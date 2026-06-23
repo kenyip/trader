@@ -111,6 +111,120 @@ bakeoff *ARGS:
 positions *ARGS:
     {{py}} manage_positions.py {{ARGS}}
 
+# Simulator: focused scenario generation (Phase 1)
+model-generate *ARGS:
+    {{py}} simulator/generate_scenarios.py --per-regime 100 --focus high_gamma_marginal,v_recovery,post_earnings_weak {{ARGS}}
+
+# Simulator: label + enrich training set (pass --scenarios PATH --low-regret-filter 25)
+model-train-focus *ARGS:
+    {{py}} simulator/build_training_set.py {{ARGS}}
+
+# Simulator: merge real backtest trades into training parquet
+model-join-real SYNTHETIC OUTPUT:
+    {{py}} simulator/join_real_trades.py --synthetic {{SYNTHETIC}} --output {{OUTPUT}}
+
+# Simulator: train policy + should-trade models (pass --input PATH)
+model-train *ARGS:
+    {{py}} simulator/train_should_trade_model.py {{ARGS}}
+    {{py}} simulator/train_best_policy_model.py {{ARGS}}
+
+# Simulator: validate model policy vs rules on real history
+model-validate *ARGS:
+    {{py}} simulator/validate_model_policy.py {{ARGS}}
+
+# Simulator: model policy on canonical 12-regime windows
+model-scenarios *ARGS:
+    {{py}} simulator/validate_model_policy.py --canonical {{ARGS}}
+
+# Simulator: feature parity smoke (Phase 0)
+model-verify:
+    {{py}} simulator/verify_model_features.py
+
+# PMCC / LEAPS diagonal snapshot — live chain grid (delta-based strike matching)
+# Examples:
+#   just pmcc-snapshot --preset balanced
+#   just pmcc-snapshot --preset bullish --target-spot 550
+#   just pmcc-snapshot --preset income --top 15
+#   just pmcc-snapshot --refresh          # force live fetch
+#   (default: 30m TTL when market open; after hours keeps last session cache)
+pmcc-snapshot *ARGS:
+    {{py}} pmcc_analyze.py {{ARGS}}
+
+# Explain pair ranking — why 420/430? compare vs path-sim
+#   just pmcc-rank --explain 420/430
+#   just pmcc-rank --preset managed --compare
+pmcc-rank *ARGS:
+    {{py}} pmcc_pair_rank.py {{ARGS}}
+
+# Compare default vs wide DTE grids; audit available chain expirations
+pmcc-sweep-dte *ARGS:
+    {{py}} pmcc_sweep_dte.py {{ARGS}}
+
+# Scenario walkthrough (rip/drop) on best pair from preset
+#   just pmcc-scenarios --preset bullish --target-spot 550
+#   just pmcc-scenarios --preset balanced --leaps-strike 420 --short-strike 510
+pmcc-scenarios *ARGS:
+    {{py}} pmcc_scenarios.py {{ARGS}}
+
+# Monthly playthrough to LEAPS expiry on bear→bull paths (best pair + roll rules)
+#   just pmcc-playthrough --preset balanced
+#   just pmcc-playthrough --preset bullish --path moonshot
+pmcc-playthrough *ARGS:
+    {{py}} pmcc_playthrough.py {{ARGS}}
+
+# Optimized rules + daily spot/premium playbook (reentry + roll targets)
+#   just pmcc-playbook --preset balanced
+#   just pmcc-playbook --out .cache/pmcc_playbook.md
+pmcc-playbook *ARGS:
+    {{py}} pmcc_playbook.py {{ARGS}}
+
+# Daily playthrough (1d steps) — gap-rip paths + pair comparison
+#   just pmcc-daily --preset balanced
+#   just pmcc-daily --compare --leaps-strike 420 --short-strike 430
+#   just pmcc-daily --path single_day_rip_10
+pmcc-daily *ARGS:
+    {{py}} pmcc_daily_playthrough.py {{ARGS}}
+
+# Discover TSLA historical patterns → PMCC path suggestions
+pmcc-discover *ARGS:
+    {{py}} pmcc_discover_paths.py {{ARGS}}
+
+# Systematic rule tuner (whipsaw-weighted daily sim grid search)
+#   just pmcc-tune --preset balanced --leaps-strike 420 --short-strike 430 --save
+pmcc-tune *ARGS:
+    {{py}} pmcc_tune.py {{ARGS}}
+
+# Pair scan — path sim on strike combos (fast) or full grid (slow)
+#   just pmcc-scan --refresh                    # sim-best DTE per strike pair (~8 min)
+#   just pmcc-scan --mode full --refresh        # ~2950 grid cells (~20-40 min)
+#   just pmcc-scan --ladder-short 490
+pmcc-scan *ARGS:
+    {{py}} pmcc_pair_scan.py {{ARGS}}
+
+# Calibrate static scores against full-grid path sim (run full scan first)
+#   just pmcc-calibrate --refresh               # full scan + report
+#   just pmcc-calibrate --dte-table             # static vs sim DTE picks
+pmcc-calibrate *ARGS:
+    {{py}} pmcc_calibrate.py {{ARGS}}
+
+# Scenario playbook — walk through each path with real premiums and trade logs
+#   just pmcc-playbook-gen --leaps-strike 410 --short-strike 460
+#   just pmcc-playbook-gen --leaps-strike 380 --short-strike 450 --out .cache/pmcc_playbook_380_450.md
+pmcc-playbook-gen *ARGS:
+    {{py}} pmcc_playbook_gen.py {{ARGS}}
+
+# Live position manager — daily status + action recommendations
+#   just pmcc-manage                    # check all positions
+#   just pmcc-manage --spot 420         # override spot
+#   just pmcc-manage --what-if 500      # what-if table at $500
+#   just pmcc-manage --triggers         # full trigger playbook
+pmcc-manage *ARGS:
+    {{py}} pmcc_manage.py {{ARGS}}
+
+# Quiet PMCC monitor for cron/alerts — silent unless action is needed
+pmcc-monitor *ARGS:
+    {{py}} pmcc_manage.py --monitor --quiet-ok {{ARGS}}
+
 # Clean generated plots
 clean:
     rm -f *.png

@@ -6,7 +6,7 @@ Convention: **current approach at top, dated history at bottom.** Rewrite the to
 
 ---
 
-## Current approach — v1.13 (2026-05-14, analyzer-driven rule fleet: 5 rules shipped, exit-side hook online)
+## Current approach — v1.14 rule fleet (6 shipped TSLL adaptive rules incl. management override + exit hook) + model scaffolding (entry/management advisors behind `enable_model_*=False`; research loop via `simulator/`)
 
 ## In plain words: what the strategy actually does
 
@@ -264,7 +264,7 @@ The flow below adds a new rule without touching the engine, the backtest harness
 
 6. **Update docs.** Bump version line at top of STRATEGY.md, update the v1.X baseline numbers and rules table, append a v1.X history entry.
 
-### Currently active adaptive rules (v1.13)
+### Currently active adaptive rules (v1.14)
 
 | Rule | Ticker | Logic | Surfaced via | Why it works (hypothesis) |
 |---|---|---|---|---|
@@ -273,8 +273,9 @@ The flow below adds a new rule without touching the engine, the backtest harness
 | `tsll_skip_tuesday` | TSLL | skip if `day_of_week == 1` | v1.13 `--scan-narrow` | Tue→Fri 3-DTE puts sit through more overnight gap risk than Wed/Thu |
 | `tsll_skip_post_earnings_drift` | TSLL | skip if `11 ≤ days_since_earnings ≤ 21` | v1.13 `--scan-narrow` | IV-rank decay window misleads — residual post-earnings vol catches puts |
 | `tsll_skip_downtrend_high_iv` | TSLL | skip if `-0.63 ≤ ret_14d ≤ -0.07 AND iv_rank ≥ 77` | v1.13 `--pairs` | post-decline IV spike before capitulation — rich-looking premium gets caught |
+| `ride_high_credit_mgmt` | TSLL | if `credit/strike ≥ 1.35× min_credit_pct` → `daily_capture_mult=2.2`, `profit_target=0.70` | v1.14 model distill | rich premium days → hold_longer-style exits; TRIPLE-WIN on 5y+suite+OOS (DD flat) |
 
-Five rules total — milestone target met (GOAL.md success criterion 1).
+Six rules on TSLL, one on TSLA. Model-inspired candidates `tight_risk_high_gamma` and `dynamic_credit_on_high_gamma_marginal` remain registered but **not** enabled (TSLA null / neutral).
 
 ### Exit ladder — first to fire wins (`check_exits`)
 
@@ -1305,3 +1306,31 @@ Captured in the legacy `.md` files in repo root. Briefly:
 - **v6.11**: short-strangle backtest with early exits
 
 All of these are absorbed into the v1.0 engine + `StrategyConfig`. The legacy Python files (`dynamic_parameter_engine.py`, `strategy_v6_dynamic.py`) still drive the live daily recommendation but will be re-wired to the optimised params after Phase 4.
+
+### Management policy / close-roll advisor (v1.14+ scaffolding, 2026-05-31)
+
+**Current state (safe, behind flag)**: `StrategyConfig` now has `enable_model_management=False` (default) + `model_min_management_conf` / `model_min_mgmt_edge` / `model_management_path`. 
+
+- `recommend_management_advisor(row, pos_dict, cfg, mark)` (thin wrapper in `strategies.py`) is the single surface.
+- When enabled (lab only): calls `PickEntryModel.recommend_management` (Phase B) which builds 33-col traj vector via `build_management_decision_features` SoT (10 fields: decision_step, current_pnl_pct, pace_vs_target, days_held_norm, max_adverse_pct, is_gap_day, ret_1d/3d_since, iv_rank_at_decision, regime_at_decision; deterministic encoding + NaN guard).
+- Output proposal: `{'close': bool, 'reason': str, 'overrides': {delta_breach, ...}, 'confidence', 'expected_improvement'}`.
+- Wired read-only into `positions.py:check_position` (status['model_management_advice']) + `format_status` ("MODEL MGMT (shadow): ...") and `manage_positions whatif` subcommand.
+- `check_exits`, `adapt_exit_params`, backtest loop, `just scenarios`, `pick_entry`, live rec: **100% untouched**. Proposals are diagnostics / what-if only until distilled to `ADAPTIVE_EXIT_RULES` or proven win on cost fn.
+
+**Training recipe (synthetic only for densification)**: `generate_scenarios --focus high_gamma_marginal,post_earnings_weak` + `build_training_set --scenarios ... --label --low-regret-filter 30` (produces 48-col with traj at decision points; 77.9% zero-regret on demo set). Model: LGBM on entry+traj feats → advisor. Full parity gauntlet via extended `validate_model_policy` + real 5y + canonicals (cost = pnl/contract − 1.0×DD).
+
+**Promotion rule**: Only after real gauntlet shows improvement (or clean documented null); prefer explicit rule distillation over raw weights. See `simulator/PLAN.md` (this session) + `MODEL_TRAINING_PLAYBOOK.md` for commands + first-cycle null result.
+
+**History entry (2026-05-31)**: Implemented approved plan for signal-driven close/roll (enriched labeling + SoT traj features (Phase A complete), `recommend_management` + gates + focused training demo (B), StrategyConfig + positions/whatif wiring (C)). All behind enable=False. `just scenarios` pure. First focused labels: 41k+ ex, 77.9% oracle-zero-regret. Demo mgmt model loads + proposes on adverse traj. Live surface test passes (advice rendered read-only). Gauntlet: clean null on cost (loop ready for critic iterations). No core invariants broken. Docs + summary updated. (See /tmp/grok-impl-summary-a70f9988.md for full cmds/outputs per phase.)
+
+### 2026-06-05 — v1.14: `ride_high_credit_mgmt` shipped (TSLL) + closed-loop phases 0–5 advance
+
+- **Shipped** `ride_high_credit_mgmt` on TSLL (`DEFAULT_CONFIG_BY_TICKER`): when peek credit ≥ 1.35× `min_credit_pct`, apply hold_longer-style exits (`daily_capture_mult=2.2`, `profit_target=0.70`). `validate_rule.py` → **TRIPLE-WIN** (5y +$0 delta on already-enabled rule pin; suite/OOS unchanged; DD flat).
+- **Rejected** `tight_risk_high_gamma` on TSLA: NULL (−$3,123 5y P/L, +$579 DD, −$990 suite).
+- **Phase 0**: `verify_model_features.py` passes on latest 20260515/20260605 models (20/23 + 33-col mgmt).
+- **Phase 1**: 1,580 focused paths (`.cache/phase1_focus_20260605.parquet`); large label build in flight.
+- **Phase 2/3 infra**: `simulator/join_real_trades.py` unions real `*_trades.csv` feature rows with synthetic parquet; `just model-*` recipes added.
+- **Phase 4**: `trade_labeler` mid-trade snapshots (`emit_midtrade` / `build_training_set --midtrade`) for standard-policy per-bar trajectory rows.
+- **Phase 5**: Dashboard Today tab shows experimental model recommendation (read-only; production path still `pick_entry`).
+- **Still off**: `enable_model_entry`, `enable_model_management` — rules remain source of truth for opens/closes.
+

@@ -16,6 +16,10 @@ just sweep KNOB --values v1,v2,v3     # reusable single-knob sweep (the LLM-crit
 just positions                        # status of open positions (per positions.yaml, gitignored)
 just positions example                # write a sample positions.yaml template
 just positions add ...                # append a position (see `just positions add --help`)
+
+# PMCC / LEAPS diagonal monitor
+just pmcc-manage                      # full PMCC dashboard: marks, premium clock, next action
+just pmcc-monitor                     # quiet monitor: silent unless action is needed
 ```
 
 ## Source-of-truth documents
@@ -27,6 +31,7 @@ These three files are kept current. Everything else in the repo is either code o
 | [**GOAL.md**](GOAL.md) | The end-state goal — data-driven critic loop, success criteria, sequenced milestones. Use as `/goal` input in new sessions. |
 | [**ENGINE.md**](ENGINE.md) | The backtest harness — modules, data flow, pricing assumptions, event loop semantics, known limitations, roadmap |
 | [**STRATEGY.md**](STRATEGY.md) | The trading rules — entry logic, exit ladder (incl. daily profit capture formula), `StrategyConfig` defaults, latest baseline results, next tuning targets |
+| [**docs/PMCC_MONITOR_DEPLOYMENT.md**](docs/PMCC_MONITOR_DEPLOYMENT.md) | PMCC always-on monitor deployment, live position file transfer, Hermes cron, and Telegram gateway setup |
 
 Both follow the same convention: **current state at the top, dated history at the bottom.**
 

@@ -1,0 +1,1 @@
+"""PMCC (LEAPS diagonal) snapshot analyzer — separate from short-premium engine."""

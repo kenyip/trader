@@ -3,6 +3,8 @@ __pycache__/
 *.pyc
 .cache/
 .DS_Store
+.grok/
 
 # active live positions — user-specific, never committed
 positions.yaml
+pmcc_positions.yaml

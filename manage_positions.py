@@ -19,6 +19,7 @@ import pandas as pd
 from positions import (
     POSITIONS_PATH, load_positions, load_closed_positions, save_positions,
     check_position, format_all, next_group_id,
+    get_config,
 )
 
 
@@ -65,6 +66,34 @@ def cmd_check() -> int:
     for r, e in errors:
         print(f"\n  ERROR on position {r}: {e}", file=sys.stderr)
     return 0 if not errors else 1
+
+
+def cmd_whatif() -> int:
+    """Phase C demo: force enable_model_management + debug on current positions and surface advisor proposals.
+    The underlying ladder (check_exits) and Position state are untouched; this is pure read-only what-if.
+    """
+    records = load_positions()
+    closed = load_closed_positions()
+    if not records:
+        print(f"No positions in {POSITIONS_PATH}. Run `just positions example` for a template.")
+        return 0
+    print("=== WHAT-IF (model management advisor shadow mode) ===")
+    print("enable_model_management=True, model_debug=True (rule ladder still executes unchanged)")
+    statuses = []
+    for r in records:
+        try:
+            cfg = get_config(r['ticker'], enable_model_management=True, model_debug=True)
+            st = check_position(r, cfg=cfg, closed_positions=closed)
+            statuses.append(st)
+            advice = st.get('model_management_advice', {})
+            if advice:
+                print(f"\n[whatif {r['ticker']}] advisor: {advice.get('reason', 'n/a')}")
+                print(f"  close={advice.get('close')} conf={advice.get('confidence',0):.2f} overrides={advice.get('overrides')}")
+        except Exception as e:
+            print(f"  ERROR whatif on {r}: {e}", file=sys.stderr)
+    if statuses:
+        print("\n" + format_all(statuses))
+    return 0
 
 
 def cmd_add(args) -> int:
@@ -184,6 +213,7 @@ def main() -> int:
     sub = ap.add_subparsers(dest='cmd')
 
     sub.add_parser('check', help='Run exit ladder on all open positions (default)')
+    sub.add_parser('whatif', help='Phase C: what-if close/roll using model mgmt advisor (enable_model_management + debug; read-only shadow, no ladder change)')
     sub.add_parser('example', help='Write a sample positions.yaml (no overwrite)')
 
     a = sub.add_parser('add', help='Append a position to positions.yaml')
@@ -219,6 +249,8 @@ def main() -> int:
 
     if args.cmd is None or args.cmd == 'check':
         return cmd_check()
+    if args.cmd == 'whatif':
+        return cmd_whatif()
     if args.cmd == 'add':
         return cmd_add(args)
     if args.cmd == 'close':

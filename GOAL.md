@@ -153,6 +153,8 @@ Train a small gradient-boosted classifier on `(features at entry, P/L sign)` fro
 
 **Action:** add `analyze_model.py` (separate from `analyze.py` to keep deterministic stats and model-based proposal cleanly separated). Use scikit-learn or LightGBM. Output is interpretable: top splits = candidate rules.
 
+**Progress (2026-05-31 via plan 019e7d50)**: Extended the simulator model machinery (pick_entry_model + feature_utils SoT + trade_labeler traj) to management/close-roll decisions. Added 10 trajectory decision-state features (current_pnl_pct, pace, adverse, ret_since, regime_at_decision etc) + build_management_decision_features. Trained demo advisor on focused weak-regime + low-regret synthetic labels (77.9% zero-regret coverage). Wired thin `enable_model_management` (default False) + advisor into positions tracker + whatif CLI for read-only guidance ("given traj + signals, model recommends tighten/close because..."). All behind flags; `just scenarios` / rule ladder pure. First real gauntlet: clean null (cost unchanged) — loop + infra ready for distillation to ADAPTIVE_EXIT_RULES or next cycle. See simulator/PLAN.md + STRATEGY.md history.
+
 ### M7 — Multi-rule interaction validation (~2 hours)
 
 Once 3+ rules are shipped, their interactions matter. Two rules each "skip a bucket" may overlap (skipping more than intended) or be redundant.

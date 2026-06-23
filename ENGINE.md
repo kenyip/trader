@@ -6,7 +6,7 @@ This document follows a fixed convention: **current state at top, dated history 
 
 ---
 
-## Current state — v1.10 (2026-05-14)
+## Current state — v1.10 harness + v1.14 observability (positions status now carries optional model_management_advice for advisor shadow; no change to event loop / check_exits)
 
 > v1.10 introduces **trade-group bookkeeping** (chains of rolled positions counted as one logical trade), **group-level + capital-time metrics**, a **generalized roll mechanic** with explicit chain caps (`max_rolls_per_group`, `max_chain_loss_mult`), the **archetype bake-off harness** (`archetype_bakeoff.py` + `just bakeoff`) for head-to-head comparison of strategy *shapes* rather than individual knobs, and **`group_id` support in live position tracking** (`positions.yaml` schema gains `group_id` + retained `closed_positions:` history; `manage_positions.py` gains `roll` subcommand and chain P/L display). No strategy changes ship; the v1.13 strategy is bit-identical pre/post-v1.10. The bake-off's first run confirmed the v1.13 shape as dominant over three challenger archetypes — null-resulted in STRATEGY.md.
 
@@ -428,3 +428,6 @@ Strategy iteration happened in scattered scripts and one-off Markdown notes. Tho
 - `STRATEGY_DEVELOPMENT_LOG.md`, `STRATEGY_RESET_2026-05-12.md` — stubs
 
 The Python files from that era are similarly mixed-quality: `dynamic_parameter_engine.py`, `strategy_v5_optimized.py`, `strategy_v6_dynamic.py`, the two `backtest_*.py` synthetic GBM scripts, and `walk_forward_optimizer.py` (broken — imports a class from a stub) all predate the engine. `walk_forward_optimizer.py` will be replaced in Phase 4.
+
+**v1.14+ note (2026-05-31)**: `Position` and status dicts now carry optional `model_management_advice` (from positions tracker when `StrategyConfig.enable_model_management`). This is read-only observability for the management advisor (traj features + close/roll proposals); does not affect `check_exits` execution or backtest loop. See `positions.py`, `strategies.recommend_management_advisor`, and `simulator/PLAN.md`.
+

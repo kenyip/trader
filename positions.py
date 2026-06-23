@@ -47,7 +47,7 @@ import pandas as pd
 
 from backtest import Position
 from data import build
-from strategies import StrategyConfig, check_exits, get_config
+from strategies import StrategyConfig, check_exits, get_config, recommend_management_advisor
 
 
 REPO_ROOT = Path(__file__).resolve().parent
@@ -170,6 +170,10 @@ def check_position(d: dict, cfg: StrategyConfig | None = None, df: pd.DataFrame 
         chain_n_closed, chain_realized = chain_realized_pnl(pos.group_id, closed_positions)
         chain_total = chain_realized + pnl_share
 
+    # Phase C: thin safe model management advisor (read-only surface when cfg.enable_model_management)
+    # Always calls the guard fn (which is zero-cost when disabled). Adds 'model_management_advice' to status.
+    # The real ladder (decision) is never altered here; advice may be used by user or future adapt hook.
+    mgmt_advice = recommend_management_advisor(row, d, cfg, mark={"pnl_per_share": pnl_share, **mark})
     return {
         'record': d,
         'ticker': ticker,
@@ -197,6 +201,7 @@ def check_position(d: dict, cfg: StrategyConfig | None = None, df: pd.DataFrame 
             'reversal': bool(row['reversal']),
             'high_iv': bool(row['high_iv']),
         },
+        'model_management_advice': mgmt_advice,
     }
 
 
@@ -275,6 +280,13 @@ def format_status(status: dict) -> str:
     if f['high_iv']:
         flag_bits.append("high_iv flagged")
     lines.append(f"    regime_flip    today: regime={f['regime']}, reversal={f['reversal']}  ({'/'.join(flag_bits) or 'no flags'})")
+    # Phase C surface (read-only, zero effect on real decision unless user acts or future distillation)
+    advice = status.get('model_management_advice') or {}
+    if advice and (advice.get('close') or advice.get('overrides') or advice.get('confidence', 0) > 0.1):
+        ov = advice.get('overrides', {})
+        ov_str = f" overrides={ov}" if ov else ""
+        lines.append(f"  MODEL MGMT (shadow): close={advice.get('close')} conf={advice.get('confidence',0):.2f}{ov_str}")
+        lines.append(f"    reason: {advice.get('reason', '')[:90]}")
     if rec.get('notes'):
         lines.append(f"  notes: {rec['notes']}")
     return '\n'.join(lines)

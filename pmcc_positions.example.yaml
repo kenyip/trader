@@ -1,0 +1,19 @@
+# Copy to pmcc_positions.yaml on the machine that monitors the live PMCC.
+# pmcc_positions.yaml is gitignored because it contains user-specific live positions.
+pmcc_positions:
+  - ticker: TSLA
+    leaps_strike: 410
+    leaps_expiration: 2028-06-16
+    leaps_debit: 13000
+    short_strike: 500
+    short_expiration: 2026-08-21
+    short_credit: 725
+    entry_date: 2026-06-22
+    short_open_date: 2026-06-22
+    short_open_dte: 60
+    spot_at_entry: 405.05
+    contracts: 1
+    income_floor_daily: 10
+    income_good_daily: 15
+    income_strong_daily: 20
+    notes: "Example PMCC: replace with your actual fills on the monitoring box"

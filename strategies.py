@@ -18,7 +18,7 @@ Exit ladder (first to fire wins, checked in this order):
 
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import Callable
+from typing import Callable, Optional
 import numpy as np
 import pandas as pd
 
@@ -100,14 +100,202 @@ class StrategyConfig:
     exit_rules: tuple = ()
     ticker: str = ''                    # set by get_config so rules can branch per-ticker without re-plumbing
 
+    # === PR 2 model-driven entry knobs (safe defaults; only affect experimental model path) ===
+    # enable_model_entry=False keeps the main rule path (pick_entry + adapt_entry_params + ADAPTIVE_RULES) 100% untouched.
+    enable_model_entry: bool = False
+    model_min_should_trade: float = 0.55   # first cheap gate (should_trade prob must be >= this)
+    model_min_policy_conf: float = 0.35    # policy model confidence filter
+    model_min_edge: float = 0.0            # P/L edge filter (only if PICK_ENTRY_USE_PL=1 and pl model loaded)
+    model_debug: bool = False              # rich per-decision prints in model path
+    model_best_policy_path: Optional[str] = None  # for pinning a specific model file
+    model_should_trade_path: Optional[str] = None
+
+    # === Phase C: model-driven management (close/roll re-scoring via trajectory features) ===
+    # enable_model_management=False (default) keeps 100% rule path: check_exits + ADAPTIVE_EXIT_RULES + ladder.
+    # When True (lab only), after ladder the advisor may propose overrides or early-close signals.
+    # Proposals feed adapt_exit hook or are surfaced read-only (positions tracker, what-if).
+    # No behavior change to backtest/scenarios/live until distilled or explicitly enabled + validated.
+    enable_model_management: bool = False
+    model_min_management_conf: float = 0.30  # advisor confidence gate (PR 2 pattern)
+    model_min_mgmt_edge: float = 4.0         # expected improvement $ gate
+    model_management_path: Optional[str] = None  # pin specific advisor model
+
 
 # v1.5: per-ticker defaults from the DTE × delta sweep on 5y backtest + 12-regime suite validation.
 # Different underlyings have different optimal entry params (TSLL is 2x-leveraged, smaller price,
 # higher relative IV → shorter DTE / higher delta is the sweet spot).
 DEFAULT_CONFIG_BY_TICKER = {
-    'TSLA': {'long_dte': 7,  'long_target_delta': 0.20, 'min_credit_pct': 0.010, 'delta_breach': 0.50, 'daily_capture_mult_short': 2.0, 'bear_dte': 3, 'bear_target_delta': 0.20, 'regime_flip_exit_enabled': False, 'adaptive_rules': ('tsla_skip_mild_intraday_up',)},
-    'TSLL': {'long_dte': 3,  'long_target_delta': 0.30, 'min_credit_pct': 0.012, 'delta_breach': 0.45, 'daily_capture_mult_short': 1.25, 'max_loss_mult': 10.0, 'bear_dte': 5, 'bear_target_delta': 0.20, 'adaptive_rules': ('tsll_skip_marginal_up', 'tsll_skip_tuesday', 'tsll_skip_post_earnings_drift', 'tsll_skip_downtrend_high_iv')},
+    'TSLA': {'long_dte': 7,  'long_target_delta': 0.20, 'min_credit_pct': 0.010, 'delta_breach': 0.50, 'daily_capture_mult_short': 2.0, 'bear_dte': 3, 'bear_target_delta': 0.20, 'regime_flip_exit_enabled': False, 'adaptive_rules': ('tsla_skip_mild_intraday_up',), 'model_min_should_trade': 0.58, 'model_min_policy_conf': 0.40},
+    'TSLL': {'long_dte': 3,  'long_target_delta': 0.30, 'min_credit_pct': 0.012, 'delta_breach': 0.45, 'daily_capture_mult_short': 1.25, 'max_loss_mult': 10.0, 'bear_dte': 5, 'bear_target_delta': 0.20, 'adaptive_rules': ('tsll_skip_marginal_up', 'tsll_skip_tuesday', 'tsll_skip_post_earnings_drift', 'tsll_skip_downtrend_high_iv', 'ride_high_credit_mgmt'), 'model_min_should_trade': 0.65, 'model_min_policy_conf': 0.45},
 }
+
+# Model-inspired candidates from simulator training (as of 2026-05-14):
+# Tested via validate_rule.py. None have shipped yet.
+#
+# Best hard-skip so far on TSLA:   'skip_high_gamma_marginal_ret1d_v4'   (ultra-selective)
+# Best dynamic approach on TSLL:   'dynamic_credit_on_high_gamma_marginal' (almost neutral)
+#
+# To experiment:
+#   TSLA:  'adaptive_rules': ('tsla_skip_mild_intraday_up', 'skip_high_gamma_marginal_ret1d_v4')
+#   TSLL:  'adaptive_rules': (..., 'dynamic_credit_on_high_gamma_marginal')
+#
+# All variants were generated from the first policy model trained on simulator-labeled data.
+
+# =============================================================================
+# MODEL-DRIVEN ENTRY (pick_entry_model) — Work in Progress
+# =============================================================================
+# This is the integration point for the simulator-trained policy models.
+# It allows the engine to use a trained model (instead of or in addition to rules)
+# to propose full strategies (entry + recommended management policy).
+#
+# See simulator/pick_entry_model.py for the actual model logic.
+# See simulator/validate_model_policy.py for historical backtesting of model policies.
+
+try:
+    from simulator.pick_entry_model import PickEntryModel, Recommendation, EntryAction, ManagementPolicy
+    from simulator.trade_labeler import EntryAction as TL_EntryAction  # for type hints if needed
+    from simulator.feature_utils import get_peek_features_for_action
+    _PICK_ENTRY_MODEL = PickEntryModel()
+except Exception as e:
+    _PICK_ENTRY_MODEL = None
+    # Silent fail during development — will be loud once we're ready to ship
+
+
+def pick_entry_model(row: pd.Series, cfg: StrategyConfig, S: float, today: pd.Timestamp):
+    """
+    Model-driven entry function (experimental).
+
+    Uses the trained Best Management Policy + P/L models from the simulator
+    to recommend a full trade plan (side, DTE, delta + management policy).
+
+    PR 2: respects cfg.model_* knobs, delegates peek to feature_utils (no dupe pricing),
+    forwards all 4 policy overrides (incl. delta_breach_override), runs post-veto skeleton,
+    rich per-candidate + "why []" diagnostics when cfg.model_debug.
+    The main rule path (pick_entry) is completely untouched unless enable_model_entry + PR3 wiring.
+    """
+    if _PICK_ENTRY_MODEL is None:
+        return None
+
+    debug = getattr(cfg, "model_debug", False)
+    min_conf = getattr(cfg, "model_min_policy_conf", 0.35)
+    min_edge = getattr(cfg, "model_min_edge", 0.0)
+    min_should = getattr(cfg, "model_min_should_trade", 0.55)
+
+    try:
+        # Delegate to single-source get_peek (removes manual pricing duplication per PR 2)
+        default_action = EntryAction("put", 5, 0.22)
+        row = row.copy()
+        peek = get_peek_features_for_action(row, default_action)
+        row["peek_credit"] = peek.get("peek_credit", 0.5)
+        row["peek_gamma_dollar"] = peek.get("peek_gamma_dollar", 0.15)
+        row["peek_theta_yield"] = peek.get("peek_theta_yield", 0.03)
+
+        # Fill any missing expected columns with reasonable defaults
+        for col in ["ret_1d", "ret_5d", "ret_14d", "iv_rank", "ema_stack", "volume_surge"]:
+            if col not in row or pd.isna(row.get(col)):
+                row[col] = 0.0
+
+        # Call hardened recommend with cfg knobs (should-trade gate inside)
+        recs = _PICK_ENTRY_MODEL.recommend(
+            row,
+            min_policy_conf=min_conf,
+            min_edge=min_edge,
+            min_should_trade=min_should,
+            use_should_trade_gate=True,
+            debug=debug,
+        )
+        if not recs:
+            if debug:
+                print("[pick_entry_model] recommend returned [] (should_gate or min_* filters or post-veto)")
+            return None
+
+        best = recs[0]
+        action = best.entry_action
+        policy = best.recommended_policy
+
+        # Post-model veto skeleton (PR 2) — proven hard-skip rules only (see _passes_model_veto_rules)
+        if not _passes_model_veto_rules(row, action, cfg):
+            if debug:
+                print("[pick_entry_model] post-model veto fired — falling back (model path)")
+            return None
+
+        # Pricing for the chosen action (unchanged logic)
+        iv = float(row.get("iv_proxy", 0.55))
+        T = action.dte / 365.0
+        try:
+            K = pricing.strike_from_delta(S, T, iv, action.target_delta, action.side, r=cfg.risk_free_rate)
+            K = pricing.round_strike(K, 2.5)
+            credit = pricing.price(S, K, T, iv, action.side, r=cfg.risk_free_rate)
+        except Exception:
+            return None
+
+        if credit / K < getattr(action, "min_credit_pct", 0.010):
+            if credit / K < 0.008:
+                return None
+
+        expiration = today + pd.Timedelta(days=action.dte)
+
+        # All 4 overrides forwarded (delta_breach_override is the new one for PR 2)
+        position = Position(
+            side=action.side,
+            entry_date=today,
+            expiration=expiration,
+            strike=K,
+            credit=credit,
+            dte_at_entry=action.dte,
+            iv_at_entry=iv,
+            regime_at_entry=str(row.get("regime", "unknown")),
+            daily_theta_target=credit / action.dte,
+            daily_capture_mult=policy.daily_capture_mult,
+            max_loss_mult_override=policy.max_loss_mult,
+            profit_target_override=policy.profit_target,
+            delta_breach_override=getattr(policy, "delta_breach", None),
+        )
+
+        if debug:
+            print(f"[pick_entry_model] MODEL PROPOSAL accepted: {action.side} {action.dte}d @ {action.target_delta}Δ "
+                  f"policy={policy.name} (conf={best.confidence:.2f} edge=${best.predicted_pnl:.1f})")
+
+        return position
+
+    except Exception as e:
+        if debug:
+            print(f"[pick_entry_model] error (safe return None): {e}")
+        # Fail safely during early development
+        return None
+
+
+def _build_traj_for_advisor(position_dict: dict, row: pd.Series, mark: dict | None = None) -> dict:
+    """Delegates to single source of truth in feature_utils (fixes dupe + None/gap/now() past patterns).
+    today=None lets caller pass deterministic timestamp for backtests/gauntlet purity.
+    """
+    from simulator.feature_utils import build_trajectory_dict
+    return build_trajectory_dict(position=position_dict, row=row, mark=mark, today=None)
+
+
+def recommend_management_advisor(row: pd.Series, position_dict: dict, cfg: StrategyConfig, mark: dict | None = None) -> dict:
+    """Thin safe wrapper (Phase C). Delegates to PickEntryModel.recommend_management when enable_model_management.
+    Returns proposal dict (or {}) — caller may log, surface read-only, or feed to adapt_exit_params.
+    Zero impact when flag False (default). Reuses exact PR 2 gate/diag/alignment discipline.
+    """
+    if not getattr(cfg, "enable_model_management", False) or _PICK_ENTRY_MODEL is None:
+        return {}
+    debug = getattr(cfg, "model_debug", False)
+    min_c = getattr(cfg, "model_min_management_conf", 0.30)
+    min_e = getattr(cfg, "model_min_mgmt_edge", 4.0)
+    try:
+        traj = _build_traj_for_advisor(position_dict, row, mark)
+        rec = _PICK_ENTRY_MODEL.recommend_management(
+            row, position=position_dict, trajectory=traj,
+            min_conf=min_c, min_edge=min_e, debug=debug
+        )
+        if debug:
+            print(f"[recommend_management_advisor] {rec.get('reason', '')[:60]} conf={rec.get('confidence', 0):.2f}")
+        return rec or {}
+    except Exception as e:
+        if debug:
+            print(f"[recommend_management_advisor] safe neutral on error: {e}")
+        return {}
 
 
 def get_config(ticker: str, **overrides) -> StrategyConfig:
@@ -358,6 +546,180 @@ def _rule_tsll_skip_downtrend_high_iv(row, cfg, current):
 ADAPTIVE_RULES['tsll_skip_downtrend_high_iv'] = _rule_tsll_skip_downtrend_high_iv
 
 
+def _rule_skip_high_gamma_marginal_ret1d(row, cfg, current):
+    """
+    Model-inspired rule (from first policy model trained on simulator data).
+
+    Skip when 1-day return is in a narrow "uncertain" band AND gamma risk on
+    the would-be position is high. This is a more conservative version after
+    the first validation pass showed the initial thresholds were too aggressive
+    (especially hurt v_recovery).
+
+    Top signals from the simulator-trained model: ret_1d (#1) + peek_gamma_dollar (#3).
+    """
+    r1 = row.get('ret_1d')
+    g = current.get('gamma_dollar')
+
+    if r1 is None or g is None or not (np.isfinite(r1) and np.isfinite(g)):
+        return {}
+
+    # Narrower uncertain band + higher gamma threshold (more conservative)
+    if -0.008 <= r1 <= 0.015 and g > 0.095:
+        return {'skip': True}
+    return {}
+
+
+ADAPTIVE_RULES['skip_high_gamma_marginal_ret1d'] = _rule_skip_high_gamma_marginal_ret1d
+
+
+def _rule_skip_high_gamma_marginal_ret1d_v2(row, cfg, current):
+    """
+    v2 (more conservative) of the simulator-model-inspired rule.
+
+    Key changes after v1 validation failure:
+    - Much narrower "uncertain momentum" band on ret_1d
+    - Significantly higher gamma_dollar threshold (only skip when risk is truly elevated)
+    - Goal: keep the signal while protecting v_recovery and normal regimes.
+    """
+    r1 = row.get('ret_1d')
+    g = current.get('gamma_dollar')
+
+    if r1 is None or g is None or not (np.isfinite(r1) and np.isfinite(g)):
+        return {}
+
+    # Tighter, more conservative conditions
+    if -0.006 <= r1 <= 0.012 and g > 0.11:
+        return {'skip': True}
+    return {}
+
+
+ADAPTIVE_RULES['skip_high_gamma_marginal_ret1d_v2'] = _rule_skip_high_gamma_marginal_ret1d_v2
+
+
+def _rule_skip_high_gamma_marginal_ret1d_credit(row, cfg, current):
+    """
+    Variant that also considers peek_credit (model's #2 feature).
+
+    Skip when momentum is marginal, gamma risk is high, *and* credit quality
+    is not excellent. This tries to be more selective than pure gamma rules.
+    """
+    r1 = row.get('ret_1d')
+    g = current.get('gamma_dollar')
+    credit = current.get('credit')
+
+    if None in (r1, g, credit) or not all(np.isfinite(x) for x in (r1, g, credit)):
+        return {}
+
+    # Marginal momentum + high gamma + mediocre credit
+    if -0.007 <= r1 <= 0.013 and g > 0.09 and credit < 1.8:
+        return {'skip': True}
+    return {}
+
+
+ADAPTIVE_RULES['skip_high_gamma_marginal_ret1d_credit'] = _rule_skip_high_gamma_marginal_ret1d_credit
+
+
+def _rule_tsla_only_high_gamma_marginal_ret1d_v3(row, cfg, current):
+    """
+    Extremely conservative TSLA-only version (v3).
+
+    Only skips in a very narrow band and only when gamma is *very* high.
+    Designed specifically to avoid hurting v_recovery while still capturing
+    the core model signal (ret_1d + gamma_dollar).
+    """
+    if cfg.ticker != 'TSLA':
+        return {}
+
+    r1 = row.get('ret_1d')
+    g = current.get('gamma_dollar')
+
+    if r1 is None or g is None or not (np.isfinite(r1) and np.isfinite(g)):
+        return {}
+
+    # Very tight band + very high gamma threshold
+    if -0.004 <= r1 <= 0.009 and g > 0.135:
+        return {'skip': True}
+    return {}
+
+
+ADAPTIVE_RULES['tsla_only_high_gamma_marginal_ret1d_v3'] = _rule_tsla_only_high_gamma_marginal_ret1d_v3
+
+
+def _rule_skip_high_gamma_marginal_ret1d_v4(row, cfg, current):
+    """
+    v4 — extremely selective hard-skip version.
+
+    Only fires on a very narrow uncertain momentum band and *very* high gamma.
+    Intended as a final attempt at a pure skip rule before moving to dynamic knobs.
+    """
+    r1 = row.get('ret_1d')
+    g = current.get('gamma_dollar')
+
+    if r1 is None or g is None or not (np.isfinite(r1) and np.isfinite(g)):
+        return {}
+
+    if -0.003 <= r1 <= 0.008 and g > 0.145:
+        return {'skip': True}
+    return {}
+
+
+ADAPTIVE_RULES['skip_high_gamma_marginal_ret1d_v4'] = _rule_skip_high_gamma_marginal_ret1d_v4
+
+
+def _rule_dynamic_credit_on_high_gamma_marginal(row, cfg, current):
+    """
+    A2: Dynamic knob version (preferred direction).
+
+    Instead of hard-skipping, raise the credit floor when momentum is marginal
+    and gamma risk is elevated. This uses the M4 per-position override system.
+
+    This is more surgical than a hard skip — it still allows very high-quality
+    premium when it exists, but demands better compensation when risk is high.
+    """
+    r1 = row.get('ret_1d')
+    g = current.get('gamma_dollar')
+
+    if r1 is None or g is None or not (np.isfinite(r1) and np.isfinite(g)):
+        return {}
+
+    if -0.006 <= r1 <= 0.012 and g > 0.10:
+        # Raise the bar from the default (0.010 / 0.012) to 1.45%
+        return {'min_credit_pct': 0.0145}
+    return {}
+
+
+ADAPTIVE_RULES['dynamic_credit_on_high_gamma_marginal'] = _rule_dynamic_credit_on_high_gamma_marginal
+
+
+def _rule_ride_high_credit_mgmt(row, cfg, current):
+    """Phase 3 distill: when peek credit is rich, use hold_longer-style exits (model label)."""
+    credit = current.get('credit')
+    if credit is None or not np.isfinite(credit):
+        return {}
+    strike = float(current.get('strike') or row.get('close') or 1.0)
+    if strike <= 0:
+        return {}
+    credit_pct = float(credit) / strike
+    threshold = 0.012 if cfg.ticker == 'TSLL' else 0.010
+    if credit_pct < threshold * 1.35:
+        return {}
+    return {'daily_capture_mult': 2.2, 'profit_target': 0.70}
+
+
+ADAPTIVE_RULES['ride_high_credit_mgmt'] = _rule_ride_high_credit_mgmt
+
+
+def _rule_tight_risk_high_gamma(row, cfg, current):
+    """Phase 3b distill: elevated gamma → tight_risk management overrides."""
+    g = current.get('gamma_dollar')
+    if g is None or not np.isfinite(g) or float(g) < 0.30:
+        return {}
+    return {'daily_capture_mult': 1.3, 'profit_target': 0.50, 'delta_breach': 0.38}
+
+
+ADAPTIVE_RULES['tight_risk_high_gamma'] = _rule_tight_risk_high_gamma
+
+
 def _exit_rule_take_half_on_reversal(position, mark: dict, row: pd.Series, cfg: StrategyConfig) -> dict:
     """v1.13 EXAMPLE exit rule — close early when we're already ≥50% in profit AND
     today is a reversal (puts) or bearish (calls). Locks in half-credit before the
@@ -429,6 +791,54 @@ def _daily_capture_mult_for(dte: int, cfg: StrategyConfig) -> float:
     if dte <= 15:
         return cfg.daily_capture_mult_mid
     return cfg.daily_capture_mult_long
+
+
+def _passes_model_veto_rules(row: pd.Series, action: "EntryAction", cfg: StrategyConfig) -> bool:
+    """Lightweight post-model veto skeleton (PR 2).
+
+    Runs only the *proven* hard-skip rules (the five shipped in DEFAULT_CONFIG_BY_TICKER
+    plus the model-inspired gamma hard-skips that already survived validate_rule.py).
+    Returns True if the model proposal survives (no veto); False → fall back to rule path.
+
+    This is the "proposer can change; validator cannot" guard. Only hard skips for v1;
+    softer dynamic rules remain model-influenceable. Called from the experimental model path
+    (pick_entry_model wrapper + future PR3 hybrid).
+    """
+    if not action:
+        return True
+    current = {
+        "side": action.side,
+        "dte": action.dte,
+        "target_delta": action.target_delta,
+    }
+    # Proven hard-skip names (from DEFAULT + gamma model-derived that passed real gauntlet)
+    veto_rule_names = (
+        "tsla_skip_mild_intraday_up",
+        "tsll_skip_marginal_up",
+        "tsll_skip_tuesday",
+        "tsll_skip_post_earnings_drift",
+        "tsll_skip_downtrend_high_iv",
+        # model-inspired gamma hard skips (v4 is the selective one)
+        "skip_high_gamma_marginal_ret1d_v4",
+        "skip_high_gamma_marginal_ret1d",
+    )
+    debug = getattr(cfg, "model_debug", False)
+    for name in veto_rule_names:
+        rule = ADAPTIVE_RULES.get(name)
+        if rule is None:
+            continue
+        try:
+            res = rule(row, cfg, dict(current))
+            if res and res.get("skip"):
+                if debug:
+                    print(f"[veto] post-model veto by {name}")
+                return False
+        except Exception:
+            # never let a rule crash kill the path
+            if debug:
+                print(f"[veto] rule {name} errored (ignored)")
+            continue
+    return True
 
 
 def pick_entry(row: pd.Series, cfg: StrategyConfig, S: float, today: pd.Timestamp):
