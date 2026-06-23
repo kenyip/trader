@@ -54,7 +54,41 @@ def _call_mark(spot: float, strike: float, dte: int, iv: float, r: float) -> dic
         T = dte / 365.0
         px = max(pricing.price(spot, strike, T, iv, "call", r=r), 0.0)
         delta = pricing.delta(spot, strike, T, iv, "call", r=r)
-    return {"price": px, "delta": delta}
+    return {"price": px, "delta": delta, "source": "model", "iv": iv}
+
+
+def _chain_call_mark(chain, expiration: str, strike: float) -> dict | None:
+    """Exact contract mark from live/cached chain, dollars per share."""
+    if chain is None or chain.empty:
+        return None
+    sub = chain[
+        (chain["expiration"].astype(str) == str(expiration)[:10])
+        & (chain["strike"].astype(float) == float(strike))
+    ]
+    if sub.empty:
+        return None
+    row = sub.iloc[0]
+    mid = float(row.get("mid") or 0.0)
+    bid = float(row.get("bid") or 0.0)
+    ask = float(row.get("ask") or 0.0)
+    last = float(row.get("last") or 0.0)
+    if mid <= 0:
+        if bid > 0 and ask > 0:
+            mid = (bid + ask) / 2.0
+        elif last > 0:
+            mid = last
+    if mid <= 0:
+        return None
+    return {
+        "price": mid,
+        "delta": float(row.get("delta") or 0.0),
+        "source": "chain",
+        "iv": float(row.get("iv") or 0.0),
+        "bid": bid,
+        "ask": ask,
+        "last": last,
+        "expiration": str(row.get("expiration")),
+    }
 
 
 def record_to_pair(record: dict, spot_now: float, *, r: float = 0.04) -> PmccPair:
@@ -91,13 +125,27 @@ def check_pmcc_position(
 ) -> dict:
     """Mark PMCC diagonal and evaluate playbook triggers."""
     pair = record_to_pair(record, spot_now, r=r)
+    chain = None
+    ticker = str(record.get("ticker", "TSLA"))
+    try:
+        _, chain = fetch_call_chain(ticker, r=r, min_dte=1)
+    except Exception:
+        chain = None
     tune_preset = preset if preset in POLICY_BY_PRESET else "balanced"
     base = POLICY_BY_PRESET.get(tune_preset, PlayPolicy())
     policy = daily_policy(load_tuned_policy(
         tune_preset, pair.leaps_strike, pair.short_strike, base,
     ))
-    leaps_m = _call_mark(spot_now, pair.leaps_strike, pair.leaps_dte, pair.leaps_iv, r)
-    short_m = _call_mark(spot_now, pair.short_strike, pair.short_dte, pair.short_iv, r)
+    leaps_m = _chain_call_mark(chain, pair.leaps_exp, pair.leaps_strike) or _call_mark(
+        spot_now, pair.leaps_strike, pair.leaps_dte, pair.leaps_iv, r,
+    )
+    short_m = _chain_call_mark(chain, pair.short_exp, pair.short_strike) or _call_mark(
+        spot_now, pair.short_strike, pair.short_dte, pair.short_iv, r,
+    )
+    if leaps_m.get("iv", 0) > 0:
+        pair.leaps_iv = float(leaps_m["iv"])
+    if short_m.get("iv", 0) > 0:
+        pair.short_iv = float(short_m["iv"])
     leaps_leg = leaps_m["price"] * 100 - pair.leaps_debit
     short_mark = short_m["price"] * 100
     leaps_mark = leaps_m["price"] * 100

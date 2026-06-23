@@ -155,6 +155,34 @@ def _append_pair(
     ))
 
 
+def _snap_dte_grid(
+    chain: pd.DataFrame,
+    requested: tuple[int, ...] | list[int],
+    *,
+    dte_min: int | None = None,
+    dte_max: int | None = None,
+) -> tuple[int, ...]:
+    """Map nominal DTE targets to actual expirations in the live chain.
+
+    Option expiration DTEs drift by one calendar day every day. This keeps
+    presets stable (e.g. 60d, 727d) while selecting today's actual 59d/724d
+    contracts instead of requiring exact integer matches in config.py.
+    """
+    dtes = sorted(int(x) for x in chain["dte"].dropna().unique())
+    if dte_min is not None:
+        dtes = [x for x in dtes if x >= dte_min]
+    if dte_max is not None:
+        dtes = [x for x in dtes if x <= dte_max]
+    if not dtes:
+        return tuple(int(x) for x in requested)
+    snapped: list[int] = []
+    for target in requested:
+        best = min(dtes, key=lambda x: abs(x - int(target)))
+        if best not in snapped:
+            snapped.append(best)
+    return tuple(snapped)
+
+
 def build_pmcc_grid(cfg: PmccConfig, chain: pd.DataFrame | None = None) -> tuple[float, pd.DataFrame]:
     if chain is None:
         spot, chain = fetch_call_chain(
@@ -168,9 +196,18 @@ def build_pmcc_grid(cfg: PmccConfig, chain: pd.DataFrame | None = None) -> tuple
         spot = float(chain["spot"].iloc[0])
 
     rows: list[dict] = []
+    leaps_dte_grid = _snap_dte_grid(
+        chain, cfg.leaps_dte_grid,
+        dte_min=cfg.leaps_dte_min,
+        dte_max=cfg.leaps_dte_max,
+    )
+    short_dte_grid = _snap_dte_grid(
+        chain, cfg.short_dte_grid,
+        dte_max=cfg.short_dte_max,
+    )
     if cfg.grid_mode == "strike":
         leaps_strikes, short_strikes = resolve_strike_grids(cfg, spot)
-        for leaps_dte in cfg.leaps_dte_grid:
+        for leaps_dte in leaps_dte_grid:
             for leaps_strike in leaps_strikes:
                 leaps_leg = pick_contract_at_strike(
                     chain, leaps_strike, leaps_dte,
@@ -179,7 +216,7 @@ def build_pmcc_grid(cfg: PmccConfig, chain: pd.DataFrame | None = None) -> tuple
                 )
                 if leaps_leg is None:
                     continue
-                for short_dte in cfg.short_dte_grid:
+                for short_dte in short_dte_grid:
                     for short_strike in short_strikes:
                         if short_strike <= leaps_strike:
                             continue
@@ -196,7 +233,7 @@ def build_pmcc_grid(cfg: PmccConfig, chain: pd.DataFrame | None = None) -> tuple
                             cfg,
                         )
     else:
-        for leaps_dte in cfg.leaps_dte_grid:
+        for leaps_dte in leaps_dte_grid:
             for leaps_delta in cfg.leaps_delta_grid:
                 leaps_leg = pick_contract(
                     chain, leaps_dte, leaps_delta,
@@ -205,7 +242,7 @@ def build_pmcc_grid(cfg: PmccConfig, chain: pd.DataFrame | None = None) -> tuple
                 )
                 if leaps_leg is None:
                     continue
-                for short_dte in cfg.short_dte_grid:
+                for short_dte in short_dte_grid:
                     for short_delta in cfg.short_delta_grid:
                         short_leg = pick_contract(
                             chain, short_dte, short_delta, dte_max=cfg.short_dte_max,

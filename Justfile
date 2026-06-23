@@ -225,6 +225,10 @@ pmcc-manage *ARGS:
 pmcc-monitor *ARGS:
     {{py}} pmcc_manage.py --monitor --quiet-ok {{ARGS}}
 
+# Compare 300 TSLA shares vs current PMCC stack under rip targets
+pmcc-compare-stock *ARGS:
+    {{py}} pmcc_stock_vs_pmcc.py {{ARGS}}
+
 # Clean generated plots
 clean:
     rm -f *.png
