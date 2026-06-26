@@ -21,6 +21,24 @@ def _today(value: date | None = None) -> date:
     return value or datetime.now(timezone.utc).date()
 
 
+def position_record_key(record: dict) -> str:
+    """Stable identity for pmcc_positions.yaml rows (same strike, different lots)."""
+    return "|".join([
+        str(record.get("ticker", "TSLA")).upper(),
+        f"{float(record.get('leaps_strike', 0)):g}",
+        str(record.get("leaps_expiration", ""))[:10],
+        f"{float(record.get('leaps_debit', 0)):g}",
+        str(int(record.get("contracts", 1))),
+        f"{float(record.get('short_strike', 0)):g}" if record.get("short_strike") is not None else "",
+        str(record.get("short_expiration", ""))[:10],
+    ])
+
+
+def position_remove_match(left: dict, right: dict) -> bool:
+    """True when two YAML records are the same tracked position."""
+    return position_record_key(left) == position_record_key(right)
+
+
 def next_earnings_date(*, today: date | None = None, staged_earnings: str | None = None) -> date | None:
     """Next TSLA earnings after today; staged date wins when still in the future."""
     today = _today(today)
@@ -163,7 +181,11 @@ def build_position_rows(statuses: list[dict], spot: float) -> list[dict]:
         p: PmccPair = s["pair"]
         rec = s["record"]
         contracts = s.get("contracts", 1)
-        diag = f"{int(p.leaps_strike)}/{int(p.short_strike) if not s.get('no_open_short') else '—'}"
+        short_label = "" if s.get("no_open_short") else f"/{int(p.short_strike)}"
+        diag = (
+            f"{int(p.leaps_strike)}{short_label} "
+            f"x{contracts} ${float(rec.get('leaps_debit', p.leaps_debit)):,.0f}"
+        )
 
         leaps_m = s["leaps_mark"]
         leaps_mark = leaps_m["price"] * 100

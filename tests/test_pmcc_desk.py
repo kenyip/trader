@@ -10,6 +10,8 @@ from pmcc.desk import (
     build_situation,
     compute_patience_expires,
     next_earnings_date,
+    position_record_key,
+    position_remove_match,
     select_next_short,
 )
 from pmcc.income import income_metrics, reentry_candidates
@@ -89,6 +91,27 @@ class PmccDeskTest(unittest.TestCase):
         self.assertEqual(out["source"], "staged")
         self.assertIn("hero", out)
         self.assertGreater(len(out.get("candidates", [])), 0)
+
+    def test_position_record_key_distinguishes_same_strike_lots(self) -> None:
+        a = {
+            "ticker": "TSLA",
+            "leaps_strike": 410,
+            "leaps_expiration": "2028-06-16",
+            "leaps_debit": 13000,
+            "contracts": 2,
+            "open_short": False,
+        }
+        b = {
+            "ticker": "TSLA",
+            "leaps_strike": 410,
+            "leaps_expiration": "2028-06-16",
+            "leaps_debit": 10800,
+            "contracts": 1,
+            "open_short": False,
+        }
+        self.assertNotEqual(position_record_key(a), position_record_key(b))
+        self.assertFalse(position_remove_match(a, b))
+        self.assertTrue(position_remove_match(a, dict(a)))
 
     def test_staged_entry_sparse_chain_uses_model_fallback(self) -> None:
         sparse = self.chain[self.chain["strike"] >= 500.0]

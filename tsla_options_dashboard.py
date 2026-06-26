@@ -228,7 +228,13 @@ tab_today, tab_research = st.tabs(["Today", "Research"])
 # ═══════════════════════════════════════════════════════════════════════════
 with tab_today:
     from pmcc.chain_data import chain_fetch_meta, format_chain_source
-    from pmcc.desk import build_position_rows, build_situation, select_next_short
+    from pmcc.desk import (
+        build_position_rows,
+        build_situation,
+        position_record_key,
+        position_remove_match,
+        select_next_short,
+    )
     from pmcc.positions import (
         PMCC_POSITIONS_PATH,
         check_pmcc_position,
@@ -314,17 +320,15 @@ with tab_today:
             width="stretch",
         )
 
-        seen_diag: set[str] = set()
         for i, s in enumerate(pmcc_statuses):
             p = s["pair"]
-            diag_key = f"{p.leaps_strike}"
-            if diag_key in seen_diag:
-                continue
-            seen_diag.add(diag_key)
+            rec = s["record"]
+            contracts = s.get("contracts", 1)
             icon = _PMCC_LEVEL_ICON.get(s["primary_level"], "•")
             label = (
                 f"{icon} {int(p.leaps_strike)}"
                 f"{'' if s.get('no_open_short') else f'/{int(p.short_strike)}'}"
+                f" x{contracts} ${float(rec.get('leaps_debit', p.leaps_debit)):,.0f}"
                 f" — playbook"
             )
             with st.expander(label, expanded=s["primary_level"] in ("alert", "warn")):
@@ -348,15 +352,10 @@ with tab_today:
                             })
                         st.dataframe(pd.DataFrame(clock_rows), hide_index=True, width="stretch")
                         st.caption(f"Reload mode: {clock.get('reload_mode', '—')}")
-                if st.button("Remove position", key=f"pmcc_rm_{i}"):
-                    rec = s["record"]
+                if st.button("Remove position", key=f"pmcc_rm_{position_record_key(rec)}"):
                     fresh = [
                         x for x in load_pmcc_positions()
-                        if not (
-                            float(x.get("leaps_strike", -1)) == float(rec.get("leaps_strike", -2))
-                            and str(x.get("leaps_expiration", ""))[:10]
-                            == str(rec.get("leaps_expiration", ""))[:10]
-                        )
+                        if not position_remove_match(x, rec)
                     ]
                     save_pmcc_positions(fresh)
                     st.rerun()
