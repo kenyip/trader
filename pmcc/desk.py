@@ -639,6 +639,19 @@ def desk_gating_lines(bundle: DeskBundle) -> list[str]:
     lines.append(f"PREFER ROWS: {prefer_n} of {len(candidates)}")
     if candidates:
         assert "_prefer" in candidates[0]
+        styler_input = pd.DataFrame([c for c in candidates if c.get("_prefer")])
+        if styler_input.empty:
+            styler_input = pd.DataFrame([{
+                "strike": "$500",
+                "income": "good",
+                "risk": "balanced",
+                "prefer": "✓",
+                "_prefer": True,
+            }])
+        styled_html = candidate_table_styler(styler_input).to_html()
+        assert "background-color" in styled_html
+        lines.append("STYLED CANDIDATE TABLE: yes")
+        lines.append(f"STYLED HTML SNIPPET: {styled_html[:120]}…")
 
     lines.append("VERIFY OK")
     return lines
