@@ -132,6 +132,13 @@ def load_pmcc_grid(preset: str, refresh: bool) -> tuple[float, pd.DataFrame, str
 
 
 @st.cache_data(ttl=1800)
+def load_call_chain(ticker: str, refresh: bool) -> tuple[float, pd.DataFrame]:
+    from pmcc.chain_data import fetch_call_chain
+
+    return fetch_call_chain(ticker, refresh=refresh)
+
+
+@st.cache_data(ttl=1800)
 def run_pmcc_daily_summary(
     preset: str, leaps_strike: float, short_strike: float, spot: float, refresh: bool,
 ) -> pd.DataFrame:
@@ -217,16 +224,18 @@ tab_today, tab_research = st.tabs(["Today", "Research"])
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# TODAY — open positions + new signals
+# TODAY — unified PMCC desk
 # ═══════════════════════════════════════════════════════════════════════════
 with tab_today:
-    from pmcc.chain_data import chain_fetch_meta
+    from pmcc.chain_data import chain_fetch_meta, format_chain_source
+    from pmcc.desk import build_position_rows, build_situation, select_next_short
     from pmcc.positions import (
         PMCC_POSITIONS_PATH,
         check_pmcc_position,
         load_pmcc_positions,
         save_pmcc_positions,
     )
+    from pmcc.staged_entry import build_tsla_staged_entry_plan
 
     c_pmcc_preset, c_pmcc_refresh = st.columns([1, 2])
     pmcc_preset = c_pmcc_preset.selectbox(
@@ -234,183 +243,123 @@ with tab_today:
     )
     pmcc_refresh = c_pmcc_refresh.checkbox("Refresh PMCC chain", value=False, key="today_pmcc_refresh")
 
+    spot_pmcc = None
+    plan_chain = pd.DataFrame()
+    chain_meta = None
     try:
-        spot_pmcc, grid_pmcc, chain_src = load_pmcc_grid(pmcc_preset, pmcc_refresh)
+        spot_pmcc, plan_chain = load_call_chain("TSLA", pmcc_refresh)
+        chain_meta = chain_fetch_meta()
+        _pmcc_market_banner(chain_meta)
+        st.caption(format_chain_source(chain_meta))
     except Exception as ex:
         st.error(f"PMCC chain load failed: {ex}")
-        spot_pmcc = None
-        grid_pmcc = pd.DataFrame()
 
-    if spot_pmcc is not None:
-        _pmcc_market_banner(chain_fetch_meta())
-        st.caption(chain_src)
-
-    st.subheader("PMCC entry picks")
-    scan_df, scan_label = load_pmcc_pair_scan(pmcc_preset, refresh=False)
-
-    if scan_df.empty:
-        st.info("No scan cached — run `just pmcc-scan --refresh` once (~5 min).")
-    elif spot_pmcc is None or grid_pmcc.empty:
-        st.warning("Chain unavailable — cannot quote live strikes.")
-    else:
-        st.caption(f"Ranked by path sim (scenario return + roll burden) · {scan_label}")
-
-        def _entry_row(rank_row: pd.Series, label: str) -> dict:
-            lk, sk = float(rank_row["leaps_strike"]), float(rank_row["short_strike"])
-            live = grid_pmcc[
-                (grid_pmcc.leaps_strike == lk) & (grid_pmcc.short_strike == sk)
-            ]
-            if live.empty:
-                return {
-                    "pick": label,
-                    "pair": rank_row["pair"],
-                    "leaps": f"${lk:.0f}",
-                    "short": f"${sk:.0f}",
-                    "leaps exp": "—",
-                    "short exp": "—",
-                    "net debit": f"${rank_row['net_debit']:,.0f}",
-                    "sim": f"{rank_row['path_sim_score']:+.1f}",
-                    "return": f"{rank_row.get('path_return_score', 0):+.1f}%",
-                    "roll": f"{rank_row.get('roll_tax_burden', 0):.1f}%",
-                    "bear": f"{rank_row['bear_worst']:+.1f}%",
-                }
-            g = live.iloc[0]
-            net = float(g.leaps_debit) - float(g.short_credit)
-            return {
-                "pick": label,
-                "pair": f"{int(lk)}/{int(sk)}",
-                "leaps": f"${lk:.0f} ({int(g.leaps_dte)}d)",
-                "short": f"${sk:.0f} ({int(g.short_dte)}d)",
-                "leaps exp": str(g.leaps_exp)[:10],
-                "short exp": str(g.short_exp)[:10],
-                "net debit": f"${net:,.0f}",
-                "return %": f"{rank_row.get('path_return_score', 0):+.1f}%",
-                "roll %": f"{rank_row.get('roll_tax_burden', 0):.1f}%",
-                "bear %": f"{rank_row['bear_worst']:+.1f}%",
-            }
-
-        picks: list[dict] = []
-        top = scan_df.head(3)
-        for _, row in top.iterrows():
-            picks.append(_entry_row(row, f"#{int(row['rank'])}"))
-
-        if "path_return_score" in scan_df.columns:
-            ret = scan_df.loc[scan_df["path_return_score"].idxmax()]
-            if int(ret["rank"]) > 3:
-                picks.append(_entry_row(ret, f"#{int(ret['rank'])} best return"))
-        st.dataframe(pd.DataFrame(picks), hide_index=True, width="stretch")
-
-        best = scan_df.iloc[0]
-        st.success(
-            f"**Primary:** {best['pair']} — "
-            f"${best['net_debit']:,.0f} net debit · "
-            f"sim {best['path_sim_score']:+.1f} · "
-            f"return {best.get('path_return_score', 0):+.1f}% · "
-            f"roll burden {best.get('roll_tax_burden', 0):.1f}% · "
-            f"bear {best['bear_worst']:+.1f}% · "
-            f"see **Research** tab for width/DTE explorer"
-        )
-
-    st.subheader("PMCC diagonals")
     pmcc_records = load_pmcc_positions()
     pmcc_statuses: list[dict] = []
+    staged = None
+
+    if spot_pmcc is not None:
+        try:
+            staged = build_tsla_staged_entry_plan(pmcc_records, plan_chain, spot=spot_pmcc)
+        except Exception as ex:
+            st.warning(f"Staged plan unavailable: {ex}")
+        for r in pmcc_records:
+            try:
+                pmcc_statuses.append(check_pmcc_position(r, spot_pmcc, preset=pmcc_preset))
+            except Exception:
+                pass
+
+    situation = build_situation(
+        spot=spot_pmcc or 0.0,
+        chain_age_minutes=chain_meta.age_minutes if chain_meta else None,
+        statuses=pmcc_statuses,
+        staged=staged,
+    )
+
+    # ── Block 1: Situation bar ────────────────────────────────────────────
+    age_caption = (
+        f"chain {situation['chain_age_minutes']:.0f}m old"
+        if situation.get("chain_age_minutes") is not None else "chain age —"
+    )
+    s1, s2, s3, s4 = st.columns(4)
+    s1.metric("TSLA spot", f"${situation['spot']:.2f}" if spot_pmcc else "—", age_caption)
+    icon = _PMCC_LEVEL_ICON.get(situation["primary_level"], "•")
+    s2.metric("Next action", f"{icon} {situation['primary_action']}")
+    s3.metric("Patience", situation["patience_budget"])
+    s4.metric("Catalyst", situation["catalyst"][:40] + ("…" if len(situation["catalyst"]) > 40 else ""))
+    if situation["primary_detail"]:
+        st.caption(situation["primary_detail"])
+    expires = situation["patience_expires"]
+    if expires.get("label") and expires["label"] != "—":
+        st.markdown(f"**{expires['label']}** ({expires.get('explanation', '')})")
+
+    # ── Block 2: MY POSITIONS ───────────────────────────────────────────────
+    st.subheader("MY POSITIONS")
 
     if not pmcc_records:
         st.caption(f"No diagonals in `{PMCC_POSITIONS_PATH.name}`.")
-        with st.expander("Add PMCC diagonal"):
-            with st.form("add_pmcc_empty", clear_on_submit=True):
-                c1, c2 = st.columns(2)
-                in_leaps_k = c1.number_input("LEAPS strike", step=5.0, value=380.0, key="add_leaps_k_e")
-                in_short_k = c2.number_input("Short strike", step=5.0, value=490.0, key="add_short_k_e")
-                c3, c4 = st.columns(2)
-                in_leaps_exp = c3.date_input("LEAPS exp", key="add_leaps_exp_e")
-                in_short_exp = c4.date_input("Short exp", key="add_short_exp_e")
-                c5, c6 = st.columns(2)
-                in_leaps_debit = c5.number_input("LEAPS debit $", step=50.0, value=11000.0, key="add_leaps_d_e")
-                in_short_credit = c6.number_input("Short credit $", step=25.0, value=700.0, key="add_short_c_e")
-                if st.form_submit_button("Add"):
-                    if spot_pmcc is None:
-                        st.warning("PMCC chain not loaded — retry or uncheck Refresh.")
-                    else:
-                        save_pmcc_positions([{
-                            "ticker": "TSLA",
-                            "leaps_strike": float(in_leaps_k),
-                            "leaps_expiration": str(in_leaps_exp),
-                            "leaps_debit": float(in_leaps_debit),
-                            "short_strike": float(in_short_k),
-                            "short_expiration": str(in_short_exp),
-                            "short_credit": float(in_short_credit),
-                            "spot_at_entry": spot_pmcc,
-                            "contracts": 1,
-                        }])
-                        st.rerun()
     elif spot_pmcc is None:
-        st.warning("PMCC chain unavailable — cannot mark positions.")
+        st.warning("Chain unavailable — cannot mark positions.")
     else:
-        table_rows = []
-        for r in pmcc_records:
-            try:
-                s = check_pmcc_position(r, spot_pmcc, preset=pmcc_preset)
-                pmcc_statuses.append(s)
-                p = s["pair"]
-                icon = _PMCC_LEVEL_ICON.get(s["primary_level"], "•")
-                table_rows.append({
-                    "pair": f"{int(p.leaps_strike)}/{int(p.short_strike)}",
-                    "width": f"${int(s['spread_width'])}",
-                    "short_dte": p.short_dte,
-                    "pnl/ct": f"${s['net_pnl']:+,.0f}",
-                    "pnl total": f"${s['net_pnl_total']:+,.0f}",
-                    "action": f"{icon} {s['primary_action']}",
-                    "roll to": f"~${s['roll_target']:.0f}",
-                })
-            except Exception as ex:
-                table_rows.append({
-                    "pair": f"{r.get('leaps_strike', '?')}/{r.get('short_strike', '?')}",
-                    "width": "—", "short_dte": "—",
-                    "pnl/ct": "—", "pnl total": "—",
-                    "action": f"❌ {ex}", "roll to": "—",
-                })
-        st.dataframe(pd.DataFrame(table_rows), hide_index=True, width="stretch")
+        pos_rows = build_position_rows(pmcc_statuses, spot_pmcc)
+        display_cols = [
+            "diagonal", "leg", "strike_exp_dte", "entry_cost", "mark",
+            "leg_pnl", "net_pnl", "delta", "per_day", "upside_pct", "status",
+        ]
+        st.dataframe(
+            pd.DataFrame(pos_rows)[display_cols],
+            hide_index=True,
+            width="stretch",
+        )
 
+        seen_diag: set[str] = set()
         for i, s in enumerate(pmcc_statuses):
-            if s["primary_level"] not in ("alert", "warn"):
-                continue
             p = s["pair"]
+            diag_key = f"{p.leaps_strike}"
+            if diag_key in seen_diag:
+                continue
+            seen_diag.add(diag_key)
             icon = _PMCC_LEVEL_ICON.get(s["primary_level"], "•")
-            with st.expander(
-                f"{icon} {int(p.leaps_strike)}/{int(p.short_strike)} — {s['primary_action']}",
-                expanded=True,
-            ):
+            label = (
+                f"{icon} {int(p.leaps_strike)}"
+                f"{'' if s.get('no_open_short') else f'/{int(p.short_strike)}'}"
+                f" — playbook"
+            )
+            with st.expander(label, expanded=s["primary_level"] in ("alert", "warn")):
                 for item in s["checks"]:
                     lvl = item["level"]
-                    if lvl == "alert":
-                        st.error(f"**{item['rule']}** — {item['detail']}")
-                    elif lvl == "warn":
-                        st.warning(f"**{item['rule']}** — {item['detail']}")
-                    elif lvl == "info":
-                        st.info(f"**{item['rule']}** — {item['detail']}")
-                    else:
-                        st.success(f"**{item['rule']}** — {item['detail']}")
-                if st.button("Remove", key=f"pmcc_rm_{i}"):
+                    fn = {"alert": st.error, "warn": st.warning, "info": st.info}.get(lvl, st.success)
+                    fn(f"**{item['rule']}** — {item['detail']}")
+                if s.get("no_open_short"):
+                    clock = s.get("closed_short_clock")
+                    if clock:
+                        st.markdown("**Premium clock (closed shorts)**")
+                        clock_rows = []
+                        for key in ("floor", "good", "strong"):
+                            t = clock["targets"][key]
+                            clock_rows.append({
+                                "tier": key,
+                                "target $/d": f"${t['portfolio_target_daily']:.0f}",
+                                "days covered": f"{t['portfolio_days_covered']:.1f}",
+                                "wait budget": f"{t['portfolio_wait_days']:.1f}d",
+                                "until": t.get("portfolio_budget_until", "—"),
+                            })
+                        st.dataframe(pd.DataFrame(clock_rows), hide_index=True, width="stretch")
+                        st.caption(f"Reload mode: {clock.get('reload_mode', '—')}")
+                if st.button("Remove position", key=f"pmcc_rm_{i}"):
                     rec = s["record"]
                     fresh = [
                         x for x in load_pmcc_positions()
                         if not (
                             float(x.get("leaps_strike", -1)) == float(rec.get("leaps_strike", -2))
-                            and float(x.get("short_strike", -1)) == float(rec.get("short_strike", -2))
-                            and str(x.get("short_expiration", ""))[:10]
-                            == str(rec.get("short_expiration", ""))[:10]
+                            and str(x.get("leaps_expiration", ""))[:10]
+                            == str(rec.get("leaps_expiration", ""))[:10]
                         )
                     ]
                     save_pmcc_positions(fresh)
                     st.rerun()
 
-        with st.expander("All PMCC positions & add/remove"):
-            for i, s in enumerate(pmcc_statuses):
-                p = s["pair"]
-                st.markdown(f"**{int(p.leaps_strike)}/{int(p.short_strike)}** — ${s['net_pnl']:+,.0f}/ct")
-                for item in s["checks"]:
-                    st.caption(f"{item['rule']}: {item['detail']}")
+        with st.expander("Add / edit PMCC positions"):
             with st.form("add_pmcc_position", clear_on_submit=True):
                 c1, c2, c3 = st.columns(3)
                 in_leaps_k = c1.number_input("LEAPS strike", step=5.0, value=380.0)
@@ -438,67 +387,107 @@ with tab_today:
                         }])
                         st.rerun()
 
-    st.markdown("---")
-    st.subheader("Short premium positions")
-    records = load_positions()
-    all_statuses: list[dict] = []
+    # ── Block 3: NEXT SHORT TO SELL ───────────────────────────────────────
+    st.subheader("NEXT SHORT TO SELL")
 
-    if not records:
-        st.caption(f"No positions in `{POSITIONS_PATH.name}`.")
+    if spot_pmcc is None:
+        st.warning("Chain unavailable — cannot quote candidates.")
     else:
-        rows_for_table = []
-        for r in records:
-            try:
-                s = check_position(r)
-                all_statuses.append(s)
+        next_short = select_next_short(
+            spot=spot_pmcc,
+            chain=plan_chain,
+            records=pmcc_records,
+            statuses=pmcc_statuses,
+            staged=staged,
+            preset=pmcc_preset,
+        )
+        st.success(f"**{next_short['hero']}**")
+        st.caption(f"Source: {next_short.get('source', '—')}")
+        cand_df = pd.DataFrame(next_short.get("candidates") or [])
+        if not cand_df.empty:
+            show_cols = [c for c in ["pick", "strike", "exp", "bid", "$/day", "delta", "upside %", "income", "risk"] if c in cand_df.columns]
+            st.dataframe(cand_df[show_cols], hide_index=True, width="stretch")
+        if staged:
+            with st.expander("Rip management levels & staged packages"):
+                st.dataframe(pd.DataFrame(staged.get("management") or []), hide_index=True, width="stretch")
+                pkg_rows = []
+                for key in ("initial", "higher", "add_on", "wider_add_on"):
+                    p = (staged.get("packages") or {}).get(key)
+                    if p:
+                        pkg_rows.append({
+                            "stage": p["label"],
+                            "legs": p["legs"],
+                            "bid credit": f"${p['bid_credit']:,.0f}",
+                            "bid $/day": f"${p['bid_per_day']:.2f}",
+                            "status": p.get("status", "—"),
+                        })
+                if pkg_rows:
+                    st.dataframe(pd.DataFrame(pkg_rows), hide_index=True, width="stretch")
+                events = staged.get("events") or {}
+                if events.get("headline_risk"):
+                    st.caption(events["headline_risk"])
+
+    # ── Footer: wheel strategy (separate) ───────────────────────────────────
+    with st.expander("Wheel / short puts (separate)"):
+        st.caption("Standalone short-premium strategy — not PMCC diagonals.")
+        records = load_positions()
+        all_statuses: list[dict] = []
+
+        if not records:
+            st.caption(f"No positions in `{POSITIONS_PATH.name}`.")
+        else:
+            rows_for_table = []
+            for r in records:
+                try:
+                    s = check_position(r)
+                    all_statuses.append(s)
+                    pos = s["position"]
+                    action = _DECISION_ACTION.get(s["exit_decision"], "HOLD")
+                    rows_for_table.append({
+                        "ticker": s["ticker"],
+                        "side": pos.side,
+                        "strike": f"${pos.strike:.2f}",
+                        "exp": pos.expiration.date(),
+                        "dte": s["dte_remaining"],
+                        "pnl/sh": f"${s['pnl_per_share']:+.2f}",
+                        "action": "🚨 " + action if s["exit_decision"] else "✅ HOLD",
+                    })
+                except Exception as e:
+                    rows_for_table.append({
+                        "ticker": r.get("ticker", "?"),
+                        "side": r.get("side", "?"),
+                        "strike": r.get("strike", "?"),
+                        "exp": r.get("expiration", "?"),
+                        "dte": "—", "pnl/sh": "—",
+                        "action": f"❌ {e}",
+                    })
+            st.dataframe(pd.DataFrame(rows_for_table), hide_index=True, width="stretch")
+
+            for i, s in enumerate(all_statuses):
+                if not s["exit_decision"]:
+                    continue
                 pos = s["position"]
-                action = _DECISION_ACTION.get(s["exit_decision"], "HOLD")
-                rows_for_table.append({
-                    "ticker": s["ticker"],
-                    "side": pos.side,
-                    "strike": f"${pos.strike:.2f}",
-                    "exp": pos.expiration.date(),
-                    "dte": s["dte_remaining"],
-                    "pnl/sh": f"${s['pnl_per_share']:+.2f}",
-                    "action": "🚨 " + action if s["exit_decision"] else "✅ HOLD",
-                })
-            except Exception as e:
-                rows_for_table.append({
-                    "ticker": r.get("ticker", "?"),
-                    "side": r.get("side", "?"),
-                    "strike": r.get("strike", "?"),
-                    "exp": r.get("expiration", "?"),
-                    "dte": "—", "pnl/sh": "—",
-                    "action": f"❌ {e}",
-                })
-        st.dataframe(pd.DataFrame(rows_for_table), hide_index=True, width="stretch")
+                with st.expander(
+                    f"🚨 {s['ticker']} {pos.side} ${pos.strike:.2f} — "
+                    f"{_DECISION_ACTION.get(s['exit_decision'], '')}",
+                ):
+                    mark = s["mark"]
+                    pnl_share = s["pnl_per_share"]
+                    st.metric("P/L", f"${pnl_share:+.2f}/sh", f"{s['pnl_pct_credit']:+.1f}% credit")
+                    st.metric("Δ", f"{mark['delta']:+.3f}")
+                    if st.button("Remove", key=f"close_{i}"):
+                        fresh = [
+                            r for r in load_positions()
+                            if not (
+                                r["ticker"].upper() == s["ticker"].upper()
+                                and float(r["strike"]) == pos.strike
+                                and str(r["expiration"]) == str(pos.expiration.date())
+                            )
+                        ]
+                        save_positions(fresh)
+                        st.rerun()
 
-        for i, s in enumerate(all_statuses):
-            if not s["exit_decision"]:
-                continue
-            pos = s["position"]
-            with st.expander(
-                f"🚨 {s['ticker']} {pos.side} ${pos.strike:.2f} — "
-                f"{_DECISION_ACTION.get(s['exit_decision'], '')}",
-                expanded=True,
-            ):
-                mark = s["mark"]
-                pnl_share = s["pnl_per_share"]
-                st.metric("P/L", f"${pnl_share:+.2f}/sh", f"{s['pnl_pct_credit']:+.1f}% credit")
-                st.metric("Δ", f"{mark['delta']:+.3f}")
-                if st.button("Remove", key=f"close_{i}"):
-                    fresh = [
-                        r for r in load_positions()
-                        if not (
-                            r["ticker"].upper() == s["ticker"].upper()
-                            and float(r["strike"]) == pos.strike
-                            and str(r["expiration"]) == str(pos.expiration.date())
-                        )
-                    ]
-                    save_positions(fresh)
-                    st.rerun()
-
-        with st.expander("Add short premium position"):
+        with st.expander("Add short premium position", expanded=False):
             with st.form("add_position", clear_on_submit=True):
                 c1, c2, c3 = st.columns(3)
                 in_ticker = c1.selectbox("Ticker", ["TSLA", "TSLL"])
@@ -518,31 +507,28 @@ with tab_today:
                     }])
                     st.rerun()
 
-    st.markdown("---")
-    st.subheader("New short-premium trades")
-    col_tsla, col_tsll = st.columns(2, gap="large")
-
-    for ticker, col in [("TSLA", col_tsla), ("TSLL", col_tsll)]:
-        with col:
-            rec = make_recommendation(ticker)
-            st.markdown(f"**{ticker}** ${rec['spot']:.2f} · {rec['date'].date()}")
-
-            if rec["action"] == "STAND_ASIDE":
-                st.warning(rec["reason"])
-            else:
-                side = "PUT" if "PUT" in rec["action"] else "CALL"
-                st.success(
-                    f"SELL {side} ${rec['strike']:.2f} · "
-                    f"{rec['expiration'].date()} ({rec['dte']}d) · "
-                    f"~${rec['estimated_credit']*100:,.0f}/ct"
-                )
-                with st.expander("Exit targets"):
-                    e = rec["exit_targets"]
-                    st.dataframe(pd.DataFrame([
-                        {"rung": "profit", "level": f"≤ ${e['profit_target_buyback']:.2f}"},
-                        {"rung": "max loss", "level": f"≥ ${e['max_loss_buyback']:.2f}"},
-                        {"rung": "delta", "level": f"|Δ| > {e['delta_breach']}"},
-                    ]), hide_index=True, width="stretch")
+        st.markdown("**New short-premium signals**")
+        col_tsla, col_tsll = st.columns(2, gap="large")
+        for ticker, col in [("TSLA", col_tsla), ("TSLL", col_tsll)]:
+            with col:
+                rec = make_recommendation(ticker)
+                st.markdown(f"**{ticker}** ${rec['spot']:.2f} · {rec['date'].date()}")
+                if rec["action"] == "STAND_ASIDE":
+                    st.warning(rec["reason"])
+                else:
+                    side = "PUT" if "PUT" in rec["action"] else "CALL"
+                    st.success(
+                        f"SELL {side} ${rec['strike']:.2f} · "
+                        f"{rec['expiration'].date()} ({rec['dte']}d) · "
+                        f"~${rec['estimated_credit']*100:,.0f}/ct"
+                    )
+                    with st.expander("Exit targets"):
+                        e = rec["exit_targets"]
+                        st.dataframe(pd.DataFrame([
+                            {"rung": "profit", "level": f"≤ ${e['profit_target_buyback']:.2f}"},
+                            {"rung": "max loss", "level": f"≥ ${e['max_loss_buyback']:.2f}"},
+                            {"rung": "delta", "level": f"|Δ| > {e['delta_breach']}"},
+                        ]), hide_index=True, width="stretch")
 
 
 # ═══════════════════════════════════════════════════════════════════════════

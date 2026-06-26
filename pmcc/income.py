@@ -131,6 +131,28 @@ def income_metrics(
     }
 
 
+def _chain_bid(chain, expiration: str | None, strike: float) -> dict | None:
+    if chain is None or getattr(chain, "empty", True):
+        return None
+    exp = str(expiration)[:10] if expiration else None
+    sub = chain[chain["strike"].astype(float) == float(strike)]
+    if exp:
+        sub = sub[sub["expiration"].astype(str).str[:10] == exp]
+    if sub.empty:
+        return None
+    row = sub.iloc[0]
+    bid = float(row.get("bid") or 0.0)
+    if bid <= 0:
+        return None
+    return {
+        "bid_credit": bid * 100,
+        "delta": float(row.get("delta") or 0.0),
+        "iv": float(row.get("iv") or 0.0),
+        "expiration": str(row.get("expiration", ""))[:10],
+        "dte": int(row.get("dte") or 0),
+    }
+
+
 def reentry_candidates(
     spot_now: float,
     pair: PmccPair,
@@ -138,8 +160,10 @@ def reentry_candidates(
     dte: int = 60,
     iv: float | None = None,
     r: float = 0.04,
+    chain=None,
+    expiration: str | None = None,
 ) -> list[dict]:
-    """Model next-short candidates around the current safe range."""
+    """Next-short candidates; uses live chain bid when available, else BSM model."""
     iv = float(iv or pair.short_iv or 0.45)
     strikes = sorted(set(
         [round(x / 5) * 5 for x in [spot_now * m for m in (1.15, 1.18, 1.20, 1.23, 1.25, 1.30)]]
@@ -149,14 +173,25 @@ def reentry_candidates(
     for strike in strikes:
         if strike <= pair.leaps_strike:
             continue
-        T = dte / 365.0
-        try:
-            price = pricing.price(spot_now, strike, T, iv, "call", r=r) * 100
-            delta = pricing.delta(spot_now, strike, T, iv, "call", r=r)
-        except Exception:
-            continue
+        live = _chain_bid(chain, expiration, strike)
+        use_dte = int(live["dte"]) if live and live.get("dte") else dte
+        use_dte = max(use_dte, 1)
+        if live:
+            price = live["bid_credit"]
+            delta = live["delta"]
+            exp = live.get("expiration") or expiration
+            if live.get("iv"):
+                iv = live["iv"]
+        else:
+            T = use_dte / 365.0
+            try:
+                price = pricing.price(spot_now, strike, T, iv, "call", r=r) * 100
+                delta = pricing.delta(spot_now, strike, T, iv, "call", r=r)
+            except Exception:
+                continue
+            exp = expiration
         upside_pct = (strike / spot_now - 1) * 100
-        daily = price / dte
+        daily = price / use_dte
         if upside_pct < 15:
             risk = "too tight"
         elif upside_pct < 20:
@@ -173,14 +208,19 @@ def reentry_candidates(
             income = "good"
         else:
             income = "strong"
-        out.append({
+        row = {
             "strike": float(strike),
-            "dte": dte,
+            "dte": use_dte,
             "credit": price,
+            "bid_credit": price if live else None,
             "daily": daily,
             "delta": delta,
             "upside_pct": upside_pct,
             "risk": risk,
             "income": income,
-        })
+            "source": "chain" if live else "model",
+        }
+        if exp:
+            row["expiration"] = exp
+        out.append(row)
     return out
