@@ -26,9 +26,8 @@ from pmcc.scenarios import PmccPair
 def _get_spot(ticker: str = "TSLA") -> float:
     try:
         from pmcc.chain_data import fetch_call_chain
-        chain = fetch_call_chain(ticker)
-        if chain and "spot" in chain:
-            return float(chain["spot"])
+        spot, _chain = fetch_call_chain(ticker)
+        return float(spot)
     except Exception:
         pass
     try:
@@ -78,25 +77,101 @@ def format_reentry_section(s: dict) -> str:
     p = s["pair"]
     spot = s["spot_now"]
     rows = reentry_candidates(spot, p, dte=int(p.short_dte if 45 <= p.short_dte <= 75 else 60), iv=p.short_iv)
-    rows = [r for r in rows if 470 <= r["strike"] <= 550]
+    lo = max(p.leaps_strike + 5, spot * 1.05)
+    hi = spot * 1.35
+    rows = [r for r in rows if lo <= r["strike"] <= hi]
     lines = []
     lines.append("  NEXT SHORT CANDIDATES AFTER HARVEST")
     lines.append("    Aim: reload premium, but do not choke upside. Prefer carry/good income with balanced/wide risk.")
+    floor = float(s["record"].get("income_floor_daily", 10.0))
+    good = float(s["record"].get("income_good_daily", 15.0))
+    strong = float(s["record"].get("income_strong_daily", 20.0))
     lines.append(f"    {'strike':>6}  {'credit':>8}  {'$/day':>6}  {'delta':>5}  {'upside':>7}  {'income':>8}  {'risk':>10}")
     lines.append(f"    {'-' * 62}")
     for r in rows:
+        if r["daily"] >= strong:
+            income = "strong"
+        elif r["daily"] >= good:
+            income = "good"
+        elif r["daily"] >= floor:
+            income = "carry"
+        else:
+            income = "low"
         marker = ""
-        if r["income"] in {"carry", "good", "strong"} and r["risk"] in {"balanced", "wide"}:
+        if income in {"carry", "good", "strong"} and r["risk"] in {"balanced", "wide"}:
             marker = "  <-- candidate"
         lines.append(
             f"    ${r['strike']:>5.0f}  ${r['credit']:>7,.0f}  ${r['daily']:>5.1f}  "
-            f"{r['delta']:>5.2f}  {r['upside_pct']:>6.1f}%  {r['income']:>8}  {r['risk']:>10}{marker}"
+            f"{r['delta']:>5.2f}  {r['upside_pct']:>6.1f}%  {income:>8}  {r['risk']:>10}{marker}"
         )
     lines.append("")
     return "\n".join(lines)
 
 
+def format_leaps_only_detail(s: dict) -> str:
+    p = s["pair"]
+    spot = s["spot_now"]
+    contracts = s["contracts"]
+    leaps_mark = s["leaps_mark"]["price"] * 100
+    realized_short_total = float(s.get("realized_short_total", 0.0))
+    clock = s.get("closed_short_clock") or {}
+    lines = []
+    lines.append(f"  {'=' * 78}")
+    lines.append(f"  {s['record'].get('ticker', 'TSLA')}  LEAPS ONLY  ${p.leaps_strike:.0f} {p.leaps_dte}d  |  Spot ${spot:,.2f}")
+    lines.append(f"  {'=' * 78}")
+    lines.append("")
+    lines.append(f"  POSITION MARKS ({contracts} long LEAPS contract{'s' if contracts > 1 else ''}, no open short)")
+    lines.append(f"    LEAPS ${p.leaps_strike:.0f}: mark ${leaps_mark:,.0f}  "
+                 f"(debit ${p.leaps_debit:,.0f}, P/L ${s['leaps_leg_pnl']:+,.0f}/long)")
+    lines.append(f"    Closed-short realized P/L: ${realized_short_total:+,.0f} total")
+    lines.append(f"    NET P/L: ${s['net_pnl']:+,.0f}/long  (${s['net_pnl_total']:+,.0f} total incl. closed shorts)")
+    lines.append("")
+    if clock:
+        lines.append("  CLOSED-SHORT PREMIUM CLOCK")
+        lines.append(
+            f"    Banked ${clock['realized']:,.0f} from {clock['short_contracts']} closed short contract"
+            f"{'s' if clock['short_contracts'] != 1 else ''}; {clock['days_since_open']} day(s) since first open, "
+            f"{clock['days_since_close']} day(s) since close."
+        )
+        lines.append(
+            f"    Average so far: ${clock['avg_since_open']:.1f}/day total, "
+            f"${clock['avg_per_long_since_open']:.1f}/day per long LEAPS."
+        )
+        lines.append("    Budget remaining before the bank falls below target:")
+        for key in ("strong", "good", "floor"):
+            t = clock["targets"][key]
+            lines.append(
+                f"      {key:>6}: portfolio target ${t['portfolio_target_daily']:.0f}/day "
+                f"(${t['target_per_contract']:.0f}/day x {clock['long_contracts']} longs) — "
+                f"covers {t['portfolio_days_covered']:.1f} total days; "
+                f"wait budget {t['portfolio_wait_days']:.1f}d (until ~{t['portfolio_budget_until']})"
+            )
+        one = clock["targets"]["good"]
+        lines.append(
+            f"    One-short lens: at ${one['target_per_contract']:.0f}/day, the closed short alone covers "
+            f"{one['one_short_days_covered']:.1f} total days; wait budget {one['one_short_wait_days']:.1f}d."
+        )
+        lines.append(f"    Reload mode: {clock['reload_mode']}")
+        lines.append("")
+    lines.append("  NEXT SHORT CANDIDATES")
+    lines.append("    Aim: reload income, but avoid choking upside. These are model quotes, not live orders.")
+    lines.append(format_reentry_section(s))
+    lines.append("  ACTIVE TRIGGERS")
+    for check in s["checks"]:
+        level_icon = {"alert": "🔴", "warn": "🟡", "ok": "🟢", "info": "🔵"}.get(check["level"], "⚪")
+        lines.append(f"    {level_icon} [{check['level'].upper()}] {check['rule']}")
+        lines.append(f"       {check['detail']}")
+    lines.append("")
+    lines.append(f"  >>> NEXT ACTION: [{s['primary_level'].upper()}] {s['primary_action']}")
+    lines.append(f"      {s['primary_detail']}")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def format_position_detail(s: dict) -> str:
+    if s.get("no_open_short"):
+        return format_leaps_only_detail(s)
+
     p = s["pair"]
     pol = s["policy"]
     spot = s["spot_now"]
@@ -163,6 +238,32 @@ def format_monitor(rows: list[dict], *, quiet_ok: bool = False) -> str:
     lines = []
     for s in rows:
         p = s["pair"]
+        if s.get("no_open_short"):
+            actionable = True
+            if quiet_ok and not actionable:
+                continue
+            status = "ACTION"
+            ticker = s['record'].get('ticker', 'TSLA')
+            lines.append(
+                f"PMCC {status}: {ticker} LEAPS {int(p.leaps_strike)} x{s['contracts']} "
+                f"spot ${s['spot_now']:.2f} | NO OPEN SHORT | P/L ${s['net_pnl']:+,.0f}/long"
+            )
+            lines.append(f"  {s['primary_detail']}")
+            lines.append(
+                f"  closed-short realized P/L ${float(s.get('realized_short_total', 0.0)):+,.0f}; "
+                f"LEAPS mark ${s['leaps_mark']['price']*100:,.0f} vs debit ${p.leaps_debit:,.0f}"
+            )
+            clock = s.get("closed_short_clock") or {}
+            if clock:
+                good = clock["targets"]["good"]
+                lines.append(
+                    f"  premium clock: ${clock['avg_since_open']:.1f}/d total since open; "
+                    f"good portfolio target ${good['portfolio_target_daily']:.0f}/d; "
+                    f"wait budget {good['portfolio_wait_days']:.1f}d"
+                )
+            lines.append("")
+            continue
+
         c = s["carry"]
         actionable = (
             s["primary_level"] in {"alert", "warn"}
@@ -172,8 +273,9 @@ def format_monitor(rows: list[dict], *, quiet_ok: bool = False) -> str:
         if quiet_ok and not actionable:
             continue
         status = "ACTION" if actionable else "OK"
+        ticker = s['record'].get('ticker', 'TSLA')
         lines.append(
-            f"PMCC {status}: TSLA {int(p.leaps_strike)}/{int(p.short_strike)} "
+            f"PMCC {status}: {ticker} {int(p.leaps_strike)}/{int(p.short_strike)} "
             f"spot ${s['spot_now']:.2f} | {s['primary_action']} | P/L ${s['net_pnl']:+,.0f}/ct"
         )
         lines.append(f"  {s['primary_detail']}")
@@ -192,6 +294,11 @@ def format_monitor(rows: list[dict], *, quiet_ok: bool = False) -> str:
 
 def format_what_if(record: dict, base_spot: float, *, preset: str = "managed") -> str:
     """Show what happens at different spot levels for this position."""
+    if record.get("open_short", True) is False:
+        return (
+            f"  WHAT-IF SCENARIO TABLE: {record.get('ticker', 'TSLA')} LEAPS ONLY\n"
+            f"  No open short is recorded, so diagonal what-if is skipped. Reload a short first to get roll/harvest levels.\n"
+        )
     from pmcc.positions import record_to_pair, _call_mark
     from pmcc.playbook import _roll_target
     from pmcc.playthrough import POLICY_BY_PRESET
@@ -262,23 +369,17 @@ def main():
     ap.add_argument("--preset", default="managed")
     args = ap.parse_args()
 
-    # Get spot
-    if args.spot:
-        spot = args.spot
-    else:
-        spot = _get_spot()
-        if spot == 0:
-            print("Could not fetch TSLA spot price. Use --spot to override.")
-            sys.exit(1)
-
-    if not (args.monitor and args.quiet_ok):
-        print(f"\n  TSLA spot: ${spot:,.2f}  |  preset: {args.preset}")
-        print(f"  {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}")
-        print()
-
     # Check positions
     positions = load_pmcc_positions()
     if not positions:
+        spot = args.spot if args.spot else _get_spot()
+        if spot == 0:
+            print("Could not fetch TSLA spot price. Use --spot to override.")
+            sys.exit(1)
+        if not (args.monitor and args.quiet_ok):
+            print(f"\n  TSLA spot: ${spot:,.2f}  |  preset: {args.preset}")
+            print(f"  {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}")
+            print()
         print(f"  No positions found in {PMCC_POSITIONS_PATH}")
         print(f"  Create one with: just pmcc-positions example")
         print()
@@ -298,9 +399,25 @@ def main():
             print("\n  Use --triggers with a position to see the full playbook.")
         return
 
+    if not (args.monitor and args.quiet_ok):
+        if args.spot:
+            print(f"\n  spot override: ${args.spot:,.2f} for all positions  |  preset: {args.preset}")
+        else:
+            tickers = sorted({str(r.get('ticker', 'TSLA')) for r in positions})
+            spots = {t: _get_spot(t) for t in tickers}
+            spot_line = ", ".join(f"{t} ${v:,.2f}" for t, v in spots.items())
+            print(f"\n  Spots: {spot_line}  |  preset: {args.preset}")
+        print(f"  {datetime.now().strftime('%Y-%m-%d %H:%M UTC')}")
+        print()
+
     # Check each position
     results = []
     for record in positions:
+        ticker = str(record.get("ticker", "TSLA"))
+        spot = args.spot if args.spot else _get_spot(ticker)
+        if spot == 0:
+            print(f"Could not fetch {ticker} spot price. Use --spot to override.")
+            sys.exit(1)
         result = check_pmcc_position(record, spot, preset=args.preset)
         results.append(result)
 
