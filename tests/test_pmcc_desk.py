@@ -12,7 +12,8 @@ from pmcc.desk import (
     next_earnings_date,
     select_next_short,
 )
-from pmcc.income import reentry_candidates
+from pmcc.income import income_metrics, reentry_candidates
+from pmcc.positions import check_leaps_only_position
 from pmcc.scenarios import PmccPair
 from pmcc.staged_entry import build_tsla_staged_entry_plan
 
@@ -88,6 +89,54 @@ class PmccDeskTest(unittest.TestCase):
         self.assertEqual(out["source"], "staged")
         self.assertIn("hero", out)
         self.assertGreater(len(out.get("candidates", [])), 0)
+
+    def test_staged_entry_sparse_chain_uses_model_fallback(self) -> None:
+        sparse = self.chain[self.chain["strike"] >= 500.0]
+        plan = build_tsla_staged_entry_plan(self.records, sparse, spot=375.0, today=date(2026, 6, 25))
+        self.assertIn("packages", plan)
+        self.assertGreater(plan["packages"]["initial"]["bid_credit"], 0)
+
+    def test_income_metrics_carry_has_wait_and_net_daily_fields(self) -> None:
+        record = {
+            "entry_date": "2026-06-01",
+            "short_open_date": "2026-06-01",
+            "short_open_dte": 60,
+            "income_floor_daily": 10.0,
+            "income_good_daily": 15.0,
+            "income_strong_daily": 20.0,
+        }
+        carry = income_metrics(record, self.pair, 375.0, short_mark=350.0, leaps_mark=13000.0)
+        for key in (
+            "wait_floor_days_after_harvest",
+            "wait_good_days_after_harvest",
+            "net_current_profit_daily",
+            "net_full_credit_daily",
+        ):
+            self.assertIn(key, carry)
+
+    def test_leaps_only_status_has_closed_short_clock(self) -> None:
+        record = {
+            "ticker": "TSLA",
+            "leaps_strike": 410,
+            "leaps_expiration": "2028-06-16",
+            "leaps_debit": 13000,
+            "contracts": 2,
+            "open_short": False,
+            "entry_date": "2026-06-20",
+            "closed_shorts": [{
+                "credit": 325,
+                "close_debit": 50,
+                "contracts": 1,
+                "opened": "2026-06-20",
+                "closed": "2026-06-23",
+            }],
+        }
+        status = check_leaps_only_position(record, 375.0, preset="managed")
+        clock = status.get("closed_short_clock")
+        self.assertIsNotNone(clock)
+        good = clock["targets"]["good"]
+        self.assertIn("portfolio_wait_days", good)
+        self.assertIn("portfolio_budget_until", good)
 
     def test_build_position_rows_leaps_only(self) -> None:
         status = {
