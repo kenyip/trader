@@ -90,9 +90,8 @@ def compute_patience_expires(
         if delivery_start:
             try:
                 d = _parse_date(delivery_start)
-                soft = d - timedelta(days=2)
-                if soft >= today:
-                    candidates.append((soft, "delivery window soft deadline"))
+                if d >= today:
+                    candidates.append((d, "delivery window"))
             except ValueError:
                 pass
         earnings = staged_events.get("earnings_date")
@@ -103,23 +102,16 @@ def compute_patience_expires(
                 candidates.append((hard, "earnings − 5 calendar days"))
 
     for s in statuses:
-        if s.get("no_open_short"):
-            clock = s.get("closed_short_clock") or {}
-            good = (clock.get("targets") or {}).get("good") or {}
-            until = good.get("portfolio_budget_until")
-            if until:
-                try:
-                    d = _parse_date(until)
-                    if d >= today:
-                        candidates.append((d, "premium clock portfolio budget"))
-                except ValueError:
-                    pass
-        carry = s.get("carry")
-        if carry and carry.get("current_short_profit", 0) >= carry.get("harvest_profit", 0):
-            days = carry.get("wait_good_days_after_harvest", 0)
-            if days > 0:
-                d = today + timedelta(days=round(days))
-                candidates.append((d, "post-harvest good wait budget"))
+        clock = s.get("closed_short_clock") or {}
+        good = (clock.get("targets") or {}).get("good") or {}
+        until = good.get("portfolio_budget_until")
+        if until:
+            try:
+                d = _parse_date(until)
+                if d >= today:
+                    candidates.append((d, "premium clock portfolio budget"))
+            except ValueError:
+                pass
 
     if not candidates:
         return {"date": None, "label": "—", "explanation": "no deadline computed"}
@@ -655,6 +647,11 @@ def desk_gating_lines(bundle: DeskBundle) -> list[str]:
         lines.append("STYLED CANDIDATE TABLE: yes")
         lines.append("STYLED HTML background-color: present")
         lines.append(f"STYLED HTML SNIPPET: {snippet}")
+
+    patience = bundle.situation.get("patience_expires") or {}
+    if patience.get("date"):
+        lines.append(f"PATIENCE EXPIRES: {patience['date']}")
+        lines.append(f"PATIENCE SOURCE: {patience.get('explanation', '—')}")
 
     lines.append("VERIFY OK")
     return lines

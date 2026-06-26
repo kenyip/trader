@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+from datetime import date
 
 import pandas as pd
 
@@ -8,6 +9,7 @@ from pmcc.desk import (
     assemble_pmcc_desk,
     candidate_is_preferred,
     candidate_table_styler,
+    compute_patience_expires,
     desk_gating_lines,
     position_record_key,
     position_remove_match,
@@ -73,6 +75,9 @@ class AssemblePmccDeskIntegrationTest(unittest.TestCase):
         self.assertTrue(any(line.startswith("REENTRY COUNT:") for line in lines))
         self.assertTrue(any("STYLED HTML background-color: present" in line for line in lines))
         self.assertTrue(any("background-color:" in line for line in lines))
+        self.assertEqual(bundle.situation["patience_expires"]["date"], "2026-07-01")
+        self.assertTrue(any(line.startswith("PATIENCE EXPIRES: 2026-07-01") for line in lines))
+        self.assertTrue(any(line.startswith("PATIENCE SOURCE: delivery window") for line in lines))
 
     def test_position_record_key_distinguishes_same_strike_lots(self) -> None:
         a = {
@@ -93,6 +98,51 @@ class AssemblePmccDeskIntegrationTest(unittest.TestCase):
         }
         self.assertNotEqual(position_record_key(a), position_record_key(b))
         self.assertFalse(position_remove_match(a, b))
+
+
+class ComputePatienceExpiresTest(unittest.TestCase):
+    _clock_status = {
+        "no_open_short": True,
+        "closed_short_clock": {
+            "targets": {"good": {"portfolio_budget_until": "2026-07-03"}},
+        },
+    }
+
+    def test_delivery_window_wins(self) -> None:
+        result = compute_patience_expires(
+            staged_events={
+                "delivery_window": "2026-07-01 to 2026-07-03 (estimate)",
+                "earnings_date": "2026-07-22",
+            },
+            statuses=[self._clock_status],
+            today=date(2026, 6, 26),
+        )
+        self.assertEqual(result["date"], "2026-07-01")
+        self.assertEqual(result["explanation"], "delivery window")
+
+    def test_premium_clock_wins(self) -> None:
+        result = compute_patience_expires(
+            staged_events={
+                "delivery_window": "2026-07-05 to 2026-07-07",
+                "earnings_date": "2026-07-22",
+            },
+            statuses=[self._clock_status],
+            today=date(2026, 6, 26),
+        )
+        self.assertEqual(result["date"], "2026-07-03")
+        self.assertEqual(result["explanation"], "premium clock portfolio budget")
+
+    def test_earnings_minus_five_wins(self) -> None:
+        result = compute_patience_expires(
+            staged_events={
+                "delivery_window": "2026-07-20 to 2026-07-22",
+                "earnings_date": "2026-07-22",
+            },
+            statuses=[],
+            today=date(2026, 6, 26),
+        )
+        self.assertEqual(result["date"], "2026-07-17")
+        self.assertEqual(result["explanation"], "earnings − 5 calendar days")
 
 
 if __name__ == "__main__":
