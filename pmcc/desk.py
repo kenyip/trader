@@ -650,8 +650,11 @@ def desk_gating_lines(bundle: DeskBundle) -> list[str]:
             }])
         styled_html = candidate_table_styler(styler_input).to_html()
         assert "background-color" in styled_html
+        idx = styled_html.index("background-color")
+        snippet = styled_html[idx : idx + len("background-color") + 24]
         lines.append("STYLED CANDIDATE TABLE: yes")
-        lines.append(f"STYLED HTML SNIPPET: {styled_html[:120]}…")
+        lines.append("STYLED HTML background-color: present")
+        lines.append(f"STYLED HTML SNIPPET: {snippet}")
 
     lines.append("VERIFY OK")
     return lines
