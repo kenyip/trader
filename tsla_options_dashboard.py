@@ -266,8 +266,10 @@ with tab_today:
         for r in pmcc_records:
             try:
                 pmcc_statuses.append(check_pmcc_position(r, spot_pmcc, preset=pmcc_preset))
-            except Exception:
-                pass
+            except Exception as ex:
+                st.warning(
+                    f"Position check failed for LEAPS {r.get('leaps_strike', '?')}: {ex}"
+                )
 
     situation = build_situation(
         spot=spot_pmcc or 0.0,
