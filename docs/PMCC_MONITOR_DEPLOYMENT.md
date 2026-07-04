@@ -33,7 +33,7 @@ That script is what Hermes cron should run. It is silent unless action is needed
 From this machine, copy the real file to the 24/7 box. Example:
 
 ```bash
-scp /home/ken/dev/tsla-tsll-options-tracker/pmcc_positions.yaml USER@HOST:~/dev/tsla-tsll-options-tracker/pmcc_positions.yaml
+scp /Users/jarvis/dev/tsla-tsll-options-tracker/pmcc_positions.yaml USER@HOST:~/dev/tsla-tsll-options-tracker/pmcc_positions.yaml
 ```
 
 Or manually edit on the new host:

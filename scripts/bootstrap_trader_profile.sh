@@ -4,12 +4,15 @@ set -euo pipefail
 PROFILE="trader"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROFILE_DIR="${HOME}/.hermes/profiles/${PROFILE}"
+ALIAS_PATH="${HOME}/.local/bin/${PROFILE}"
+HERMES_BIN="$(command -v hermes || true)"
 
 if ! command -v hermes >/dev/null 2>&1; then
   echo "Missing hermes CLI. Install Hermes first:" >&2
   echo "  curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash" >&2
   exit 1
 fi
+HERMES_BIN="$(command -v hermes)"
 
 echo "Trader Hermes profile bootstrap"
 echo "Repo: ${REPO_DIR}"
@@ -22,6 +25,15 @@ else
 fi
 
 mkdir -p "${PROFILE_DIR}/memories" "${PROFILE_DIR}/skills/trading/trading-partner"
+
+mkdir -p "$(dirname "${ALIAS_PATH}")"
+cat > "${ALIAS_PATH}" <<EOF
+#!/bin/sh
+cd "${REPO_DIR}" || exit 1
+export TERMINAL_CWD="${REPO_DIR}"
+exec "${HERMES_BIN}" -p ${PROFILE} "\$@"
+EOF
+chmod +x "${ALIAS_PATH}"
 
 hermes -p "${PROFILE}" config set terminal.cwd "${REPO_DIR}"
 hermes -p "${PROFILE}" config set display.personality helpful
@@ -173,7 +185,7 @@ Run long scans in background with completion notification. During market hours p
 Before changing strategy code:
 
 ```bash
-cd /home/ken/dev/tsla-tsll-options-tracker
+cd __TRADER_REPO_DIR__
 just scenarios
 ```
 
@@ -200,6 +212,12 @@ Build in stages:
 7. Add read-only brokerage/data access first; execution access only later with explicit authorization and hard limits.
 EOF
 
+python3 - <<PY
+from pathlib import Path
+p = Path("${PROFILE_DIR}/skills/trading/trading-partner/SKILL.md")
+p.write_text(p.read_text(encoding="utf-8").replace("__TRADER_REPO_DIR__", "${REPO_DIR}"), encoding="utf-8")
+PY
+
 echo
 hermes profile show "${PROFILE}"
 skills_output="$(hermes -p "${PROFILE}" skills list)"
@@ -212,4 +230,5 @@ echo
 echo "Bootstrap complete. Start the profile with:"
 echo "  trader chat"
 echo "or smoke-test with:"
+echo "  trader chat -Q -t terminal -q 'Use the terminal tool exactly once to execute: pwd. Then answer '\''STDOUT: <the stdout>'\''.'"
 echo "  trader chat -q 'Load trading-partner and pmcc-strategy, then run just pmcc-manage --monitor and summarize whether action is needed.'"

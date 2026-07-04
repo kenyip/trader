@@ -9,9 +9,9 @@ The goal is to build a disciplined trading partner that is excellent at finding 
 ```text
 Profile: trader
 Command: trader
-Path: /home/ken/.hermes/profiles/trader
-Default repo/cwd: /home/ken/dev/tsla-tsll-options-tracker
-Primary repo: ~/dev/tsla-tsll-options-tracker
+Path: /Users/jarvis/.hermes/profiles/trader
+Default repo/cwd: /Users/jarvis/dev/tsla-tsll-options-tracker
+Primary repo: /Users/jarvis/dev/tsla-tsll-options-tracker
 Primary skills: trading-partner, pmcc-strategy
 ```
 
@@ -19,6 +19,7 @@ Useful commands:
 
 ```bash
 trader chat
+trader chat -Q -t terminal -q "Use the terminal tool exactly once to execute: pwd. Then answer 'STDOUT: <the stdout>'."
 trader chat -q "Load trading-partner and pmcc-strategy, then run just pmcc-manage and summarize current PMCC risk."
 trader status --all
 trader skills list | grep -E 'trading-partner|pmcc-strategy'
@@ -137,7 +138,8 @@ Before sharing or archiving the tarball, remember it may contain config, `.env`,
 trader profile show trader
 trader config check
 trader skills list | grep -E 'trading-partner|pmcc-strategy'
-cd ~/dev/tsla-tsll-options-tracker
+trader chat -Q -t terminal -q "Use the terminal tool exactly once to execute: pwd. Then answer 'STDOUT: <the stdout>'."
+cd /Users/jarvis/dev/tsla-tsll-options-tracker
 just pmcc-manage --monitor
 just pmcc-monitor
 ```
@@ -145,6 +147,7 @@ just pmcc-monitor
 Expected:
 
 - `trader` exists and points at the repo as `terminal.cwd`.
+- Terminal tool smoke test prints `STDOUT: /Users/jarvis/dev/tsla-tsll-options-tracker`.
 - `trading-partner` and `pmcc-strategy` are available.
 - PMCC monitor is quiet when no action is needed.
 - Alert-path test can be triggered with a simulated spot without editing positions.
