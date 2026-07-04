@@ -33,6 +33,7 @@ These three files are kept current. Everything else in the repo is either code o
 | [**STRATEGY.md**](STRATEGY.md) | The trading rules — entry logic, exit ladder (incl. daily profit capture formula), `StrategyConfig` defaults, latest baseline results, next tuning targets |
 | [**docs/PMCC_MONITOR_DEPLOYMENT.md**](docs/PMCC_MONITOR_DEPLOYMENT.md) | PMCC always-on monitor deployment, live position file transfer, Hermes cron, and Telegram gateway setup |
 | [**docs/TRADER_AGENT_PROFILE.md**](docs/TRADER_AGENT_PROFILE.md) | Dedicated Hermes `trader` profile: trade-analysis operating principles, local bootstrap, Mac Mini migration path, and privacy boundaries |
+| [**docs/TRADER_KNOWLEDGE_MAP.md**](docs/TRADER_KNOWLEDGE_MAP.md) | Memory-vs-skill-vs-repo routing map for the Trader profile, including where recent PMCC learnings and dated playbooks live |
 
 Both follow the same convention: **current state at the top, dated history at the bottom.**
 

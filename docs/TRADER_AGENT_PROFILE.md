@@ -37,6 +37,18 @@ The profile's `SOUL.md`, curated memory, and `trading-partner` skill encode thes
 7. Never submit orders or access brokerage accounts without explicit authorization.
 8. Never commit live positions, market caches, Hermes secrets, broker credentials, or Telegram tokens.
 
+## Knowledge placement
+
+The profile intentionally avoids bloated memory. Use:
+
+- `~/.hermes/profiles/trader/memories/MEMORY.md` for compact routing/high-level stance only.
+- `trading-partner` for general trade-analysis workflow and memory-vs-skill routing.
+- `pmcc-strategy` for durable PMCC strategy rules and detailed dated references.
+- `docs/TRADER_KNOWLEDGE_MAP.md` for the index of past-weeks learnings and where each one lives.
+- `session_search` only when a detail was not promoted into memory, skills, or repo docs.
+
+Live fills and actual open positions belong only in `pmcc_positions.yaml`, which is private and gitignored.
+
 ## Trade-analysis output standard
 
 For every meaningful recommendation, the agent should provide:

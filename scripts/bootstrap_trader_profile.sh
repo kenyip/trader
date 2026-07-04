@@ -73,6 +73,8 @@ Trading analysis standard: use fresh market/chain/news/fundamental data when pos
 §
 PMCC stance: half+ safe/core TSLA exposure managed up/out, not forced closed on rips; remaining sleeve income-driven for stable income and flat/down/chop profit, with acceptable small loss on extreme fast rips covered by core sleeve. LEAPS budget valued ~50% of shares because shares are marginable; LEAPS are not.
 §
+Detailed past-weeks learnings live in \`docs/TRADER_KNOWLEDGE_MAP.md\`, \`trading-partner\`, and \`pmcc-strategy\` references. Memory stays compact: routing/high-level stance only; dated playbooks/sim tables go in repo refs/skills; live fills stay only in \`pmcc_positions.yaml\`.
+§
 24/7 migration target: after local proof, move repo/profile to Mac Mini, recreate Hermes gateway/Telegram/cron there, and transfer live \`pmcc_positions.yaml\` privately. Repo must never contain positions, caches, Hermes secrets, broker credentials, or Telegram tokens.
 EOF
 
@@ -127,6 +129,30 @@ For every meaningful recommendation, produce:
 7. Comparison baseline: shares vs PMCC/options whenever relevant.
 8. Final stance: do now / wait for price / avoid / needs more data.
 
+## Knowledge routing
+
+Keep memory compact. Use this order before bloating memory:
+
+1. Check `docs/TRADER_KNOWLEDGE_MAP.md` for where a learning should live.
+2. Use `pmcc-strategy` for durable PMCC rules and its dated references for detailed playbooks.
+3. Use repo docs/references for dated analyses, dashboards, deployment, and migration details.
+4. Use `session_search` only when a detail is missing from memory/skills/repo docs.
+
+Promote learnings by type:
+
+- Stable preference or routing fact → compact profile memory.
+- Repeatable procedure or strategy rule → skill.
+- Dated analysis, simulation output, catalyst playbook, or implementation details → repo doc/reference.
+- Live fills/positions → `pmcc_positions.yaml` only; never memory and never git.
+
+Recent durable sources to know:
+
+- `docs/TRADER_KNOWLEDGE_MAP.md` — map of past-weeks learnings and where they live.
+- `pmcc-strategy/references/tsla-300-share-sleeve-and-4-leaps-management-2026-06-25.md` — margin-aware shares-vs-PMCC and staged dashboard notes.
+- `pmcc-strategy/references/tsla-8-leaps-15day-rip-management-2026-06-28.md` — partial coverage and trim-buffer rules.
+- `pmcc-strategy/references/tsla-income-sleeve-capped-rip-framework-2026-06-30.md` — core vs income sleeve and capped-rip formula.
+- `pmcc-strategy/references/tsla-post-delivery-selloff-playbook-2026-07-02.md` — post-delivery selloff / July 7 catalyst framing.
+
 ## PMCC workflow
 
 Load `pmcc-strategy` before PMCC work. Preferred commands:
@@ -176,6 +202,12 @@ EOF
 
 echo
 hermes profile show "${PROFILE}"
+skills_output="$(hermes -p "${PROFILE}" skills list)"
+if [[ "${skills_output}" != *pmcc-strategy* ]]; then
+  echo
+  echo "WARNING: pmcc-strategy skill is not installed in the ${PROFILE} profile."
+  echo "Import the private trader profile archive or copy ~/.hermes/skills/trading/pmcc-strategy into ${PROFILE_DIR}/skills/trading/ before relying on PMCC analysis."
+fi
 echo
 echo "Bootstrap complete. Start the profile with:"
 echo "  trader chat"
