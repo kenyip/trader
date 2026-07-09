@@ -2,9 +2,16 @@
 
 > **Pinned 2026-07-09.** Ken’s standing intent for the **isolated Agentic Robinhood account**.
 > Product north star: [TRADER_PLATFORM_GOAL.md](TRADER_PLATFORM_GOAL.md).
-> Code: `platform/risk_governor.py`, `platform/execution/`, `platform/autonomy_loop.py`.
+> Code: `trader_platform/risk_governor.py`, `trader_platform/execution/`, `trader_platform/autonomy_loop.py`.
 
 ---
+
+## Stage2 status (2026-07-09)
+
+- RH **read-only** smoke + local snapshot readiness live under `trader_platform/rh_snapshot.py`.
+- Default paper path uses `PaperRhBridge` (paper mutations + optional RH snapshot).
+- **Agentic sleeve is currently unfunded and has no options level** — keep `agentic_live` off.
+- Details: `docs/STAGE2_RH_READONLY_AND_CAPITAL.md`.
 
 ## Standing intent
 
@@ -35,7 +42,7 @@ Arming checklist (human, on Ken’s Mac — not automated here):
 
 1. Stage1 Robinhood OAuth for the **isolated Agentic account only**
 2. Broker MCP connected and healthy (no secrets in repo)
-3. `platform/risk_limits.yaml` reviewed
+3. `trader_platform/risk_limits.yaml` reviewed
 4. Kill switch file absent / cleared intentionally
 5. Config: `agentic.enabled: true` **and** mode `agentic_live`
 6. Strategy allowlist non-empty and promotion evidence present for live-status hypotheses
@@ -57,9 +64,9 @@ Later Hermes cron shape (documentation only):
 ```bash
 # NOT registered in M0–M1 — example for future ops
 cd ~/dev/tsla-tsll-options-tracker
-.venv/bin/python -m platform.autonomy_loop --mode paper --once
+.venv/bin/python -m trader_platform.autonomy_loop --mode paper --once
 # after arming only:
-# .venv/bin/python -m platform.autonomy_loop --mode agentic_live --once
+# .venv/bin/python -m trader_platform.autonomy_loop --mode agentic_live --once
 ```
 
 Just recipes: `just platform-scan`, `just platform-paper-tick`.
@@ -76,7 +83,7 @@ Just recipes: `just platform-scan`, `just platform-paper-tick`.
 
 ## Hard risk envelope
 
-Defaults live in `platform/risk_limits.yaml` (tunable in config, not chat secrets):
+Defaults live in `trader_platform/risk_limits.yaml` (tunable in config, not chat secrets):
 
 | Control | Purpose |
 |---|---|
@@ -97,7 +104,7 @@ Governor interface: proposed order intent → `allow` / `deny` + reasons. Every 
 Hypotheses move: `candidate → testing → paper → shadow → live` (or `retired` / `rejected`).
 
 - **No auto-promote to `live`** without an evidence record (walk-forward, scenarios, costs, drawdown checklist).
-- Code: `platform/promotion_gates.py` — structure real; criteria may be stubs with TODOs until gauntlet wiring deepens.
+- Code: `trader_platform/promotion_gates.py` — structure real; criteria may be stubs with TODOs until gauntlet wiring deepens.
 
 ---
 

@@ -46,7 +46,7 @@ Sleeves that use the stack:
 research → paper → shadow → agentic_live
 ```
 
-No auto-promote to live without an evidence record. See `platform/promotion_gates.py`.
+No auto-promote to live without an evidence record. See `trader_platform/promotion_gates.py`.
 
 ### What this is not
 
@@ -57,7 +57,7 @@ No auto-promote to live without an evidence record. See `platform/promotion_gate
 
 ### Current milestone
 
-**M0–M1 (2026-07-09):** doctrine pinned; local hypothesis registry; risk governor; paper broker; autonomy loop in paper/dry-run. Live broker path stubbed until Stage1 OAuth + arming.
+**M0–M2 (2026-07-09):** doctrine pinned; local hypothesis registry; risk governor; paper broker; autonomy loop in paper/dry-run; **research loop foundation** (`premium_scout`: regime→strategy→symbol→premium, paper-first). Package renamed `platform/` → `trader_platform/` (stdlib unshadowed). Live broker path stubbed until Stage1 OAuth + arming.
 
 ---
 
@@ -66,3 +66,12 @@ No auto-promote to live without an evidence record. See `platform/promotion_gate
 ### 2026-07-09 — Platform north star pinned
 
 Ken: no per-build approval; build so it does not drift. Affirmed research→paper→shadow→live income engine. Isolated Agentic account gets autonomous limit-order freedom inside risk envelope; no per-trade Ken wait once armed. Cron/event-driven scanning allowed by design (local stubs only until Stage1).
+
+
+## Stage2 progress (2026-07-09)
+
+Completed: RH MCP read-only smoke (after-hours), risk review vs real accounts, paper→RH bridge (`PaperRhBridge` + snapshot readiness), strategy/capital plan tiers T0–T3.
+
+**Blockers for live:** Agentic account ~$0 and no options level. Keep `agentic.enabled=false`.
+
+Details: `docs/STAGE2_RH_READONLY_AND_CAPITAL.md`.

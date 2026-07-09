@@ -1341,7 +1341,12 @@ All of these are absorbed into the v1.0 engine + `StrategyConfig`. The legacy Py
 Pinned income-platform doctrine and local autonomy foundation. **No change to pick_entry / check_exits / adaptive rules.**
 
 - Docs: `docs/TRADER_PLATFORM_GOAL.md`, `docs/AGENTIC_AUTONOMY_POLICY.md`; GOAL.md pointer.
-- New package `platform/`: hypothesis registry (YAML), promotion gates (structure + no auto-live), risk governor, paper broker, RH MCP stub, autonomy loop (paper default).
+- Package `trader_platform/` (was platform/); M2 `premium_scout` regime→strategy→symbol→premium paper-first: hypothesis registry (YAML), promotion gates (structure + no auto-live), risk governor, paper broker, RH MCP stub, autonomy loop (paper default).
 - Modes: `research|paper|shadow|agentic_live` — agentic_live blocked until broker connected + armed.
 - Seed hypotheses: short premium TSLA/TSLL, PMCC income, stand-aside (status candidate/testing — not live).
 - Live OAuth / real place_order / Hermes live-trading cron: **out of scope** (Stage1 gate).
+
+### 2026-07-09 — Stage2 RH read-only + paper→RH wire
+
+- Added `trader_platform/rh_snapshot.py`, `PaperRhBridge`, readiness CLI, `docs/STAGE2_RH_READONLY_AND_CAPITAL.md`.
+- Live place remains fail-closed; Agentic sleeve unfunded in smoke snapshot.

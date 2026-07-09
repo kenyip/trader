@@ -7,8 +7,8 @@ import json
 import sys
 from typing import Optional
 
-from platform.hypothesis_registry import SLEEVES, STATUSES, HypothesisRegistry
-from platform.promotion_gates import can_promote
+from trader_platform.hypothesis_registry import SLEEVES, STATUSES, HypothesisRegistry
+from trader_platform.promotion_gates import can_promote
 
 
 def main(argv: Optional[list[str]] = None) -> int:

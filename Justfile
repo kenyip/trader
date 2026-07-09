@@ -248,19 +248,31 @@ clean:
     rm -f *.png
     echo "Cleaned generated files"
 
-# --- Income platform M0–M1 (paper/local; no live RH) ---
+# --- Income platform M0–M2 (paper/local; no live RH) ---
 # Seed + list hypotheses: just platform-hypotheses list
 platform-hypotheses *ARGS:
-    {{py}} -m platform.hypothesis_cli {{ARGS}}
+    {{py}} -m trader_platform.hypothesis_cli {{ARGS}}
 
 # Scan / propose / risk / paper execute one tick (default paper)
 platform-paper-tick *ARGS:
-    {{py}} -m platform.autonomy_loop --mode paper --once {{ARGS}}
+    {{py}} -m trader_platform.autonomy_loop --mode paper --once {{ARGS}}
 
 # Propose + risk only (no ledger mutate)
 platform-scan *ARGS:
-    {{py}} -m platform.autonomy_loop --mode shadow --once {{ARGS}}
+    {{py}} -m trader_platform.autonomy_loop --mode shadow --once {{ARGS}}
 
-# Smoke: registry + risk + paper place/replace/cancel
+# Smoke: registry + risk + paper place/replace/cancel + Stage2 bridge
 platform-smoke:
-    {{py}} platform/smoke_test.py
+    {{py}} trader_platform/smoke_test.py
+
+# Stage2: RH read-only snapshot readiness + capital plan recommendations
+platform-rh-readiness *ARGS:
+    {{py}} -m trader_platform.rh_readonly_cli {{ARGS}}
+
+# Stage2: dry-review (RH review_* payloads only; no place)
+platform-dry-review *ARGS:
+    {{py}} -m trader_platform.autonomy_loop --mode paper --dry-review --once {{ARGS}}
+
+# M2 research loop: regime→strategy→symbol→premium scout (intents only; paper-first)
+platform-scout *ARGS:
+    {{py}} -m trader_platform.premium_scout {{ARGS}}

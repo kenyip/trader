@@ -435,10 +435,10 @@ The Python files from that era are similarly mixed-quality: `dynamic_parameter_e
 
 ### 2026-07-09 — Platform execution layer (paper-only)
 
-Added local `platform/` package for income-engine autonomy scaffolding. Does **not** alter `backtest.py` event loop, `data.py`, or pricing.
+Added local `trader_platform/` package for income-engine autonomy scaffolding. Does **not** alter `backtest.py` event loop, `data.py`, or pricing.
 
-- `platform/execution/broker_adapter.py` — Broker protocol; `PaperBroker` local ledger; `RobinhoodMcpBroker` raises NotConnected.
-- `platform/risk_governor.py` + `platform/risk_limits.yaml` + kill-switch file support.
-- `platform/autonomy_loop.py` — scan → propose → risk_check → paper_execute (default).
-- CLI: `python -m platform.hypothesis_cli`, `just platform-scan`, `just platform-paper-tick`.
+- `trader_platform/execution/broker_adapter.py` — Broker protocol; `PaperBroker` local ledger; `RobinhoodMcpBroker` raises NotConnected.
+- `trader_platform/risk_governor.py` + `trader_platform/risk_limits.yaml` + kill-switch file support.
+- `trader_platform/autonomy_loop.py` — scan → propose → risk_check → paper_execute (default).
+- CLI: `python -m trader_platform.hypothesis_cli`, `just platform-scan`, `just platform-paper-tick`.
 - Live broker mutations and Hermes cron that place orders remain **blocked** until Stage1 OAuth + arming (see docs/AGENTIC_AUTONOMY_POLICY.md).

@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
-from platform.hypothesis_registry import Hypothesis, HypothesisRegistry
+from trader_platform.hypothesis_registry import Hypothesis, HypothesisRegistry
 
 
 @dataclass
