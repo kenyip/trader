@@ -1,0 +1,72 @@
+version: 1
+hypotheses:
+- id: hyp_short_premium_tsla
+  name: TSLA short premium (regime-directed)
+  thesis: Sell OTM puts in bullish/neutral regimes and OTM calls in confirmed bearish
+    regimes; stand aside when credit floor fails. Edge is short-horizon premium decay
+    with strict entry filters and exit ladder.
+  sleeve: premium
+  instruments:
+  - TSLA
+  entry_logic_ref: strategies.pick_entry
+  exit_logic_ref: strategies.check_exits
+  status: testing
+  evidence_links:
+  - STRATEGY.md#current-approach
+  - just scenarios
+  null_results: []
+  created: '2026-07-09T07:07:16+00:00'
+  updated: '2026-07-09T07:07:16+00:00'
+  notes: "Seed from v1.13/v1.14 baseline \u2014 still a hypothesis, not ceiling."
+- id: hyp_short_premium_tsll
+  name: TSLL short premium (levered ETF)
+  thesis: Same engine as TSLA with per-ticker knobs (shorter put DTE, adaptive skip
+    rules). Levered-ETF path risk means stand-aside and adaptive filters matter more.
+  sleeve: premium
+  instruments:
+  - TSLL
+  entry_logic_ref: strategies.pick_entry
+  exit_logic_ref: strategies.check_exits
+  status: testing
+  evidence_links:
+  - STRATEGY.md#current-approach
+  null_results:
+  - TSLL wheel underperforms cash (STRATEGY.md history)
+  created: '2026-07-09T07:07:16+00:00'
+  updated: '2026-07-09T07:07:16+00:00'
+  notes: ''
+- id: hyp_pmcc_income
+  name: PMCC income sleeve
+  thesis: Long LEAP call + short near-term call for defined-structure upside with
+    premium harvest; manage rolls and income vs core long bias separately.
+  sleeve: premium
+  instruments:
+  - TSLA
+  entry_logic_ref: pmcc/
+  exit_logic_ref: pmcc_manage / manage playbook
+  status: candidate
+  evidence_links:
+  - docs/TRADER_KNOWLEDGE_MAP.md
+  - pmcc/
+  null_results: []
+  created: '2026-07-09T07:07:16+00:00'
+  updated: '2026-07-09T07:07:16+00:00'
+  notes: ''
+- id: hyp_stand_aside
+  name: Stand-aside cash sleeve
+  thesis: No trade is a valid action when credit floor, regime, or risk envelope fails.
+    Cash sleeve is success, not a broken signal.
+  sleeve: cash
+  instruments:
+  - TSLA
+  - TSLL
+  entry_logic_ref: "strategies.pick_entry \u2192 STAND_ASIDE"
+  exit_logic_ref: n/a
+  status: testing
+  evidence_links:
+  - GOAL.md cost function
+  - live.py STAND_ASIDE
+  null_results: []
+  created: '2026-07-09T07:07:16+00:00'
+  updated: '2026-07-09T07:07:16+00:00'
+  notes: ''

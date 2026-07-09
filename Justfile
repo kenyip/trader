@@ -140,6 +140,12 @@ model-scenarios *ARGS:
 model-verify:
     {{py}} simulator/verify_model_features.py
 
+# Lab one-command smoke: model feature parity + production 12-regime suite
+# See docs/FREE_STRATEGY_RESEARCH_RUNBOOK.md (cold-start free strategy research)
+lab-smoke:
+    {{py}} simulator/verify_model_features.py
+    {{py}} run_scenarios.py
+
 # PMCC / LEAPS diagonal snapshot — live chain grid (delta-based strike matching)
 # Examples:
 #   just pmcc-snapshot --preset balanced
@@ -225,6 +231,14 @@ pmcc-manage *ARGS:
 pmcc-monitor *ARGS:
     {{py}} pmcc_manage.py --monitor --quiet-ok {{ARGS}}
 
+# Income Engine desk brief — raw gather only (PMCC + short-premium + data-quality banner)
+# Synthesis/stance is agent or human work per docs/DESK_BRIEF.md
+#   just desk-brief
+#   just desk-brief --full
+#   just desk-brief --no-live
+desk-brief *ARGS:
+    {{py}} scripts/desk_brief.py {{ARGS}}
+
 # Compare 300 TSLA shares vs current PMCC stack under rip targets
 pmcc-compare-stock *ARGS:
     {{py}} pmcc_stock_vs_pmcc.py {{ARGS}}
@@ -233,3 +247,20 @@ pmcc-compare-stock *ARGS:
 clean:
     rm -f *.png
     echo "Cleaned generated files"
+
+# --- Income platform M0–M1 (paper/local; no live RH) ---
+# Seed + list hypotheses: just platform-hypotheses list
+platform-hypotheses *ARGS:
+    {{py}} -m platform.hypothesis_cli {{ARGS}}
+
+# Scan / propose / risk / paper execute one tick (default paper)
+platform-paper-tick *ARGS:
+    {{py}} -m platform.autonomy_loop --mode paper --once {{ARGS}}
+
+# Propose + risk only (no ledger mutate)
+platform-scan *ARGS:
+    {{py}} -m platform.autonomy_loop --mode shadow --once {{ARGS}}
+
+# Smoke: registry + risk + paper place/replace/cancel
+platform-smoke:
+    {{py}} platform/smoke_test.py

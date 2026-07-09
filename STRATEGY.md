@@ -1334,3 +1334,14 @@ All of these are absorbed into the v1.0 engine + `StrategyConfig`. The legacy Py
 - **Phase 5**: Dashboard Today tab shows experimental model recommendation (read-only; production path still `pick_entry`).
 - **Still off**: `enable_model_entry`, `enable_model_management` — rules remain source of truth for opens/closes.
 
+
+
+### 2026-07-09 — Platform M0–M1 foundation (no strategy rule change)
+
+Pinned income-platform doctrine and local autonomy foundation. **No change to pick_entry / check_exits / adaptive rules.**
+
+- Docs: `docs/TRADER_PLATFORM_GOAL.md`, `docs/AGENTIC_AUTONOMY_POLICY.md`; GOAL.md pointer.
+- New package `platform/`: hypothesis registry (YAML), promotion gates (structure + no auto-live), risk governor, paper broker, RH MCP stub, autonomy loop (paper default).
+- Modes: `research|paper|shadow|agentic_live` — agentic_live blocked until broker connected + armed.
+- Seed hypotheses: short premium TSLA/TSLL, PMCC income, stand-aside (status candidate/testing — not live).
+- Live OAuth / real place_order / Hermes live-trading cron: **out of scope** (Stage1 gate).

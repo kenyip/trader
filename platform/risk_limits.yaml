@@ -1,0 +1,28 @@
+# Conservative defaults for isolated Agentic sleeve.
+# Tune in this file — never paste secrets into chat.
+
+agentic:
+  enabled: false  # soft kill; must be true for agentic_live
+
+# Kill switch file (repo-relative or absolute). Presence => deny all mutating orders.
+kill_switch_file: agentic_kill.switch
+
+order:
+  allow_market: false
+  max_notional_per_order: 2500.0
+  max_contracts_per_order: 5
+  allowed_sides: [buy, sell]
+  allowed_order_types: [limit]  # market denied by default
+
+portfolio:
+  max_open_risk: 5000.0
+  max_open_orders: 10
+  max_daily_loss: 750.0
+
+# Empty allowlist = all strategies allowed at risk layer (promotion still gates live status).
+# Prefer explicit IDs once a live set is armed.
+strategy_allowlist: []
+strategy_disabled: []
+
+# Instruments allowed for autonomous orders (expand deliberately).
+instrument_allowlist: [TSLA, TSLL]

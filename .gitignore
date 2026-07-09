@@ -8,3 +8,7 @@ __pycache__/
 # active live positions — user-specific, never committed
 positions.yaml
 pmcc_positions.yaml
+
+# platform local runtime (paper ledger, audit, kill switch)
+agentic_kill.switch
+.cache/platform/

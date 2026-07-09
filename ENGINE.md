@@ -431,3 +431,14 @@ The Python files from that era are similarly mixed-quality: `dynamic_parameter_e
 
 **v1.14+ note (2026-05-31)**: `Position` and status dicts now carry optional `model_management_advice` (from positions tracker when `StrategyConfig.enable_model_management`). This is read-only observability for the management advisor (traj features + close/roll proposals); does not affect `check_exits` execution or backtest loop. See `positions.py`, `strategies.recommend_management_advisor`, and `simulator/PLAN.md`.
 
+
+
+### 2026-07-09 — Platform execution layer (paper-only)
+
+Added local `platform/` package for income-engine autonomy scaffolding. Does **not** alter `backtest.py` event loop, `data.py`, or pricing.
+
+- `platform/execution/broker_adapter.py` — Broker protocol; `PaperBroker` local ledger; `RobinhoodMcpBroker` raises NotConnected.
+- `platform/risk_governor.py` + `platform/risk_limits.yaml` + kill-switch file support.
+- `platform/autonomy_loop.py` — scan → propose → risk_check → paper_execute (default).
+- CLI: `python -m platform.hypothesis_cli`, `just platform-scan`, `just platform-paper-tick`.
+- Live broker mutations and Hermes cron that place orders remain **blocked** until Stage1 OAuth + arming (see docs/AGENTIC_AUTONOMY_POLICY.md).

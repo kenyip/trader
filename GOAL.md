@@ -2,6 +2,12 @@
 
 > Use this as the `/goal` input in a new session. Self-contained: any session can pick it up cold.
 
+> **Platform product pin (2026-07-09):** self-learning research + **income engine** on Hermes profile `trader`, with autonomous live sleeve on the isolated Agentic account only. Full anti-drift doctrine:
+> - [docs/TRADER_PLATFORM_GOAL.md](docs/TRADER_PLATFORM_GOAL.md)
+> - [docs/AGENTIC_AUTONOMY_POLICY.md](docs/AGENTIC_AUTONOMY_POLICY.md)
+>
+> This file remains the **research-engine / critic-loop** goal. Do not redefine the platform product here — update the docs above.
+
 ---
 
 ## North star
@@ -13,6 +19,8 @@ The destination is **Software 1.5 → 2.0 in increments**:
 - **2.0 (later)**: A trained model proposes rule sketches or directly outputs adjustment vectors per bar; same validation harness gates everything.
 
 The **deterministic validation harness is the trust layer.** Proposers can be anything — human intuition, LLM critic, gradient-boosted tree, neural net — and trust comes from the unchanged validation gate, not from the proposer.
+
+**Platform layer (M0–M1+):** the same trust layer gates promotion of hypotheses into paper → shadow → `agentic_live` execution on the isolated Agentic account. Live is autonomous *inside* risk limits — never unguarded.
 
 ---
 
