@@ -10,13 +10,15 @@ hypotheses:
   - TSLA
   entry_logic_ref: strategies.pick_entry
   exit_logic_ref: strategies.check_exits
-  status: testing
+  status: paper
   evidence_links:
   - STRATEGY.md#current-approach
   - just scenarios
+  - "learn_tick:2026-07-09:NEEDS_MORE_DATA:testing\u2192paper: paper_orders=2 evidence_n=2\
+    \ (paper sleeve only; no live)"
   null_results: []
   created: '2026-07-09T07:07:16+00:00'
-  updated: '2026-07-09T07:07:16+00:00'
+  updated: '2026-07-09T08:14:49+00:00'
   notes: "Seed from v1.13/v1.14 baseline \u2014 still a hypothesis, not ceiling."
 - id: hyp_short_premium_tsll
   name: TSLL short premium (levered ETF)
@@ -70,3 +72,103 @@ hypotheses:
   created: '2026-07-09T07:07:16+00:00'
   updated: '2026-07-09T07:07:16+00:00'
   notes: ''
+- id: hyp_research_smci_short_put_cautious
+  name: 'Research: SMCI short_put_cautious'
+  thesis: "Research scout ranked SMCI #1 (composite=81.8, vol=87.9, premium=91.5,\
+    \ alpha=57.8). Regime=bearish; family hint=short_put_cautious. Capital fit (short\
+    \ CSP proxy)=fit_3k; spot=28.17; CSP_BP\u22482676; long_debit\u2248139. PAPER\
+    \ CANDIDATE ONLY \u2014 not live, not an order."
+  sleeve: premium
+  instruments:
+  - SMCI
+  entry_logic_ref: strategies.pick_entry
+  exit_logic_ref: strategies.check_exits
+  status: testing
+  evidence_links:
+  - research.db run_id=2 rank=1 composite=81.85
+  - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/research_backtests/SMCI_research_trades.csv
+  - backtest_hook:SMCI:2y:trades=38
+  - "learn_tick:2026-07-09:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=81.85 cap_fit=fit_3k evidence_n=3"
+  null_results: []
+  created: '2026-07-09T08:10:45+00:00'
+  updated: '2026-07-09T08:14:49+00:00'
+  notes: source=research_promote_top; capital_fit=fit_3k; never_auto_live=true; research_run=2
+- id: hyp_research_tsla_short_strangle_candidate
+  name: 'Research: TSLA short_strangle_candidate'
+  thesis: "Research scout ranked TSLA #2 (composite=68.2, vol=79.9, premium=65.9,\
+    \ alpha=55.3). Regime=neutral; family hint=short_strangle_candidate. Capital fit\
+    \ (short CSP proxy)=oversized; spot=417.70; CSP_BP\u224839682; long_debit\u2248\
+    1015. PAPER CANDIDATE ONLY \u2014 not live, not an order."
+  sleeve: premium
+  instruments:
+  - TSLA
+  entry_logic_ref: strategies.pick_entry
+  exit_logic_ref: strategies.check_exits
+  status: candidate
+  evidence_links:
+  - research.db run_id=2 rank=2 composite=68.18
+  - backtest_hook:TSLA:2y:trades=0
+  null_results: []
+  created: '2026-07-09T08:10:45+00:00'
+  updated: '2026-07-09T08:10:45+00:00'
+  notes: source=research_promote_top; capital_fit=oversized; never_auto_live=true;
+    research_run=2
+- id: hyp_research_tsll_short_strangle_candidate
+  name: 'Research: TSLL short_strangle_candidate'
+  thesis: "Research scout ranked TSLL #3 (composite=64.0, vol=91.1, premium=68.2,\
+    \ alpha=19.5). Regime=neutral; family hint=short_strangle_candidate. Capital fit\
+    \ (short CSP proxy)=fit_3k; spot=13.81; CSP_BP\u22481311; long_debit\u224867.\
+    \ PAPER CANDIDATE ONLY \u2014 not live, not an order."
+  sleeve: premium
+  instruments:
+  - TSLL
+  entry_logic_ref: strategies.pick_entry
+  exit_logic_ref: strategies.check_exits
+  status: testing
+  evidence_links:
+  - research.db run_id=2 rank=3 composite=64.03
+  - "learn_tick:2026-07-09:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=3\
+    \ composite=64.03 cap_fit=fit_3k evidence_n=1"
+  null_results: []
+  created: '2026-07-09T08:10:45+00:00'
+  updated: '2026-07-09T08:14:49+00:00'
+  notes: source=research_promote_top; capital_fit=fit_3k; never_auto_live=true; research_run=2
+- id: hyp_research_amd_short_strangle_candidate
+  name: 'Research: AMD short_strangle_candidate'
+  thesis: "Research scout ranked AMD #4 (composite=63.6, vol=71.0, premium=63.8, alpha=52.8).\
+    \ Regime=neutral; family hint=short_strangle_candidate. Capital fit (short CSP\
+    \ proxy)=oversized; spot=517.41; CSP_BP\u224849154; long_debit\u22481855. PAPER\
+    \ CANDIDATE ONLY \u2014 not live, not an order."
+  sleeve: premium
+  instruments:
+  - AMD
+  entry_logic_ref: strategies.pick_entry
+  exit_logic_ref: strategies.check_exits
+  status: candidate
+  evidence_links:
+  - research.db run_id=2 rank=4 composite=63.6
+  null_results: []
+  created: '2026-07-09T08:10:45+00:00'
+  updated: '2026-07-09T08:10:45+00:00'
+  notes: source=research_promote_top; capital_fit=oversized; never_auto_live=true;
+    research_run=2
+- id: hyp_research_mu_short_strangle_candidate
+  name: 'Research: MU short_strangle_candidate'
+  thesis: "Research scout ranked MU #5 (composite=61.6, vol=79.6, premium=68.6, alpha=25.2).\
+    \ Regime=neutral; family hint=short_strangle_candidate. Capital fit (short CSP\
+    \ proxy)=oversized; spot=948.80; CSP_BP\u224890136; long_debit\u22484531. PAPER\
+    \ CANDIDATE ONLY \u2014 not live, not an order."
+  sleeve: premium
+  instruments:
+  - MU
+  entry_logic_ref: strategies.pick_entry
+  exit_logic_ref: strategies.check_exits
+  status: candidate
+  evidence_links:
+  - research.db run_id=2 rank=5 composite=61.61
+  null_results: []
+  created: '2026-07-09T08:10:45+00:00'
+  updated: '2026-07-09T08:10:45+00:00'
+  notes: source=research_promote_top; capital_fit=oversized; never_auto_live=true;
+    research_run=2

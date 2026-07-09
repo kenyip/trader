@@ -42,6 +42,7 @@ Purpose: general trading-agent behavior and workflow.
 It should contain:
 
 - trade-analysis output checklist
+- Income Engine **desk brief** workflow (daily status: gather + synthesize + action queue)
 - knowledge-routing policy
 - private-state boundaries
 - staged path to Mac Mini / Telegram / read-only broker access / later execution access
@@ -74,11 +75,15 @@ It should contain durable rules like:
 
 Repo code/docs are the right place for detailed playbooks and scripts:
 
+- `docs/DESK_BRIEF.md`: Income Engine daily desk brief playbook (I1) — checklist, output shape, data-quality rules
+- `scripts/desk_brief.py` + `just desk-brief`: raw gather (PMCC monitor/manage + short-premium live/positions + session banner)
 - `pmcc/positions.py` and `pmcc_manage.py`: live PMCC state, LEAPS-only state, premium clock, monitor output
 - `pmcc/staged_entry.py`: dynamic TSLA staged short-entry plan for dashboard/desk
 - `pmcc_income_sleeve_scan.py`: income-sleeve PMCC scanner for capped-rip acceptable sleeves
 - `docs/TRADER_AGENT_PROFILE.md`: how to operate/migrate the dedicated profile
 - `docs/PMCC_MONITOR_DEPLOYMENT.md`: always-on monitor, Telegram, cron, private transfer rules
+- `docs/FREE_STRATEGY_RESEARCH_RUNBOOK.md`: cold-start free strategy research lab — production vs lab boundary, weekly generate→label→train/analyze→validate→scoreboard loop, Path A (rules) / Path B (model shadow), exact `just` commands (`lab-smoke`, `model-*`, `analyze`, `scenarios`)
+- `docs/RESEARCH_SCOREBOARD.md`: production baseline freeze (v1.13 + PMCC managed) + append-only lab SHIP/NULL log; points to `GOAL.md` + `simulator/CLOSED_LOOP_STRATEGY_FINDER.md` firewall
 - `scripts/bootstrap_trader_profile.sh`: canonical local/Mac profile repair/recreate path
 - `scripts/bootstrap_pmcc_monitor.sh`: writes the local Hermes monitor script
 

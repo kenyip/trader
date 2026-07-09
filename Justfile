@@ -276,3 +276,45 @@ platform-dry-review *ARGS:
 # M2 research loop: regime→strategy→symbol→premium scout (intents only; paper-first)
 platform-scout *ARGS:
     {{py}} -m trader_platform.premium_scout {{ARGS}}
+
+# --- Multi-symbol research scout (universe ranking; paper-only; NOT live allowlist) ---
+# Rank full research universe by vol / premium / alpha + capital-by-price
+#   just research-tick
+#   just research-tick -- --top 15 --json
+#   just research-tick -- --sleeve-usd 5000 --write-report
+#   just research-tick -- --promote --promote-top 5 --sleeve-usd 3000
+# Paper recurring wrapper (dated report; optional promote). See docs/RESEARCH_CRON.md
+#   just research-tick-paper
+#   just research-tick-paper -- --sleeve-usd 5000 --promote
+research-tick *ARGS:
+    {{py}} -m trader_platform.research tick {{ARGS}}
+
+# Paper-only recurring research tick: write dated report under .cache/platform/research_reports/
+# Does NOT place orders / does NOT arm agentic / does NOT start a trading cron.
+research-tick-paper *ARGS:
+    {{py}} -m trader_platform.research tick --write-report --notes research_tick_paper {{ARGS}}
+
+# Wire last-run top-N → hypothesis *candidates* (never live). Optional engine backtest hooks.
+#   just research-promote-top
+#   just research-promote-top -- --top 5 --sleeve-usd 5000
+#   just research-promote-top -- --run-backtests --dry-run
+research-promote-top *ARGS:
+    {{py}} -m trader_platform.research promote-top {{ARGS}}
+
+# Print last (or --run-id N) research tables (incl. capital columns)
+#   just research-report
+#   just research-report -- --run-id 1 --top 12
+research-report *ARGS:
+    {{py}} -m trader_platform.research report {{ARGS}}
+
+# Show configured multi-symbol research universe
+research-universe *ARGS:
+    {{py}} -m trader_platform.research universe {{ARGS}}
+
+# --- Learn tick (self-improve from outcomes; never live) — see docs/TRADER_LOOPS.md ---
+#   just learn-tick
+#   just learn-tick -- --apply
+#   just learn-tick -- --apply --append-scoreboard
+#   just learn-tick -- --json
+learn-tick *ARGS:
+    {{py}} -m trader_platform.learn_tick --once {{ARGS}}

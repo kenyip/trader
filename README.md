@@ -17,9 +17,18 @@ just positions                        # status of open positions (per positions.
 just positions example                # write a sample positions.yaml template
 just positions add ...                # append a position (see `just positions add --help`)
 
+# Free strategy research lab (shadow only — see docs/FREE_STRATEGY_RESEARCH_RUNBOOK.md)
+just lab-smoke                        # model-verify + scenarios
+just model-verify                     # feature parity smoke
+just analyze                          # rule proposer (critic loop)
+
 # PMCC / LEAPS diagonal monitor
 just pmcc-manage                      # full PMCC dashboard: marks, premium clock, next action
 just pmcc-monitor                     # quiet monitor: silent unless action is needed
+
+# Income Engine desk brief (raw gather; agent synthesizes stance — docs/DESK_BRIEF.md)
+just desk-brief                       # session banner + PMCC monitor + short-premium live rec
+just desk-brief --full                # full pmcc-manage dashboard in the gather
 ```
 
 ## Source-of-truth documents
@@ -34,6 +43,8 @@ These three files are kept current. Everything else in the repo is either code o
 | [**docs/PMCC_MONITOR_DEPLOYMENT.md**](docs/PMCC_MONITOR_DEPLOYMENT.md) | PMCC always-on monitor deployment, live position file transfer, Hermes cron, and Telegram gateway setup |
 | [**docs/TRADER_AGENT_PROFILE.md**](docs/TRADER_AGENT_PROFILE.md) | Dedicated Hermes `trader` profile: trade-analysis operating principles, local bootstrap, Mac Mini migration path, and privacy boundaries |
 | [**docs/TRADER_KNOWLEDGE_MAP.md**](docs/TRADER_KNOWLEDGE_MAP.md) | Memory-vs-skill-vs-repo routing map for the Trader profile, including where recent PMCC learnings and dated playbooks live |
+| [**docs/DESK_BRIEF.md**](docs/DESK_BRIEF.md) | Income Engine daily desk brief playbook: one checklist for PMCC + short-premium + stance |
+| [**docs/FREE_STRATEGY_RESEARCH_RUNBOOK.md**](docs/FREE_STRATEGY_RESEARCH_RUNBOOK.md) | Cold-start free strategy research lab: production vs lab boundary, weekly loop, Path A/B promotion, exact `just` commands |
 
 Both follow the same convention: **current state at the top, dated history at the bottom.**
 

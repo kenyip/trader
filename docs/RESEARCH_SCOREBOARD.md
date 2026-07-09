@@ -205,6 +205,15 @@ Rolling end date moves with data; headline metrics below are the **freeze re-run
 
 ---
 
+| 2026-07-09 | learn_tick:hyp_short_premium_tsla | research_rank=2, paper_orders=2, audit_intents=29 | **NEEDS_MORE_DATA** | status=testing→paper; comp=68.18; cap=oversized | learn_audit.jsonl |
+| 2026-07-09 | learn_tick:hyp_short_premium_tsll | research_rank=3 | **NEEDS_MORE_DATA** | status=testing→testing; comp=64.03; cap=fit_3k | learn_audit.jsonl |
+| 2026-07-09 | learn_tick:hyp_pmcc_income | research_rank=2 | **NEEDS_MORE_DATA** | status=candidate→candidate; comp=68.18; cap=oversized | learn_audit.jsonl |
+| 2026-07-09 | learn_tick:hyp_research_smci_short_put_cautious | research_rank=1 | **NEEDS_MORE_DATA** | status=candidate→testing; comp=81.85; cap=fit_3k | learn_audit.jsonl |
+| 2026-07-09 | learn_tick:hyp_research_tsla_short_strangle_candidate | research_rank=2 | **NEEDS_MORE_DATA** | status=candidate→candidate; comp=68.18; cap=oversized | learn_audit.jsonl |
+| 2026-07-09 | learn_tick:hyp_research_tsll_short_strangle_candidate | research_rank=3 | **NEEDS_MORE_DATA** | status=candidate→testing; comp=64.03; cap=fit_3k | learn_audit.jsonl |
+| 2026-07-09 | learn_tick:hyp_research_amd_short_strangle_candidate | research_rank=4 | **NEEDS_MORE_DATA** | status=candidate→candidate; comp=63.6; cap=oversized | learn_audit.jsonl |
+| 2026-07-09 | learn_tick:hyp_research_mu_short_strangle_candidate | research_rank=5 | **NEEDS_MORE_DATA** | status=candidate→candidate; comp=61.61; cap=oversized | learn_audit.jsonl |
+
 ## 5. Lab operating notes
 
 - Proposals may come from human intuition, `just analyze`, LLM critic, or model shadow — **trust is the validation gate**, not the proposer.

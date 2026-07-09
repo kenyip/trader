@@ -73,6 +73,17 @@ scripts/bootstrap_trader_profile.sh
 
 The script is safe to re-run. It creates the `trader` profile if missing, sets its working directory to the repo, writes the trading SOUL/memory/skill, and does not copy positions, auth files, provider keys, or Telegram tokens into git.
 
+## Income Engine desk brief (daily)
+
+Single operating surface for PMCC + short-premium status. Full playbook: `docs/DESK_BRIEF.md`.
+
+```bash
+cd ~/dev/tsla-tsll-options-tracker
+just desk-brief                 # raw gather: data-quality banner + PMCC monitor + live.py (+ positions if present)
+just desk-brief --full          # full pmcc-manage instead of --monitor
+trader chat -q "Run the Income Engine desk brief playbook (docs/DESK_BRIEF.md). Load trading-partner and pmcc-strategy. Gather with just desk-brief, then synthesize the standard output shape. Do not place trades."
+```
+
 ## PMCC commands
 
 ```bash

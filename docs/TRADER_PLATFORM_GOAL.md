@@ -59,6 +59,8 @@ No auto-promote to live without an evidence record. See `trader_platform/promoti
 
 **M0–M2 (2026-07-09):** doctrine pinned; local hypothesis registry; risk governor; paper broker; autonomy loop in paper/dry-run; **research loop foundation** (`premium_scout`: regime→strategy→symbol→premium, paper-first). Package renamed `platform/` → `trader_platform/` (stdlib unshadowed). Live broker path stubbed until Stage1 OAuth + arming.
 
+**Loops + learn-tick v0:** shared map [TRADER_LOOPS.md](TRADER_LOOPS.md) + coordination [BUILD_COORDINATION.md](BUILD_COORDINATION.md). Multi-symbol research (CoS lane) + `learn_tick` outcome→hyp status (never auto live/shadow).
+
 ---
 
 ## History

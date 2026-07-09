@@ -1,0 +1,47 @@
+# Research universe — multi-symbol liquid names for opportunity ranking.
+# This is NOT the live risk allowlist (risk_limits.instrument_allowlist).
+# Research may scan broadly; live orders stay gated separately.
+
+version: 1
+description: >
+  Default liquid multi-name universe for paper research ticks.
+  Indexes + mega-cap + liquid high-beta/options names. TSLA/TSLL are members, not sole members.
+
+symbols:
+  # Broad market / indexes (ETFs)
+  - SPY
+  - QQQ
+  - IWM
+  - DIA
+
+  # Mega-cap / liquid options names
+  - AAPL
+  - MSFT
+  - NVDA
+  - AMZN
+  - META
+  - GOOGL
+  - AMD
+  - NFLX
+
+  # High-beta / single-name options liquidity
+  - TSLA
+  - TSLL   # 2x TSLA ETF — leveraged sleeve research member
+  - COIN
+  - PLTR
+  - ARM
+  - SMCI
+  - AVGO
+  - MU
+
+  # Financials / energy liquid names
+  - JPM
+  - XOM
+  - BAC
+
+# Optional groups (informational; scorer does not require groups)
+groups:
+  indexes: [SPY, QQQ, IWM, DIA]
+  mega_cap: [AAPL, MSFT, NVDA, AMZN, META, GOOGL, AMD, NFLX]
+  high_beta: [TSLA, TSLL, COIN, PLTR, ARM, SMCI, AVGO, MU]
+  financials_energy: [JPM, XOM, BAC]
