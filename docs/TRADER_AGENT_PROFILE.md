@@ -6,7 +6,7 @@ Dedicated **self-evolving** Hermes profile for Ken's research → paper → shad
 
 | Wrong framing | Right framing |
 |---|---|
-| Cron runs a Python tick program | Cron **wakes Trader** with a goal + continuation |
+| Caller supplies slot/goal/NEXT judgment | Caller runs `just trader-build-lab`; Trader orients and chooses autonomously |
 | Evolution = `just evolve-tick` finished | Evolution = agent orients, chooses, builds, validates, leaves residue |
 | Fixed strategy box (PMCC/short-premium only) | Seed sleeves are hypotheses; free search across DNA/structures |
 | LaunchAgents as primary loop | Hermes **trader** gateway + agent crons |
@@ -55,6 +55,10 @@ hermes -p trader cron run efe58ee280c8
 7. Think in dollars, contracts, DTE, deltas, credits/debits when trade-shaped.
 8. A wake is incomplete until scope is closed, checks are green, learning is promoted, and intended repo changes are committed, integrated to `main`, pushed, remote-verified, and clean.
 9. Executor/challenger phases are evidence inputs. Only the finalizer plus deterministic completion gate may declare `RUN COMPLETE`.
+
+## Canonical zero-input wake
+
+`just trader-build-lab` is the normal BUILD interface for humans, Jarvis/coordinator, and cron. It loads the sole program goal from `configs/build_lab_free_goal.txt` and derives time/session metadata internally. Trader then orients from SOUL, doctrine, memory/skills, readiness, prior learning, and current context. Prior NEXT is context, not an order. `--goal`, `--slot`, structure, and recovery flags remain debug/recovery tools only.
 
 ## Wake protocol
 

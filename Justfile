@@ -379,9 +379,8 @@ trader-wake-moa *ARGS:
 
 # Dual-model income BUILD lab (GPT 5.6 Sol → Grok 4.5). More discovery time.
 #   just trader-build-lab
-#   just trader-build-lab --slot evening
-#   just trader-build-lab --goal "time-bias PCS DTE grid"
-#   just trader-build-lab --structures put_credit_spread,call_credit_spread,iron_condor
+#   Zero-input is canonical for human, coordinator, and cron callers.
+#   Optional --goal/--slot/--structures are debug or recovery overrides only.
 trader-build-lab *ARGS:
     bash scripts/trader_build_lab_moa.sh {{ARGS}}
 

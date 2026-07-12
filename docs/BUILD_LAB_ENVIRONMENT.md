@@ -47,6 +47,8 @@ BUILD remains **search / simulate / learn**.
 4. **Falsify hard** — B3 regime + B4 cost + ml/dd quality bar vs current leader
 5. **Paper path next** — live-clock open/close samples only when filters pass
 
+The sole authoritative durable BUILD goal is `configs/build_lab_free_goal.txt`; Trader SOUL owns identity, north star, risk, and the self-sufficient orientation/judgment contract. Every authorized caller uses the same **zero-input** front door. Time/market session is derived internally as context metadata; it is not caller strategy judgment. Prior NEXT is context, never an order.
+
 Each BUILD wake is **goal-driven rather than recipe-driven**. Trader may explore any liquid symbol, strategy DNA, combination, entry/exit/management rule, regime, time, volatility, stand-aside condition, simulator, negative control, or research tool. Prior NEXT is context, not an order. Evidence validity remains non-negotiable: a flaw that can invalidate the chosen claim must be repaired, tested, or used to narrow that claim. A blocked observed-data path blocks dependent promotion claims but does not freeze unrelated valid exploration. Proxy work is allowed for discovery when labeled; it cannot earn L1 without evidence appropriate to the claim.
 
 See `docs/INCOME_STRATEGY_COVERAGE.md` for the structure matrix and gaps.
@@ -61,11 +63,12 @@ cd /Users/jarvis/dev/tsla-tsll-options-tracker
 # Full dual-pass income discovery lab (Sol → Grok)
 just trader-build-lab
 
-# Focused goal
-just trader-build-lab -- --goal "Hunt time-biased PCS vs CCS on high-IV names; falsify before any capital seat"
+# Normal interface for humans, Jarvis/coordinator, and cron: no arguments
+just trader-build-lab
 
-# Structure rotation (omit for free catalog search)
-just trader-build-lab -- --structures put_credit_spread,call_credit_spread,iron_condor
+# Debug/recovery overrides only (not normal routing)
+just trader-build-lab --goal "diagnose a named evidence failure"
+just trader-build-lab --slot replay-label --structures put_credit_spread,call_credit_spread
 
 # Coverage report only (no MoA)
 just trader-income-coverage
@@ -86,7 +89,8 @@ just trader-wake-moa -- --hyps id1,id2,id3
 
 | Surface | Role |
 |---|---|
-| `scripts/trader_build_lab_moa.sh` | Dual-model discovery orchestrator (Sol exec / Grok challenge) |
+| `configs/build_lab_free_goal.txt` | Sole authoritative durable BUILD program goal |
+| `scripts/trader_build_lab_moa.sh` | Zero-input dual-model orchestrator; loads canonical goal and derives context |
 | `scripts/trader_income_coverage.py` | Catalog + hyp + sim coverage scoreboard |
 | `scripts/trader_wake_moa.sh` | Dual-pass stress / judgment MoA |
 | `docs/INCOME_STRATEGY_COVERAGE.md` | Target matrix + gaps + build order |
@@ -154,6 +158,10 @@ Manual preflight: `just trader-run-gate preflight`. Enforcement: `scripts/trader
 ---
 
 ## History
+
+### 2026-07-12 — Zero-input self-sufficient wake contract
+
+Established `configs/build_lab_free_goal.txt` as the sole BUILD program goal. `just trader-build-lab` and the wrapper now require no caller judgment: they load the canonical goal, derive session context internally, and direct Trader to orient from SOUL/doctrine/readiness/prior learning before choosing the highest-information loop. Prior NEXT is context, not an order. Active profile cron compatibility names converge on one zero-argument runner; explicit goal/slot/structure and recovery flags remain diagnosis/recovery only.
 
 ### 2026-07-10 — Dual-model BUILD lab environment
 

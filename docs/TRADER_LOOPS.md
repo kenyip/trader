@@ -192,7 +192,7 @@ Doctrine: [BUILD_LAB_ENVIRONMENT.md](BUILD_LAB_ENVIRONMENT.md) · [INCOME_STRATE
 hermes -p trader gateway status
 hermes -p trader cron list
 just trader-income-coverage
-just trader-build-lab --slot evening
+just trader-build-lab              # canonical zero-input wake; Trader chooses the loop
 just trader-wake-moa --hyps id1,id2   # judgment/stress peak
 # residue: reports/trader-wakes/moa/<stamp>/
 

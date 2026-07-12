@@ -10,7 +10,7 @@
 #   scripts/trader_build_lab_moa.sh --challenger-only --stamp 2026-07-10T2000
 #   scripts/trader_build_lab_moa.sh --resume --stamp 2026-07-10T2000
 #   scripts/trader_build_lab_moa.sh --finalizer-only --stamp 2026-07-10T2000
-#   scripts/trader_build_lab_moa.sh --slot premarket|postclose|daily|evening|weekend|weekly
+#   scripts/trader_build_lab_moa.sh --slot LABEL  # debug/recovery metadata override only
 #
 # Env:
 #   MOA_EXEC_PROVIDER / MOA_EXEC_MODEL (default openai-codex / gpt-5.6-sol)
@@ -30,11 +30,16 @@ MAX_EXEC="${MOA_MAX_TURNS_EXEC:-60}"
 MAX_CHALL="${MOA_MAX_TURNS_CHALL:-35}"
 MAX_FINAL="${MOA_MAX_TURNS_FINAL:-45}"
 GATE="$REPO/scripts/trader_run_completion_gate.py"
+GOAL_FILE="$REPO/configs/build_lab_free_goal.txt"
 
 GOAL=""
 MODE="both"
 STAMP=""
-SLOT="daily"
+SLOT=""
+SLOT_SOURCE="auto"
+GOAL_SOURCE="canonical"
+SLOT_EXPLICIT=0
+GOAL_EXPLICIT=0
 STRUCTURES=""
 TOP_SYMBOLS="${MOA_TOP_SYMBOLS:-8}"
 MUTANTS="${MOA_MUTANTS:-2}"
@@ -43,13 +48,13 @@ SLEEVE="${MOA_SLEEVE_USD:-3000}"
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --) shift ;; # ignore bare -- from `just recipe -- args`
-    --goal) GOAL="$2"; shift 2 ;;
+    --goal) GOAL="$2"; GOAL_SOURCE="override"; GOAL_EXPLICIT=1; shift 2 ;;
     --executor-only) MODE="executor-only"; shift ;;
     --challenger-only) MODE="challenger-only"; shift ;;
     --finalizer-only) MODE="finalizer-only"; shift ;;
     --resume) MODE="resume"; shift ;;
     --stamp) STAMP="$2"; shift 2 ;;
-    --slot) SLOT="$2"; shift 2 ;;
+    --slot) SLOT="$2"; SLOT_SOURCE="override"; SLOT_EXPLICIT=1; shift 2 ;;
     --structures) STRUCTURES="$2"; shift 2 ;;
     --top-symbols) TOP_SYMBOLS="$2"; shift 2 ;;
     --mutants) MUTANTS="$2"; shift 2 ;;
@@ -67,6 +72,40 @@ done
 
 if [[ -z "$STAMP" ]]; then
   STAMP="$(date +%Y-%m-%dT%H%M)"
+fi
+
+# Caller supplies no judgment by default. Time/session is metadata that Trader
+# evaluates alongside SOUL, readiness, prior learning, and current market data.
+if [[ -z "$SLOT" ]]; then
+  weekday="$(date +%u)"
+  hour="$(date +%H)"
+  if (( weekday >= 6 )); then
+    SLOT="weekend"
+  elif (( 10#$hour < 6 )); then
+    SLOT="premarket"
+  elif (( 10#$hour < 13 )); then
+    SLOT="rth"
+  elif (( 10#$hour < 17 )); then
+    SLOT="postclose"
+  else
+    SLOT="offhours"
+  fi
+fi
+
+if [[ -z "$GOAL" ]]; then
+  if [[ ! -s "$GOAL_FILE" ]]; then
+    echo "ERROR: canonical Trader program goal missing or empty: $GOAL_FILE" >&2
+    exit 1
+  fi
+  GOAL="$(<"$GOAL_FILE")"
+fi
+
+# Debug/test hook: assembles the exact no-input launch context without starting
+# a branch, lock, model session, or market action.
+if [[ "${TRADER_BUILD_CONTEXT_ONLY:-0}" == "1" ]]; then
+  printf 'goal_source=%s\ncontext=%s\ncontext_source=%s\ngoal_file=%s\n--- CANONICAL GOAL ---\n%s\n--- END GOAL ---\n' \
+    "$GOAL_SOURCE" "$SLOT" "$SLOT_SOURCE" "$GOAL_FILE" "$GOAL"
+  exit 0
 fi
 
 BASE_HEAD=""
@@ -119,37 +158,11 @@ if [[ "$MODE" == "both" || "$MODE" == "executor-only" ]]; then
   PHASE="executor"
 fi
 
-case "$SLOT" in
-  premarket)
-    SLOT_FOCUS="Pre-market BUILD: refresh research rank; prefer defined-risk evolve; prep RTH paper conditions; no live."
-    ;;
-  postclose)
-    SLOT_FOCUS="Post-close BUILD: free multi-structure discovery + falsify new SHIP; rotate away from last structure if tunnel risk."
-    ;;
-  evening)
-    SLOT_FOCUS="Evening BUILD: close a structure/time/direction gap or implement one missing sim class scaffold if justified."
-    ;;
-  weekend)
-    SLOT_FOCUS="Weekend lab: broader coverage pass — under-simmed structures, time-bias grids, systems improvements."
-    ;;
-  weekly)
-    SLOT_FOCUS="Weekly critic: coverage matrix, sticky bad DNA, ship-bar honesty, one systems improvement."
-    ;;
-  daily|*)
-    SLOT_FOCUS="Daily income lab: research → multi-structure sims → quality falsify → one capital-honest NEXT."
-    ;;
-esac
-
 STRUCT_LINE="catalog-free exploration across any liquid symbol and any strategy DNA; defined-risk is required for a \$3k capital candidate, not for forming or falsifying research hypotheses"
 EVOLVE_STRUCT_ARGS=""
 if [[ -n "$STRUCTURES" ]]; then
-  STRUCT_LINE="structures focus: ${STRUCTURES}"
-  # shell-split structures on comma into evolve --structures args
+  STRUCT_LINE="structures focus override (debug/recovery): ${STRUCTURES}"
   EVOLVE_STRUCT_ARGS="$STRUCTURES"
-fi
-
-if [[ -z "$GOAL" ]]; then
-  GOAL="BUILD LAB (${SLOT}). Discover a robust, paper-testable edge for the \$${SLEEVE} sleeve. ${SLOT_FOCUS} Explore creatively across symbols, structures, volatility/time/direction/regime, entries, exits, management, and stand-aside logic. ${STRUCT_LINE}. Use valid evidence and falsify promotion candidates with relevant B3/B4 + ml/dd gates. Paper/research only. No live/agentic/shadow promote. Leave ONE highest-information NEXT seed."
 fi
 
 EVOLVE_HINT="just evolve-tick --apply --top-symbols $TOP_SYMBOLS --mutants $MUTANTS --max-population 36 --sleeve-usd $SLEEVE"
@@ -171,6 +184,16 @@ if [[ "$MODE" == "challenger-only" || "$MODE" == "finalizer-only" || "$MODE" == 
     echo "ERROR: stamp $STAMP predates the recoverable completion contract" >&2
     exit 1
   fi
+  # Recovery reuses the original assembled goal/context unless explicitly
+  # overridden for diagnosis. NEXT and strategy judgment still belong to Trader.
+  if (( GOAL_EXPLICIT == 0 )); then
+    GOAL="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("goal", ""))' "$MOA_DIR/meta.json")"
+    GOAL_SOURCE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("goal_source", "canonical"))' "$MOA_DIR/meta.json")"
+  fi
+  if (( SLOT_EXPLICIT == 0 )); then
+    SLOT="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(d.get("context", d.get("slot", "recovery")))' "$MOA_DIR/meta.json")"
+    SLOT_SOURCE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("context_source", "recovered"))' "$MOA_DIR/meta.json")"
+  fi
   if [[ "$(git branch --show-current)" != "$RUN_BRANCH" ]]; then
     echo "ERROR: recovery must run from $RUN_BRANCH (current: $(git branch --show-current))" >&2
     exit 1
@@ -190,7 +213,10 @@ meta = {
   "stamp": "$STAMP",
   "lab": "income_build_lab",
   "completion_contract_version": 2,
-  "slot": "$SLOT",
+  "context": "$SLOT",
+  "context_source": "$SLOT_SOURCE",
+  "goal_source": "$GOAL_SOURCE",
+  "goal_file": "$GOAL_FILE",
   "goal": """$GOAL""",
   "mode": "$MODE",
   "executor": {"provider": "$EXEC_PROVIDER", "model": "$EXEC_MODEL"},
@@ -211,10 +237,16 @@ fi
 # --- Executor prompt ---
 cat > "$MOA_DIR/prompts/01-executor.txt" <<EOF
 MOA BUILD LAB — PHASE 1 EXECUTOR (ONLY writer) — GPT 5.6 Sol.
-You are Trader. Load skill trader-self-evolution.
-Also read: docs/BUILD_LAB_ENVIRONMENT.md, docs/INCOME_STRATEGY_COVERAGE.md,
-reports/readiness/income-coverage-LATEST.md (if present),
-reports/trader-wakes/LATEST.md, reports/readiness/LATEST.md.
+You are Trader. Your profile SOUL is authoritative; load skill trader-self-evolution.
+Before choosing, orient from the canonical goal above plus:
+- docs/TRADER_PLATFORM_GOAL.md, docs/TRADER_LOOPS.md,
+  docs/AGENTIC_AUTONOMY_POLICY.md, docs/GO_LIVE_READINESS.md
+- docs/BUILD_LAB_ENVIRONMENT.md, docs/INCOME_STRATEGY_COVERAGE.md
+- reports/readiness/income-coverage-LATEST.md (if present)
+- reports/trader-wakes/LATEST.md, reports/readiness/LATEST.md
+- hypothesis registry, learn/evolve audits, coverage, current local time,
+  market/session state, and relevant current data.
+The caller supplied no loop judgment unless meta explicitly says override.
 
 PHASE: BUILD. Sleeve USD $SLEEVE. Paper/research only.
 Models: YOU = GPT 5.6 Sol executor. Grok 4.5 will challenge after you. Do not wait for Grok mid-loop.
@@ -222,7 +254,8 @@ Models: YOU = GPT 5.6 Sol executor. Grok 4.5 will challenge after you. Do not wa
 GOAL:
 $GOAL
 
-SLOT: $SLOT
+CALLER CONTEXT (internally derived metadata, not an assignment): $SLOT (source=$SLOT_SOURCE)
+CANONICAL GOAL SOURCE: $GOAL_SOURCE ($GOAL_FILE)
 STRUCTURE FOCUS: $STRUCT_LINE
 DEFAULT EVOLVE KNOBS: --top-symbols $TOP_SYMBOLS --mutants $MUTANTS --sleeve-usd $SLEEVE
 
@@ -345,7 +378,7 @@ EOF
 
 run_exec() {
   PHASE="executor"
-  echo "=== BUILD LAB EXECUTOR: $EXEC_PROVIDER / $EXEC_MODEL (slot=$SLOT) ==="
+  echo "=== BUILD LAB EXECUTOR: $EXEC_PROVIDER / $EXEC_MODEL (context=$SLOT, source=$SLOT_SOURCE) ==="
   set +e
   hermes -p trader chat \
     -q "$(cat "$MOA_DIR/prompts/01-executor.txt")" \
@@ -489,7 +522,7 @@ esac
 echo
 echo "=== BUILD LAB MoA status ==="
 echo "stamp:  $STAMP"
-echo "slot:   $SLOT"
+echo "context: $SLOT ($SLOT_SOURCE)"
 echo "dir:    $REPO/$MOA_DIR"
 echo "meta:   $MOA_DIR/meta.json"
 ls -la "$MOA_DIR" || true

@@ -35,6 +35,32 @@ exec "${HERMES_BIN}" -p ${PROFILE} "\$@"
 EOF
 chmod +x "${ALIAS_PATH}"
 
+# Canonical zero-input BUILD wake. Cron compatibility names intentionally add
+# no goal, slot, seed, or strategy judgment; the repo wrapper derives context.
+PROFILE_BUILD_CANONICAL="${PROFILE_DIR}/scripts/trader-build-lab-canonical.sh"
+mkdir -p "${PROFILE_DIR}/scripts"
+cat > "${PROFILE_BUILD_CANONICAL}" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+cd "${REPO_DIR}"
+exec bash "${REPO_DIR}/scripts/trader_build_lab_moa.sh"
+EOF
+chmod +x "${PROFILE_BUILD_CANONICAL}"
+for wrapper_name in \
+  trader-build-lab-premarket.sh trader-build-lab-postclose.sh \
+  trader-build-lab-daily.sh trader-build-lab-evening.sh \
+  trader-build-lab-weekend.sh trader-build-lab-weekly.sh \
+  trader-build-lab-midday.sh trader-build-lab-overnight.sh \
+  trader-build-lab-free-explore.sh trader_build_lab_cron.sh
+do
+  cat > "${PROFILE_DIR}/scripts/${wrapper_name}" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+exec "${PROFILE_BUILD_CANONICAL}"
+EOF
+  chmod +x "${PROFILE_DIR}/scripts/${wrapper_name}"
+done
+
 hermes -p "${PROFILE}" config set terminal.cwd "${REPO_DIR}"
 hermes -p "${PROFILE}" config set display.personality helpful
 hermes -p "${PROFILE}" config set agent.environment_hint "Self-evolving trading system operator. Repo: ${REPO_DIR}. Ticks are agent wakes (orient→choose→act→learn), not mandatory program pipelines. Optional tools: just research-tick-paper|evolve-tick|learn-tick|desk-brief. Never live-trade without mandate."
@@ -90,6 +116,10 @@ No live orders, broker login, auto shadow/live, agentic arm, secrets/positions i
 ## Completion contract
 
 A wake is complete only when scoped work is closed, relevant/full-suite verification is green, learning is promoted to repo docs/reports, skills, or compact profile memory, and every intended repo change is committed, integrated to main, pushed, remote-verified, and clean. Executor/challenger phases are partial. Missing artifacts, red tests, dirty/untracked files, unpushed commits, or unmerged branches mean RUN INCOMPLETE. Use the deterministic repo completion gate; never weaken checks or hide residue to finish.
+
+## Self-sufficient wake contract
+
+The canonical BUILD interface is zero-input: `just trader-build-lab`. Load `configs/build_lab_free_goal.txt`; derive market/session context internally; treat prior NEXT as context, never an order. The caller never chooses a slot, strategy axis, seed, or goal. Optional overrides are debug/recovery only.
 
 ## Wake shape
 

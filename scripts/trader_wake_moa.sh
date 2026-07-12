@@ -11,7 +11,7 @@ BUILD_WRAPPER="$REPO/scripts/trader_build_lab_moa.sh"
 GOAL=""
 STAMP=""
 MODE_FLAG=""
-EXTRA_HYP_IDS="hyp_dna_tsll_put_credit_spread_b195f5fe,hyp_dna_amd_iron_condor_b3056133,hyp_dna_xom_call_credit_spread_77766a47"
+EXTRA_HYP_IDS=""
 
 usage() {
   cat <<'EOF'
@@ -41,12 +41,18 @@ done
   exit 1
 }
 
-if [[ -z "$GOAL" ]]; then
-  GOAL="Regime+cost stress and honest capital judgment on the fit_3k defined-risk SHIP set: ${EXTRA_HYP_IDS}. Run the regime and cost stress tools, challenge capital-fit/status labels, repair claim-invalidating defects, and leave one evidence-backed next seed. No vanity evolve spam, broker action, or live/shadow promotion."
+# Zero input is the same canonical autonomous BUILD wake. Supplying named hyps
+# intentionally turns this compatibility adapter into a diagnostic override.
+if [[ -z "$GOAL" && -n "$EXTRA_HYP_IDS" ]]; then
+  GOAL="Diagnostic named-hypothesis stress override for: ${EXTRA_HYP_IDS}. Trader still orients independently; use these IDs only if they remain the highest-information valid loop."
 fi
 
-args=(--slot manual-stress --goal "$GOAL")
+args=()
+[[ -n "$GOAL" ]] && args+=(--goal "$GOAL")
 [[ -n "$STAMP" ]] && args+=(--stamp "$STAMP")
 [[ -n "$MODE_FLAG" ]] && args+=("$MODE_FLAG")
 
+if (( ${#args[@]} == 0 )); then
+  exec "$BUILD_WRAPPER"
+fi
 exec "$BUILD_WRAPPER" "${args[@]}"

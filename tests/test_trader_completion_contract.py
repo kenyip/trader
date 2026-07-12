@@ -28,6 +28,8 @@ class TraderCompletionContractSurfaceTest(unittest.TestCase):
         self.assertIn("run_finalize", build)
         self.assertIn("integrate_run", build)
         self.assertIn("exec \"$BUILD_WRAPPER\"", stress)
+        self.assertIn("args=()", stress)
+        self.assertNotIn("args=(--slot", stress)
         self.assertIn("--finalizer-only", stress)
         self.assertIn("--resume", stress)
 
@@ -88,6 +90,18 @@ class TraderCompletionContractSurfaceTest(unittest.TestCase):
                 capture_output=True,
             )
             self.assertEqual(before, {path: path.read_bytes() for path in protected})
+            canonical = profile / "scripts" / "trader-build-lab-canonical.sh"
+            self.assertIn(
+                f'exec bash "{REPO}/scripts/trader_build_lab_moa.sh"',
+                canonical.read_text(),
+            )
+            for wrapper in profile.joinpath("scripts").glob("trader*build*lab*.sh"):
+                if wrapper == canonical:
+                    continue
+                body = wrapper.read_text()
+                self.assertIn(f'exec "{canonical}"', body)
+                self.assertNotIn("--goal", body)
+                self.assertNotIn("--slot", body)
 
     def test_stress_adapter_forwards_recovery_to_build_wrapper(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -109,10 +123,85 @@ class TraderCompletionContractSurfaceTest(unittest.TestCase):
                 capture_output=True,
                 check=True,
             )
-            self.assertIn("manual-stress", proc.stdout)
+            self.assertNotIn("manual-stress", proc.stdout)
             self.assertIn("id1,id2", proc.stdout)
             self.assertIn("test-stamp", proc.stdout)
             self.assertIn("--resume", proc.stdout)
+
+    def test_zero_input_build_front_door_loads_exact_canonical_goal(self) -> None:
+        env = os.environ.copy()
+        env["TRADER_BUILD_CONTEXT_ONLY"] = "1"
+        proc = subprocess.run(
+            ["just", "trader-build-lab"],
+            cwd=REPO,
+            env=env,
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+        expected = (REPO / "configs" / "build_lab_free_goal.txt").read_text().strip()
+        assembled = proc.stdout.split("--- CANONICAL GOAL ---\n", 1)[1].split(
+            "\n--- END GOAL ---", 1
+        )[0]
+        self.assertEqual(expected, assembled)
+        self.assertIn("goal_source=canonical", proc.stdout)
+        self.assertIn("context_source=auto", proc.stdout)
+        self.assertNotIn("BUILD LAB (", assembled)
+        wrapper = (REPO / "scripts" / "trader_build_lab_moa.sh").read_text()
+        for surface in (
+            "docs/TRADER_PLATFORM_GOAL.md",
+            "docs/TRADER_LOOPS.md",
+            "docs/AGENTIC_AUTONOMY_POLICY.md",
+            "docs/GO_LIVE_READINESS.md",
+            "reports/trader-wakes/LATEST.md",
+            "reports/readiness/LATEST.md",
+            "hypothesis registry, learn/evolve audits",
+            "market/session state",
+        ):
+            self.assertIn(surface, wrapper)
+
+    def test_goal_and_slot_overrides_remain_debuggable(self) -> None:
+        env = os.environ.copy()
+        env["TRADER_BUILD_CONTEXT_ONLY"] = "1"
+        proc = subprocess.run(
+            [
+                "bash", str(REPO / "scripts" / "trader_build_lab_moa.sh"),
+                "--goal", "diagnostic override", "--slot", "replay",
+            ],
+            cwd=REPO,
+            env=env,
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+        self.assertIn("goal_source=override", proc.stdout)
+        self.assertIn("context=replay", proc.stdout)
+        self.assertIn("context_source=override", proc.stdout)
+        self.assertIn("--- CANONICAL GOAL ---\ndiagnostic override\n", proc.stdout)
+
+    def test_bootstrap_cron_compatibility_names_converge_without_judgment(self) -> None:
+        bootstrap = (REPO / "scripts" / "bootstrap_trader_profile.sh").read_text()
+        names = (
+            "trader-build-lab-premarket.sh",
+            "trader-build-lab-postclose.sh",
+            "trader-build-lab-daily.sh",
+            "trader-build-lab-evening.sh",
+            "trader-build-lab-weekend.sh",
+            "trader-build-lab-weekly.sh",
+            "trader-build-lab-midday.sh",
+            "trader-build-lab-overnight.sh",
+            "trader-build-lab-free-explore.sh",
+            "trader_build_lab_cron.sh",
+        )
+        for name in names:
+            self.assertIn(name, bootstrap)
+        managed = bootstrap.split("# Canonical zero-input BUILD wake.", 1)[1].split(
+            'hermes -p "${PROFILE}" config set terminal.cwd', 1
+        )[0]
+        self.assertIn('exec bash "${REPO_DIR}/scripts/trader_build_lab_moa.sh"', managed)
+        self.assertIn('exec "${PROFILE_BUILD_CANONICAL}"', managed)
+        self.assertNotIn("--goal", managed)
+        self.assertNotIn("--slot", managed)
 
     def test_claude_points_to_current_suite_and_contract(self) -> None:
         claude = (REPO / "CLAUDE.md").read_text()
