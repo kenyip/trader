@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "stamp": "2026-07-12T1636",
+  "loop_signature": "ccs/volatility/expansion/rolling-origin/proxy-cost",
+  "outcome": "FALSIFIED",
+  "useful_deltas": [
+    {
+      "kind": "falsification",
+      "summary": "A predeclared prior-bar hv_20/hv_60>=1.20 plus non-positive-return CCS failed all 24 expanding-origin train gates across eight symbols under dual proxy costs and hard path-risk gates; the family is closed without tuning, registration, or promotion.",
+      "novelty_key": "ccs-realized-vol-expansion-rolling-origin-8x3-reject",
+      "artifacts": [
+        "scripts/ccs_vol_expansion_rolling_origin_lab.py",
+        "tests/test_ccs_vol_expansion_rolling_origin_lab.py",
+        "docs/BUILD_LAB_ENVIRONMENT.md",
+        "docs/INCOME_STRATEGY_COVERAGE.md",
+        "reports/trader-wakes/2026-07-12T1636-moa-merge.md"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "The CCS module lacked a local passing-holdout/failing-train negative control, and BUILD direction-bias wording under-mentioned the four prior PCS signal rejects.",
+      "status": "repaired",
+      "rationale": "The local CCS suite now proves that a passing holdout cannot rescue a failed train cost axis. BUILD and generated coverage wording now name close-shock, momentum, pullback, and volatility-compression PCS alongside the new volatility-expansion CCS rejection.",
+      "repair_artifacts": [
+        "scripts/ccs_vol_expansion_rolling_origin_lab.py",
+        "scripts/trader_income_coverage.py"
+      ],
+      "test_artifacts": [
+        "tests/test_ccs_vol_expansion_rolling_origin_lab.py"
+      ]
+    },
+    {
+      "finding": "Sparse samples imply the family should be called inconclusive rather than rejected.",
+      "status": "rejected",
+      "rationale": "The predeclared falsifier required at least eight trades on every train and holdout cost axis; sparse and zero samples therefore fail closed. The claim is rejection on this synthetic evidence, not proof that no real-world CCS edge can exist.",
+      "repair_artifacts": [],
+      "test_artifacts": []
+    },
+    {
+      "finding": "The executor should tune the volatility threshold, DTE, or management after zero of 24 train gates passed.",
+      "status": "rejected",
+      "rationale": "Tuning the same synthetic daily-bar evidence after universal train-gate failure would be holdout-adjacent search and thrash. The family is closed until a genuinely new evidence class or repaired capability exists.",
+      "repair_artifacts": [],
+      "test_artifacts": []
+    },
+    {
+      "finding": "The prior archive NEXT should have been executed on Sunday instead of superseded.",
+      "status": "rejected",
+      "rationale": "Archive density can advance only on a distinct New York RTH market date; Sunday supplied no valid new date. The distinct-RTH append remains the sole NEXT seed.",
+      "repair_artifacts": [],
+      "test_artifacts": []
+    }
+  ],
+  "closed_families": [
+    "ccs-vol-expansion-daily-bar"
+  ],
+  "data_dependencies": [
+    "A distinct New York RTH market date is required to advance observed TSLL option archive density from 1/3 to 2/3.",
+    "Provider-backed historical simulation, observed-cost calibration, evolve-on-observed-grid, and L1 claims remain blocked until at least 3/3 distinct market dates."
+  ],
+  "next": "On the next distinct New York RTH market date, append one all-expiration TSLL option observation snapshot and verify archive density advances from 1/3 to 2/3 without duplicating identical rows; do not run provider-backed historical simulation, observed-cost calibration, evolve-on-observed-grid, or L1 claims before 3/3."
+}
