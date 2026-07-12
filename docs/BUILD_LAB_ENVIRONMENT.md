@@ -143,6 +143,8 @@ Each finalizer promotes learning by type:
 
 Required learning artifact: `reports/trader-wakes/moa/<stamp>/learning-promotion.md` with `VERIFICATION`, `DURABLE`, `LESSON`, and exactly one `NEXT` (or `DIMINISHING_RETURNS`). Machine receipt: `.cache/platform/completion/<stamp>.json`.
 
+Manual/direct-main infrastructure wakes do not fabricate MoA artifacts. They must commit a tracked report under `reports/trader-wakes/` with `VERIFICATION`, `DURABLE`, `LESSON`, and exactly one non-empty `NEXT`, then run `postflight --report <path> --base-head <pre-mutation-head> --run-head <integrated-commit> --receipt .cache/platform/completion/<name>.json`. This preserves the same clean/main/origin/ancestry proof without weakening wrapper `--stamp` checks. `preflight` reports `completion: false` and cannot write a completion receipt.
+
 Manual preflight: `just trader-run-gate preflight`. Enforcement: `scripts/trader_run_completion_gate.py` and `scripts/trader_build_lab_moa.sh`.
 
 ---

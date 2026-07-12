@@ -12,6 +12,7 @@ import json
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 SENSITIVE_BASENAMES = {
@@ -188,7 +189,61 @@ def require_run_artifacts(repo: Path, stamp: str, *, tracked: bool) -> None:
 def preflight(repo: Path) -> dict[str, object]:
     require_clean(repo)
     require_main_remote_sync(repo)
-    return {"ok": True, "mode": "preflight", "head": local_head(repo), "branch": "main"}
+    return {
+        "ok": True,
+        "mode": "preflight",
+        "completion": False,
+        "head": local_head(repo),
+        "branch": "main",
+    }
+
+
+def require_manual_report(repo: Path, report: str) -> str:
+    repo = repo.resolve()
+    path = (repo / report).resolve()
+    reports_root = (repo / "reports" / "trader-wakes").resolve()
+    if reports_root not in path.parents or path.suffix != ".md":
+        raise GateError("manual report must be a Markdown file under reports/trader-wakes")
+    if not path.is_file():
+        raise GateError(f"manual completion report does not exist: {report}")
+    rel = str(path.relative_to(repo))
+    tracked = subprocess.run(
+        ["git", "ls-files", "--error-unmatch", "--", rel],
+        cwd=repo,
+        text=True,
+        capture_output=True,
+    )
+    if tracked.returncode:
+        raise GateError(f"manual completion report is not tracked: {rel}")
+    text = path.read_text(encoding="utf-8")
+    required = ("## VERIFICATION", "## DURABLE", "## LESSON", "## NEXT")
+    absent = [heading for heading in required if heading not in text]
+    if absent:
+        raise GateError("manual completion report missing headings: " + ", ".join(absent))
+    next_headings = list(re.finditer(r"(?m)^## NEXT\s*$", text))
+    if len(next_headings) != 1:
+        raise GateError("manual completion report must contain exactly one ## NEXT heading")
+    next_start = next_headings[0].end()
+    following = re.search(r"(?m)^## ", text[next_start:])
+    next_end = next_start + following.start() if following else len(text)
+    if not text[next_start:next_end].strip():
+        raise GateError("manual completion report has an empty ## NEXT")
+    return rel
+
+
+def write_receipt(repo: Path, receipt: str, result: dict[str, object]) -> None:
+    path = (repo / receipt).resolve()
+    receipt_root = (repo / ".cache" / "platform" / "completion").resolve()
+    if path.parent != receipt_root or path.suffix != ".json":
+        raise GateError("receipt must be a JSON file directly under .cache/platform/completion")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = json.dumps(result, indent=2) + "\n"
+    with tempfile.NamedTemporaryFile(
+        "w", encoding="utf-8", dir=path.parent, prefix=f".{path.name}.", delete=False
+    ) as handle:
+        handle.write(payload)
+        temporary = Path(handle.name)
+    temporary.replace(path)
 
 
 def prepare(repo: Path, stamp: str, base_head: str, run_branch: str) -> dict[str, object]:
@@ -216,12 +271,23 @@ def prepare(repo: Path, stamp: str, base_head: str, run_branch: str) -> dict[str
     }
 
 
-def postflight(repo: Path, stamp: str, base_head: str, run_head: str) -> dict[str, object]:
+def postflight(
+    repo: Path, stamp: str | None, base_head: str, run_head: str, *, report: str | None = None
+) -> dict[str, object]:
     require_clean(repo)
     require_main_remote_sync(repo)
     head = local_head(repo)
     if head == base_head:
         raise GateError("main HEAD did not advance from the run base")
+    base_ancestor = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", base_head, "refs/heads/main"],
+        cwd=repo,
+        capture_output=True,
+    )
+    if base_ancestor.returncode:
+        raise GateError(f"run base {base_head} is not an ancestor of main")
+    if run_head == base_head:
+        raise GateError("run commit must differ from the run base")
     ancestor = subprocess.run(
         ["git", "merge-base", "--is-ancestor", run_head, "refs/heads/main"],
         cwd=repo,
@@ -229,11 +295,25 @@ def postflight(repo: Path, stamp: str, base_head: str, run_head: str) -> dict[st
     )
     if ancestor.returncode:
         raise GateError(f"run commit {run_head} is not an ancestor of main")
-    require_run_artifacts(repo, stamp, tracked=True)
+    if bool(stamp) == bool(report):
+        raise GateError("postflight requires exactly one of stamp or report")
+    if stamp:
+        require_run_artifacts(repo, stamp, tracked=True)
+        completion_kind = "wrapper"
+        evidence: dict[str, object] = {"stamp": stamp}
+    else:
+        completion_kind = "manual"
+        report_rel = require_manual_report(repo, report or "")
+        changed_report = git(repo, "diff", "--name-only", f"{base_head}..HEAD", "--", report_rel)
+        if report_rel not in changed_report.splitlines():
+            raise GateError("manual completion report was not added or changed after the run base")
+        evidence = {"report": report_rel}
     return {
         "ok": True,
         "mode": "postflight",
-        "stamp": stamp,
+        "completion": True,
+        "completion_kind": completion_kind,
+        **evidence,
         "base_head": base_head,
         "head": head,
         "run_head": run_head,
@@ -253,6 +333,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--base-head")
     parser.add_argument("--run-branch")
     parser.add_argument("--run-head")
+    parser.add_argument("--report")
+    parser.add_argument("--receipt")
     return parser.parse_args()
 
 
@@ -260,6 +342,8 @@ def main() -> int:
     args = parse_args()
     repo = Path(args.repo).resolve()
     try:
+        if args.receipt and args.mode != "postflight":
+            raise GateError("only postflight may write a completion receipt")
         if args.mode == "preflight":
             result = preflight(repo)
         elif args.mode == "prepare":
@@ -267,9 +351,13 @@ def main() -> int:
                 raise GateError("prepare requires --stamp, --base-head, and --run-branch")
             result = prepare(repo, args.stamp, args.base_head, args.run_branch)
         else:
-            if not (args.stamp and args.base_head and args.run_head):
-                raise GateError("postflight requires --stamp, --base-head, and --run-head")
-            result = postflight(repo, args.stamp, args.base_head, args.run_head)
+            if not (args.base_head and args.run_head):
+                raise GateError("postflight requires --base-head and --run-head")
+            result = postflight(
+                repo, args.stamp, args.base_head, args.run_head, report=args.report
+            )
+            if args.receipt:
+                write_receipt(repo, args.receipt, result)
     except GateError as exc:
         print(json.dumps({"ok": False, "mode": args.mode, "error": str(exc)}, indent=2))
         return 1

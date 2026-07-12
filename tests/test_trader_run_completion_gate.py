@@ -7,7 +7,15 @@ import unittest
 from pathlib import Path
 
 from scripts import trader_build_progress
-from scripts.trader_run_completion_gate import GateError, postflight, preflight, prepare
+from scripts.trader_run_completion_gate import (
+    GateError,
+    postflight,
+    preflight,
+    prepare,
+    require_manual_report,
+)
+
+GATE = Path(__file__).resolve().parents[1] / "scripts" / "trader_run_completion_gate.py"
 
 
 class TraderRunCompletionGateTest(unittest.TestCase):
@@ -63,6 +71,7 @@ class TraderRunCompletionGateTest(unittest.TestCase):
     def test_preflight_requires_clean_main_synced_to_origin(self) -> None:
         result = preflight(self.repo)
         self.assertTrue(result["ok"])
+        self.assertFalse(result["completion"])
         (self.repo / "dirty.txt").write_text("dirty\n", encoding="utf-8")
         with self.assertRaisesRegex(GateError, "not clean"):
             preflight(self.repo)
@@ -100,6 +109,123 @@ class TraderRunCompletionGateTest(unittest.TestCase):
         self.assertEqual(result["head"], result["origin_main"])
         with self.assertRaisesRegex(GateError, "not an ancestor"):
             postflight(self.repo, stamp, self.base, "0" * 40)
+
+    def test_manual_postflight_requires_tracked_report_and_proves_completion(self) -> None:
+        report = self.repo / "reports" / "trader-wakes" / "manual.md"
+        report.parent.mkdir(parents=True)
+        report.write_text(
+            "## VERIFICATION\ngreen\n\n"
+            "## DURABLE\ngate\n\n"
+            "## LESSON\nfail closed\n\n"
+            "## NEXT\none seed\n",
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(GateError, "not tracked"):
+            require_manual_report(self.repo, str(report.relative_to(self.repo)))
+
+        self._git("add", "-A")
+        self._git("commit", "-m", "manual infrastructure wake")
+        self._git("push", "origin", "main")
+        run_head = self._git("rev-parse", "HEAD")
+        result = postflight(
+            self.repo,
+            None,
+            self.base,
+            run_head,
+            report=str(report.relative_to(self.repo)),
+        )
+        self.assertTrue(result["completion"])
+        self.assertEqual(result["mode"], "postflight")
+        self.assertEqual(result["completion_kind"], "manual")
+        self.assertEqual(result["report"], "reports/trader-wakes/manual.md")
+
+    def test_manual_postflight_rejects_report_unchanged_since_base(self) -> None:
+        report = self.repo / "reports" / "trader-wakes" / "old.md"
+        report.parent.mkdir(parents=True)
+        report.write_text(
+            "## VERIFICATION\ngreen\n\n"
+            "## DURABLE\ngate\n\n"
+            "## LESSON\nold\n\n"
+            "## NEXT\none seed\n",
+            encoding="utf-8",
+        )
+        self._git("add", "-A")
+        self._git("commit", "-m", "old report")
+        self._git("push", "origin", "main")
+        base = self._git("rev-parse", "HEAD")
+        (self.repo / "unrelated.txt").write_text("change\n", encoding="utf-8")
+        self._git("add", "-A")
+        self._git("commit", "-m", "unrelated run")
+        self._git("push", "origin", "main")
+        run_head = self._git("rev-parse", "HEAD")
+        with self.assertRaisesRegex(GateError, "not added or changed"):
+            postflight(
+                self.repo,
+                None,
+                base,
+                run_head,
+                report=str(report.relative_to(self.repo)),
+            )
+
+    def test_only_postflight_can_write_completion_receipt(self) -> None:
+        receipt = self.repo / ".cache" / "platform" / "completion" / "manual.json"
+        proc = subprocess.run(
+            [
+                str(GATE),
+                "preflight",
+                "--repo",
+                str(self.repo),
+                "--receipt",
+                str(receipt.relative_to(self.repo)),
+            ],
+            text=True,
+            capture_output=True,
+        )
+        self.assertNotEqual(proc.returncode, 0)
+        self.assertIn("only postflight", proc.stdout)
+        self.assertFalse(receipt.exists())
+
+    def test_manual_postflight_writes_atomic_completion_receipt(self) -> None:
+        report = self.repo / "reports" / "trader-wakes" / "manual.md"
+        report.parent.mkdir(parents=True)
+        report.write_text(
+            "## VERIFICATION\ngreen\n\n"
+            "## DURABLE\ngate\n\n"
+            "## LESSON\nfail closed\n\n"
+            "## NEXT\none seed\n",
+            encoding="utf-8",
+        )
+        self._git("add", "-A")
+        self._git("commit", "-m", "manual infrastructure wake")
+        self._git("push", "origin", "main")
+        run_head = self._git("rev-parse", "HEAD")
+        receipt_rel = ".cache/platform/completion/manual.json"
+        proc = subprocess.run(
+            [
+                str(GATE),
+                "postflight",
+                "--repo",
+                str(self.repo),
+                "--report",
+                "reports/trader-wakes/manual.md",
+                "--base-head",
+                self.base,
+                "--run-head",
+                run_head,
+                "--receipt",
+                receipt_rel,
+            ],
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+        receipt = json.loads((self.repo / receipt_rel).read_text())
+        self.assertEqual(receipt, json.loads(proc.stdout))
+        self.assertEqual(receipt["mode"], "postflight")
+        self.assertTrue(receipt["completion"])
+        self.assertTrue(receipt["clean"])
+        self.assertTrue(receipt["integrated"])
+        self.assertTrue(receipt["pushed"])
 
     def test_prepare_rejects_private_key_marker(self) -> None:
         stamp = "2026-07-12T1204"

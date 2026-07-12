@@ -22,7 +22,9 @@ A changed-repository wake is `RUN COMPLETE` only when all are true:
 4. Learning is promoted deliberately: repo docs/reports for project truth/history; Trader skills for reusable procedures/pitfalls; compact profile memory only for stable stance/preferences. Superseded guidance is rewritten, not stacked.
 5. Intended paths are reviewed for secrets/private positions and committed coherently. Raw session logs, auth, `.env`, caches, provider dumps, and live position files stay untracked.
 6. The run branch is pushed normally, integrated into `main`, `main` is pushed, the run commit is an ancestor of remote `main`, and the canonical checkout is clean.
-7. The deterministic postflight gate passes and writes its receipt under `.cache/platform/completion/`.
+7. The deterministic postflight gate passes and atomically writes its receipt under `.cache/platform/completion/`.
+
+Wrapper BUILD wakes use `postflight --stamp <stamp>` and retain the full MoA artifact contract. Manual/direct-main infrastructure wakes use `postflight --report <tracked-wake-report>` with the pre-mutation base and integrated run commit. Both paths prove clean synchronized `main`, remote ancestry, and an advanced HEAD; both emit `mode: postflight` and `completion: true`. Preflight emits `completion: false` and is forbidden from writing a completion receipt.
 
 Executor/challenger output is a partial phase, never completion. On failure preserve the run branch and artifacts, report `RUN INCOMPLETE` with exact residue, and resume the contract-v2 BUILD stamp with `scripts/trader_build_lab_moa.sh --stamp <stamp> --resume` (or `--finalizer-only` after a successful critique).
 

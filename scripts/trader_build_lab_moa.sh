@@ -486,7 +486,7 @@ integrate_run() {
     --stamp "$STAMP" \
     --base-head "$BASE_HEAD" \
     --run-head "$RUN_HEAD" \
-    | tee "$LOCK_DIR/completion/${STAMP}.json"
+    --receipt ".cache/platform/completion/${STAMP}.json"
 
   git branch -d "$RUN_BRANCH"
   git push origin --delete "$RUN_BRANCH" >/dev/null 2>&1 || true
