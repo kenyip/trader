@@ -116,6 +116,9 @@ class TraderRunCompletionGateTest(unittest.TestCase):
             self._git("commit", "-m", "complete v2 run")
             self._git("push", "origin", "main")
             self.assertTrue(trader_build_progress.score_stamp(run_dir)["complete"])
+            self.assertTrue(
+                trader_build_progress.score_stamp(run_dir.relative_to(self.repo))["complete"]
+            )
         finally:
             trader_build_progress.REPO = original_repo
 

@@ -8,6 +8,8 @@
 #   scripts/trader_build_lab_moa.sh --structures put_credit_spread,call_credit_spread,iron_condor
 #   scripts/trader_build_lab_moa.sh --executor-only
 #   scripts/trader_build_lab_moa.sh --challenger-only --stamp 2026-07-10T2000
+#   scripts/trader_build_lab_moa.sh --resume --stamp 2026-07-10T2000
+#   scripts/trader_build_lab_moa.sh --finalizer-only --stamp 2026-07-10T2000
 #   scripts/trader_build_lab_moa.sh --slot premarket|postclose|daily|evening|weekend|weekly
 #
 # Env:
@@ -44,6 +46,8 @@ while [[ $# -gt 0 ]]; do
     --goal) GOAL="$2"; shift 2 ;;
     --executor-only) MODE="executor-only"; shift ;;
     --challenger-only) MODE="challenger-only"; shift ;;
+    --finalizer-only) MODE="finalizer-only"; shift ;;
+    --resume) MODE="resume"; shift ;;
     --stamp) STAMP="$2"; shift 2 ;;
     --slot) SLOT="$2"; shift 2 ;;
     --structures) STRUCTURES="$2"; shift 2 ;;
@@ -84,7 +88,7 @@ echo "pid=$$ ts=$(date -Iseconds) slot=${SLOT:-?} mode=${MODE:-?}" >"$LOCK_FILE"
 cleanup_lock() { rm -f "$LOCK_FILE" 2>/dev/null || true; }
 trap cleanup_lock EXIT
 
-if [[ "$MODE" == "both" ]]; then
+if [[ "$MODE" == "both" || "$MODE" == "executor-only" ]]; then
   if [[ ! -x "$GATE" ]]; then
     echo "ERROR: completion gate is missing or not executable: $GATE" >&2
     exit 1
@@ -140,11 +144,29 @@ fi
 MOA_DIR="reports/trader-wakes/moa/${STAMP}"
 mkdir -p "$MOA_DIR/prompts" reports/trader-wakes reports/readiness
 
+if [[ "$MODE" == "challenger-only" || "$MODE" == "finalizer-only" || "$MODE" == "resume" ]]; then
+  if [[ ! -f "$MOA_DIR/meta.json" ]]; then
+    echo "ERROR: recovery mode requires existing $MOA_DIR/meta.json" >&2
+    exit 1
+  fi
+  BASE_HEAD="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("base_head", ""))' "$MOA_DIR/meta.json")"
+  RUN_BRANCH="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("run_branch", ""))' "$MOA_DIR/meta.json")"
+  if [[ -z "$BASE_HEAD" || -z "$RUN_BRANCH" ]]; then
+    echo "ERROR: stamp $STAMP predates the recoverable completion contract" >&2
+    exit 1
+  fi
+  if [[ "$(git branch --show-current)" != "$RUN_BRANCH" ]]; then
+    echo "ERROR: recovery must run from $RUN_BRANCH (current: $(git branch --show-current))" >&2
+    exit 1
+  fi
+fi
+
 # Preflight coverage (non-fatal)
 set +e
 .venv/bin/python scripts/trader_income_coverage.py --write >/dev/null 2>"$MOA_DIR/coverage-preflight.err"
 set -e
 
+if [[ "$MODE" == "both" || "$MODE" == "executor-only" ]]; then
 python3 - <<PY
 import json
 from pathlib import Path
@@ -168,6 +190,7 @@ meta = {
 }
 Path("$MOA_DIR/meta.json").write_text(json.dumps(meta, indent=2) + "\n")
 PY
+fi
 
 # --- Executor prompt ---
 cat > "$MOA_DIR/prompts/01-executor.txt" <<EOF
@@ -430,6 +453,15 @@ case "$MODE" in
   challenger-only)
     run_chall
     echo "PARTIAL PHASE COMPLETE: challenger residue written; RUN INCOMPLETE until finalization, verification, and integration"
+    ;;
+  resume)
+    run_chall
+    run_finalize
+    integrate_run
+    ;;
+  finalizer-only)
+    run_finalize
+    integrate_run
     ;;
 esac
 

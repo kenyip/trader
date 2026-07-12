@@ -127,6 +127,8 @@ A BUILD wake has three judgment phases plus deterministic integration:
 
 The wrapper may emit `RUN COMPLETE` only after all four close. Executor/challenger markers are phase receipts—not completion. A red test, dirty tree, untracked residue, missing learning artifact, unpushed commit, or unmerged branch leaves the run `RUN INCOMPLETE` with its branch/evidence preserved for repair.
 
+Recovery is explicit and resumable: run `scripts/trader_build_lab_moa.sh --stamp <stamp> --resume` to rerun challenge → finalizer → integration, or `--finalizer-only` when the critique is already green. Recovery must run from the original `trader/run-<stamp>` branch recorded in `meta.json`; old pre-contract runs cannot masquerade as recoverable completed runs.
+
 Each finalizer promotes learning by type:
 
 - dated outcome, current readiness, and project truth → repo report/doc;

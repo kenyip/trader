@@ -28,6 +28,8 @@ def _read(p: Path) -> str:
 
 def _tracked_on_origin_main(path: Path) -> bool:
     """True when the path's latest committed version is integrated into origin/main."""
+    if not path.is_absolute():
+        path = REPO / path
     try:
         rel = str(path.relative_to(REPO))
     except ValueError:
@@ -51,6 +53,8 @@ def _tracked_on_origin_main(path: Path) -> bool:
 
 
 def score_stamp(d: Path) -> dict:
+    if not d.is_absolute():
+        d = REPO / d
     meta_p = d / "meta.json"
     close = _read(d / "executor-closeout.md") + "\n" + _read(d / "challenger-critique.md")
     latest_bits = close.lower()
