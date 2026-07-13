@@ -31,7 +31,7 @@ Corrected model:
 
 Grok 4.5 initially FAILed three issues: an over-broad permanent DR ban, self-asserted batch L1 metadata, and incomplete boundary tests. All were repaired. Read-only re-review returned PASS on archive-scoped redirect semantics, scoreboard stuffing resistance, three-date plumbing-only semantics, and strategy freedom. Residuals are non-blocking: archive-stop wording uses a token heuristic; observed replay remains deliberately hard-false until a real adapter exists; future readiness callers must use computed coverage rather than self-asserted payload metadata.
 
-## Verification
+## VERIFICATION
 
 - Focused behavioral/boundary/negative suite: `tests.test_trader_build_compounding`, `tests.test_evidence_policy`, `tests.test_pcs_direction_scoreboard`, option-observation and contract-grid tests — 33/33 green.
 - Full unittest discovery — 134/134 green.
@@ -43,11 +43,15 @@ Grok 4.5 initially FAILed three issues: an over-broad permanent DR ban, self-ass
 
 No living leader and no capital seat. BUILD/L0 and all formal B checks remain unchanged. This repair changes research routing and evidence provenance, not strategy performance. No trade-shaped candidate was produced, so structure/capital-fit/max-loss/max-lots are not applicable.
 
-## Durable lesson
+## DURABLE
+
+The route inventory is machine-readable in zero-input `orientation.json`; provenance/L1 behavior is centralized in `trader_platform/research/evidence_policy.py`; corrected project truth and the provider gate are tracked in the option-data docs and readiness report.
+
+## LESSON
 
 A dataset gate is claim-scoped, not program-scoped. Real historical underlying replay with proxy option marks can productively discover and falsify strategy DNA, but proxy provenance must remain explicit and can never cross L1. Sparse forward archives are plumbing/calibration evidence, not edge evidence.
 
-## ONE NEXT
+## NEXT
 
 On the next zero-input BUILD wake, inventory open independent historical routes against closed novelty keys and autonomously choose one highest-information predeclared broad historical simulation/falsification or missing simulator-capability loop. Keep option marks explicitly Black-Scholes proxy/L0, do not force a symbol or structure, and treat forward archive capture as parallel only when a distinct RTH market date exists.
 
