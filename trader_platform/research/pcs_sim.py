@@ -273,6 +273,9 @@ def entry_filters_pass(row: pd.Series, cfg: dict[str, Any]) -> bool:
         ("intraday_return", "entry_intraday_return_min", "entry_intraday_return_max"),
         ("volume_surge", "entry_volume_surge_min", "entry_volume_surge_max"),
         ("ret_1d", "entry_ret_1d_min", "entry_ret_1d_max"),
+        ("ret_5d", "entry_ret_5d_min", "entry_ret_5d_max"),
+        ("ret_14d", "entry_ret_14d_min", "entry_ret_14d_max"),
+        ("ema_stack", "entry_ema_stack_min", "entry_ema_stack_max"),
         ("rsi_14", "entry_rsi_min", "entry_rsi_max"),
         ("hv_ratio_20_60", "entry_hv_ratio_min", "entry_hv_ratio_max"),
     )
@@ -294,11 +297,17 @@ def entry_filters_pass(row: pd.Series, cfg: dict[str, Any]) -> bool:
             value = hv_20_value / hv_60_value
         else:
             value = row.get(column)
-        if value is None or not np.isfinite(float(value)):
+        if value is None:
             return False
-        if minimum_key in cfg and float(value) < _cfg_float(cfg, minimum_key, float("-inf")):
+        try:
+            numeric_value = float(value)
+        except (TypeError, ValueError):
             return False
-        if maximum_key in cfg and float(value) > _cfg_float(cfg, maximum_key, float("inf")):
+        if not np.isfinite(numeric_value):
+            return False
+        if minimum_key in cfg and numeric_value < _cfg_float(cfg, minimum_key, float("-inf")):
+            return False
+        if maximum_key in cfg and numeric_value > _cfg_float(cfg, maximum_key, float("inf")):
             return False
     return True
 

@@ -10,7 +10,7 @@
 | **Structure** | What we trade (PCS, CCS, IC, …) | `STRUCTURE_CATALOG` + sim engine |
 | **Symbol** | Where | `universe.yaml` research rank |
 | **Time bias** | DTE bucket, hold days, entry weekday/session | `pcs_time_bias_grid.py` covers multi-hyp DTE/profit-target/DTE-stop + entry-weekday/cost slices; lagged completed-bar close-shock filters and chronological selection/holdout falsification are built; session pending |
-| **Direction / regime / volatility bias** | Bull / bear / neutral / compression / expansion / stand-aside | Shared-window scoreboard plus `regime_router_sim.py`: one no-lookahead PCS/CCS/IC position with standalone controls; router, four PCS signal families, and a bearish volatility-expansion CCS rolling-origin family were rejected |
+| **Direction / regime / volatility bias** | Bull / bear / neutral / compression / expansion / stand-aside | Shared-window scoreboard plus `regime_router_sim.py`: one no-lookahead PCS/CCS/IC position with standalone controls; router, four adjacent-daily PCS families, a multi-horizon trend-pullback PCS family, and a bearish volatility-expansion CCS family were rejected |
 | **Risk fit** | 1-lot max_loss, open risk, BP | capital_fit + quality bar |
 | **Falsify** | Regime windows + cost/slip | B3/B4 scripts + fixed-dollar per-leg half-spread axis across all defined-risk proxy sims |
 
@@ -220,3 +220,7 @@ Added a fail-closed `hv_20/hv_60` PCS entry filter and `scripts/pcs_vol_compress
 ### 2026-07-12 — Realized-volatility-expansion CCS falsification
 
 Added `scripts/ccs_vol_expansion_rolling_origin_lab.py` to test one predeclared direction-aligned 14-DTE CCS after prior completed-bar `hv_20/hv_60 >= 1.20` and non-positive return. Across the same eight-symbol expanding 40/60/80% rolling-origin design, zero of 24 train folds and zero complete folds passed both proxy cost axes. Minimum strategy-axis samples were 0–6; worst per-symbol fold drawdown was $76.20–$347.91 while worst one-lot max loss was $94.71–$237.36. Unconditional and compression CCS controls were persisted, and all 286 strategy/control/window summaries had exact ledgers with zero signal or same-bar violations. The family is rejected without tuning, registration, or L1 claim.
+
+### 2026-07-12 — Multi-horizon trend-pullback PCS falsification
+
+Extended the fail-closed PCS signal boundary to lagged `ret_5d`, `ret_14d`, and EMA-stack bounds, then tested one predeclared 21-DTE PCS after a non-positive five-day return inside a ≥3% fourteen-day return and bullish EMA stack. Across BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL and three expanding rolling-origin folds, four of 24 train gates passed but zero complete folds survived untouched holdouts under both 5% leg slip and $0.01-per-leg costs. All 286 strategy/control/window summaries had exact ledgers with zero signal or same-bar violations. The multi-horizon family is rejected without threshold tuning or registration; option marks remain Black-Scholes proxies and cannot earn L1.

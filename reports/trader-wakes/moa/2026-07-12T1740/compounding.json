@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "stamp": "2026-07-12T1740",
+  "loop_signature": "pcs/direction/multi-horizon-trend-pullback/rolling-origin/proxy-cost",
+  "outcome": "FALSIFIED",
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "The shared PCS entry-filter boundary now supports lagged ret_5d, ret_14d, and ema_stack bounds and fails closed rather than raising on malformed configured numeric features.",
+      "novelty_key": "pcs-multi-horizon-entry-filter-nonnumeric-fail-closed",
+      "artifacts": [
+        "trader_platform/research/pcs_sim.py",
+        "tests/test_pcs_trend_pullback_rolling_origin_lab.py"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "A predeclared 21-DTE multi-horizon trend-pullback PCS produced four of 24 train-gate passes but zero complete untouched-holdout folds across eight symbols under both proxy cost axes, so the family is closed without tuning, registration, or promotion.",
+      "novelty_key": "pcs-multi-horizon-trend-pullback-rolling-origin-8x3-reject",
+      "artifacts": [
+        "scripts/pcs_trend_pullback_rolling_origin_lab.py",
+        "tests/test_pcs_trend_pullback_rolling_origin_lab.py",
+        "docs/BUILD_LAB_ENVIRONMENT.md",
+        "docs/INCOME_STRATEGY_COVERAGE.md",
+        "reports/trader-wakes/2026-07-12T1740-moa-merge.md",
+        "reports/readiness/LATEST.md"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "The trend-pullback module lacked a local passing-holdout/failing-train negative control even though sibling rolling-origin labs carry one.",
+      "status": "repaired",
+      "rationale": "The local suite now constructs passing holdout axes and a failing train slip axis and proves _fold_pass rejects the fold, preserving the conjunctive train-before-holdout boundary next to the new lab.",
+      "repair_artifacts": [
+        "scripts/pcs_trend_pullback_rolling_origin_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_pcs_trend_pullback_rolling_origin_lab.py"
+      ]
+    },
+    {
+      "finding": "Four train gates indicate an almost-edge that should trigger threshold, DTE, or management retuning.",
+      "status": "rejected",
+      "rationale": "The predeclared decision required every train-first fold to survive untouched holdouts under both cost axes; zero of 24 complete folds passed. Retuning on the same synthetic marks after seeing holdout failures would be holdout-adjacent search and thrash.",
+      "repair_artifacts": [],
+      "test_artifacts": []
+    },
+    {
+      "finding": "The prior observed-archive NEXT had to be executed on Sunday instead of being superseded.",
+      "status": "rejected",
+      "rationale": "Archive density advances only on a distinct New York RTH market date, which Sunday cannot provide. The independent historical-underlying proxy and simulator-capability routes remained executable under explicit L0 claim limits.",
+      "repair_artifacts": [],
+      "test_artifacts": []
+    },
+    {
+      "finding": "The 286 integrity-summary claim is incomplete because a broader nested-field count is larger.",
+      "status": "rejected",
+      "rationale": "The established run-summary convention counts dictionaries carrying both integrity and n_trades; the exact rerun contains 286 such summaries and all 286 are true. Nested holdout-window fields are also exact, with aggregate signal and same-bar-reentry violations both zero.",
+      "repair_artifacts": [],
+      "test_artifacts": []
+    },
+    {
+      "finding": "Missing the local fold-gate negative control invalidated the rejection decision.",
+      "status": "rejected",
+      "rationale": "The shared _fold_pass implementation was already conjunctive and produced zero complete folds despite four train passes, so the omission was not claim-invalidating. The finalizer nevertheless repaired the local test-parity gap and reconfirmed the complete suite.",
+      "repair_artifacts": [],
+      "test_artifacts": []
+    },
+    {
+      "finding": "The current run's orientation.json should be rewritten to include the newly closed family.",
+      "status": "rejected",
+      "rationale": "orientation.json is immutable pre-choice context generated only from prior integrated compounding records. Rewriting it with the current outcome would create temporal leakage; this run records the closure in compounding.json, and the next integrated orientation will ingest it.",
+      "repair_artifacts": [],
+      "test_artifacts": []
+    }
+  ],
+  "closed_families": [
+    "pcs-multi-horizon-trend-pullback-daily-bar"
+  ],
+  "data_dependencies": [
+    "A reliable dividend/ex-date event source and deterministic as-of semantics are required before short-call diagonal/debit assignment-risk claims; dependent simulations must fail closed when event data is absent.",
+    "A distinct New York RTH market date is required to advance the TSLL option archive from 1/3 to 2/3; provider-backed historical replay and L1 remain blocked before sufficient history and complete joins."
+  ],
+  "next": "Build a no-lookahead dividend/ex-date and early-assignment risk boundary for short-call diagonal and debit simulators, with deterministic behavioral and negative-control tests before strategy retuning; fail closed when required event data is absent, keep proxy claims L0, and do not reopen the rejected multi-horizon trend-pullback PCS family through threshold polish."
+}

@@ -111,7 +111,7 @@ just trader-wake-moa -- --hyps id1,id2,id3
 | Diagonal spreads | **Partial** — defined-debit scaffold + B3/B4 + exact-DNA OOS/density; observed surfaces and assignment realism missing |
 | Butterfly / debit / ratio spreads | **Partial** — long call butterfly, symmetric/broken-wing credit iron butterflies, bull-call/bear-put debit verticals, and a 1x2 put ratio backspread have BS scaffolds; ratio cost survival did not overcome its drawdown gate |
 | Explicit time-bucket research dimensions | **Partial** (multi-hyp DTE/target/stop + entry-weekday/cost grid, lagged completed-bar close-shock filters, and chronological selection/holdout falsification built; session-time slices absent) |
-| Direction bias as first-class score feature | **Partial** — shared-window scoreboard plus a no-lookahead shared-position PCS/CCS/IC router and standalone controls exist; router, prior close-shock/momentum/pullback/vol-compression PCS families, and the bearish volatility-expansion CCS rolling-origin family were cost/density/DD-rejected |
+| Direction bias as first-class score feature | **Partial** — shared-window scoreboard plus a no-lookahead shared-position PCS/CCS/IC router and standalone controls exist; router, prior adjacent-daily close-shock/momentum/pullback/vol-compression PCS, multi-horizon trend-pullback PCS, and bearish volatility-expansion CCS families were cost/density/DD-rejected |
 | Cost-model realism | **Partial** — percentage/fixed-dollar sensitivity + normalized observed bid/ask archive/current snapshot + exact PCS/CCS/IC leg/time coverage reject gate; injectable actual expiry/strike-grid boundary and date-aware archived provider are fixture-tested and fail-closed. All-expiration append-safe capture is built, but historical density remains one market date; at least three dates are required before provider-backed historical entry simulation |
 | Live-clock multi-session paper open/close | **Thin** (B6 partial) |
 | Live / agentic open-close | **Blocked** until fund + arm |
@@ -248,6 +248,10 @@ Added fail-closed current-row entry bounds and an explicit completed-bar signal 
 ### 2026-07-12 — Bearish volatility-expansion CCS falsification
 
 Tested one predeclared 14-DTE call-credit-spread DNA after a prior completed-bar `hv_20/hv_60 >= 1.20` state and non-positive return across BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL. Expanding 40/60/80% train gates and following holdouts used both proxy cost axes plus unconditional and compression CCS controls. Zero of 24 train folds and zero complete folds passed; minimum strategy-axis samples were 0–6 and worst per-symbol fold drawdown was $76.20–$347.91 despite one-lot max loss remaining $94.71–$237.36. All 286 persisted strategy/control/window summaries had exact ledgers, zero signal violations, and zero same-bar re-entry. Family rejected without tuning or registration; synthetic option marks/costs cannot earn L1.
+
+### 2026-07-12 — Multi-horizon trend-pullback PCS falsification
+
+Added fail-closed prior-bar `ret_5d`, `ret_14d`, and EMA-stack entry bounds and tested one predeclared 21-DTE PCS across BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL. Four of 24 expanding-origin train gates passed, but zero complete folds survived untouched holdouts under both proxy cost axes; all 286 persisted strategy/control/window summaries had exact ledgers with zero signal or same-bar violations. The finalizer added a local passing-holdout/failing-train negative control. This proxy family is closed without threshold tuning or registration and cannot earn L1.
 
 ## Cumulative improvement contract
 

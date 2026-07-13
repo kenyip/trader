@@ -1,0 +1,33 @@
+# MOA BUILD learning promotion — 2026-07-12T1740
+
+## VERIFICATION
+
+- Exact lab rerun: `.venv/bin/python scripts/pcs_trend_pullback_rolling_origin_lab.py --out .cache/platform/pcs_trend_pullback_rolling_origin_lab_2026-07-12T1740.json` → `REJECT_MULTI_HORIZON_TREND_PULLBACK_PCS`; 8 completed symbols, 24 folds, 4 train-gate passes, 0 complete-fold passes, 0 errors.
+- Independent artifact reduction: 286/286 established strategy/control/window run summaries had `integrity=true`; aggregate `signal_violations=0` and `same_bar_reentries=0`. Persisted train/holdout cost axes reported `capital_fit_usd` $75.30–$225.80 and worst one-lot `max_loss_usd` $227.19. PLTR's train-pass holdout remained slip −$208.97 / DD $214.28 and fixed −$39.62 / DD $118.96.
+- Focused behavioral/boundary/negative-control/regression suite: `.venv/bin/python -m unittest tests.test_pcs_trend_pullback_rolling_origin_lab tests.test_ccs_vol_expansion_rolling_origin_lab tests.test_pcs_vol_compression_rolling_origin_lab tests.test_pcs_pullback_rolling_origin_lab tests.test_pcs_momentum_walkforward_lab tests.test_pcs_expiry_grid tests.test_pcs_direction_scoreboard` → 36 tests, OK. Finalizer added the local passing-holdout/failing-train fold-gate negative control.
+- Platform smoke: `.venv/bin/python -m trader_platform.smoke_test` → `platform smoke OK`; multi-leg risk/ledger path passed and `agentic_live` remained blocked by the Stage1 OAuth gate.
+- Full regression: `.venv/bin/python -m unittest discover -s tests` → 138 tests, OK.
+- Compile: `.venv/bin/python -m py_compile scripts/pcs_trend_pullback_rolling_origin_lab.py tests/test_pcs_trend_pullback_rolling_origin_lab.py scripts/trader_income_coverage.py` → exit 0.
+- Derived coverage regeneration: `.venv/bin/python scripts/trader_income_coverage.py --write --stamp 2026-07-12T1740` → 20 structures, 245 hypotheses, 67 evolve artifacts, no living quality leader; dated and LATEST coverage files agree.
+- Structured handoff: `.venv/bin/python scripts/trader_build_compounding.py validate-handoff --repo . --stamp 2026-07-12T1740 --base-head 6b9a7e01044bdcbe917706bf2b15d8ea8c0ca7de` → `ok=true`, `role_ready=true`, outcome `FALSIFIED`, 2 useful deltas, 6 closed critic findings, and novelty keys `pcs-multi-horizon-entry-filter-nonnumeric-fail-closed` plus `pcs-multi-horizon-trend-pullback-rolling-origin-8x3-reject`.
+- Consistency/whitespace: `cmp` proved the dated merge equals wake `LATEST.md` and dated income coverage equals coverage `LATEST.md`; `python -m json.tool` accepted `compounding.json`; `git diff --check 6b9a7e01044bdcbe917706bf2b15d8ea8c0ca7de` → exit 0.
+- Complete base-diff audit: 22 intended text paths (8 tracked modifications, 14 untracked run artifacts), zero binary paths, zero sensitive/private-position path matches, and zero raw-secret assignments. Concurrent monitor-only 1800 files that appeared during finalization were stale pre-integration derived debris; the two run-created dated files were removed and their LATEST surfaces were restored byte-for-byte to base rather than included in this run.
+- Accepted challenger findings: PASS 8/8; the exact rejection, 8/8 population, 4/24 train passes, 0/24 complete folds, capital range, risk maximum, integrity, no-promotion judgment, empty leader, BUILD/L0 state, family closure, and dividend/assignment NEXT all stand. The optional local negative-control hardening was accepted and repaired.
+- Rejected findings with evidence: four train-only survivors do not justify same-evidence retuning after zero complete folds; Sunday cannot create a distinct New York RTH archive date; 286 is the established exact run-summary count rather than a missed nested-field defect; and the previously shared conjunctive fold gate meant the missing local parity test did not invalidate the rejection, although the test gap is now repaired. The current `orientation.json` remains immutable pre-choice context: rewriting it with the current closure would create temporal leakage, so `compounding.json` carries the family and the next integrated orientation will ingest it.
+- Learning promotion: `trader-self-evolution` now carries a generic pitfall for guarded numeric feature parsing plus local train-fail/holdout-pass tests; no profile-memory update was appropriate because this is a reusable procedure and dated research result, not a stable Ken preference or environment fact.
+- Integration remains pending the deterministic wrapper gate. This finalizer did not commit, push, merge, switch branches, or claim RUN COMPLETE.
+
+## DURABLE
+
+- Project truth and dated evidence: `docs/BUILD_LAB_ENVIRONMENT.md`, `docs/INCOME_STRATEGY_COVERAGE.md`, `reports/trader-wakes/2026-07-12T1740-moa-exec.md`, `reports/trader-wakes/2026-07-12T1740-moa-merge.md`, `reports/trader-wakes/LATEST.md`, `reports/trader-wakes/INDEX.md`, and `reports/readiness/LATEST.md` agree that the multi-horizon trend-pullback PCS family is closed, the capital path is empty, and readiness remains BUILD/L0.
+- Reusable machinery and tests: `trader_platform/research/pcs_sim.py`, `scripts/pcs_trend_pullback_rolling_origin_lab.py`, and `tests/test_pcs_trend_pullback_rolling_origin_lab.py` preserve lagged multi-horizon bounds, malformed-feature fail-close, disjoint controls, train-before-holdout gating, dual proxy costs, and the local negative control.
+- Generated truth: `scripts/trader_income_coverage.py`, `reports/readiness/income-coverage-2026-07-12T1740.md`, and `reports/readiness/income-coverage-LATEST.md` name the new rejection consistently.
+- Skill promotion: profile skill `trader-self-evolution` now generalizes the configured numeric-feature failure and the required malformed-input plus local fold-gate tests. No memory promotion was made because dated metrics belong in repo evidence.
+
+## LESSON
+
+Future Trader can research lagged multi-horizon states without crashing on malformed configured values and can prove locally that a good holdout never rescues a failed train cost axis. On the present L0 Black-Scholes proxy evidence, a five-day pullback inside a positive fourteen-day/EMA trend produced only train-local survival and zero complete dual-cost rolling-origin folds; threshold polishing is therefore thrash, while dividend/ex-date and early-assignment event realism is the higher-information capability boundary.
+
+## NEXT
+
+Build a no-lookahead dividend/ex-date and early-assignment risk boundary for short-call diagonal and debit simulators, with deterministic behavioral and negative-control tests before strategy retuning. Fail closed when required event data is absent, keep proxy claims L0, and do not reopen the rejected multi-horizon trend-pullback PCS family through threshold polish.
