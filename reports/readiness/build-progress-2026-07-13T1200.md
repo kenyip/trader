@@ -1,4 +1,4 @@
-# BUILD progress scoreboard — 2026-07-13T1345
+# BUILD progress scoreboard — 2026-07-13T1200
 
 Heuristic from MoA closeouts (not a live arm). See `docs/BUILD_PROGRESS_AND_CONFIDENCE.md`.
 
@@ -19,7 +19,7 @@ Heuristic from MoA closeouts (not a live arm). See `docs/BUILD_PROGRESS_AND_CONF
 | `2026-07-12T2237` | 4 | delta_capability | 0/0 | gpt-5.6-sol→grok-4.5 |
 | `2026-07-12T2315` | 3 | delta_capability, delta_falsification | 0/0 | gpt-5.6-sol→grok-4.5 |
 | `2026-07-13T0026` | 3 | delta_capability, delta_falsification, delta_repair | 0/0 | gpt-5.6-sol→grok-4.5 |
-| `2026-07-13T0515` | 0 | failed_or_incomplete | 0/0 | gpt-5.6-sol→grok-4.5 |
+| `2026-07-13T0515` | 0 | failed_or_incomplete | None/None | gpt-5.6-sol→grok-4.5 |
 
 ## Real-trade confidence (manual ladder)
 

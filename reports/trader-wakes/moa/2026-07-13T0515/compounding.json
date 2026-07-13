@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "stamp": "2026-07-13T0515",
+  "loop_signature": "historical-underlying/session-time-30m/pcs-ccs-ic/chronological-dual-cost",
+  "outcome": "FALSIFIED",
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "Built a no-lookahead New York RTH completed-30-minute session frame and reproducible PCS/CCS/IC train-selection to untouched-holdout dual-cost lab.",
+      "novelty_key": "session-time-30m-prior-session-chronological-lab-v1",
+      "artifacts": [
+        "trader_platform/research/intraday_session_data.py",
+        "scripts/pcs_session_time_chronological_lab.py",
+        "tests/test_intraday_session_data.py",
+        "tests/test_pcs_session_time_chronological_lab.py"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "Rejected the locked 8-symbol x 3-structure 7-DTE session-time proxy cycle after 24/24 rows completed, six train rows passed both cost axes, and zero passed the complete train plus untouched-holdout conjunction.",
+      "novelty_key": "session-time-8x3-dual-cost-reject-2026-07-13-cycle",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-13T0515/pcs-session-time-chronological-lab.json",
+        "reports/trader-wakes/moa/2026-07-13T0515/executor-closeout.md",
+        "reports/trader-wakes/moa/2026-07-13T0515/challenger-critique.md"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Made PCS/CCS/IC calendar DTE safe for timezone-aware intraday timestamps, applied entry lag to every entry feature, and made exits consume the date/session bucket to prevent later same-bucket reentry.",
+      "novelty_key": "pcs-intraday-calendar-dte-exit-bucket-integrity-v1",
+      "artifacts": [
+        "trader_platform/research/pcs_sim.py",
+        "tests/test_pcs_expiry_grid.py"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Replaced stale generated/doctrine coverage that called session-time missing with tested built-but-rejected and usable-date-density semantics, while preserving no-living-leader language.",
+      "novelty_key": "income-coverage-session-time-state-regression-v1",
+      "artifacts": [
+        "scripts/trader_income_coverage.py",
+        "tests/test_trader_income_coverage.py",
+        "docs/BUILD_LAB_ENVIRONMENT.md",
+        "docs/INCOME_STRATEGY_COVERAGE.md",
+        "reports/readiness/income-coverage-2026-07-13T0515.md"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "F1: generated coverage still said session-time slices were missing after the capability and exact-cycle reject existed.",
+      "status": "repaired",
+      "rationale": "Coverage machinery now reports the completed-30-minute lab as built and 0/24 rejected, and a subprocess regression test rejects the stale missing-capability phrase.",
+      "repair_artifacts": [
+        "scripts/trader_income_coverage.py"
+      ],
+      "test_artifacts": [
+        "tests/test_trader_income_coverage.py"
+      ]
+    },
+    {
+      "finding": "F2: executor NEXT treated absent raw dates as the bottleneck even though raw history had about 60 dates and feature readiness left only 21 usable dates.",
+      "status": "repaired",
+      "rationale": "The merged and final NEXT target append-safe raw provenance plus no-lookahead usable-feature density before one locked rerun; session-frame machinery and prior-session feature tests make the distinction explicit.",
+      "repair_artifacts": [
+        "trader_platform/research/intraday_session_data.py",
+        "scripts/pcs_session_time_chronological_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_intraday_session_data.py",
+        "tests/test_pcs_session_time_chronological_lab.py"
+      ]
+    },
+    {
+      "finding": "F3: axis max_lots reported generic capacity 3 while prose fixed the operating posture at one lot.",
+      "status": "rejected",
+      "rationale": "No row passed, no seat or intent was created, every axis/structure states the one-lot operating posture, and max one-lot loss is $224.61. Rewriting immutable evidence labels after execution would not change the decision; a future rerun may predeclare separate operating and theoretical fields."
+    },
+    {
+      "finding": "F4: nine holdout dates produce only one window, making dense-negative and window stress nearly vacuous.",
+      "status": "rejected",
+      "rationale": "Accepted as a limitation but not a claim-invalidating defect for this rejection: all six train survivors already fail untouched holdout cost-axis PnL or trade density. Current reports prohibit affirmative interpretation of sparse windows, and NEXT requires denser usable dates before retest."
+    },
+    {
+      "finding": "F5: concurrent RTH prose called historical b195f5fe a quality PCS despite an empty capital path and no living leader.",
+      "status": "repaired",
+      "rationale": "Current readiness now labels every same-day occurrence as a historical PCS reference with no living leader; tested coverage retains a none/former-reference leader hint.",
+      "repair_artifacts": [
+        "scripts/trader_income_coverage.py"
+      ],
+      "test_artifacts": [
+        "tests/test_trader_income_coverage.py"
+      ]
+    }
+  ],
+  "closed_families": [
+    "session-time-7dte-one-point-pcs-ccs-ic-proxy-seed-2026-07-13-cycle"
+  ],
+  "data_dependencies": [
+    "Append-safe provenance-recorded raw 30-minute underlying archive for BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL with download/as-of metadata.",
+    "More than the current 21 usable prior-session feature dates and nine holdout dates, obtained without lookahead or holdout retuning.",
+    "Observed historical option surfaces remain required for any claim above L0; current TSLL archive is only 2/3 market dates and is provider-backtest ineligible."
+  ],
+  "next": "Promote an append-safe provenance-recorded raw 30-minute underlying archive for BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL, expand usable prior-session feature dates toward retained raw history without lookahead, then rerun exactly once the locked PCS/CCS/IC open/midday/late chronological dual-cost train-to-holdout specification with unchanged DNA/gates and no holdout retune; keep L0 and do not register, promote, paper, shadow, arm, or live."
+}

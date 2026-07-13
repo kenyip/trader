@@ -110,9 +110,9 @@ just trader-wake-moa -- --hyps id1,id2,id3
 | Calendar spreads | **Partial** — explicit front/back IV + put-skew assumptions and chronological OOS scaffold; historical option-surface inputs still absent |
 | Diagonal spreads | **Partial** — defined-debit scaffold + B3/B4 + exact-DNA OOS/density, no-lookahead dividend/short-call assignment guard, and archived Nasdaq declaration-date provider for supported eventful listings; AAPL announcement date/amount/common-stock identity have bounded 40/40 issuer corroboration from 2016-07-26 through 2026-04-30, while the independent explicit-ex-date inventory covered only the latest 20/40 target events and closed that narrow route at partial L0; earlier events, unsupported symbols, and observed surfaces remain unqualified |
 | Butterfly / debit / ratio spreads | **Partial** — long call butterfly, symmetric/broken-wing credit iron butterflies, bull-call/bear-put debit verticals, and a 1x2 put ratio backspread have BS scaffolds; bull-call debit has the no-lookahead dividend/assignment guard plus supported-listing archived declaration-date provider and the same bounded AAPL issuer corroboration, while the explicit-ex-date inventory was incomplete at 20/40, observed surfaces and short-put assignment remain unmodeled, and ratio cost survival did not overcome its drawdown gate |
-| Explicit time-bucket research dimensions | **Partial** (multi-hyp DTE/target/stop + entry-weekday/cost grid, lagged completed-bar close-shock filters, and chronological selection/holdout falsification built; session-time slices absent) |
+| Explicit time-bucket research dimensions | **Partial** — multi-hyp DTE/target/stop + entry-weekday/cost grid and lagged completed-bar filters exist; a completed-30-minute open/midday/late PCS/CCS/IC chronological dual-cost lab is now built, but its first 8-symbol cycle rejected 24/24 rows and usable feature history is only 21 dates versus about 60 raw dates |
 | Direction bias as first-class score feature | **Partial** — shared-window scoreboard plus a no-lookahead shared-position PCS/CCS/IC router and standalone controls exist; router, prior adjacent-daily close-shock/momentum/pullback/vol-compression PCS, multi-horizon trend-pullback PCS, and bearish volatility-expansion CCS families were cost/density/DD-rejected |
-| Cost-model realism | **Partial** — percentage/fixed-dollar sensitivity + normalized observed bid/ask archive/current snapshot + exact PCS/CCS/IC leg/time coverage reject gate; injectable actual expiry/strike-grid boundary and date-aware archived provider are fixture-tested and fail-closed. All-expiration append-safe capture is built, but historical density remains one market date; at least three dates are required before provider-backed historical entry simulation |
+| Cost-model realism | **Partial** — percentage/fixed-dollar sensitivity + normalized observed bid/ask archive/current snapshot + exact PCS/CCS/IC leg/time coverage reject gate; injectable actual expiry/strike-grid boundary and date-aware archived provider are fixture-tested and fail-closed. All-expiration append-safe capture is built, but the TSLL archive has only 2/3 distinct New York market dates; provider-backed historical entry simulation remains blocked |
 | Live-clock multi-session paper open/close | **Thin** (B6 partial) |
 | Live / agentic open-close | **Blocked** until fund + arm |
 
@@ -160,6 +160,10 @@ Manual preflight: `just trader-run-gate preflight`. Enforcement: `scripts/trader
 ---
 
 ## History
+
+### 2026-07-13 — Completed-30-minute session-time proxy route
+
+Added a no-lookahead 30-minute underlying session frame with New York RTH buckets, prior-completed-session regime/IV features, a one-completed-bar entry lag, timezone-safe calendar DTE, and date/session-bucket consumption on both entry and exit. The reproducible eight-symbol PCS/CCS/IC chronological dual-cost lab completed 24/24 rows; six train rows passed both proxy cost axes, but zero survived untouched holdout conjunction, so the exact seed is rejected at L0 with no registration or capital seat. Raw yfinance history spans about 60 dates while default feature readiness leaves only 21 usable dates and a nine-date holdout; the next valid retest must preserve the locked DNA/gates, densify usable no-lookahead history, and avoid holdout retuning.
 
 ### 2026-07-13 — Double-diagonal proxy capital-honesty boundary
 

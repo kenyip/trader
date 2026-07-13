@@ -78,6 +78,128 @@ class PcsExpiryGridTest(unittest.TestCase):
         self.assertTrue(all(trade.entry_date in expected_entry_dates for trade in result.trades))
         self.assertTrue(all(trade.entry_date not in signal_dates for trade in result.trades))
 
+    def test_backtest_lag_applies_to_all_entry_features_not_only_filters(self):
+        dates = pd.bdate_range("2026-05-01", periods=2)
+        history = pd.DataFrame(
+            {
+                "close": [50.0, 50.0],
+                "iv_proxy": [0.45, 0.45],
+                "iv_rank": [60.0, 60.0],
+                "regime": ["bearish", "bullish"],
+            },
+            index=dates,
+        )
+
+        result = run_pcs_backtest(
+            "TEST",
+            df=history,
+            min_bars=1,
+            config={
+                "long_dte": 7,
+                "long_target_delta": 0.20,
+                "spread_width": 1.0,
+                "min_credit_pct": 0.0,
+                "entry_signal_lag_bars": 1,
+                "bear_dte": 0,
+            },
+        )
+
+        self.assertEqual(result.n_trades, 0)
+
+    def test_backtest_entry_session_bucket_filters_intraday_entries(self):
+        timestamps = pd.to_datetime(
+            ["2026-05-01 09:30", "2026-05-01 10:00", "2026-05-01 14:00"]
+        )
+        history = pd.DataFrame(
+            {
+                "close": [50.0, 50.0, 50.0],
+                "iv_proxy": [0.45, 0.45, 0.45],
+                "iv_rank": [60.0, 60.0, 60.0],
+                "regime": ["neutral", "neutral", "neutral"],
+                "session_bucket": ["open", "open", "late"],
+            },
+            index=timestamps,
+        )
+
+        result = run_pcs_backtest(
+            "TEST",
+            df=history,
+            min_bars=1,
+            config={
+                "long_dte": 7,
+                "long_target_delta": 0.20,
+                "spread_width": 1.0,
+                "min_credit_pct": 0.0,
+                "profit_target": 0.0,
+                "entry_session_buckets": ["late"],
+            },
+        )
+
+        self.assertGreater(result.n_trades, 0)
+        self.assertTrue(all(trade.entry_date.hour >= 14 for trade in result.trades))
+
+    def test_backtest_does_not_reenter_the_same_session_bucket_on_one_date(self):
+        timestamps = pd.to_datetime(
+            ["2026-05-01 14:00", "2026-05-01 14:30", "2026-05-01 15:00"]
+        )
+        history = pd.DataFrame(
+            {
+                "close": [50.0, 50.0, 50.0],
+                "iv_proxy": [0.45, 0.45, 0.45],
+                "iv_rank": [60.0, 60.0, 60.0],
+                "regime": ["neutral", "neutral", "neutral"],
+                "session_bucket": ["late", "late", "late"],
+            },
+            index=timestamps,
+        )
+
+        result = run_pcs_backtest(
+            "TEST",
+            df=history,
+            min_bars=1,
+            config={
+                "long_dte": 7,
+                "long_target_delta": 0.20,
+                "spread_width": 1.0,
+                "min_credit_pct": 0.0,
+                "profit_target": 0.0,
+                "entry_session_buckets": ["late"],
+            },
+        )
+
+        self.assertEqual(result.n_trades, 1)
+
+    def test_backtest_exit_consumes_session_bucket_before_later_reentry(self):
+        timestamps = pd.to_datetime(
+            ["2026-05-01 14:00", "2026-05-04 14:00", "2026-05-04 14:30"]
+        )
+        history = pd.DataFrame(
+            {
+                "close": [50.0, 50.0, 50.0],
+                "iv_proxy": [0.45, 0.45, 0.45],
+                "iv_rank": [60.0, 60.0, 60.0],
+                "regime": ["neutral", "neutral", "neutral"],
+                "session_bucket": ["late", "late", "late"],
+            },
+            index=timestamps,
+        )
+
+        result = run_pcs_backtest(
+            "TEST",
+            df=history,
+            min_bars=1,
+            config={
+                "long_dte": 7,
+                "long_target_delta": 0.20,
+                "spread_width": 1.0,
+                "min_credit_pct": 0.0,
+                "profit_target": 0.0,
+                "entry_session_buckets": ["late"],
+            },
+        )
+
+        self.assertEqual(result.n_trades, 1)
+
     def test_target_dte_rolls_forward_to_listed_friday(self):
         entry = cast(pd.Timestamp, pd.Timestamp("2026-07-06"))
 
@@ -116,6 +238,41 @@ class PcsExpiryGridTest(unittest.TestCase):
         assert trade is not None
         self.assertEqual(trade.expiration, pd.Timestamp("2026-07-24"))
         self.assertEqual(trade.dte_at_entry, 18)
+
+    def test_timezone_aware_intraday_marks_use_calendar_dte(self):
+        entry = cast(
+            pd.Timestamp,
+            pd.Timestamp("2026-07-06 09:30", tz="America/New_York"),
+        )
+        row = pd.Series(
+            {"iv_proxy": 0.45, "iv_rank": 60.0, "regime": "neutral"}
+        )
+        trade = pick_vertical_entry(
+            row,
+            50.0,
+            entry,
+            {
+                "long_dte": 7,
+                "long_target_delta": 0.20,
+                "spread_width": 1.0,
+                "min_credit_pct": 0.0,
+            },
+        )
+
+        self.assertIsNotNone(trade)
+        assert trade is not None
+        mark = trade.mark_net_debit(
+            50.0,
+            0.45,
+            cast(
+                pd.Timestamp,
+                pd.Timestamp("2026-07-07 14:00", tz="America/New_York"),
+            ),
+            0.04,
+        )
+
+        self.assertEqual(trade.expiration, pd.Timestamp("2026-07-17"))
+        self.assertEqual(mark["dte_remaining"], 10)
 
     def test_injected_grid_selects_actual_expiration_and_strikes(self):
         entry = cast(pd.Timestamp, pd.Timestamp("2026-07-06"))

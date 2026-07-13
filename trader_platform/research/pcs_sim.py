@@ -27,6 +27,13 @@ ContractGrid = Mapping[str | pd.Timestamp, Mapping[str, Sequence[float]]]
 ContractGridProvider = Callable[[str, pd.Timestamp], Optional[ContractGrid]]
 
 
+def _calendar_days_between(expiration: pd.Timestamp, today: pd.Timestamp) -> int:
+    """Calendar DTE independent of intraday timezone metadata."""
+    expiration_date = pd.Timestamp(expiration).date()
+    today_date = pd.Timestamp(today).date()
+    return int((expiration_date - today_date).days)
+
+
 def strike_increment_for(spot: float) -> float:
     s = float(spot or 0.0)
     if s <= 0:
@@ -130,7 +137,7 @@ class PcsTrade:
         r: float,
         half_spread_per_leg: float = 0.0,
     ) -> tuple[float, float]:
-        days = (self.expiration - today).days
+        days = _calendar_days_between(self.expiration, today)
         if days <= 0:
             if right == "call":
                 short_intr = max(S - short_k, 0.0)
@@ -156,7 +163,7 @@ class PcsTrade:
         r: float = 0.04,
         half_spread_per_leg: float = 0.0,
     ) -> dict:
-        days = (self.expiration - today).days
+        days = _calendar_days_between(self.expiration, today)
         if self.right == "iron_condor":
             put_debit, put_d = self._wing_debit(
                 S,
@@ -265,6 +272,18 @@ def _entry_weekdays(cfg: dict[str, Any]) -> set[int] | None:
     if not weekdays or any(value < 0 or value > 4 for value in weekdays):
         raise ValueError("entry_weekdays must contain weekday integers 0..4")
     return weekdays
+
+
+def _entry_session_buckets(cfg: dict[str, Any]) -> set[str] | None:
+    raw = cfg.get("entry_session_buckets")
+    if raw in (None, "", "all"):
+        return None
+    values = raw if isinstance(raw, (list, tuple, set)) else str(raw).split(",")
+    buckets = {str(value).strip().lower() for value in values if str(value).strip()}
+    allowed = {"open", "midday", "late"}
+    if not buckets or not buckets.issubset(allowed):
+        raise ValueError(f"entry_session_buckets must be a subset of {sorted(allowed)}")
+    return buckets
 
 
 def entry_filters_pass(row: pd.Series, cfg: dict[str, Any]) -> bool:
@@ -843,12 +862,16 @@ def run_pcs_backtest(
     r = _cfg_float(cfg, "risk_free_rate", 0.04)
     half_spread = max(_cfg_float(cfg, "half_spread_per_leg", 0.0), 0.0)
     entry_weekdays = _entry_weekdays(cfg)
+    entry_session_buckets = _entry_session_buckets(cfg)
+    entered_session_buckets: set[tuple[object, str]] = set()
 
     for row_number, (today, row) in enumerate(df.iterrows()):
         S = float(row["close"])
         sigma = float(row["iv_proxy"])
         if not np.isfinite(sigma) or sigma <= 0:
             continue
+        session_bucket = str(row.get("session_bucket") or "").strip().lower()
+        session_key = (pd.Timestamp(str(today)).date(), session_bucket)
 
         closed_this_bar = False
         if open_t is not None:
@@ -868,6 +891,11 @@ def run_pcs_backtest(
                 trades.append(open_t)
                 open_t = None
                 closed_this_bar = True
+                # An exit consumes this date/bucket too. Otherwise a position
+                # opened on an earlier date could close early in a bucket and
+                # re-enter later in that same bucket.
+                if entry_session_buckets is not None:
+                    entered_session_buckets.add(session_key)
 
         # One position per bar: never re-enter on the close bar (canonical harness).
         signal_lag = max(_cfg_int(cfg, "entry_signal_lag_bars", 0), 0)
@@ -876,6 +904,13 @@ def run_pcs_backtest(
             open_t is None
             and not closed_this_bar
             and (entry_weekdays is None or pd.Timestamp(str(today)).weekday() in entry_weekdays)
+            and (
+                entry_session_buckets is None
+                or (
+                    session_bucket in entry_session_buckets
+                    and session_key not in entered_session_buckets
+                )
+            )
             and signal_row is not None
             and entry_filters_pass(signal_row, cfg)
         ):
@@ -883,7 +918,7 @@ def run_pcs_backtest(
             if contract_grid_provider or require_contract_grid:
                 contract_grid = contract_grid_provider(sym, entry_date) if contract_grid_provider else None
                 ent = pick_structure_entry(
-                    row,
+                    signal_row,
                     S,
                     entry_date,
                     cfg,
@@ -892,11 +927,13 @@ def run_pcs_backtest(
                     require_contract_grid=require_contract_grid,
                 )
             else:
-                ent = pick_structure_entry(row, S, entry_date, cfg, structure=structure)
+                ent = pick_structure_entry(signal_row, S, entry_date, cfg, structure=structure)
             if ent is not None:
                 ent.group_id = gid
                 gid += 1
                 open_t = ent
+                if entry_session_buckets is not None:
+                    entered_session_buckets.add(session_key)
 
     # EOD close
     if open_t is not None:

@@ -1,11 +1,11 @@
-# BUILD fast-track monitor — 2026-07-13T1345 PDT
+# BUILD fast-track monitor — 2026-07-13T0900 PDT
 
 Monitor-only. Program goal: **wide coverage → L1 high-confidence strategy** (then B6 paper). Ken/Jarvis do not micromanage axes.
 
 ## Status
 - Complete duals scored (recent): **6**
 - Latest wake file present: **True**
-- Readiness language: **L0/BUILD (expected until edge)**
+- Readiness language: **L1-positive?**
 - Lock: **yes**
 
 ## Recent complete duals (heuristic score)
@@ -21,11 +21,11 @@ Monitor-only. Program goal: **wide coverage → L1 high-confidence strategy** (t
 
 ## Drift / alerts
 
-- INFO: dual running (lock age 12m)
+- ALERT: build_lab.lock age 224m — possible stuck dual
 
 ## Current NEXT (from readiness/LATEST.md)
 
-- BUILD — promote an append-safe, provenance-recorded raw 30m archive for BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL; expand usable prior-session feature dates toward retained raw history without lookahead; then rerun the locked PCS/CCS/IC open/midday/late chronological dual-cost spec exactly once with no holdout retune. Keep L0; no register/promote/paper/shadow/arm/live. RTH parallel remains next distinct NY market date only for TSLL observed archive 2→3/3; no same-date thrash or provider historical replay before eligible.
+- BUILD — build one no-lookahead intraday session-time evidence route for defined-risk PCS/CCS/IC using completed 30-minute bars, prior-completed regime features, open/midday/late buckets, both 5% and $0.01-per-leg costs, and untouched chronological holdouts; reject unless max_loss≤$300, window DD≤$75, density, and exact-ledger gates pass. Keep L0; register nothing first pass; no paper/shadow/arm/live. RTH parallel: next *new* NY market date only for archive 2→3/3; no same-date thrash; no provider hist before eligible.
 
 ## Confidence ladder
 
@@ -36,7 +36,7 @@ Monitor-only. Program goal: **wide coverage → L1 high-confidence strategy** (t
 ## Progress script
 
 ```
-# BUILD progress scoreboard — 2026-07-13T1345
+# BUILD progress scoreboard — 2026-07-13T0900
 
 Heuristic from MoA closeouts (not a live arm). See `docs/BUILD_PROGRESS_AND_CONFIDENCE.md`.
 
@@ -55,7 +55,7 @@ Heuristic from MoA closeouts (not a live arm). See `docs/BUILD_PROGRESS_AND_CONF
 | `2026-07-12T2237` | 4 | delta_capability | 0/0 | gpt-5.6-sol→grok-4.5 |
 | `2026-07-12T2315` | 3 | delta_capability, delta_falsification | 0/0 | gpt-5.6-sol→grok-4.5 |
 | `2026-07-13T0026` | 3 | delta_capability, delta_falsification, delta_repair | 0/0 | gpt-5.6-sol→grok-4.5 |
-| `2026-07-13T0515` | 0 | failed_or_incomplete | 0/0 | gpt-5.6-sol→grok-4.5 |
+| `2026-07-13T0515` | 0 | failed_or_incomplete | None/None | gpt-5.6-sol→grok-4.5 |
 
 ## Real-trade confidence (manual ladder)
 
