@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "stamp": "2026-07-13T0026",
+  "loop_signature": "simulator/double-diagonal/symmetric-14-60/chronological-dual-cost-capital-honesty",
+  "outcome": "FALSIFIED",
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "Added a structure-pure same/inward four-leg double-diagonal Black-Scholes simulator with catalog/evolve dispatch, exact adverse percentage and fixed-dollar leg costs, one-position cadence, capital fields, and behavioral tests.",
+      "novelty_key": "double-diagonal-same-inward-simulator-v1",
+      "artifacts": [
+        "trader_platform/research/double_diagonal_sim.py",
+        "trader_platform/strategy_dna.py",
+        "trader_platform/evolve_tick.py",
+        "tests/test_double_diagonal_sim.py"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "Falsified the exact predeclared neutral/high-IV 14/60-DTE seed across BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL: 8/8 completed and 0/8 passed both chronological train/holdout cost axes plus absolute gates, so no hypothesis or capital seat was created.",
+      "novelty_key": "double-diagonal-14-60-eight-symbol-dual-cost-reject-v1",
+      "artifacts": [
+        "docs/INCOME_STRATEGY_COVERAGE.md",
+        "reports/trader-wakes/2026-07-13T0026-moa-merge.md",
+        "reports/readiness/income-coverage-2026-07-13T0026.md",
+        "reports/trader-wakes/moa/2026-07-13T0026/learning-promotion.md"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Repaired debit-spread capital honesty by intrinsic-flooring American protective legs, preserving signed adverse liquidation, sizing reported loss to the larger of structural debit and observed stressed path loss, and separating the enforced one-lot operating cap from generic theoretical capacity.",
+      "novelty_key": "double-diagonal-american-intrinsic-signed-liquidation-capital-v1",
+      "artifacts": [
+        "trader_platform/research/double_diagonal_sim.py",
+        "trader_platform/strategy_dna.py",
+        "tests/test_double_diagonal_sim.py",
+        "docs/BUILD_LAB_ENVIRONMENT.md"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Promoted the chronological experiment into a checked-in runner with a conjunctive train AND untouched-holdout AND window-integrity gate and an explicit passing-holdout/failing-train negative control.",
+      "novelty_key": "double-diagonal-chronological-conjunctive-gate-runner-v1",
+      "artifacts": [
+        "scripts/double_diagonal_chronological_lab.py",
+        "tests/test_double_diagonal_chronological_lab.py",
+        "docs/BUILD_LAB_ENVIRONMENT.md"
+      ]
+    },
+    {
+      "kind": "capability",
+      "summary": "Made the existing deterministic integration recovery path explicitly parseable as --integrate-only with an explicit stamp, and added a context-only behavioral regression that proves mode/stamp parsing without invoking finalization or integration.",
+      "novelty_key": "build-lab-integrate-only-cli-recovery-parser-v1",
+      "artifacts": [
+        "scripts/trader_build_lab_moa.sh",
+        "tests/test_trader_completion_contract.py"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "F1: the chronological reject experiment lacked a durable checked-in runner.",
+      "status": "repaired",
+      "rationale": "The finalizer added a thin reproducible runner for the exact eight-symbol 60/40 dual-cost design without reopening or retuning the rejected family.",
+      "repair_artifacts": [
+        "scripts/double_diagonal_chronological_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_double_diagonal_chronological_lab.py"
+      ]
+    },
+    {
+      "finding": "F2: the lab lacked an explicit passing-holdout/failing-train fail-open negative control.",
+      "status": "repaired",
+      "rationale": "The complete evidence predicate now requires train, untouched holdout, and window/integrity gates conjunctively; the new negative control proves a failed train cannot be rescued by a passing holdout.",
+      "repair_artifacts": [
+        "scripts/double_diagonal_chronological_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_double_diagonal_chronological_lab.py"
+      ]
+    },
+    {
+      "finding": "F3: same-close daily-bar entry remains promotion-blocking.",
+      "status": "rejected",
+      "rationale": "Rejected as an outstanding repair for this run because every project and readiness surface explicitly limits the result to L0 proxy discovery; no candidate, L1, paper, or universal-family claim depends on same-close semantics. A future prior-completed intraday route is the sole NEXT rather than an unstated current TODO."
+    },
+    {
+      "finding": "F4: the symmetric zero-offset structure is economically a double calendar and must not be labeled as universal diagonal-family death.",
+      "status": "rejected",
+      "rationale": "Rejected as a current defect because catalog text says double-calendar/inside-wing diagonal and all final surfaces scope the outcome to the exact 14/60 seed/configuration/cycle. No universal calendar, diagonal, or time-spread closure is claimed."
+    },
+    {
+      "finding": "Finalizer review found that European BS protective marks below intrinsic plus a zero-clipped liquidation could hide closing friction and overstate paid debit as a hard loss bound; generic capital capacity could also report 2–3 lots despite the stated one-lot operating posture.",
+      "status": "repaired",
+      "rationale": "American protective legs now retain intrinsic value, adverse package liquidation remains signed, structural debit is labeled before closing friction, and capital uses max(structural debit, observed stressed path loss). Operating max_lots is capped at one while theoretical_max_lots retains generic capacity math. Boundary tests prove deep-ITM front-expiry behavior, a realized path loss greater than structural debit, and the one-lot/theoretical-capacity separation without weakening the $300 gate.",
+      "repair_artifacts": [
+        "trader_platform/research/double_diagonal_sim.py",
+        "trader_platform/strategy_dna.py"
+      ],
+      "test_artifacts": [
+        "tests/test_double_diagonal_sim.py"
+      ]
+    }
+  ],
+  "closed_families": [
+    "double-diagonal-symmetric-14-60-neutral-high-iv-proxy-seed-2026-07-13-cycle"
+  ],
+  "data_dependencies": [
+    "Observed historical option surfaces with complete entry/exit leg joins are required before any double-diagonal evidence can exceed L0.",
+    "Listed expirations/strikes, assignment/exercise/dividend behavior, commissions, and quote-fill calibration remain unmodeled.",
+    "Same-close daily-bar proxy entry cannot support promotion; future session-time evidence must use prior-completed bars.",
+    "The forward TSLL option archive remains one of three required distinct New York market dates for replay plumbing; three dates still do not establish historical edge."
+  ],
+  "next": "Build one no-lookahead completed-30-minute-bar session-time evidence route for defined-risk PCS/CCS/IC across BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL using prior-completed features, open/midday/late buckets, chronological train selection then untouched holdout, both 5% and $0.01-per-leg cost axes, exact ledger, and no same-bar/same-bucket reentry; reject unless positive non-vacuous holdouts meet max_loss_usd <= $300, window max DD <= $75, and dense-negative windows <= 5. Keep L0, register nothing first pass, and do not reopen the rejected double-diagonal seed or closed daily-bar families."
+}

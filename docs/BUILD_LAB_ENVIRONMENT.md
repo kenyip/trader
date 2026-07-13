@@ -161,6 +161,10 @@ Manual preflight: `just trader-run-gate preflight`. Enforcement: `scripts/trader
 
 ## History
 
+### 2026-07-13 — Double-diagonal proxy capital-honesty boundary
+
+Added a reproducible eight-symbol 60/40 chronological runner for the new same/inward 14/60-DTE double-diagonal scaffold. The finalizer repaired the model boundary before preserving the rejection: American protective legs retain intrinsic value, adverse package liquidation remains signed instead of clipping at zero, capital reports the larger of structural debit and observed stressed path loss, and operating `max_lots=1` is separated from generic 2–3-lot capacity retained as `theoretical_max_lots`. The `$300` gate remains unchanged and directly asserted. The exact seed remained rejected at 0/8 complete dual-cost passes; no registration or readiness promotion occurred. Reusable chronological labs must require train AND untouched holdout AND window/integrity gates, with an explicit passing-holdout/failing-train negative control.
+
 ### 2026-07-12 — Zero-input self-sufficient wake contract
 
 Established `configs/build_lab_free_goal.txt` as the sole BUILD program goal. `just trader-build-lab` and the wrapper now require no caller judgment: they load the canonical goal, derive session context internally, and direct Trader to orient from SOUL/doctrine/readiness/prior learning before choosing the highest-information loop. Prior NEXT is context, not an order. Active profile cron compatibility names converge on one zero-argument runner; explicit goal/slot/structure and recovery flags remain diagnosis/recovery only.

@@ -271,6 +271,24 @@ class TraderCompletionContractSurfaceTest(unittest.TestCase):
         self.assertIn("context_source=override", proc.stdout)
         self.assertIn("--- CANONICAL GOAL ---\ndiagnostic override\n", proc.stdout)
 
+    def test_integrate_only_recovery_mode_is_parseable(self) -> None:
+        env = os.environ.copy()
+        env["TRADER_BUILD_CONTEXT_ONLY"] = "1"
+        proc = subprocess.run(
+            [
+                "bash", str(REPO / "scripts" / "trader_build_lab_moa.sh"),
+                "--integrate-only", "--stamp", "2026-01-02T0405",
+            ],
+            cwd=REPO,
+            env=env,
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("mode=integrate-only", proc.stdout)
+        self.assertIn("stamp=2026-01-02T0405", proc.stdout)
+
     def test_bootstrap_cron_compatibility_names_converge_without_judgment(self) -> None:
         bootstrap = (REPO / "scripts" / "bootstrap_trader_profile.sh").read_text()
         names = (

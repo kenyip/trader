@@ -10,6 +10,7 @@
 #   scripts/trader_build_lab_moa.sh --challenger-only --stamp 2026-07-10T2000
 #   scripts/trader_build_lab_moa.sh --resume --stamp 2026-07-10T2000
 #   scripts/trader_build_lab_moa.sh --finalizer-only --stamp 2026-07-10T2000
+#   scripts/trader_build_lab_moa.sh --integrate-only --stamp 2026-07-10T2000
 #   scripts/trader_build_lab_moa.sh --slot LABEL  # debug/recovery metadata override only
 #
 # Env:
@@ -55,6 +56,7 @@ while [[ $# -gt 0 ]]; do
     --executor-only) MODE="executor-only"; shift ;;
     --challenger-only) MODE="challenger-only"; shift ;;
     --finalizer-only) MODE="finalizer-only"; shift ;;
+    --integrate-only) MODE="integrate-only"; shift ;;
     --resume) MODE="resume"; shift ;;
     --stamp) STAMP="$2"; STAMP_EXPLICIT=1; shift 2 ;;
     --slot) SLOT="$2"; SLOT_SOURCE="override"; SLOT_EXPLICIT=1; shift 2 ;;

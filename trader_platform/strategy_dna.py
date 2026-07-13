@@ -59,6 +59,10 @@ BOUNDS: dict[str, tuple[float, float]] = {
     "diagonal_long_dte": (35, 120),
     "diagonal_short_delta": (0.10, 0.40),
     "diagonal_long_delta": (0.55, 0.90),
+    "double_diagonal_short_dte": (7, 30),
+    "double_diagonal_long_dte": (35, 120),
+    "double_diagonal_short_delta": (0.15, 0.40),
+    "double_diagonal_long_offset_steps": (0, 3),
     "debit_long_delta": (0.40, 0.75),
     "collar_put_delta": (0.10, 0.40),
     "collar_call_delta": (0.10, 0.40),
@@ -492,6 +496,51 @@ STRUCTURE_CATALOG: dict[str, dict[str, Any]] = {
         },
         "sim_engine": "diagonal_sim",
     },
+    "double_diagonal_spread": {
+        "description": (
+            "Neutral/high-IV symmetric double-calendar/inside-wing diagonal: sell front-month "
+            "OTM put and call, buy same-strike or inward back-month put and call. Entry debit "
+            "is the frictionless structural loss bound before closing costs; research-only "
+            "Black-Scholes daily-bar scaffold with no live capital claim."
+        ),
+        "entry_plan": {
+            "side_policy": "neutral_high_iv_time_decay",
+            "legs": [
+                {"action": "buy", "right": "put", "qty": 1, "role": "back_month_long_put"},
+                {"action": "sell", "right": "put", "qty": 1, "role": "front_month_short_put"},
+                {"action": "sell", "right": "call", "qty": 1, "role": "front_month_short_call"},
+                {"action": "buy", "right": "call", "qty": 1, "role": "back_month_long_call"},
+            ],
+            "filters": ["neutral_regime", "iv_rank_min", "max_loss_budget_usd"],
+        },
+        "exit_plan": {
+            "ladder": ["profit_target", "defined_loss", "front_expiry"],
+            "management": [],
+            "limitations": [
+                "observed_expiry_surfaces_unmodeled",
+                "early_assignment_unmodeled",
+                "closing_costs_can_exceed_entry_debit",
+                "one_lot_operating_cap_theoretical_capacity_separately_labeled",
+            ],
+        },
+        "config_seed": {
+            "double_diagonal_short_dte": 14,
+            "double_diagonal_long_dte": 60,
+            "double_diagonal_short_delta": 0.30,
+            "double_diagonal_long_offset_steps": 0,
+            "iv_rank_min": 20.0,
+            "profit_target": 0.30,
+            "defined_loss_exit_frac": 0.65,
+            "dte_stop": 0,
+            "max_loss_budget_usd": 300.0,
+            "front_iv_multiplier": 1.05,
+            "back_iv_multiplier": 0.95,
+            "regime_flip_exit_enabled": False,
+            "wheel_enabled": False,
+            "roll_on_max_loss": False,
+        },
+        "sim_engine": "double_diagonal_sim",
+    },
     "butterfly_spread": {
         "description": (
             "Long symmetric call butterfly: buy lower call, sell two middle calls, buy upper call. "
@@ -792,6 +841,11 @@ class StrategyDNA:
         """True when DNA uses the defined-debit diagonal simulator."""
         tmpl = STRUCTURE_CATALOG.get(self.structure) or {}
         return str(tmpl.get("sim_engine") or "") == "diagonal_sim"
+
+    def uses_double_diagonal_sim(self) -> bool:
+        """True when DNA uses the defined-debit double-diagonal simulator."""
+        tmpl = STRUCTURE_CATALOG.get(self.structure) or {}
+        return str(tmpl.get("sim_engine") or "") == "double_diagonal_sim"
 
     def uses_butterfly_sim(self) -> bool:
         """True when DNA uses the defined-debit butterfly simulator."""

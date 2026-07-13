@@ -495,6 +495,29 @@ def sim_dna(
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(butterfly.to_dict(), default=str, indent=2))
             evidence_path = str(path)
+    elif dna.uses_double_diagonal_sim():
+        from trader_platform.research.double_diagonal_sim import run_double_diagonal_backtest
+
+        double_diagonal = run_double_diagonal_backtest(
+            sym,
+            period=period,
+            use_cache=use_cache,
+            config=dna.sim_config(),
+            sleeve_usd=3000.0,
+            open_risk_budget_usd=750.0,
+        )
+        metrics = dict(double_diagonal.metrics or {})
+        n = int(double_diagonal.n_trades or metrics.get("n_trades") or 0)
+        skipped = bool(double_diagonal.skipped)
+        ok = bool(double_diagonal.ok)
+        skip_reason = double_diagonal.reason or ""
+        capital_meta = dict(double_diagonal.capital or {})
+        evidence_path = ""
+        if dump_dir and double_diagonal.trades:
+            path = Path(dump_dir) / f"{sym}_double_diagonal_trades.json"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(double_diagonal.to_dict(), default=str, indent=2))
+            evidence_path = str(path)
     elif dna.uses_diagonal_sim():
         from trader_platform.research.diagonal_sim import run_diagonal_backtest
 
@@ -650,12 +673,16 @@ def sim_dna(
                             f"butterfly_sim:{dna.structure}"
                             if dna.uses_butterfly_sim()
                             else (
-                                f"diagonal_sim:{dna.structure}"
-                                if dna.uses_diagonal_sim()
+                                f"double_diagonal_sim:{dna.structure}"
+                                if dna.uses_double_diagonal_sim()
                                 else (
-                                    f"calendar_sim:{dna.structure}"
-                                    if dna.uses_calendar_sim()
-                                    else (f"pcs_sim:{dna.structure}" if dna.uses_pcs_sim() else "single_leg")
+                                    f"diagonal_sim:{dna.structure}"
+                                    if dna.uses_diagonal_sim()
+                                    else (
+                                        f"calendar_sim:{dna.structure}"
+                                        if dna.uses_calendar_sim()
+                                        else (f"pcs_sim:{dna.structure}" if dna.uses_pcs_sim() else "single_leg")
+                                    )
                                 )
                             )
                         )
