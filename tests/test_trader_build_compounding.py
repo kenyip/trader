@@ -8,6 +8,7 @@ from pathlib import Path
 
 from scripts.trader_build_compounding import (
     CompoundingError,
+    assess_research_routes,
     build_context,
     snapshot,
     validate,
@@ -86,6 +87,91 @@ class TraderBuildCompoundingTest(unittest.TestCase):
         self.assertEqual(result["closed_families"], ["mild-pullback-pcs"])
         self.assertTrue(result["redirect_required"])
         self.assertIn("last two", result["redirect_reasons"][0])
+
+    def test_forward_archive_dependency_cannot_globally_force_diminishing_returns(self):
+        stamp = "2026-01-01T0159"
+        run, _ = self._handoff(
+            stamp,
+            outcome="DIMINISHING_RETURNS",
+            useful_deltas=[],
+            next="DIMINISHING_RETURNS",
+            data_dependencies=["forward option archive needs two more dates"],
+        )
+        self._git("add", str(run.relative_to(self.repo)))
+        self._git("commit", "-m", stamp)
+        self._git("push", "origin", "main")
+        cache = self.repo / ".cache"
+        cache.mkdir()
+        (cache / "AAPL_5y.csv").write_text("date,close\n2025-01-01,100\n")
+        sim = self.repo / "trader_platform" / "research" / "pcs_sim.py"
+        sim.parent.mkdir(parents=True)
+        sim.write_text("# historical underlying / proxy option simulator\n")
+
+        out = self.repo / "reports" / "current" / "orientation.json"
+        result = build_context(self.repo, "2026-01-01T0200", out)
+
+        routes = result["research_routes"]
+        self.assertFalse(routes["archive_density_alone_can_justify_diminishing_returns"])
+        self.assertTrue(routes["routes"]["historical_underlying_proxy_discovery"]["executable"])
+        self.assertFalse(routes["routes"]["observed_historical_option_replay"]["executable"])
+        self.assertTrue(result["redirect_required"])
+        self.assertTrue(result["archive_dependent_stop_invalidated"])
+        self.assertTrue(any("independent research route" in reason for reason in result["redirect_reasons"]))
+
+    def test_non_archive_information_exhaustion_stop_is_not_invalidated(self):
+        stamp = "2026-01-01T0159b"
+        run, _ = self._handoff(
+            stamp,
+            outcome="DIMINISHING_RETURNS",
+            useful_deltas=[],
+            next="DIMINISHING_RETURNS",
+            data_dependencies=["all materially novel open routes assessed"],
+        )
+        self._git("add", str(run.relative_to(self.repo)))
+        self._git("commit", "-m", stamp)
+        self._git("push", "origin", "main")
+        cache = self.repo / ".cache"
+        cache.mkdir()
+        (cache / "AAPL_5y.csv").write_text("date,close\n2025-01-01,100\n")
+        sim = self.repo / "trader_platform" / "research" / "pcs_sim.py"
+        sim.parent.mkdir(parents=True)
+        sim.write_text("# simulator\n")
+
+        result = build_context(
+            self.repo, "2026-01-01T0200b", self.repo / "reports" / "current" / "orientation.json"
+        )
+
+        self.assertFalse(result["archive_dependent_stop_invalidated"])
+        self.assertFalse(any("archive-dependent" in reason for reason in result["redirect_reasons"]))
+
+    def test_three_date_archive_is_plumbing_not_historical_edge_route(self):
+        cache = self.repo / ".cache"
+        cache.mkdir()
+        (cache / "AAPL_5y.csv").write_text("date,close\n2025-01-01,100\n")
+        sim = self.repo / "trader_platform" / "research" / "pcs_sim.py"
+        sim.parent.mkdir(parents=True)
+        sim.write_text("# simulator\n")
+        archive = cache / "platform" / "option_quotes" / "AAPL_archive.csv"
+        archive.parent.mkdir(parents=True)
+        archive.write_text(
+            "observed_at\n"
+            "2026-01-02T20:00:00+00:00\n"
+            "2026-01-05T20:00:00+00:00\n"
+            "2026-01-06T20:00:00+00:00\n"
+        )
+
+        result = assess_research_routes(self.repo)
+        observed = result["routes"]["observed_historical_option_replay"]
+
+        self.assertTrue(observed["plumbing_gate_met"])
+        self.assertFalse(observed["executable"])
+        self.assertTrue(result["routes"]["historical_underlying_proxy_discovery"]["executable"])
+        self.assertFalse(result["archive_density_alone_can_justify_diminishing_returns"])
+
+    def test_no_executable_research_route_is_globally_blocked(self):
+        result = assess_research_routes(self.repo)
+        self.assertTrue(result["global_build_blocked"])
+        self.assertFalse(result["archive_density_alone_can_justify_diminishing_returns"])
 
     def test_non_diminishing_handoff_requires_measurable_delta(self):
         stamp = "2026-01-01T0200"

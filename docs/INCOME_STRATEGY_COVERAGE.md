@@ -147,7 +147,7 @@ Added `half_spread_per_leg` entry/exit pricing to PCS/CCS/IC and credit iron-but
 
 ### 2026-07-11 — Fixed-dollar cost axis completed across proxy sims
 
-Extended adverse `half_spread_per_leg` entry/exit pricing and the uniform stress runner to calendar, diagonal, long butterfly, and debit-vertical proxies. TSLL calendar `fcc76896` remained dense and positive at $0.01 per leg (116 trades / +$298.28; max loss $66.97), but fixed-cost max DD rose to $115.81 versus the $74.85 leader bar, so it did not reach L1. New PLTR/NFLX/XOM calendars that survived $0.01 had materially worse max-loss/DD; new TSLA/MU butterflies and the TSLL debit vertical failed the fixed-dollar axis. Observed quotes remain the next realism boundary.
+Extended adverse `half_spread_per_leg` entry/exit pricing and the uniform stress runner to calendar, diagonal, long butterfly, and debit-vertical proxies. TSLL calendar `fcc76896` remained dense and positive at $0.01 per leg (116 trades / +$298.28; max loss $66.97), but fixed-cost max DD rose to $115.81 versus the $74.85 leader bar, so it failed the proxy quality bar; Black-Scholes proxy results cannot earn L1. New PLTR/NFLX/XOM calendars that survived $0.01 had materially worse max-loss/DD; new TSLA/MU butterflies and the TSLL debit vertical failed the fixed-dollar axis. Observed quotes remain the next realism boundary.
 
 ### 2026-07-11 — Observed quote archive boundary
 
@@ -155,7 +155,7 @@ Added a validated normalized bid/ask observation adapter, synthetic fixture smok
 
 ### 2026-07-11 — Exact observed leg/time coverage reject gate
 
-Added a non-future exact-contract join for registered PCS/CCS/IC simulated entry and exit legs. Against the only 70-row TSLL snapshot, leader `b195f5fe` required 228 leg observations and matched 0, correctly returning `REJECT_INSUFFICIENT_COVERAGE`. Join plumbing is closed; forward archive density remains the blocker and no proxy metric was promoted.
+Added a non-future exact-contract join for registered PCS/CCS/IC simulated entry and exit legs. Against the only 70-row TSLL snapshot, leader `b195f5fe` required 228 leg observations and matched 0, correctly returning `REJECT_INSUFFICIENT_COVERAGE`. Join plumbing is closed; forward archive density blocks only observed-option replay/calibration claims, not independent historical-underlying/Black-Scholes-proxy discovery, and no proxy metric was promoted.
 
 ### 2026-07-11 — Friday weekly-expiry realism and leader rejection
 
@@ -167,11 +167,11 @@ Added an optional PCS/CCS/IC contract-grid provider that supplies symbol/date-sp
 
 ### 2026-07-11 — Archive-backed contract-grid replay
 
-Added a market-timezone-aware provider that converts normalized observed quote archives into exact date-specific expiry/right/strike grids and reports covered versus missing requests. The existing 70-row TSLL snapshot replay covered its single 2026-07-11 market date and failed closed for 2026-07-10, proving the plumbing but not historical density. One required pop36 produced three new defined-risk SHIPs; all failed the non-vacuous after-cost L1 bar, so the capital path remains empty.
+Added a market-timezone-aware provider that converts normalized observed quote archives into exact date-specific expiry/right/strike grids and reports covered versus missing requests. The existing 70-row TSLL snapshot replay covered its single 2026-07-11 market date and failed closed for 2026-07-10, proving the plumbing but not historical density. One required pop36 produced three new defined-risk SHIPs; all failed the non-vacuous after-cost proxy metric bar; proxy option marks cannot earn L1, so the capital path remains empty.
 
 ### 2026-07-11 — Append-safe all-expiration archive capture
 
-Current-chain capture now requests all available expirations by default and writes through an atomic, history-preserving, identical-row-deduplicating archive path. Density reporting fails closed below three distinct New York market dates. The first all-expiration TSLL run captured 600 observed quotes across 12 expirations but still only one market date, so evolve and provider-backed historical simulation remain blocked; no quality leader exists.
+Current-chain capture now requests all available expirations by default and writes through an atomic, history-preserving, identical-row-deduplicating archive path. Density reporting fails closed below three distinct New York market dates. The first all-expiration TSLL run captured 600 observed quotes across 12 expirations but still only one market date, so observed-grid evolve and provider-backed historical option replay remain blocked. Independent broad historical-underlying/Black-Scholes-proxy discovery remains available at L0; no quality leader exists.
 
 ### 2026-07-11 — Broken-wing credit iron butterfly scaffold + rejection
 

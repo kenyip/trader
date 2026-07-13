@@ -1,6 +1,6 @@
 # Option quote data boundary
 
-Updated: 2026-07-11
+Updated: 2026-07-12
 
 Purpose: replace assumed percentage/fixed-dollar option costs with archived bid/ask observations before any L1 claim.
 
@@ -55,3 +55,22 @@ The first executable check used `hyp_dna_tsll_put_credit_spread_b195f5fe`, its 5
 ## Exact blocker
 
 There is no verified no-paid historical bid/ask backfill in the installed stack. Exact PCS/CCS/IC leg/time joining, all-expiration append-safe capture, a three-market-date density floor, and an insufficient-coverage reject gate now exist, but the forward archive has no matched historical entries or exits. Until enough observations exist across regimes and exits, proxy B3/B4 cannot become observed-cost evidence and readiness remains L0.
+
+
+## Corrected evidence/data model (2026-07-12)
+
+The platform has independent evidence routes; option-archive density is not a global BUILD gate.
+
+| Route | Inputs actually present | Valid use now | Forbidden inference |
+|---|---|---|---|
+| Historical underlying replay | Cached yfinance OHLCV across the broad universe (1y/2y/5y/10y where present), with lagged features/regimes | Search, rolling-origin train/holdout, regime and management falsification, negative controls | Does not observe listed option marks, spreads, fills, assignment, or contract availability |
+| Option proxy simulation | The same real historical underlying bars plus `iv_proxy`, listed-Friday/rounded-strike assumptions, and Black-Scholes leg marks | L0 discovery and relative sensitivity across any strategy DNA supported by a simulator | Cannot earn L1 or be described as observed-option after-cost edge |
+| Historical option replay | Timestamped historical bid/ask surfaces joined to exact entry/exit legs without future quotes | Not available in the installed/local dataset | No edge, cost-calibration, or readiness claim from current data |
+| Forward option capture | Current yfinance chains archived append-only | Validate capture/dedup/date/contract-grid/join plumbing; begin cost calibration as density grows | Three dates do not establish a historical strategy edge and do not earn L1 |
+| Synthetic market generator | Regime-aware bootstrap/perturbation of historical underlying paths | Stress and model-training augmentation | Neither observed underlying replay nor observed option evidence |
+
+Current code paths using real historical **underlying** bars with proxy **option** marks are `pcs_sim` (PCS/CCS/IC), calendar, diagonal, long butterfly, debit vertical, credit iron butterfly, put-ratio backspread, collar, and the regime router over PCS entries. Single-leg `StrategyConfig` backtests also use historical underlying bars with Black-Scholes marks. The separate `simulator/market_generator.py` path block-bootstraps and perturbs historical underlying bars and is synthetic stress, not historical replay.
+
+`trader_platform/research/evidence_policy.py` provides a fail-closed L1 provenance policy, and the proxy direction scoreboard applies it; readiness/promotion callers must use computed coverage rather than self-asserted metadata. Proxy or unknown option marks cannot earn L1. Observed marks still require more than the three-date plumbing floor, complete observed entry/exit leg joins, and an explicit demonstration that historical coverage is sufficient for the edge claim.
+
+Zero-input orientation records these independent routes in `orientation.json.research_routes`. Observed-option/archive blockage alone cannot justify `DIMINISHING_RETURNS` while historical-underlying/proxy discovery or simulator capability work remains informative. Honest information-exhaustion stops remain valid after open routes are assessed for material novelty.

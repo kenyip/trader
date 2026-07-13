@@ -8,12 +8,24 @@ import json
 import subprocess
 import sys
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from typing import Any
 
 SCHEMA_VERSION = 1
 DELTA_KINDS = {"candidate", "falsification", "capability", "repair", "evidence", "stop_rule"}
 OUTCOMES = {"CANDIDATE", "FALSIFIED", "CAPABILITY", "REPAIRED", "DIMINISHING_RETURNS"}
+
+HISTORICAL_SIM_MODULES = (
+    "trader_platform/research/pcs_sim.py",
+    "trader_platform/research/calendar_sim.py",
+    "trader_platform/research/diagonal_sim.py",
+    "trader_platform/research/butterfly_sim.py",
+    "trader_platform/research/debit_vertical_sim.py",
+    "trader_platform/research/iron_butterfly_sim.py",
+    "trader_platform/research/put_ratio_backspread_sim.py",
+    "trader_platform/research/collar_sim.py",
+)
 
 
 class CompoundingError(RuntimeError):
@@ -84,6 +96,82 @@ def _previous_records(repo: Path, current_stamp: str) -> list[dict[str, Any]]:
     return rows
 
 
+def assess_research_routes(repo: Path) -> dict[str, Any]:
+    """Describe independent BUILD evidence routes without selecting strategy DNA.
+
+    A forward option archive is one route. It must never mask executable historical
+    underlying/proxy simulation or simulator-capability work.
+    """
+    cache = repo / ".cache"
+    underlying_files = sorted(cache.glob("*_*.csv")) if cache.is_dir() else []
+    historical_underlyings = [
+        path for path in underlying_files
+        if path.stem.rsplit("_", 1)[-1] in {"1y", "2y", "5y", "10y"}
+    ]
+    sim_modules = [path for value in HISTORICAL_SIM_MODULES if (path := repo / value).is_file()]
+
+    archive_root = repo / ".cache" / "platform" / "option_quotes"
+    archive_dates: dict[str, int] = {}
+    if archive_root.is_dir():
+        import csv
+
+        for archive_path in sorted(archive_root.glob("*_archive.csv")):
+            try:
+                with archive_path.open(newline="", encoding="utf-8") as handle:
+                    archive_dates[archive_path.stem.removesuffix("_archive")] = len(
+                        {
+                            datetime.fromisoformat(str(row["observed_at"]).replace("Z", "+00:00"))
+                            .astimezone(ZoneInfo("America/New_York"))
+                            .date()
+                            .isoformat()
+                            for row in csv.DictReader(handle)
+                            if row.get("observed_at")
+                        }
+                    )
+            except (OSError, ValueError):
+                continue
+    observed_market_dates = max(archive_dates.values(), default=0)
+    plumbing_gate_met = observed_market_dates >= 3
+    historical_proxy_executable = bool(historical_underlyings and sim_modules)
+    routes = {
+        "historical_underlying_proxy_discovery": {
+            "executable": historical_proxy_executable,
+            "historical_dataset_count": len(historical_underlyings),
+            "simulator_count": len(sim_modules),
+            "option_mark_provenance": "black_scholes_proxy",
+            "claim_limit": "discovery/falsification only; cannot earn L1",
+        },
+        "observed_historical_option_replay": {
+            "executable": False,
+            "archive_market_dates_by_symbol": archive_dates,
+            "maximum_observed_market_dates": observed_market_dates,
+            "minimum_plumbing_dates": 3,
+            "plumbing_gate_met": plumbing_gate_met,
+            "blocked_reason": "no broad historical observed option surfaces with complete entry/exit joins",
+            "claim_limit": (
+                "three dates validate capture/join plumbing or begin cost calibration; "
+                "they do not establish strategy edge or L1"
+            ),
+        },
+        "simulator_capability_work": {
+            "executable": bool(historical_underlyings),
+            "claim_limit": "strategy-free capability/negative-control work",
+        },
+    }
+    executable = [name for name, route in routes.items() if route["executable"]]
+    return {
+        "routes": routes,
+        "executable_routes": executable,
+        "global_build_blocked": not executable,
+        "archive_density_alone_can_justify_diminishing_returns": False,
+        "rule": (
+            "A blocked observed-option route blocks only observed-option claims. Archive density alone cannot "
+            "justify DIMINISHING_RETURNS while another independent route remains informative; honest "
+            "information-exhaustion stops remain valid."
+        ),
+    }
+
+
 def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
     records = _previous_records(repo, stamp)
     closed = sorted(
@@ -109,6 +197,24 @@ def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
         redirect_reasons.append("last completed wake declared DIMINISHING_RETURNS")
     if len(signatures) >= 2 and signatures[-1] and signatures[-1] == signatures[-2]:
         redirect_reasons.append(f"last two completed wakes repeated loop signature {signatures[-1]!r}")
+    research_routes = assess_research_routes(repo)
+    last = records[-1] if records else {}
+    last_dependency_text = " ".join(
+        [str(last.get("next", "")), *(str(value) for value in last.get("data_dependencies", []))]
+    ).lower()
+    archive_dependent_stop = bool(
+        last.get("outcome") == "DIMINISHING_RETURNS"
+        and any(token in last_dependency_text for token in ("archive", "observed option", "market date"))
+    )
+    independent_route_open = any(
+        name != "observed_historical_option_replay" for name in research_routes["executable_routes"]
+    )
+    archive_stop_invalidated = archive_dependent_stop and independent_route_open
+    if archive_stop_invalidated:
+        redirect_reasons.append(
+            "archive-dependent DIMINISHING_RETURNS is invalidated by an executable independent research route"
+        )
+
     payload = {
         "schema_version": SCHEMA_VERSION,
         "stamp": stamp,
@@ -133,10 +239,14 @@ def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
         ],
         "redirect_required": bool(redirect_reasons),
         "redirect_reasons": redirect_reasons,
+        "research_routes": research_routes,
+        "archive_dependent_stop_invalidated": archive_stop_invalidated,
         "choice_rule": (
             "Closed families and prior NEXT are context, not allowlists. Reopen only with a named "
-            "new evidence class or repaired capability. If no material delta is available, stop with "
-            "DIMINISHING_RETURNS rather than manufacturing artifacts."
+            "new evidence class or repaired capability. A blocked observed-option route blocks only dependent "
+            "claims and cannot alone justify DIMINISHING_RETURNS while another historical/capability route remains "
+            "informative. Honest information-exhaustion stops remain valid after open routes are assessed for "
+            "material novelty."
         ),
     }
     out.parent.mkdir(parents=True, exist_ok=True)

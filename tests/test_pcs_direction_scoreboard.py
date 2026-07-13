@@ -6,6 +6,12 @@ from scripts.pcs_direction_scoreboard import build_scoreboard
 class DirectionScoreboardTest(unittest.TestCase):
     def test_compares_structures_only_on_shared_regime_windows(self):
         regime = {
+            "evidence": {
+                "option_mark_provenance": "observed_historical_option_quotes",
+                "complete_observed_trade_joins": True,
+                "observed_history_sufficient_for_edge": True,
+                "observed_market_dates": 100,
+            },
             "results": [
                 {
                     "hyp_id": "pcs",
@@ -59,6 +65,10 @@ class DirectionScoreboardTest(unittest.TestCase):
         self.assertEqual(pcs["common_dense_negative_n"], 1)
         self.assertEqual(pcs["common_window_max_dd"], 20.0)
         self.assertTrue(pcs["after_cost_positive_nonvacuous"])
+        self.assertEqual(result["metric_eligible_hyp_ids"], ["pcs"])
+        self.assertEqual(result["l1_hyp_ids"], [])
+        self.assertEqual(result["l1_evidence"]["option_mark_provenance"], "black_scholes_proxy")
+        self.assertEqual(result["l1_evidence"]["reason"], "proxy_or_unknown_option_marks_cannot_earn_l1")
         self.assertNotEqual(result["leader_hyp_id"], "ccs")
 
     def test_quality_rank_prefers_tighter_risk_before_dense_negative_count(self):

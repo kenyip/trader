@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from trader_platform.research.evidence_policy import PROXY_OPTION_MARKS, assess_l1_evidence
+
 
 DIRECTION_BY_STRUCTURE = {
     "put_credit_spread": "bullish",
@@ -86,13 +88,23 @@ def build_scoreboard(regime: dict[str, Any], cost: dict[str, Any]) -> dict[str, 
         )
 
     rows.sort(key=quality_key)
+    # This scoreboard consumes daily-bar BS stress outputs by construction.
+    # Input metadata cannot relabel those rows as observed option evidence.
+    evidence_decision = assess_l1_evidence(option_mark_provenance=PROXY_OPTION_MARKS)
+    metric_eligible = [
+        row["hyp_id"]
+        for row in rows
+        if row["after_cost_positive_nonvacuous"] and row["regime_hold"] and row["cost_hold"]
+    ]
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "common_window_labels": common_labels,
         "leader_hyp_id": rows[0]["hyp_id"] if rows else None,
-        "l1_hyp_ids": [row["hyp_id"] for row in rows if row["after_cost_positive_nonvacuous"] and row["regime_hold"] and row["cost_hold"]],
+        "l1_hyp_ids": [],
+        "metric_eligible_hyp_ids": metric_eligible,
+        "l1_evidence": evidence_decision.to_dict(),
         "rows": rows,
-        "note": "Research scoreboard only. Ranking requires positive non-vacuous 5% slip first, then B3+B4, dense negatives, max loss, and shared-window drawdown.",
+        "note": "Research scoreboard only. Metric eligibility requires positive non-vacuous 5% slip plus B3+B4; L1 additionally requires sufficient joined observed historical option evidence.",
     }
 
 
