@@ -1,0 +1,66 @@
+{
+  "choice_rule": "Closed families and prior NEXT are context, not allowlists. Reopen only with a named new evidence class or repaired capability. If no material delta is available, stop with DIMINISHING_RETURNS rather than manufacturing artifacts.",
+  "closed_families": [
+    "asymmetric-iron-condor-proxy",
+    "bac-friday-7dte-management",
+    "ccs-vol-expansion-daily-bar",
+    "collared-covered-call-proxy",
+    "pcs-bullish-momentum-daily-bar",
+    "pcs-close-shock-daily-bar",
+    "pcs-mild-pullback-daily-bar",
+    "pcs-vol-compression-daily-bar"
+  ],
+  "generated_at": "2026-07-13T00:00:02.137022+00:00",
+  "prior_novelty_keys": [
+    "build-compounding-v1-structured-handoff-recovery-role-validation",
+    "ccs-realized-vol-expansion-rolling-origin-8x3-reject",
+    "pcs-hv-ratio-nonnumeric-fail-closed-train-holdout-negative-control",
+    "pcs-mild-pullback-rolling-origin-8x3-reject",
+    "pcs-realized-vol-compression-rolling-origin-8x3-reject"
+  ],
+  "prior_record_count": 4,
+  "recent_runs": [
+    {
+      "loop_signature": "pcs/direction/mild-pullback/rolling-origin/proxy-cost",
+      "next": "On the next distinct New York RTH market date, append one all-expiration TSLL observation snapshot and verify archive density advances from 1/3 to 2/3 without duplicate identical rows; no provider-backed historical simulation before 3/3.",
+      "novelty_keys": [
+        "pcs-mild-pullback-rolling-origin-8x3-reject"
+      ],
+      "outcome": "FALSIFIED",
+      "stamp": "2026-07-12T1437"
+    },
+    {
+      "loop_signature": "platform/self-evolution/cumulative-build-handoffs",
+      "next": "On the next distinct New York RTH market date, append one all-expiration TSLL observation snapshot and verify archive density advances from 1/3 to 2/3 without duplicate identical rows; no provider-backed historical simulation before 3/3.",
+      "novelty_keys": [
+        "build-compounding-v1-structured-handoff-recovery-role-validation"
+      ],
+      "outcome": "REPAIRED",
+      "stamp": "2026-07-12T1553"
+    },
+    {
+      "loop_signature": "pcs/volatility/compression/rolling-origin/proxy-cost",
+      "next": "On the next distinct New York RTH market date, append one all-expiration TSLL observation snapshot and verify archive density advances from 1/3 to 2/3 without duplicate identical rows; no provider-backed historical simulation, observed-cost calibration, or L1 claim before 3/3.",
+      "novelty_keys": [
+        "pcs-realized-vol-compression-rolling-origin-8x3-reject",
+        "pcs-hv-ratio-nonnumeric-fail-closed-train-holdout-negative-control"
+      ],
+      "outcome": "FALSIFIED",
+      "stamp": "2026-07-12T1616"
+    },
+    {
+      "loop_signature": "ccs/volatility/expansion/rolling-origin/proxy-cost",
+      "next": "On the next distinct New York RTH market date, append one all-expiration TSLL option observation snapshot and verify archive density advances from 1/3 to 2/3 without duplicating identical rows; do not run provider-backed historical simulation, observed-cost calibration, evolve-on-observed-grid, or L1 claims before 3/3.",
+      "novelty_keys": [
+        "ccs-realized-vol-expansion-rolling-origin-8x3-reject"
+      ],
+      "outcome": "FALSIFIED",
+      "stamp": "2026-07-12T1636"
+    }
+  ],
+  "redirect_reasons": [],
+  "redirect_required": false,
+  "schema_version": 1,
+  "source": "integrated prior compounding.json records",
+  "stamp": "2026-07-12T1700"
+}
