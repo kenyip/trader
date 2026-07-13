@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "stamp": "2026-07-12T2237",
+  "loop_signature": "simulator/corporate-action/apple-issuer-bounded-dividend-crosscheck",
+  "outcome": "CAPABILITY",
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "Added a canonical Apple Newsroom release parser and exact bounded cross-check that independently corroborates 40 AAPL Nasdaq archive events on announcement date, nominal amount, and matched-release common-stock wording while preserving ex-date and whole-provider limits.",
+      "novelty_key": "apple-newsroom-dividend-bounded-crosscheck-v1",
+      "artifacts": [
+        "trader_platform/research/dividend_event_crosscheck.py",
+        "scripts/dividend_event_crosscheck.py",
+        "tests/test_dividend_event_crosscheck.py",
+        "docs/DIVIDEND_EVENT_DATA_BOUNDARY.md"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "Security identity is proved by explicit issuer wording only for parsed matched releases, not by a complete Nasdaq preferred-security row audit.",
+      "status": "rejected",
+      "rationale": "Rejected as a remaining overclaim: code, live JSON, doctrine, readiness, and wake reports qualify security_identity only inside the 40 matched-release interval and explicitly deny whole-provider or older-row security-class proof."
+    },
+    {
+      "finding": "The 40/40 result is intersection completeness inside the issuer-sitemap span; both sources could silently omit the same event.",
+      "status": "rejected",
+      "rationale": "Rejected as a remaining completeness overclaim: all durable surfaces call the result bounded partial corroboration and deny whole-provider completeness; dual silent omission remains an explicit residual limit."
+    },
+    {
+      "finding": "An archive ex_date equal to an issuer record_date should still remain unqualified.",
+      "status": "repaired",
+      "rationale": "A dedicated negative control now constructs equal record/ex dates and proves partial corroboration still excludes ex_date from qualified_fields.",
+      "repair_artifacts": [
+        "trader_platform/research/dividend_event_crosscheck.py"
+      ],
+      "test_artifacts": [
+        "tests/test_dividend_event_crosscheck.py"
+      ]
+    },
+    {
+      "finding": "reports/readiness/LATEST.md still pointed to the completed 1835 issuer-cross-check seed.",
+      "status": "rejected",
+      "rationale": "Rejected as a remaining defect after finalization: readiness now records the 2237 finalizer outcome, marks 1835 superseded, and carries exactly the merged explicitly-labeled-ex-date source-or-close seed."
+    },
+    {
+      "finding": "The full suite was executor-reported but not challenger-reverified.",
+      "status": "rejected",
+      "rationale": "Rejected as an outstanding gate after finalization: the finalizer reran the focused suite at 36/36, platform smoke, the live exact 40/40 cross-check, and the full suite at 166/166, all green."
+    }
+  ],
+  "closed_families": [],
+  "data_dependencies": [
+    "One genuinely independent source that explicitly labels historical AAPL ex-dividend dates is required to corroborate ex_date for the bounded 40-event interval; issuer record dates cannot substitute.",
+    "Split-adjusted amount/spot qualification remains required before deep-history assignment counts can be calibrated.",
+    "Observed historical option surfaces remain required for evidence above L0.",
+    "Forward TSLL option archive remains one of three required distinct New York market dates for replay plumbing."
+  ],
+  "next": "Inventory one no-paid source that explicitly labels historical AAPL ex-dividend dates for the same 40-event interval; corroborate only an independent ex_date-equivalent field, never issuer record date or Nasdaq reuse. If none survives a short fail-closed inventory, close this provenance route at bounded partial L0 and redirect to an open historical-underlying or simulator-capability loop; do not reopen closed daily-bar proxy families or promote, paper, shadow, arm, or live."
+}

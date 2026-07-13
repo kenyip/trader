@@ -21,6 +21,9 @@ Implementation:
 - `trader_platform/research/dividend_event_archive.py`
 - `scripts/dividend_event_observations.py`
 - `tests/test_dividend_event_archive.py`
+- `trader_platform/research/dividend_event_crosscheck.py`
+- `scripts/dividend_event_crosscheck.py`
+- `tests/test_dividend_event_crosscheck.py`
 
 ## Live source inventory
 
@@ -33,6 +36,7 @@ The inventory was performed from the repository host at 2026-07-12 18:36–18:42
 | Nasdaq empty/unsupported cases | SMCI returned an ambiguous “never provided or pending” empty history; F said non-Nasdaq history unavailable; TSLL returned source status 400 / symbol unavailable | **Blocked.** These are `None` coverage, never covered/no-event `[]`. The source cannot unlock SMCI diagonal required mode or broad-universe use. |
 | SEC Company Facts (`data.sec.gov/api/xbrl/companyfacts`) | AAPL exposes aggregate dividend facts such as `CommonStockDividendsPerShareDeclared`, but the tested response does not provide a normalized per-event declaration/ex-date stream | **Not implemented.** Aggregate filing facts do not satisfy the event-level `known_at` contract. Filing extraction from 8-K/press releases would need a separate provenance parser and completeness proof. |
 | yfinance 1.5.1 | `Ticker.dividends` / `actions` return ex-date-indexed amounts; `calendar` exposes current dividend/ex-dividend dates but not historical declaration timestamps | **Rejected for `known_at`.** Ex-date history cannot be relabeled as announcement time. |
+| Apple Newsroom earnings releases + canonical Newsroom sitemap | Forty quarterly results releases from 2016-07-26 through 2026-04-30 each explicitly state publication date, cash dividend per share, Apple common-stock identity, record date, and payment date | **Bounded partial corroboration for AAPL.** All 40 issuer releases match the 40 normalized Nasdaq events in that publication-date window on `known_at` and amount, with zero conflicts or unmatched dates. This qualifies only those fields plus security identity for that interval; issuer record date is not relabeled as ex-date. |
 
 No paid API, credential, broker session, or spend was used.
 
@@ -41,12 +45,13 @@ No paid API, credential, broker session, or spend was used.
 - `.cache/platform/dividend_event_archive_lab_2026-07-12T1835.json`: AAPL live snapshot normalized to 53 usable rows from 82 source rows; honest announcement-time coverage begins 2013-01-23 and older missing-declaration history is truncated.
 - `.cache/platform/dividend_events/AAPL_nasdaq.json`: local normalized archive; ignored runtime data, not a tracked raw provider dump.
 - `.cache/platform/dividend_event_provider_sim_smoke_2026-07-12T1835.json`: required-mode AAPL integration; diagonal completed with zero entries, bull-call completed with 21 proxy trades, both with `corporate_action_mode=required`. This proves provider wiring only.
+- `.cache/platform/dividend_event_crosscheck_2026-07-12T2237.json`: normalized Apple issuer-release evidence and exact bounded comparison; 40/40 issuer and Nasdaq events match from 2016-07-26 through 2026-04-30, with 13 earlier Nasdaq events explicitly outside issuer-sitemap coverage and `ex_date` unqualified.
 - Live SMCI capture exited non-zero with `Nasdaq dividend coverage ambiguous`; no archive was written.
 
 ## Claim boundary
 
-This capability does **not** create a strategy candidate, capital seat, B3/B4 pass, paper sample, or L1 evidence. The simulators still use Black-Scholes proxy option marks and lack observed historical option surfaces. Nasdaq amounts are split-unadjusted and may be security-class contaminated, so long-history assignment counts are not calibrated evidence; any future use must qualify amount/spot scale and class identity. For any trade-shaped research result, structure/capital fields remain mandatory; this wake created no trade-shaped candidate and therefore no new `capital_fit_usd`, one-lot `max_loss_usd`, or `max_lots` claim.
+This capability does **not** create a strategy candidate, capital seat, B3/B4 pass, paper sample, or L1 evidence. The AAPL issuer comparison removes common-stock identity ambiguity only for the matched 2016-07-26 through 2026-04-30 declaration window. The 13 earlier normalized events and every archived `ex_date` remain single-source; issuer record date is not ex-date evidence. The simulators still use Black-Scholes proxy option marks and lack observed historical option surfaces. Nasdaq amounts remain split-unadjusted, so long-history amount/spot comparisons and assignment counts are not calibrated evidence. For any trade-shaped research result, structure/capital fields remain mandatory; this wake created no trade-shaped candidate and therefore no new `capital_fit_usd`, one-lot `max_loss_usd`, or `max_lots` claim.
 
 ## Next data boundary
 
-Do not broaden the provider by treating empty histories as no-dividend coverage or by scraping ex-dates into `known_at`. A future capability loop may add a second independent announcement-time source or issuer-filing parser only if it proves event completeness and security-class identity. Strategy discovery remains free on unrelated historical-underlying/capability routes.
+Do not broaden the provider by treating empty histories as no-dividend coverage, by treating issuer record dates as ex-dates, or by extending the AAPL partial qualification outside its exact matched interval. A future capability loop may independently corroborate AAPL ex-dates/pre-2016 events or add a generic filing/issuer adapter for another eventful symbol, but only a genuinely new source field or symbol can advance this evidence family. Strategy discovery remains free on unrelated historical-underlying/capability routes.

@@ -1,0 +1,30 @@
+{
+  "stamp": "2026-07-12T2237",
+  "lab": "income_build_lab",
+  "completion_contract_version": 3,
+  "context": "manual",
+  "context_source": "override",
+  "goal_source": "override",
+  "goal_file": "/Users/jarvis/dev/tsla-tsll-options-tracker/configs/build_lab_free_goal.txt",
+  "goal": "Autonomously execute the highest-information claim-scoped BUILD loop toward an L1 paper-testable decision rule. Orient from origin/main, structured compounding history, closed novelty keys, current blockers, and the latest NEXT as context rather than an order. Preserve broad symbol/strategy freedom; prefer a candidate advance, decisive falsification, structural/evidence repair, reusable capability, meaningful behavioral test, or higher-information seed. Do not reopen closed search without a genuinely new evidence class. Keep proxy/synthetic work L0, preserve all paper/live/arm gates, and complete the full executor\u2192challenger\u2192finalizer\u2192deterministic integration/postflight contract or leave exact resumable residue.",
+  "mode": "both",
+  "executor": {
+    "provider": "openai-codex",
+    "model": "gpt-5.6-sol"
+  },
+  "challenger": {
+    "provider": "xai-oauth",
+    "model": "grok-4.5"
+  },
+  "finalizer": {
+    "provider": "openai-codex",
+    "model": "gpt-5.6-sol"
+  },
+  "base_head": "75d34da711f498173e84ec779a367154cde1b898",
+  "run_branch": "trader/run-2026-07-12T2237",
+  "structures": "",
+  "top_symbols": 8,
+  "mutants": 2,
+  "sleeve_usd": 3000.0,
+  "repo": "/Users/jarvis/dev/tsla-tsll-options-tracker"
+}
