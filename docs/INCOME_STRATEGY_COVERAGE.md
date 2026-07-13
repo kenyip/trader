@@ -1,7 +1,7 @@
 # Income Strategy Coverage Map
 
 **Goal:** steady income on $3k sleeve via multi-structure search, not one-name monomania.
-**Updated:** 2026-07-12
+**Updated:** 2026-07-13
 
 ## Axes we care about
 
@@ -9,7 +9,7 @@
 |---|---|---|
 | **Structure** | What we trade (PCS, CCS, IC, …) | `STRUCTURE_CATALOG` + sim engine |
 | **Symbol** | Where | `universe.yaml` research rank |
-| **Time bias** | DTE bucket, hold days, entry weekday/session | `pcs_time_bias_grid.py` covers multi-hyp DTE/profit-target/DTE-stop + entry-weekday/cost slices; completed-bar filters and chronological selection/holdout are built; the completed-30m open/midday/late PCS/CCS/IC lab is built but its first 8-symbol cycle was rejected (0/24 complete passes), with only 21 usable feature dates versus about 60 raw dates |
+| **Time bias** | DTE bucket, hold days, entry weekday/session | `pcs_time_bias_grid.py` covers multi-hyp DTE/profit-target/DTE-stop + entry-weekday/cost slices; completed-bar filters and chronological selection/holdout are built; append-safe 30m + daily-feature archives expanded the completed-30m open/midday/late PCS/CCS/IC lab from 21 to all 60 raw dates without same-date features, but its locked 8-symbol rerun still rejected (1/24 train passes, 0/24 complete train+holdout passes) |
 | **Direction / regime / volatility bias** | Bull / bear / neutral / compression / expansion / stand-aside | Shared-window scoreboard plus `regime_router_sim.py`: one no-lookahead PCS/CCS/IC position with standalone controls; router, four adjacent-daily PCS families, a multi-horizon trend-pullback PCS family, and a bearish volatility-expansion CCS family were rejected |
 | **Risk fit** | 1-lot max_loss, open risk, BP | capital_fit + quality bar |
 | **Falsify** | Regime windows + cost/slip | B3/B4 scripts + fixed-dollar per-leg half-spread axis across all defined-risk proxy sims |

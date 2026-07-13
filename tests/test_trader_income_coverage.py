@@ -30,7 +30,11 @@ class TraderIncomeCoverageTest(unittest.TestCase):
 
         self.assertIn("completed-30-minute", time_gap)
         self.assertIn("0/24 complete train+holdout passes", time_gap)
+        self.assertIn("append-safe", time_gap)
+        self.assertIn("60 usable", time_gap)
+        self.assertIn("1/24 train", time_gap)
         self.assertNotIn("session-time slices missing", time_gap)
+        self.assertNotIn("21 dates", time_gap)
         self.assertTrue(payload["quality_leader_hint"].startswith("none; former reference"))
 
 

@@ -1,0 +1,139 @@
+{
+  "archive_dependent_stop_invalidated": false,
+  "choice_rule": "Closed families and prior NEXT are context, not allowlists. Reopen only with a named new evidence class or repaired capability. A blocked observed-option route blocks only dependent claims and cannot alone justify DIMINISHING_RETURNS while another historical/capability route remains informative. Honest information-exhaustion stops remain valid after open routes are assessed for material novelty.",
+  "closed_families": [
+    "aapl-noauth-explicit-exdate-40event-aggregator-route",
+    "asymmetric-iron-condor-proxy",
+    "bac-friday-7dte-management",
+    "ccs-vol-expansion-daily-bar",
+    "collared-covered-call-proxy",
+    "double-diagonal-symmetric-14-60-neutral-high-iv-proxy-seed-2026-07-13-cycle",
+    "pcs-bullish-momentum-daily-bar",
+    "pcs-close-shock-daily-bar",
+    "pcs-mild-pullback-daily-bar",
+    "pcs-multi-horizon-trend-pullback-daily-bar",
+    "pcs-vol-compression-daily-bar",
+    "session-time-7dte-one-point-pcs-ccs-ic-proxy-seed-2026-07-13-cycle"
+  ],
+  "generated_at": "2026-07-13T21:43:32.037404+00:00",
+  "prior_novelty_keys": [
+    "aapl-noauth-exdate-40event-route-close-v1",
+    "apple-newsroom-dividend-bounded-crosscheck-v1",
+    "assignment-guard-catalog-threshold-precedence-controls-v1",
+    "build-compounding-v1-structured-handoff-recovery-role-validation",
+    "build-lab-integrate-only-cli-recovery-parser-v1",
+    "ccs-realized-vol-expansion-rolling-origin-8x3-reject",
+    "dividend-archive-known-at-coverage-boundary-v1",
+    "double-diagonal-14-60-eight-symbol-dual-cost-reject-v1",
+    "double-diagonal-american-intrinsic-signed-liquidation-capital-v1",
+    "double-diagonal-chronological-conjunctive-gate-runner-v1",
+    "double-diagonal-same-inward-simulator-v1",
+    "income-coverage-session-time-state-regression-v1",
+    "nasdaq-declaration-dividend-archive-provider-v1",
+    "pcs-hv-ratio-nonnumeric-fail-closed-train-holdout-negative-control",
+    "pcs-intraday-calendar-dte-exit-bucket-integrity-v1",
+    "pcs-mild-pullback-rolling-origin-8x3-reject",
+    "pcs-multi-horizon-entry-filter-nonnumeric-fail-closed",
+    "pcs-multi-horizon-trend-pullback-rolling-origin-8x3-reject",
+    "pcs-realized-vol-compression-rolling-origin-8x3-reject",
+    "session-time-30m-prior-session-chronological-lab-v1",
+    "session-time-8x3-dual-cost-reject-2026-07-13-cycle",
+    "short-call-dividend-known-at-assignment-guard-v1",
+    "stockanalysis-aapl-exdate-exact-set-gate-v1"
+  ],
+  "prior_record_count": 12,
+  "recent_runs": [
+    {
+      "loop_signature": "simulator/corporate-action/nasdaq-announcement-archive-provider",
+      "next": "Cross-check archived Nasdaq cash-dividend events for AAPL (and MU only if a normalized archive is captured first) against one independent issuer/filing announcement source; qualify per-symbol provenance only if completeness and security-class identity are proved, otherwise keep the provider L0/single-source and redirect to another open historical-underlying or simulator-capability route.",
+      "novelty_keys": [
+        "nasdaq-declaration-dividend-archive-provider-v1",
+        "dividend-archive-known-at-coverage-boundary-v1"
+      ],
+      "outcome": "CAPABILITY",
+      "stamp": "2026-07-12T1835"
+    },
+    {
+      "loop_signature": "simulator/corporate-action/apple-issuer-bounded-dividend-crosscheck",
+      "next": "Inventory one no-paid source that explicitly labels historical AAPL ex-dividend dates for the same 40-event interval; corroborate only an independent ex_date-equivalent field, never issuer record date or Nasdaq reuse. If none survives a short fail-closed inventory, close this provenance route at bounded partial L0 and redirect to an open historical-underlying or simulator-capability loop; do not reopen closed daily-bar proxy families or promote, paper, shadow, arm, or live.",
+      "novelty_keys": [
+        "apple-newsroom-dividend-bounded-crosscheck-v1"
+      ],
+      "outcome": "CAPABILITY",
+      "stamp": "2026-07-12T2237"
+    },
+    {
+      "loop_signature": "simulator/corporate-action/aapl-independent-exdate-exact-set-route-close",
+      "next": "Build one minimal paper-only double_diagonal_spread defined-debit BS/daily-bar scaffold with catalog, simulator, smoke, exact four-leg percentage and fixed-$0.01-per-leg costs, no-same-bar reentry, and one-lot max_loss_usd <= $300; run one predeclared multi-symbol chronological dual-cost falsification and reject unless both cost axes are non-vacuously positive with window max DD <= $75 and dense-negative windows <= 5. Keep L0, do not register proxy SHIP on first pass, reopen closed proxy families or the AAPL ex-date inventory, or paper/shadow/arm/live.",
+      "novelty_keys": [
+        "stockanalysis-aapl-exdate-exact-set-gate-v1",
+        "aapl-noauth-exdate-40event-route-close-v1"
+      ],
+      "outcome": "FALSIFIED",
+      "stamp": "2026-07-12T2315"
+    },
+    {
+      "loop_signature": "simulator/double-diagonal/symmetric-14-60/chronological-dual-cost-capital-honesty",
+      "next": "Build one no-lookahead completed-30-minute-bar session-time evidence route for defined-risk PCS/CCS/IC across BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL using prior-completed features, open/midday/late buckets, chronological train selection then untouched holdout, both 5% and $0.01-per-leg cost axes, exact ledger, and no same-bar/same-bucket reentry; reject unless positive non-vacuous holdouts meet max_loss_usd <= $300, window max DD <= $75, and dense-negative windows <= 5. Keep L0, register nothing first pass, and do not reopen the rejected double-diagonal seed or closed daily-bar families.",
+      "novelty_keys": [
+        "double-diagonal-same-inward-simulator-v1",
+        "double-diagonal-14-60-eight-symbol-dual-cost-reject-v1",
+        "double-diagonal-american-intrinsic-signed-liquidation-capital-v1",
+        "double-diagonal-chronological-conjunctive-gate-runner-v1",
+        "build-lab-integrate-only-cli-recovery-parser-v1"
+      ],
+      "outcome": "FALSIFIED",
+      "stamp": "2026-07-13T0026"
+    },
+    {
+      "loop_signature": "historical-underlying/session-time-30m/pcs-ccs-ic/chronological-dual-cost",
+      "next": "Promote an append-safe provenance-recorded raw 30-minute underlying archive for BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL, expand usable prior-session feature dates toward retained raw history without lookahead, then rerun exactly once the locked PCS/CCS/IC open/midday/late chronological dual-cost train-to-holdout specification with unchanged DNA/gates and no holdout retune; keep L0 and do not register, promote, paper, shadow, arm, or live.",
+      "novelty_keys": [
+        "session-time-30m-prior-session-chronological-lab-v1",
+        "session-time-8x3-dual-cost-reject-2026-07-13-cycle",
+        "pcs-intraday-calendar-dte-exit-bucket-integrity-v1",
+        "income-coverage-session-time-state-regression-v1"
+      ],
+      "outcome": "FALSIFIED",
+      "stamp": "2026-07-13T0515"
+    }
+  ],
+  "redirect_reasons": [],
+  "redirect_required": false,
+  "research_routes": {
+    "archive_density_alone_can_justify_diminishing_returns": false,
+    "executable_routes": [
+      "historical_underlying_proxy_discovery",
+      "simulator_capability_work"
+    ],
+    "global_build_blocked": false,
+    "routes": {
+      "historical_underlying_proxy_discovery": {
+        "claim_limit": "discovery/falsification only; cannot earn L1",
+        "executable": true,
+        "historical_dataset_count": 61,
+        "option_mark_provenance": "black_scholes_proxy",
+        "simulator_count": 8
+      },
+      "observed_historical_option_replay": {
+        "archive_market_dates_by_symbol": {
+          "TSLL": 2
+        },
+        "blocked_reason": "no broad historical observed option surfaces with complete entry/exit joins",
+        "claim_limit": "three dates validate capture/join plumbing or begin cost calibration; they do not establish strategy edge or L1",
+        "executable": false,
+        "maximum_observed_market_dates": 2,
+        "minimum_plumbing_dates": 3,
+        "plumbing_gate_met": false
+      },
+      "simulator_capability_work": {
+        "claim_limit": "strategy-free capability/negative-control work",
+        "executable": true
+      }
+    },
+    "rule": "A blocked observed-option route blocks only observed-option claims. Archive density alone cannot justify DIMINISHING_RETURNS while another independent route remains informative; honest information-exhaustion stops remain valid."
+  },
+  "schema_version": 1,
+  "source": "integrated prior compounding.json records",
+  "stamp": "2026-07-13T1415"
+}

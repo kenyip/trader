@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "stamp": "2026-07-13T1415",
+  "loop_signature": "historical-underlying/session-time-30m-archive-daily-warmup/locked-pcs-ccs-ic-dual-cost",
+  "outcome": "FALSIFIED",
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "Added append/deduplicate 30-minute and daily underlying archives with capture provenance, overlap accounting, New York DST-safe round trips, fail-closed validation, and strictly prior-session daily warmup features.",
+      "novelty_key": "session-time-underlying-archive-daily-warmup-provenance-v1",
+      "artifacts": [
+        "trader_platform/research/intraday_session_data.py",
+        "scripts/pcs_session_time_chronological_lab.py",
+        "tests/test_intraday_session_data.py",
+        "tests/test_pcs_session_time_chronological_lab.py"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "Closed the locked densified 8-symbol x 3-structure session-time proxy cycle after 24/24 rows completed, one train row passed both cost axes, and zero passed the complete train plus untouched-holdout conjunction over 60 usable dates.",
+      "novelty_key": "session-time-8x3-densified-dual-cost-reject-2026-07-13-cycle",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-13T1415/pcs-session-time-archive-rerun.json",
+        "reports/trader-wakes/moa/2026-07-13T1415/executor-closeout.md",
+        "reports/trader-wakes/moa/2026-07-13T1415/challenger-critique.md",
+        "reports/trader-wakes/moa/2026-07-13T1415/learning-promotion.md"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Replaced stale thin-density coverage with deterministic 60-usable-date locked-rejection semantics and removed redundant intermediate generated snapshots while preserving no-living-leader truth.",
+      "novelty_key": "session-time-coverage-60-usable-canonical-surface-v1",
+      "artifacts": [
+        "scripts/trader_income_coverage.py",
+        "tests/test_trader_income_coverage.py",
+        "docs/BUILD_LAB_ENVIRONMENT.md",
+        "docs/INCOME_STRATEGY_COVERAGE.md",
+        "reports/readiness/income-coverage-2026-07-13T1415.md",
+        "reports/readiness/income-coverage-LATEST.md"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "F1: axis max_lots reports generic capacity three while the operating posture is one lot.",
+      "status": "rejected",
+      "rationale": "The immutable artifact and all current prose explicitly distinguish generic/theoretical capacity from the one-lot operating posture; zero rows passed, no seat or intent exists, and maximum one-lot loss is $223.36. A post-run label rewrite would not change the decision."
+    },
+    {
+      "finding": "F2: the production journal is a first write and does not itself exercise overlapping live captures.",
+      "status": "rejected",
+      "rationale": "Accepted as a claim boundary, not a defect: the run reports first-capture new_rows=780/replaced_rows=0 and makes no live multi-capture claim. Unit tests independently exercise append, overlap replacement, journal growth, and mixed-DST round trips."
+    },
+    {
+      "finding": "F3: redundant intermediate income-coverage snapshots were run-created debris.",
+      "status": "repaired",
+      "rationale": "Regenerated the canonical run-stamped and LATEST reports with an explicit deterministic stamp, removed 1429/1437/1443 intermediates, and retained a regression test for the claim-current 60-date locked rejection.",
+      "repair_artifacts": [
+        "scripts/trader_income_coverage.py"
+      ],
+      "test_artifacts": [
+        "tests/test_trader_income_coverage.py"
+      ]
+    },
+    {
+      "finding": "F4: zero-trade windows report $75 capital_fit_usd/max_loss_usd theoretical values.",
+      "status": "rejected",
+      "rationale": "The $75 value is the simulator's documented theoretical one-point-width estimate when no trade exists, not an observed path loss. n_trades=0 makes gate_pass false, so the field cannot rescue selection or support an empirical-risk claim."
+    },
+    {
+      "finding": "F5: challenger did not rerun platform smoke or the full suite.",
+      "status": "rejected",
+      "rationale": "This was a required finalizer verification step rather than a code defect. The finalizer independently reran focused 31/31, platform smoke, and full 201/201 successfully."
+    },
+    {
+      "finding": "F6: executor NEXT is a completed phase handoff rather than the post-run BUILD seed.",
+      "status": "rejected",
+      "rationale": "The executor handoff remains correct historical phase evidence. Final merge, LATEST, readiness, learning, and compounding surfaces supersede it with one free defined-risk multi-structure discovery seed while keeping the densified family closed."
+    }
+  ],
+  "closed_families": [
+    "session-time-7dte-one-point-pcs-ccs-ic-proxy-seed-2026-07-13-cycle"
+  ],
+  "data_dependencies": [
+    "Observed historical option surfaces with complete entry/exit joins remain required for any claim above L0; the TSLL option archive is still only 2/3 distinct New York market dates.",
+    "A later real overlapping underlying capture may exercise multi-capture operations, but it is not needed to support this cycle's locked rejection."
+  ],
+  "next": "Run one free defined-risk multi-structure discovery across top research symbols using PCS/CCS/IC plus at most one already-simmed under-covered catalog structure, then apply exact B3+B4 and fixed-$0.01-per-leg falsification to every SHIP against non-vacuous dual-cost positive PnL, one-lot max_loss_usd <= $300, window max DD <= $75, and dense-negative windows <= 5; register nothing unless complete gates pass, keep L0/proxy labels, and do not reopen closed families or paper/shadow/arm/live."
+}

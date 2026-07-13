@@ -50,6 +50,40 @@ def split_by_market_date(
     return train, holdout
 
 
+def summarize_data_range(
+    frame: pd.DataFrame,
+    train: pd.DataFrame,
+    holdout: pd.DataFrame,
+) -> dict[str, Any]:
+    provenance = dict(frame.attrs.get("archive_provenance") or {})
+    intraday = dict(provenance.get("intraday") or {})
+    daily = dict(provenance.get("daily") or {})
+    feature_violations = sum(
+        feature_date >= market_date
+        for feature_date, market_date in zip(
+            frame["feature_market_date"],
+            frame["market_date"],
+        )
+    )
+    return {
+        "raw_intraday_archive_rows": int(intraday.get("archive_rows") or 0),
+        "raw_intraday_market_dates": int(intraday.get("archive_market_dates") or 0),
+        "daily_feature_archive_rows": int(daily.get("archive_rows") or 0),
+        "daily_feature_archive_market_dates": int(daily.get("archive_market_dates") or 0),
+        "usable_bars": int(len(frame)),
+        "usable_market_dates": int(frame["market_date"].nunique()),
+        "start": str(frame.index.min()),
+        "end": str(frame.index.max()),
+        "train_dates": int(train["market_date"].nunique()),
+        "holdout_dates": int(holdout["market_date"].nunique()),
+        "feature_date_violations": int(feature_violations),
+        "capture_source": provenance.get("source"),
+        "captured_at": provenance.get("captured_at"),
+        "intraday_capture": intraday,
+        "daily_feature_capture": daily,
+    }
+
+
 def _config(structure: str, bucket: Optional[str]) -> dict[str, Any]:
     config: dict[str, Any] = {
         "structure": structure,
@@ -245,22 +279,17 @@ def run_lab(symbols: list[str], structures: list[str], stamp: str) -> dict[str, 
     rows: list[dict[str, Any]] = []
     errors: list[dict[str, str]] = []
     data_ranges: dict[str, Any] = {}
-    raw_dir = REPO / ".cache" / "platform" / "intraday_underlying" / stamp
+    archive_dir = REPO / ".cache" / "platform" / "intraday_underlying" / "archive"
+    captured_at = datetime.now(timezone.utc).isoformat()
     for symbol in symbols:
         try:
             frame = download_session_frame(
                 symbol,
-                raw_out=raw_dir / f"{symbol}_60d_30m.csv",
+                archive_dir=archive_dir,
+                captured_at=captured_at,
             )
             train, holdout = split_by_market_date(frame)
-            data_ranges[symbol] = {
-                "bars": len(frame),
-                "market_dates": int(frame["market_date"].nunique()),
-                "start": str(frame.index.min()),
-                "end": str(frame.index.max()),
-                "train_dates": int(train["market_date"].nunique()),
-                "holdout_dates": int(holdout["market_date"].nunique()),
-            }
+            data_ranges[symbol] = summarize_data_range(frame, train, holdout)
             for structure in structures:
                 train_buckets = {
                     bucket: run_cost_axes(symbol, structure, bucket, train, f"train_{bucket}")
@@ -325,10 +354,10 @@ def run_lab(symbols: list[str], structures: list[str], stamp: str) -> dict[str, 
             "exact ledger, and no same-bar or same-date/session-bucket reentry"
         ),
         "claim_scope": (
-            "60-day yfinance 30-minute underlying history with prior-completed-session regime/IV "
-            "features and synthetic listed-Friday/rounded-strike Black-Scholes option marks; "
-            "L0 discovery/falsification only, no observed option fills, L1, registration, paper, "
-            "shadow, arm, broker, or live claim"
+            "append-safe yfinance 30-minute underlying archive with archived daily-history "
+            "prior-completed-session regime/IV features and synthetic listed-Friday/rounded-strike "
+            "Black-Scholes option marks; L0 discovery/falsification only, no observed option fills, "
+            "L1, registration, paper, shadow, arm, broker, or live claim"
         ),
         "validity": {
             "selection": "bucket selected on chronological train only; holdout is untouched unless train passes",
@@ -337,7 +366,18 @@ def run_lab(symbols: list[str], structures: list[str], stamp: str) -> dict[str, 
             "cost_axes": COST_AXES,
             "population_pure": "only requested PCS/CCS/IC rows; no registry mutation",
             "ranking_complete": len(errors) == 0 and len(rows) == len(symbols) * len(structures),
-            "source_limit": "yfinance 60d intraday retention; proxy options cannot earn L1",
+            "archive": (
+                "stable append/deduplicate archive for 30m underlying bars plus 1d feature history; "
+                "capture metadata records provider, request, row/date density, and overlap"
+            ),
+            "feature_date_integrity": all(
+                int(summary.get("feature_date_violations") or 0) == 0
+                for summary in data_ranges.values()
+            ),
+            "source_limit": (
+                "yfinance current-download retention plus forward append; daily warmup expands usable "
+                "feature density but option marks remain proxies and cannot earn L1"
+            ),
         },
         "gates": {
             "min_trades_each_train_and_holdout_axis": MIN_TRADES,

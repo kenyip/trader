@@ -1,59 +1,48 @@
-# MOA BUILD merge — 2026-07-13T0515 (finalizer green; integration pending)
+# MOA BUILD merge — 2026-07-13T1415 (finalizer green; integration pending)
 
-WAKE: 2026-07-13 PDT
 PHASE: BUILD / L0
 SLEEVE: $3,000
-ROLE: GPT 5.6 Sol finalizer after Grok 4.5 challenger PASS 8/8
-OUTCOME: CAPABILITY_ADDED / EXACT_SESSION_TIME_PROXY_SEED_FALSIFIED / COVERAGE_REPAIRED
+STATUS: Grok challenger PASS 8/8; GPT 5.6 Sol finalizer green; deterministic integration pending
+OUTCOME: archive capability added + locked densified session-time proxy cycle falsified
 PAPER_ONLY: true
 
-## Summary
+## FINAL JUDGMENT
 
-Accepted the completed-30-minute session-time research capability and the exact `REJECT_SESSION_TIME_PROXY_THIS_CYCLE` judgment. The 8-symbol × 3-structure PCS/CCS/IC lab completed 24/24 rows with zero errors; six rows passed both train cost axes and zero passed the complete train plus untouched-holdout conjunction. Maximum one-lot axis loss was `$224.61`; maximum absolute ledger delta was `1.4210854715202004e-14`; same-bar and same-date/session-bucket reentries were zero. No L1 evidence, living leader, capital seat, hypothesis registration, B-check, paper intent, shadow promotion, arm, broker access, or live action was created.
+Accepted append-safe provenance-recorded 30-minute and daily-warmup archives, but rejected the locked PCS/CCS/IC open/midday/late proxy family this cycle. The exact artifact completed 24/24 rows with zero errors, one train dual-cost pass, and zero complete train→untouched-holdout passes. All eight symbols had 780 usable bars over 60 raw=usable dates, split 36 train / 24 holdout, with zero feature-date violations. Sole train survivor AAPL late PCS had holdout fixed-cost n2/`+$6.858454559174554` and 5% slip n2/`-$10.538313351563206`; both fail density and 5% also fails PnL. Maximum one-lot loss `$223.36`; ledger delta `5.684341886080802e-14`; reentries zero.
 
-The capability is L0 underlying-only proxy research: yfinance 30-minute bars, prior-completed-session features, synthetic listed-Friday/rounded-strike Black-Scholes option marks, and proxy costs. Raw files contain about 60 dates, but feature readiness leaves only 21 usable dates and a nine-date holdout. Sparse one-window holdout summaries are not affirmative evidence; the rejection is independently decisive on dual-cost holdout PnL/trade density.
+The archive solved the prior usable-density bottleneck without revealing an edge. This remains L0 Black-Scholes/listed-Friday/rounded-strike proxy work; neither cost axis is an observed fill. Living leader none; capital path empty; no registration, B-check, paper, shadow, arm, broker, or live action. The exact densified session-time family is closed.
 
-## Challenger reconciliation
+## CHALLENGER RECONCILIATION
 
-- F1 accepted/repaired: coverage machinery, doctrines, and regenerated reports now say completed-30-minute session-time is built but the exact first cycle was rejected; a subprocess regression test prevents the stale “session-time slices missing” label.
-- F2 accepted/repaired: NEXT targets append-safe raw provenance and usable no-lookahead feature density before one locked rerun, not an idle wait for 60 new dates.
-- F3 rejected as a required post-run evidence rewrite: generic capacity may report three lots, but every structure/axis fixes the operating posture at one lot; no row passed and no seat exists. Future reruns may predeclare separate theoretical capacity.
-- F4 accepted as a limitation but rejected as claim-invalidating for this rejection: the one holdout window is weak, while dual-cost holdout PnL/trade density already rejects every train survivor. Denser usable history is mandatory before retest.
-- F5 accepted/repaired: current readiness calls `b195f5fe` historical and explicitly states no living leader.
+- Kept generic/theoretical `max_lots=3` only as immutable research capacity; operating posture is one lot and no row passed.
+- Labeled this production journal as first-write evidence; overlapping append/replace and DST behavior are independently tested, not claimed as live multi-capture evidence.
+- Removed redundant 1429/1437/1443 coverage snapshots and regenerated canonical `2026-07-13T1415` + LATEST outputs.
+- Kept zero-trade `$75` capital fields as theoretical simulator estimates; `n_trades=0` forces gate failure.
+- Re-ran focused tests, smoke, and full suite rather than inheriting executor/challenger results.
+- Superseded the completed audit handoff with the post-run BUILD seed below.
 
-## Evidence
+## VERIFICATION
 
-- `reports/trader-wakes/moa/2026-07-13T0515/pcs-session-time-chronological-lab.json`
-- `reports/trader-wakes/moa/2026-07-13T0515/executor-closeout.md`
-- `reports/trader-wakes/moa/2026-07-13T0515/challenger-critique.md`
-- `reports/trader-wakes/moa/2026-07-13T0515/learning-promotion.md`
-- `reports/trader-wakes/moa/2026-07-13T0515/compounding.json`
-- `reports/readiness/income-coverage-2026-07-13T0515.md`
+- Focused behavioral/boundary/negative-control/regression suite: 31/31 OK.
+- Platform smoke: OK; `agentic_live` blocked at Stage1 OAuth.
+- Full unittest discovery: 201/201 OK.
+- Changed-Python `py_compile`: exit 0.
+- `git diff --check`: exit 0.
+- Structured handoff validation: `ok: true`, `outcome: FALSIFIED`, three useful deltas, six critic findings closed.
+- Isolated temporary-index prepare gate: `ok: true`, 25 staged paths; real index remained untouched.
+- Coverage: 21 structures / 245 hypotheses / 67 artifacts / no living leader; canonical dated and LATEST coverage are byte-identical.
 
-## Verification
+## DURABLE
 
-- Focused behavioral/boundary/negative-control/regression suite: `.venv/bin/python -m unittest tests.test_intraday_session_data tests.test_pcs_session_time_chronological_lab tests.test_pcs_expiry_grid tests.test_trader_income_coverage -v` → 23/23 OK.
-- Full suite: `.venv/bin/python -m unittest discover -s tests` → 193/193 OK.
-- Platform smoke: `platform smoke OK`; `agentic_live` remained blocked at the Robinhood Stage1 OAuth gate.
-- `py_compile` over changed Python machinery/tests and `git diff --check 8edd2b907d9efd3d668e1ee3e274c269bdf77df9` → exit 0.
-- Isolated temporary-index `trader_run_completion_gate.py prepare` → `ok: true`, 46 staged paths; the real index remained untouched.
-- Coverage regenerated at deterministic stamp `2026-07-13T0515`: 21 structures / 245 hypotheses / 67 artifacts / no living leader.
+- Evidence: `reports/trader-wakes/moa/2026-07-13T1415/pcs-session-time-archive-rerun.json`.
+- Learning: `reports/trader-wakes/moa/2026-07-13T1415/learning-promotion.md`.
+- Compounding: `reports/trader-wakes/moa/2026-07-13T1415/compounding.json`.
+- Reusable archive-density/provenance pitfall promoted to `trader-self-evolution`; profile memory unchanged.
 
-## Durable
+## NEXT SEED
 
-- Machinery/tests: `trader_platform/research/intraday_session_data.py`, `trader_platform/research/pcs_sim.py`, `scripts/pcs_session_time_chronological_lab.py`, `scripts/trader_income_coverage.py`, and four focused test modules.
-- Project truth: `docs/BUILD_LAB_ENVIRONMENT.md`, `docs/INCOME_STRATEGY_COVERAGE.md`, readiness and coverage surfaces.
-- Reusable timezone/calendar-DTE, exit-consumes-bucket, and raw-versus-usable-density lessons already exist in `trader-self-evolution`; no duplicate skill patch. Profile memory unchanged because this is procedure and dated project evidence, not a stable user preference.
+Run one free defined-risk multi-structure discovery across top research symbols using PCS/CCS/IC plus at most one already-simmed under-covered catalog structure, then apply exact B3+B4 and fixed-`$0.01`-per-leg falsification to every SHIP against non-vacuous dual-cost positive PnL, one-lot `max_loss_usd <= $300`, window max DD `<= $75`, and dense-negative windows `<= 5`; register nothing unless complete gates pass, keep L0/proxy labels, and do not reopen closed families or paper/shadow/arm/live.
 
-## ONE NEXT SEED
-
-Promote an append-safe, provenance-recorded raw 30-minute underlying archive for BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL; retain full available history with download/as-of metadata; expand usable prior-session feature dates toward that history without lookahead; then rerun exactly once the locked PCS/CCS/IC open/midday/late chronological dual-cost train→holdout spec with unchanged DNA/gates and no holdout retune. Reject unless train and untouched holdout independently pass both cost axes plus density, positive PnL, one-lot max loss≤`$300`, max/window DD≤`$75`, dense-negative≤5, exact ledger, and no reentry. Keep L0; do not register, promote, paper, shadow, arm, or live.
-
-## Phase status
-
-Finalizer handoff is green. Integration is pending the deterministic wrapper gate. This phase did not stage, commit, push, merge, switch branches, or claim RUN COMPLETE.
-
-Verification path: `reports/trader-wakes/moa/2026-07-13T0515/learning-promotion.md`
-Learning path: `reports/trader-wakes/moa/2026-07-13T0515/compounding.json`
+Finalizer handoff only. Integration is pending the deterministic wrapper gate; no real-index staging, commit, push, merge, branch switch, RUN COMPLETE, or live action occurred.
 
 MOA_FINALIZE_READY

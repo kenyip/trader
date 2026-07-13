@@ -5,6 +5,7 @@ import pandas as pd
 from scripts.pcs_session_time_chronological_lab import (
     complete_gate,
     select_train_bucket,
+    summarize_data_range,
     split_by_market_date,
 )
 
@@ -31,6 +32,42 @@ class PcsSessionTimeChronologicalLabTest(unittest.TestCase):
         self.assertEqual(train["market_date"].nunique(), 6)
         self.assertEqual(holdout["market_date"].nunique(), 4)
         self.assertLess(max(train["market_date"]), min(holdout["market_date"]))
+
+    def test_data_range_distinguishes_raw_archive_from_usable_feature_density(self):
+        dates = pd.bdate_range("2026-05-01", periods=10)
+        index = pd.DatetimeIndex(
+            [
+                pd.Timestamp(day) + pd.Timedelta(hours=9, minutes=30)
+                for day in dates
+            ]
+        )
+        frame = pd.DataFrame(
+            {
+                "market_date": [timestamp.date() for timestamp in index],
+                "feature_market_date": [
+                    (timestamp - pd.Timedelta(days=1)).date() for timestamp in index
+                ],
+                "close": range(len(index)),
+            },
+            index=index,
+        )
+        frame.attrs["archive_provenance"] = {
+            "source": "yfinance",
+            "captured_at": "2026-05-15T21:00:00+00:00",
+            "intraday": {"archive_rows": 780, "archive_market_dates": 60},
+            "daily": {"archive_rows": 252, "archive_market_dates": 252},
+        }
+        train, holdout = split_by_market_date(frame)
+
+        summary = summarize_data_range(frame, train, holdout)
+
+        self.assertEqual(summary["raw_intraday_archive_rows"], 780)
+        self.assertEqual(summary["raw_intraday_market_dates"], 60)
+        self.assertEqual(summary["daily_feature_archive_market_dates"], 252)
+        self.assertEqual(summary["usable_market_dates"], 10)
+        self.assertEqual(summary["train_dates"], 6)
+        self.assertEqual(summary["holdout_dates"], 4)
+        self.assertEqual(summary["feature_date_violations"], 0)
 
     def test_train_selection_prefers_best_worst_cost_axis_only_among_gate_passes(self):
         rows = {
