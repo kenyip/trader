@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "stamp": "2026-07-12T1806",
+  "loop_signature": "simulator/corporate-action/short-call-assignment-boundary",
+  "outcome": "CAPABILITY",
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "Added an announcement-time-aware dividend event boundary and conservative short-call assignment-risk exit to diagonal and bull-call debit simulators, with required-mode fail-close and bear-put isolation.",
+      "novelty_key": "short-call-dividend-known-at-assignment-guard-v1",
+      "artifacts": [
+        "trader_platform/research/corporate_action_risk.py",
+        "trader_platform/research/diagonal_sim.py",
+        "trader_platform/research/debit_vertical_sim.py",
+        "tests/test_corporate_action_risk.py"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Made catalog semantics and simulator controls explicit for assignment-before-management precedence and below-extrinsic continuation.",
+      "novelty_key": "assignment-guard-catalog-threshold-precedence-controls-v1",
+      "artifacts": [
+        "trader_platform/strategy_dna.py",
+        "tests/test_corporate_action_risk.py"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "Diagonal and bull-call STRUCTURE_CATALOG entries lagged the provider-dependent assignment guard and exit precedence.",
+      "status": "repaired",
+      "rationale": "Both catalog entries now put early_assignment_risk first and state provider, honest-known_at, and non-dividend limitations; a catalog behavioral test locks the contract.",
+      "repair_artifacts": [
+        "trader_platform/strategy_dna.py"
+      ],
+      "test_artifacts": [
+        "tests/test_corporate_action_risk.py"
+      ]
+    },
+    {
+      "finding": "Simulator integration only proved an extreme dividend exit and lacked a below-extrinsic continuation control.",
+      "status": "repaired",
+      "rationale": "A deterministic integration negative control now runs both simulators with a known tiny dividend and asserts zero assignment-risk exits.",
+      "repair_artifacts": [
+        "trader_platform/research/diagonal_sim.py",
+        "trader_platform/research/debit_vertical_sim.py"
+      ],
+      "test_artifacts": [
+        "tests/test_corporate_action_risk.py"
+      ]
+    },
+    {
+      "finding": "Assignment exit ordering preceded ordinary management in code but lacked a dedicated simultaneous profit-target precedence test.",
+      "status": "repaired",
+      "rationale": "A deterministic price jump plus always-true profit-target predicate proves both simulators record early_assignment_risk when both predicates can fire.",
+      "repair_artifacts": [
+        "trader_platform/research/diagonal_sim.py",
+        "trader_platform/research/debit_vertical_sim.py"
+      ],
+      "test_artifacts": [
+        "tests/test_corporate_action_risk.py"
+      ]
+    },
+    {
+      "finding": "The provider-inventory NEXT must not freeze unrelated open historical-proxy discovery if the inventory is empty or slow.",
+      "status": "rejected",
+      "rationale": "This is accepted as an orientation constraint but rejected as a code defect: merged-next-seed.md already permits a later zero-input wake to supersede the seed after a hard data block, and no strategy or symbol allowlist was added."
+    }
+  ],
+  "closed_families": [],
+  "data_dependencies": [
+    "Historical dividend events with both ex-date and honest announcement-time known_at provenance; required mode remains blocked on missing coverage.",
+    "Observed historical option surfaces remain required for evidence above L0.",
+    "Forward TSLL option archive remains one of three required distinct New York market dates."
+  ],
+  "next": "Inventory no-paid historical corporate-action sources that supply both ex-date and honest announcement-time known_at; implement an archived DividendEventProvider only with non-fabricated provenance, otherwise write a fail-closed data decision packet and keep required-mode diagonal/bull-call simulations blocked."
+}

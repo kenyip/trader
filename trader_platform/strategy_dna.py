@@ -449,7 +449,8 @@ STRUCTURE_CATALOG: dict[str, dict[str, Any]] = {
     "diagonal_spread": {
         "description": (
             "Long call diagonal: buy a back-month higher-delta call and sell a front-month "
-            "lower-delta call. Debit is defined 1-lot max loss; research-only BS scaffold."
+            "lower-delta call. Debit is defined 1-lot max loss; research-only BS scaffold "
+            "with an opt-in, provider-dependent dividend assignment guard."
         ),
         "entry_plan": {
             "side_policy": "bullish_time_decay",
@@ -460,8 +461,18 @@ STRUCTURE_CATALOG: dict[str, dict[str, Any]] = {
             "filters": ["not_bearish", "iv_rank_min", "max_loss_budget_usd"],
         },
         "exit_plan": {
-            "ladder": ["profit_target", "defined_loss", "short_expiry"],
+            "ladder": [
+                "early_assignment_risk",
+                "profit_target",
+                "defined_loss",
+                "short_expiry",
+            ],
             "management": [],
+            "limitations": [
+                "dividend_events_provider_dependent",
+                "honest_known_at_required",
+                "non_dividend_assignment_unmodeled",
+            ],
         },
         "config_seed": {
             "diagonal_short_dte": 14,
@@ -517,7 +528,8 @@ STRUCTURE_CATALOG: dict[str, dict[str, Any]] = {
     "bull_call_debit_spread": {
         "description": (
             "Defined-debit bullish call vertical: buy a call and sell a higher-strike call. "
-            "Debit is the 1-lot max loss; research-only BS same-expiry scaffold."
+            "Debit is the 1-lot max loss; research-only BS same-expiry scaffold with an "
+            "opt-in, provider-dependent dividend assignment guard."
         ),
         "entry_plan": {
             "side_policy": "bullish_not_bearish",
@@ -527,7 +539,20 @@ STRUCTURE_CATALOG: dict[str, dict[str, Any]] = {
             ],
             "filters": ["not_bearish", "iv_rank_min", "max_loss_budget_usd"],
         },
-        "exit_plan": {"ladder": ["profit_target", "defined_loss", "dte_stop"], "management": []},
+        "exit_plan": {
+            "ladder": [
+                "early_assignment_risk",
+                "profit_target",
+                "defined_loss",
+                "dte_stop",
+            ],
+            "management": [],
+            "limitations": [
+                "dividend_events_provider_dependent",
+                "honest_known_at_required",
+                "non_dividend_assignment_unmodeled",
+            ],
+        },
         "config_seed": {
             "long_dte": 21,
             "debit_long_delta": 0.55,

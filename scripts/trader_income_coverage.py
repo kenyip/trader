@@ -97,9 +97,9 @@ def main() -> int:
 
     gaps = [
         "calendar_spread — explicit front/back IV + put-skew assumptions and chronological OOS built; observed historical option-surface inputs missing",
-        "diagonal_spread — BS defined-debit scaffold + B3/B4 + exact-DNA OOS/density built; observed option surfaces and assignment realism missing",
+        "diagonal_spread — BS defined-debit scaffold + B3/B4 + exact-DNA OOS/density plus announcement-time dividend/short-call assignment boundary built; observed option surfaces and historical event provider data missing",
         "convex/ratio family — long call, symmetric/broken-wing credit iron butterflies, and a 1x2 put ratio backspread have B3/B4/fixed-cost dispatch; ratio cost survivors still fail absolute DD/risk gates, and observed surfaces/assignment remain missing",
-        "debit_vertical — bull-call and bear-put BS defined-debit scaffold + evolve/B3/B4 built; observed option surfaces, dividends, and assignment missing",
+        "debit_vertical — bull-call and bear-put BS defined-debit scaffold + evolve/B3/B4 built; bull-call has announcement-time dividend/short-call assignment guard, while observed surfaces, historical event provider data, and short-put assignment remain missing",
         "collared_covered_call — capital-honest scaffold plus 1,152-row DTE/delta/management grid built; 258 rows were positive on both proxy cost axes but zero met the $75 window-DD gate, so the family is rejected this cycle; dividends/assignment unmodeled and no proxy SHIP registered",
         "time-bucket scoreboard — multi-hyp DTE/profit-target/DTE-stop + entry-weekday/cost grid, lagged completed-bar close-shock filters, and chronological selection/holdout falsification built; session-time slices missing",
         "direction/volatility-bias lab — shared-window scoreboard + no-lookahead shared-position PCS/CCS/IC router built; asymmetric capped-jade IC, daily close-shock/momentum/pullback/vol-compression PCS, multi-horizon trend-pullback PCS, and bearish volatility-expansion CCS families failed complete proxy gates, so they remain rejected pending a genuinely new edge or observed-data density",

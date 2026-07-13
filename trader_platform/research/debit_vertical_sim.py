@@ -9,6 +9,10 @@ import numpy as np
 import pandas as pd
 
 import pricing
+from trader_platform.research.corporate_action_risk import (
+    DividendEventProvider,
+    assess_short_call_assignment_risk,
+)
 from trader_platform.research.pcs_sim import capital_fit_pcs, strike_increment_for
 
 
@@ -217,12 +221,27 @@ def run_debit_vertical_backtest(
     open_risk_budget_usd: float = 750.0,
     df: Optional[pd.DataFrame] = None,
     min_bars: int = 15,
+    dividend_event_provider: Optional[DividendEventProvider] = None,
+    require_dividend_events: bool = False,
 ) -> DebitVerticalSimResult:
     """Run one-position-at-a-time bull-call or bear-put debit vertical simulation."""
     cfg = dict(config or {})
     sym = symbol.upper()
     if structure not in STRUCTURES:
         return DebitVerticalSimResult(sym, False, True, "unsupported structure", period, config=cfg)
+    if (
+        structure == "bull_call_debit_spread"
+        and require_dividend_events
+        and dividend_event_provider is None
+    ):
+        return DebitVerticalSimResult(
+            sym,
+            False,
+            True,
+            "required dividend event provider missing",
+            period,
+            config=cfg,
+        )
     if df is None:
         try:
             from data import build
@@ -256,7 +275,69 @@ def run_debit_vertical_backtest(
             pnl = credit - open_trade.entry_debit
             days = (open_trade.expiration - today).days
             reason = None
-            if pnl >= _num(cfg, "profit_target", 0.50) * open_trade.entry_debit:
+            assignment_risk = False
+            if open_trade.right == "call":
+                try:
+                    events = (
+                        dividend_event_provider(sym, today, open_trade.expiration)
+                        if dividend_event_provider is not None
+                        else ()
+                    )
+                except Exception as exc:  # noqa: BLE001
+                    return DebitVerticalSimResult(
+                        sym,
+                        False,
+                        True,
+                        f"dividend event provider failed on {today.date()}: {exc}",
+                        period,
+                        config=cfg,
+                    )
+                if events is None and require_dividend_events:
+                    return DebitVerticalSimResult(
+                        sym,
+                        False,
+                        True,
+                        f"required dividend event coverage missing on {today.date()}",
+                        period,
+                        config=cfg,
+                    )
+                short_mark = (
+                    max(spot - open_trade.short_strike, 0.0)
+                    if days <= 0
+                    else pricing.price(
+                        spot,
+                        open_trade.short_strike,
+                        days / 365.0,
+                        sigma,
+                        "call",
+                        r=r,
+                    )
+                )
+                try:
+                    assignment_risk = assess_short_call_assignment_risk(
+                        symbol=sym,
+                        as_of=today,
+                        expiration=open_trade.expiration,
+                        spot=spot,
+                        short_strike=open_trade.short_strike,
+                        short_call_mark=float(short_mark),
+                        events=events or (),
+                        dividend_to_extrinsic_ratio=_num(
+                            cfg, "assignment_dividend_to_extrinsic_ratio", 1.0
+                        ),
+                    ).at_risk
+                except (TypeError, ValueError) as exc:
+                    return DebitVerticalSimResult(
+                        sym,
+                        False,
+                        True,
+                        f"invalid dividend event data on {today.date()}: {exc}",
+                        period,
+                        config=cfg,
+                    )
+            if assignment_risk:
+                reason = "early_assignment_risk"
+            elif pnl >= _num(cfg, "profit_target", 0.50) * open_trade.entry_debit:
                 reason = "profit_target"
             elif pnl <= -_num(cfg, "defined_loss_exit_frac", 0.70) * open_trade.entry_debit:
                 reason = "defined_loss"
@@ -290,6 +371,18 @@ def run_debit_vertical_backtest(
         trades.append(open_trade)
 
     metrics = _metrics(trades, structure)
+    metrics["corporate_action_mode"] = (
+        "not_applicable_put"
+        if structure == "bear_put_debit_spread"
+        else "required"
+        if require_dividend_events
+        else "optional"
+        if dividend_event_provider
+        else "disabled"
+    )
+    metrics["early_assignment_risk_exits"] = sum(
+        trade.exit_reason == "early_assignment_risk" for trade in trades
+    )
     representative_loss = (
         float(np.percentile([t.entry_debit * 100.0 for t in trades], 95))
         if trades
@@ -304,6 +397,7 @@ def run_debit_vertical_backtest(
     )
     capital["note"] = (
         "defined_debit_risk=max_entry_debit_usd; paper BS same-expiry vertical; "
-        "observed option surfaces, dividends, and assignment not modeled"
+        "bull-call short-leg dividend assignment guard is provider-dependent; "
+        "observed option surfaces and non-dividend assignment are not modeled"
     )
     return DebitVerticalSimResult(sym, True, False, "ok", period, len(trades), metrics, trades, capital, cfg)

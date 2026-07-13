@@ -22,14 +22,14 @@
 | `call_credit_spread` | pcs_sim | Bearish/neutral credit | Prefer call | DTE, width | Strong | Active research; OPEN_CCS paper partial |
 | `iron_condor` | pcs_sim | Neutral or bullish-skewed range credit | Range-bound / high IV; side-specific deltas/widths + regime gate supported | DTE, per-side delta/width, regime | Strong if width tight | Active; symmetric and capped-jade-shaped asymmetric grids cost-rejected |
 | `calendar_spread` | calendar_sim | Long-debit time spread | Neutral-to-bullish put calendar | Front/back DTE/IV multipliers, put skew, target, stop | Defined debit | Assumption-aware scaffold + chronological OOS; all tested SHIPs cost-fragile |
-| `diagonal_spread` | diagonal_sim | Long-debit directional time spread | Bullish; stand aside bear | Short/long DTE and delta, expiry IV multipliers | Defined debit | Scaffold + B3/B4 + exact-DNA OOS; SMCI proxy rejected on zero recent holdout entries and worse ml/dd |
+| `diagonal_spread` | diagonal_sim | Long-debit directional time spread | Bullish; stand aside bear | Short/long DTE and delta, expiry IV multipliers | Defined debit | Scaffold + B3/B4 + exact-DNA OOS + announcement-time dividend/short-call assignment guard; SMCI proxy rejected on zero recent holdout entries and worse ml/dd |
 | `butterfly_spread` | butterfly_sim | Long-debit same-expiry convexity | Neutral-to-bullish target pin; stand aside bear | DTE, body delta, symmetric wing width | Defined debit | Minimal BS scaffold + evolve/B3/B4; observed surfaces and pin/assignment realism missing |
 | `iron_butterfly` | iron_butterfly_sim | Credit same-expiry neutral income | Neutral pin; stand aside directional regimes | DTE, symmetric wing width, credit floor | Defined width less credit | Minimal BS scaffold + evolve/B3/B4; tested proxies cost-fragile; observed surfaces and pin/assignment realism missing |
 | `broken_wing_iron_butterfly` | iron_butterfly_sim | Asymmetric credit income | Bullish/not-bearish; wider put wing, narrower call wing | DTE, near/far wing widths, credit floor | Defined widest wing less credit | Scaffold + evolve/B3/B4/fixed-cost wiring; first SMCI/XOM set cost-rejected and DD-heavy |
 | `put_ratio_backspread` | put_ratio_backspread_sim | Bearish convexity / crash payoff | Bear/neutral; stand aside bull | DTE, short-put delta, strike width, loss exit | Defined valley loss | Scaffold + structure-pure evolve/B3/B4/fixed-cost wiring; SMCI/BAC cost survivors still fail absolute DD/risk gates |
 | `collared_covered_call` | collar_sim | Stock-backed income with protective floor | Bullish/not-bearish; non-levered spot*100≤$3k | DTE, put/call delta, profit/loss exits | Full 100-share notional + downside floor | 1,152-row exact management grid rejected: zero rows meet $75 window-DD on both cost axes; dividends/assignment unmodeled |
-| `bull_call_debit_spread` | debit_vertical_sim | Long-debit bullish direction | Bull/neutral; stand aside bear | DTE, long delta, width | Defined debit | Minimal BS scaffold + evolve/B3/B4; observed surfaces/dividend/assignment realism missing |
-| `bear_put_debit_spread` | debit_vertical_sim | Long-debit bearish direction | Bear/neutral; stand aside bull | DTE, long delta, width | Defined debit | Minimal BS scaffold + evolve/B3/B4; observed surfaces/dividend/assignment realism missing |
+| `bull_call_debit_spread` | debit_vertical_sim | Long-debit bullish direction | Bull/neutral; stand aside bear | DTE, long delta, width | Defined debit | Minimal BS scaffold + evolve/B3/B4 + announcement-time dividend/short-call assignment guard; observed surfaces/event data missing |
+| `bear_put_debit_spread` | debit_vertical_sim | Long-debit bearish direction | Bear/neutral; stand aside bull | DTE, long delta, width | Defined debit | Minimal BS scaffold + evolve/B3/B4; observed surfaces and short-put assignment realism missing |
 | `regime_short_premium` | single-leg | Regime-directed premium | Regime side | Short/long DTE | Weak on levered names | Research toy unless resized |
 | `short_put_credit` | single-leg | Bull put premium | Put-only | DTE | Weak CSP-scale | Research toy for $3k |
 | `short_call_credit` | single-leg | Bear call premium | Call-only | DTE | Weak | Research toy |
@@ -44,9 +44,9 @@
 Priority for **new sim classes** (not just knob polish):
 
 1. **Calendar observed-surface realism** — explicit front/back IV and put-skew assumptions + chronological OOS now exist; historical expiry-specific option IV inputs are still absent
-2. **Diagonal realism** — scaffold and exact-DNA chronological OOS+density reporting exist; observed expiry-specific surfaces and early-assignment handling remain
+2. **Diagonal realism** — scaffold, exact-DNA chronological OOS+density, and an injectable announcement-time dividend/short-call assignment guard exist; observed expiry-specific surfaces and historical corporate-action provider data remain
 3. **Butterfly realism** — long call and credit iron-butterfly scaffolds exist; observed surfaces and pin/assignment realism remain
-4. **Debit-vertical realism** — bull-call/bear-put scaffolds now exist; observed surfaces, dividend handling, and assignment remain
+4. **Debit-vertical realism** — bull-call/bear-put scaffolds exist; bull-call now has the same injectable dividend/short-call assignment guard, while observed surfaces, historical event-provider data, and short-put assignment remain
 5. **Jade lizard / other skewed-risk structures** — broken-wing credit iron butterfly and defined-risk put ratio backspread scaffolds exist; jade lizard remains undefined downside risk unless capped
 6. **Covered call on cheap shares / LEAPS** only if max_loss fits $3k (usually fails → keep on main desk)
 

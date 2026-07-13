@@ -1,49 +1,54 @@
-# MOA BUILD merge (finalizer) — 2026-07-12T1740
+# MOA BUILD merge (finalizer) — 2026-07-12T1806
 
-WAKE: 2026-07-12T1805 PDT (Sunday; market closed)
+WAKE: 2026-07-12T1845 PDT (Sunday; market closed)
 PHASE: BUILD / L0
 SLEEVE: $3,000
+ROLES: GPT 5.6 Sol executor → Grok 4.5 challenger → GPT 5.6 Sol finalizer
+OUTCOME: CAPABILITY accepted; challenger **PASS 8/8**
 PAPER_ONLY: true
-ROLE: GPT 5.6 Sol finalizer after Grok 4.5 challenge
-OUTCOME: FALSIFIED + CAPABILITY
 
-## Executor loop
+## CHOSE (executor)
 
-One predeclared multi-horizon trend-pullback PCS: prior completed-bar `ret_5d <= 0`, `ret_14d >= 3%`, and bullish EMA stack, 21-DTE / $1 width, across BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL with expanding 40/60/80% rolling-origin train gates, untouched holdouts, dual proxy costs, and unconditional/bearish-mirror controls.
+Build a no-lookahead dividend/ex-date and early-assignment boundary for short-call diagonal and bull-call debit simulators. Falsify if later announcements leak backward, required data fails open, a known dividend-dominant ITM short call remains open, or bear-put behavior is contaminated. Weekend correctly skipped one-date archive append.
 
-Sunday could not advance the one-date option archive, so the executor correctly chose a distinct executable historical-underlying proxy class rather than repeat the prior archive NEXT.
+## DID
 
-## Challenger judgment
+- `corporate_action_risk.py`: DividendEvent + known_at visibility + conservative dividend-vs-extrinsic short-call guard.
+- Optional/required injection into `diagonal_sim` and bull-call `debit_vertical_sim`; fail closed on missing provider/coverage/malformed data.
+- Assignment-risk exits precede normal management; metrics label mode and exit counts.
+- Bear-put isolated as `not_applicable_put`.
+- Doctrine + coverage surfaces updated; no hyp/B-check/capital/paper/live mutation.
 
-**PASS 8/8.** Challenger independently matched `REJECT_MULTI_HORIZON_TREND_PULLBACK_PCS`: 8/8 complete, 0 errors, 4/24 train gates, 0/24 complete folds, 286/286 integrity summaries exact, zero signal/reentry violations, capital fit $75.30–$225.80, and worst observed one-lot max loss $227.19. No registry mutation, living leader, L1 seat, B-check change, paper order, shadow, arm, or live action.
+## CHALLENGER JUDGMENT
 
-## Finalizer reconciliation
+PASS 8/8. Independent re-run: focused 13/13, smoke green, full suite 143/143. Claims stay machinery-only L0; default mode disabled so prior proxy history is not silently rewritten. Nits (non-blocking): catalog DNA exit/limitations lag; optional below-threshold and exit-precedence sim tests.
 
-- Accepted the rejection, empty capital path, BUILD/L0 state, proxy option-mark/cost boundary, family closure, and dividend/ex-date plus early-assignment NEXT.
-- Repaired the optional test nit with a local passing-holdout/failing-train fold-gate negative control in the trend-pullback suite.
-- Closed `pcs-multi-horizon-trend-pullback-daily-bar` and recorded novelty keys for the generic fail-closed feature machinery and the eight-symbol rolling-origin rejection in `compounding.json`.
-- Promoted the generic malformed configured-feature and local fold-gate test lesson into `trader-self-evolution`; updated BUILD, income-coverage, wake, and readiness truth without changing formal B checks.
-- Rejected threshold retuning after zero complete folds as same-evidence thrash. Rejected mandatory Sunday archive execution because no distinct New York RTH date existed. Rejected the claim that 286 integrity summaries omitted a defect: all established run summaries were exact, and nested window fields were also exact.
-- Exact lab rerun reproduced the decision. Focused behavioral/boundary/negative-control/regression checks passed 36/36; platform smoke passed; full suite passed 138/138.
+## FINALIZER RECONCILIATION
 
-## Capital / readiness
+- Repaired catalog honesty: diagonal and bull-call DNA now put `early_assignment_risk` first and state provider-dependent, honest-`known_at`, and non-dividend-assignment limits.
+- Added both requested simulator controls: below-extrinsic dividends continue without assignment exits, and assignment wins when profit target is simultaneously true.
+- Accepted the NEXT-scope caution; `merged-next-seed.md` already permits zero-input supersession after a hard provider-data block, so no discovery allowlist or extra machinery restriction was added.
+- Promoted the `None` missing-coverage versus `[]` covered/no-event boundary, non-fabricated `known_at`, and test method to `trader-self-evolution`.
+- Finalizer verification: focused 16/16, platform smoke green, full suite 146/146, structured handoff validator green. No edge, candidate, B-check, paper, shadow, arm, or live mutation.
 
-- Structure: put credit spread; default posture remains 1 lot.
-- Persisted `capital_fit_usd` was $75.30–$225.80 and worst observed one-lot `max_loss_usd` was $227.19; sleeve fit does not create an edge or seat. Engine `max_lots=3` is capacity math only.
-- Living quality leader: none. Formal B checks remain unchanged. Readiness remains BUILD / L0.
-- Historical underlying bars plus listed-Friday/rounded-strike Black-Scholes marks and proxy costs cannot earn L1.
+Critique: `reports/trader-wakes/moa/2026-07-12T1806/challenger-critique.md`
+Merge: `reports/trader-wakes/2026-07-12T1806-moa-merge.md`
+NEXT file: `reports/trader-wakes/moa/2026-07-12T1806/merged-next-seed.md`
 
-## ONE NEXT SEED
+## CAPITAL / READINESS
 
-Build a no-lookahead dividend/ex-date and early-assignment risk boundary for short-call diagonal and debit simulators, with deterministic behavioral and negative-control tests before strategy retuning. Fail closed when required event data is absent, keep proxy claims L0, and do not reopen the rejected multi-horizon trend-pullback PCS family through threshold polish. On a distinct New York RTH market date only, archive capture may advance TSLL from 1/3 to 2/3 in parallel.
+No living quality leader. BUILD/L0 unchanged. No seat, shadow, arm, or live claim.
 
-## Phase status
+## NEXT SEED
+
+Inventory no-paid historical corporate-action sources for both ex-date and honest announcement-time provenance (`known_at`); implement an archived `DividendEventProvider` only if `known_at` can be represented honestly; otherwise write a fail-closed data decision packet and keep required-mode diagonal/bull-call simulations blocked rather than backfilling announcement dates from ex-dates.
+
+## PHASE STATUS
 
 Finalizer handoff is green and ready for the deterministic wrapper gate. Integration remains pending; this phase did not commit, push, merge, switch branches, or claim RUN COMPLETE.
 
 Verification and learning paths:
-- `reports/trader-wakes/moa/2026-07-12T1740/learning-promotion.md`
-- `reports/trader-wakes/moa/2026-07-12T1740/compounding.json`
-- `.cache/platform/pcs_trend_pullback_rolling_origin_lab_2026-07-12T1740.json`
+- `reports/trader-wakes/moa/2026-07-12T1806/learning-promotion.md`
+- `reports/trader-wakes/moa/2026-07-12T1806/compounding.json`
 
 MOA_FINALIZE_READY
