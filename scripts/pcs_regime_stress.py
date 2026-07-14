@@ -168,13 +168,16 @@ def _row_from_pcs(
         "end": str(sub.index[-1].date()),
         "n_trades": n,
         "pnl": round(pnl, 2),
+        "gate_pnl": pnl,
         "wr_pct": round(wr if wr > 1 else wr * 100.0, 1),
         "dd": round(dd, 2),
+        "gate_dd": dd,
         "pf": round(float(pfc), 3) if pfc == pfc else None,
         "verdict": verdict,
         "score": round(float(score), 2),
         "reason": reason,
         "max_loss_usd": cap.get("max_loss_usd"),
+        "gate_max_loss_usd": cap.get("max_loss_usd"),
         "capital_fit": cap.get("capital_fit"),
         "exit_reasons": m.get("exit_reasons") or {},
     }
@@ -252,7 +255,9 @@ def stress_one(hyp: dict[str, Any], df: pd.DataFrame) -> dict[str, Any]:
     neg = [
         r
         for r in rows + canon_rows
-        if r.get("ok") and float(r.get("pnl") or 0) < 0 and int(r.get("n_trades") or 0) >= 3
+        if r.get("ok")
+        and float(r.get("gate_pnl", r.get("pnl") or 0)) < 0
+        and int(r.get("n_trades") or 0) >= 3
     ]
     ship_like = [
         r
@@ -266,8 +271,22 @@ def stress_one(hyp: dict[str, Any], df: pd.DataFrame) -> dict[str, Any]:
     ]
 
     # Falsify summary for $3k PCS: max loss always fits, no catastrophic regime
-    max_dd = max((float(r.get("dd") or 0) for r in rows + canon_rows if r.get("ok")), default=0.0)
-    worst_pnl = min((float(r.get("pnl") or 0) for r in rows + canon_rows if r.get("ok")), default=0.0)
+    max_dd = max(
+        (
+            float(r.get("gate_dd", r.get("dd") or 0))
+            for r in rows + canon_rows
+            if r.get("ok")
+        ),
+        default=0.0,
+    )
+    worst_pnl = min(
+        (
+            float(r.get("gate_pnl", r.get("pnl") or 0))
+            for r in rows + canon_rows
+            if r.get("ok")
+        ),
+        default=0.0,
+    )
     n_neg = len(neg)
     n_ok = sum(1 for r in rows + canon_rows if r.get("ok"))
     # Soft hold: not more than ~half of trade-dense windows negative; worst window not
@@ -298,7 +317,9 @@ def stress_one(hyp: dict[str, Any], df: pd.DataFrame) -> dict[str, Any]:
             "n_ship_n_ge_3": len(ship_like),
             "n_reject_n_ge_3": len(reject_like),
             "max_dd_across_windows": round(max_dd, 2),
+            "gate_max_dd_across_windows": max_dd,
             "worst_window_pnl": round(worst_pnl, 2),
+            "gate_worst_window_pnl": worst_pnl,
             "regime_hold": hold,
             "note": "regime_hold=soft: neg dense windows <= max(3, n_ok/2) and worst_pnl > -400",
         },

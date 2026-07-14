@@ -1,9 +1,15 @@
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
+
+import pandas as pd
 
 from scripts.evolve_pre_registration_stress import (
     evaluate_proxy_gates,
     load_ship_candidates,
 )
+from scripts.pcs_cost_stress import _metrics_row
+from scripts.pcs_regime_stress import _row_from_pcs
 
 
 def _passing_inputs():
@@ -158,6 +164,78 @@ class EvolvePreRegistrationStressTest(unittest.TestCase):
         result = evaluate_proxy_gates(regime, cost, fixed)
 
         self.assertFalse(result["gates"]["slip_5pct_positive_non_vacuous_ship"])
+        self.assertFalse(result["gates"]["max_loss_lte_300"])
+        self.assertFalse(result["complete_proxy_gates"])
+
+    def test_cost_metric_rows_preserve_unrounded_gate_values(self):
+        sim = SimpleNamespace(
+            ok=True,
+            skipped=False,
+            reason=None,
+            n_trades=15,
+            metrics={
+                "n_trades": 15,
+                "total_pnl_per_contract": 0.004,
+                "win_rate_pct": 60.0,
+                "max_dd_per_contract": 75.0001,
+                "profit_factor": 1.2,
+            },
+            capital={"max_loss_usd": 300.0001, "capital_fit": "fit_3k"},
+        )
+
+        row = _metrics_row(sim, 0.05)
+
+        self.assertEqual(row["pnl"], 0.0)
+        self.assertEqual(row["dd"], 75.0)
+        self.assertEqual(row["max_loss_usd"], 300.0001)
+        self.assertEqual(row["gate_pnl"], 0.004)
+        self.assertEqual(row["gate_dd"], 75.0001)
+        self.assertEqual(row["gate_max_loss_usd"], 300.0001)
+
+    def test_regime_rows_preserve_unrounded_gate_values(self):
+        sim = SimpleNamespace(
+            ok=True,
+            skipped=False,
+            reason=None,
+            n_trades=15,
+            metrics={
+                "n_trades": 15,
+                "total_pnl_per_contract": 0.004,
+                "win_rate_pct": 60.0,
+                "max_dd_per_contract": 75.0001,
+                "profit_factor": 1.2,
+            },
+            capital={"max_loss_usd": 300.0001, "capital_fit": "fit_3k"},
+        )
+        frame = pd.DataFrame(
+            {"close": range(15)},
+            index=pd.date_range("2025-01-01", periods=15, freq="D"),
+        )
+        with patch("scripts.pcs_regime_stress.run_pcs_backtest", return_value=sim):
+            row = _row_from_pcs(
+                "fixture",
+                frame,
+                "AAA",
+                {"structure": "put_credit_spread"},
+                structure="put_credit_spread",
+            )
+
+        self.assertEqual(row["pnl"], 0.0)
+        self.assertEqual(row["dd"], 75.0)
+        self.assertEqual(row["gate_pnl"], 0.004)
+        self.assertEqual(row["gate_dd"], 75.0001)
+        self.assertEqual(row["gate_max_loss_usd"], 300.0001)
+
+    def test_hard_gates_prefer_unrounded_metrics_over_display_values(self):
+        regime, cost, fixed = _passing_inputs()
+        regime["full_history"]["gate_pnl"] = -0.0001
+        regime["summary"]["gate_max_dd_across_windows"] = 75.0001
+        fixed["by_half_spread"][0]["gate_max_loss_usd"] = 300.0001
+
+        result = evaluate_proxy_gates(regime, cost, fixed)
+
+        self.assertFalse(result["gates"]["baseline_positive_non_vacuous_ship"])
+        self.assertFalse(result["gates"]["window_max_dd_lte_75"])
         self.assertFalse(result["gates"]["max_loss_lte_300"])
         self.assertFalse(result["complete_proxy_gates"])
 

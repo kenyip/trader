@@ -117,13 +117,18 @@ def evaluate_proxy_gates(
     fixed_1c = _row_at(fixed.get("by_half_spread") or [], "half_spread_per_leg", 0.01) or {}
 
     max_loss_values = [
-        _finite(full.get("max_loss_usd")),
-        _finite(slip_5.get("max_loss_usd")),
-        _finite(fixed_1c.get("max_loss_usd")),
+        _finite(full.get("gate_max_loss_usd", full.get("max_loss_usd"))),
+        _finite(slip_5.get("gate_max_loss_usd", slip_5.get("max_loss_usd"))),
+        _finite(fixed_1c.get("gate_max_loss_usd", fixed_1c.get("max_loss_usd"))),
     ]
     observed_max_losses = [value for value in max_loss_values if value is not None]
     max_loss_usd = max(observed_max_losses) if observed_max_losses else None
-    max_window_dd = _finite(regime_summary.get("max_dd_across_windows"))
+    max_window_dd = _finite(
+        regime_summary.get(
+            "gate_max_dd_across_windows",
+            regime_summary.get("max_dd_across_windows"),
+        )
+    )
     dense_negative = int(regime_summary.get("n_negative_n_ge_3") or 0)
 
     gates = {
@@ -131,20 +136,20 @@ def evaluate_proxy_gates(
             full.get("ok")
             and full.get("verdict") == "SHIP"
             and int(full.get("n_trades") or 0) >= MIN_TRADES_SHIP
-            and (_finite(full.get("pnl")) or 0.0) > 0.0
+            and (_finite(full.get("gate_pnl", full.get("pnl"))) or 0.0) > 0.0
         ),
         "regime_soft_hold": bool(regime_summary.get("regime_hold")),
         "slip_5pct_positive_non_vacuous_ship": bool(
             slip_5.get("ok")
             and slip_5.get("verdict") == "SHIP"
             and int(slip_5.get("n_trades") or 0) >= MIN_TRADES_SHIP
-            and (_finite(slip_5.get("pnl")) or 0.0) > 0.0
+            and (_finite(slip_5.get("gate_pnl", slip_5.get("pnl"))) or 0.0) > 0.0
         ),
         "fixed_0_01_positive_non_vacuous_ship": bool(
             fixed_1c.get("ok")
             and fixed_1c.get("verdict") == "SHIP"
             and int(fixed_1c.get("n_trades") or 0) >= MIN_TRADES_SHIP
-            and (_finite(fixed_1c.get("pnl")) or 0.0) > 0.0
+            and (_finite(fixed_1c.get("gate_pnl", fixed_1c.get("pnl"))) or 0.0) > 0.0
         ),
         "max_loss_lte_300": max_loss_usd is not None and max_loss_usd <= MAX_LOSS_USD,
         "window_max_dd_lte_75": max_window_dd is not None and max_window_dd <= MAX_WINDOW_DD_USD,

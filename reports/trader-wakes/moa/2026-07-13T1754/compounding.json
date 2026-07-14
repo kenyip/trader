@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "stamp": "2026-07-13T1754",
+  "loop_signature": "historical-underlying/free-defined-risk/chronological-train-selection/untouched-holdout-absolute-gate",
+  "outcome": "CAPABILITY",
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "Added a fixed-seed outcome-rank-free adapter that builds and selects free defined-risk DNA only on chronological train slices, then evaluates each exact selected DNA once on a strictly later untouched holdout with conjunctive absolute gates and no registry authority.",
+      "novelty_key": "chronological-free-definedrisk_prereg-train-holdout-v1",
+      "artifacts": [
+        "scripts/evolve_chronological_pre_registration.py",
+        "tests/test_evolve_chronological_pre_registration.py"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Hard gates now prefer unrounded PnL, drawdown, and max-loss values over rounded display fields, preventing precision-boundary false passes.",
+      "novelty_key": "unrounded-proxy-absolute-gates-v1",
+      "artifacts": [
+        "scripts/evolve_pre_registration_stress.py",
+        "scripts/pcs_cost_stress.py",
+        "scripts/pcs_regime_stress.py",
+        "tests/test_evolve_pre_registration_stress.py"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Capped free populations now persist eligible, evaluated, omitted, and zero-inclusive per-structure counts so sampled-population completeness cannot be mislabeled as balanced structure coverage.",
+      "novelty_key": "capped-population-structure-coverage-label-v1",
+      "artifacts": [
+        "scripts/evolve_chronological_pre_registration.py",
+        "tests/test_evolve_chronological_pre_registration.py",
+        "reports/trader-wakes/moa/2026-07-13T1754/evolve-chronological-pre-registration.json"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "The exact seed-1754 cap36 60% train cycle selected 17 train SHIPs and produced zero complete train-and-untouched-holdout passes and zero registration-eligible DNA under dual-cost absolute gates.",
+      "novelty_key": "free-definedrisk_chronological-prereg-seed-1754-pop36-reject-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-13T1754/evolve-chronological-pre-registration.json",
+        "reports/trader-wakes/2026-07-13T1754-moa-merge.md"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "The declared 11 eligible structures were mislabeled as if all were evaluated even though put_credit_spread had zero rows after the cap.",
+      "status": "repaired",
+      "rationale": "The regenerated artifact reports 11 eligible, 10 evaluated, put_credit_spread omitted, and zero-inclusive counts while keeping ranking completeness scoped to the sampled cap.",
+      "repair_artifacts": [
+        "scripts/evolve_chronological_pre_registration.py"
+      ],
+      "test_artifacts": [
+        "tests/test_evolve_chronological_pre_registration.py"
+      ]
+    },
+    {
+      "finding": "Two run-stamped income-coverage snapshots existed for one run.",
+      "status": "rejected",
+      "rationale": "Accepted as residue cleanup but rejected as a machinery defect: the extra T2012 file was run-created debris and was removed; the existing deterministic --stamp generator reproduced only 2026-07-13T1754 plus LATEST, and those outputs are byte-identical."
+    },
+    {
+      "finding": "The nested fixed_cost object lacks an optional summary convenience field.",
+      "status": "rejected",
+      "rationale": "Exact zero- and one-cent by_half_spread rows, unrounded gate fields, and gate/quality summaries already provide every consumed metric. No evidence or decision relies on the absent duplicate convenience summary."
+    },
+    {
+      "finding": "The seed-1754 exact cycle needed a durable novelty key and closed-family record for future orientation.",
+      "status": "rejected",
+      "rationale": "Accepted as a required handoff update but rejected as a machinery defect: this compounding record now carries the unique novelty key and closed-family identifier, and the already-tested compounding machinery will inject them into the next orientation. The original orientation remains an immutable pre-run snapshot."
+    }
+  ],
+  "closed_families": [
+    "free-definedrisk_chronological-prereg-seed-1754-pop36-train60-cycle"
+  ],
+  "data_dependencies": [
+    "Observed historical option replay remains independently blocked below the three-distinct-New-York-market-date plumbing boundary; that does not block labeled historical-underlying Black-Scholes proxy discovery.",
+    "Any future claim of balanced multi-structure coverage requires stratified sampling or evidence that every eligible structure received evaluated rows."
+  ],
+  "next": "Implement and run one predeclared lagged gap-recovery 21-DTE put-credit-spread class on a fixed outcome-rank-free multi-symbol set: prior completed day opens at least 1% below its previous close, recovers to close at or above open, and closes above lagged EMA60; enter only on the following bar; use fixed DNA, controls, chronological 60/40 train-to-untouched-holdout, non-vacuous 5% and fixed-$0.01-per-leg costs, max_loss_usd<=300, window max DD<=75, dense-negative<=5, train AND holdout; register nothing first pass, keep L0/proxy, no paper/shadow/arm/live."
+}
