@@ -17,6 +17,10 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
 from trader_platform.strategy_dna import STRUCTURE_CATALOG  # noqa: E402
+from trader_platform.research.option_quote_observations import (  # noqa: E402
+    load_observations_csv,
+    summarize_archive_density,
+)
 
 
 def _load_hyps() -> list[dict]:
@@ -58,9 +62,32 @@ def _status(h: dict) -> str:
     return str(h.get("status") or "unknown").lower()
 
 
+def _option_archive_density(path: Path | None = None) -> dict:
+    path = path or REPO / ".cache" / "platform" / "option_quotes" / "TSLL_archive.csv"
+    if not path.exists():
+        return {"status": "missing", "n_market_dates": 0, "minimum_market_dates": 3}
+    try:
+        summary = summarize_archive_density(load_observations_csv(path))
+    except (OSError, TypeError, ValueError) as exc:
+        return {
+            "status": "invalid",
+            "n_market_dates": 0,
+            "minimum_market_dates": 3,
+            "error": f"{type(exc).__name__}: {exc}",
+        }
+    summary["status"] = "ok"
+    return summary
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--json", action="store_true")
+    ap.add_argument(
+        "--option-archive",
+        type=Path,
+        default=REPO / ".cache" / "platform" / "option_quotes" / "TSLL_archive.csv",
+        help="Observed option archive used for the derived cost-realism density label.",
+    )
     ap.add_argument("--write", action="store_true", default=True)
     ap.add_argument("--no-write", action="store_true")
     ap.add_argument("--stamp", help="override report stamp for deterministic run regeneration")
@@ -77,6 +104,30 @@ def main() -> int:
 
     sim_dir = REPO / ".cache" / "platform" / "evolve_backtests"
     sim_files = sorted(sim_dir.glob("*")) if sim_dir.exists() else []
+    archive_density = _option_archive_density(args.option_archive)
+    archive_dates = int(archive_density.get("n_market_dates", 0))
+    archive_floor = int(archive_density.get("minimum_market_dates", 3))
+    latest_date = (archive_density.get("market_dates") or [None])[-1]
+    latest_expirations = (
+        (archive_density.get("expirations_by_market_date") or {}).get(latest_date, [])
+        if latest_date
+        else []
+    )
+    archive_gap = (
+        "cost realism — exact PCS/CCS/IC leg/time join + reject gate, Friday abstraction, "
+        "archive-backed date-aware expiry/strike-grid provider, and all-expiration atomic append capture built; "
+        f"the current TSLL archive covers {archive_dates}/{archive_floor} dates"
+    )
+    if archive_dates < archive_floor:
+        archive_gap += "; the density gate still fails closed"
+    elif latest_expirations:
+        archive_gap += f"; newest-date expiration breadth is {len(latest_expirations)}"
+        if len(latest_expirations) <= 2:
+            archive_gap += " (thin)"
+    archive_gap += (
+        "; the three-date floor is plumbing only, so it cannot establish historical edge or L1; "
+        "complete observed entry/exit joins and materially deeper history remain required"
+    )
 
     rows = []
     for name, meta in sorted(STRUCTURE_CATALOG.items()):
@@ -104,7 +155,7 @@ def main() -> int:
         "collared_covered_call — capital-honest scaffold plus 1,152-row DTE/delta/management grid built; 258 rows were positive on both proxy cost axes but zero met the $75 window-DD gate, so the family is rejected this cycle; dividends/assignment unmodeled and no proxy SHIP registered",
         "time-bucket scoreboard — multi-hyp DTE/profit-target/DTE-stop + entry-weekday/cost grid plus a completed-30-minute open/midday/late PCS/CCS/IC chronological dual-cost lab are built; append-safe 30-minute and daily-feature archives produced 60 usable dates from 60 raw dates (36 train / 24 holdout), but the locked 8-symbol rerun still rejected at L0 with only 1/24 train dual-cost passes and 0/24 complete train+holdout passes",
         "direction/volatility-bias lab — shared-window scoreboard + no-lookahead shared-position PCS/CCS/IC router built; asymmetric capped-jade IC, daily close-shock/momentum/pullback/vol-compression PCS, multi-horizon trend-pullback PCS, bearish volatility-expansion CCS, and the fixed-DNA lagged downside-gap recovery PCS family failed complete chronological dual-cost proxy gates, so they remain rejected pending a genuinely new edge or evidence class",
-        "cost realism — exact PCS/CCS/IC leg/time join + reject gate, Friday abstraction, archive-backed date-aware expiry/strike-grid provider, and all-expiration atomic append capture built; density gate fails closed below three market dates, and the current TSLL archive covers 2/3 dates, so provider-backed historical simulation and observed-cost calibration remain blocked",
+        archive_gap,
     ]
 
     stamp = args.stamp or datetime.now().strftime("%Y-%m-%dT%H%M")
@@ -116,6 +167,7 @@ def main() -> int:
         "structures": rows,
         "unknown_structure_hyps": len(by_struct.get("unknown", [])),
         "sim_artifact_count": len(sim_files),
+        "option_archive_density": archive_density,
         "gaps": gaps,
         "quality_leader_hint": "none; former reference hyp_dna_tsll_put_credit_spread_b195f5fe failed listed-expiry restress quality bar",
     }

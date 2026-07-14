@@ -1,0 +1,105 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-14T0612",
+  "loop_signature": "historical-underlying/spy-vix-rv-ratio-positive-trend/matched-controls/expanding-assessments",
+  "economic_mechanism": "Persistent index-option insurance demand can make observed VIX exceed subsequent SPY realized volatility; a high same-close VIX-to-fully-warmed-RV20 ratio during a positive SPY trend was tested as a selector for bounded bullish carry.",
+  "candidate_or_family_scope": "Candidate SPY_VRP_PCS_VIX_RV_21D_V1 within canonical family SPY_VRP_VIX_RV_21D: SPY same-close VIX/RV20 at least 1.25, close above fully warmed SMA200, non-overlapping 21-session outcomes, and only conditionally a one-lot 21-DTE approximately 0.20-delta $1-wide put credit spread; no threshold, timing, DTE, width, symbol, or management mutation in-wake.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "Close the family if any of three frozen assessment windows has fewer than 10 non-overlapping treated episodes, treated mean below 1 vol point, treated positive frequency below 60%, fewer than 8 outcome-independent matched controls, or matched treated-minus-control mean at or below zero; also close if pooled density or integrity fails or the one-sided 95% circular-block-bootstrap lower bound for matched differences is at or below zero. Option pricing must remain uncalled after a mechanism failure.",
+  "outcome": "FAMILY_CLOSED",
+  "retest_decision": null,
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "No candidate advanced beyond F0. The raw treated premium was positive, but the canonical SPY_VRP_VIX_RV_21D selector failed stable incremental edge against matched controls in 2020-2021 and on the pooled matched bootstrap; pricing_calls remained zero."
+  },
+  "search_information": {
+    "summary": "Built and exercised a reusable strict-JSON mechanism-first VRP study with fully warmed features, non-overlapping episodes, outcome-independent no-replacement controls, assessment and pooled block-bootstrap gates, and a fail-closed conditional option boundary. The finalizer repaired the challenger-discovered positive fixture so it proves production matched-control density without weakening gates. Incidental repairs preserve None-versus-zero PMCC quote semantics and derive option-archive coverage labels from current data. Burst-stop posture now requires search-design reassessment rather than a third similar pre-screen.",
+    "delta_kinds": [
+      "capability",
+      "falsification",
+      "repair",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "A reusable SPY VRP mechanism-first runner computes fully warmed same-close VIX/RV/trend features, strictly forward realized-volatility outcomes, non-overlapping treated episodes, outcome-independent matched controls, deterministic circular-block bootstrap bounds, strict JSON labels, and a conditional fail-closed option branch.",
+      "novelty_key": "spy-vrp-matched-control-mechanism-gate-capability-v1",
+      "artifacts": [
+        "scripts/spy_vrp_pcs_study.py",
+        "tests/test_spy_vrp_pcs_study.py"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "The canonical SPY_VRP_VIX_RV_21D family closed at F0: 53 treated episodes and 35 matched controls; 2020-2021 matched mean -1.6221 vol points and pooled matched LB95 -2.5507 failed despite raw treated mean +3.9484 and treated LB95 +1.1085; pricing_calls=0 and registration_eligible=false.",
+      "novelty_key": "spy-vrp-vix-rv-21d-matched-selector-family-close-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-14T0612/spy-vrp-pcs-study.json"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "The positive mechanism fixture now allocates enough non-overlapping calendar space for 19 treated and 19 matched-control windows per assessment, proving the unchanged production thresholds of at least 8 pairs per assessment and 24 pooled while retaining the matched-negative-control failure half.",
+      "novelty_key": "spy-vrp-positive-fixture-matched-density-repair-v1",
+      "artifacts": [
+        "scripts/spy_vrp_pcs_study.py",
+        "tests/test_spy_vrp_pcs_study.py"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "After 17 prior no-advance wakes and consecutive TOM/VRP mechanism closes, the next wake is a search-design reassessment. It may authorize at most one later candidate only with a materially distinct mechanism, stronger outcome-independent controls, chronology, and frozen pre-option falsifier; otherwise it emits DIMINISHING_RETURNS.",
+      "novelty_key": "post-vrp-search-design-burst-stop-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-14T0612/merged-next-seed.md"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "N1: create a second closed-family identity because prose, candidate, and family labels might differ.",
+      "status": "rejected",
+      "rationale": "The canonical JSON, closeout, candidate key, and inventory already agree on candidate SPY_VRP_PCS_VIX_RV_21D_V1 within the sole closed family SPY_VRP_VIX_RV_21D; no forked identity is warranted."
+    },
+    {
+      "finding": "N2: use coarse residual matching as permission to rescue the inspected family by retuning tolerances or thresholds.",
+      "status": "rejected",
+      "rationale": "Max absolute VIX difference 4.210001, max/median session distance 427/102, and two absolute paired differences above 50 widen uncertainty and reinforce FAMILY_CLOSED. Reopening requires a materially stronger control design, not in-sample retuning."
+    },
+    {
+      "finding": "N3: change the current dominant-failure wording as though the broad raw volatility premium itself failed.",
+      "status": "rejected",
+      "rationale": "The canonical wording already distinguishes positive raw treated VRP from failed incremental high-ratio/trend selector value and names both the 2020-2021 assessment and pooled paired-bootstrap failures."
+    },
+    {
+      "finding": "N4: authorize a third similar calendar-flow or VRP pre-screen despite strategy_burst_stop_required.",
+      "status": "rejected",
+      "rationale": "The sole NEXT is POST_VRP_SEARCH_DESIGN_REASSESSMENT. It blocks another similar pre-screen and familiar PCS volume by default; only a written material-novelty review may authorize at most one later candidate, otherwise DIMINISHING_RETURNS."
+    },
+    {
+      "finding": "N5: the focused VRP suite was red because the synthetic positive fixture produced only 3 matched pairs total while unchanged production gates require at least 8 per assessment and 24 pooled.",
+      "status": "repaired",
+      "rationale": "The fixture now provides 1,000 sessions per fold with 19 treated signals on a 45-session cadence, leaving disjoint 21-session control windows. The positive mechanism passes with 57 treated and 57 matched pairs; the outcome-perturbed matched negative control still fails. Production gates and the real SPY study were not changed or rerun to rescue the family.",
+      "repair_artifacts": [
+        "scripts/spy_vrp_pcs_study.py"
+      ],
+      "test_artifacts": [
+        "tests/test_spy_vrp_pcs_study.py"
+      ]
+    },
+    {
+      "finding": "N6: readiness requires a strategy-NEXT change beyond POST_VRP_SEARCH_DESIGN_REASSESSMENT.",
+      "status": "rejected",
+      "rationale": "The readiness strategy NEXT was already correct. Finalization changes only stale verification wording and preserves the one post-VRP reassessment seed."
+    }
+  ],
+  "closed_families": [
+    "SPY_VRP_VIX_RV_21D"
+  ],
+  "data_dependencies": [],
+  "evidence_wake_condition": null,
+  "next": "POST_VRP_SEARCH_DESIGN_REASSESSMENT: stop the no-advance burst and inventory remaining reset routes for a materially distinct economic mechanism, stronger outcome-independent control or placebo design with explicit residual-match limits, chronology capable of train and untouched holdout before option marks, and a frozen pre-option falsifier; authorize at most one later candidate only if all four are written, otherwise emit DIMINISHING_RETURNS rather than run familiar PCS volume."
+}

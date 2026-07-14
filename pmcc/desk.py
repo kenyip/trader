@@ -446,9 +446,12 @@ def select_next_short(
             )
             pick = _pick_reentry(candidates, income_needed=income_needed, days_to_catalyst=days_cat)
             if pick:
+                preview_credit = pick.get("bid_credit")
+                if preview_credit is None:
+                    preview_credit = pick["credit"]
                 hero += (
                     f"; preview reload ${pick['strike']:.0f} "
-                    f"~${pick.get('bid_credit', pick['credit']):,.0f} (${pick['daily']:.1f}/d)"
+                    f"~${preview_credit:,.0f} (${pick['daily']:.1f}/d)"
                 )
             return {
                 "source": "harvest",
@@ -483,7 +486,9 @@ def select_next_short(
 
     pick = _pick_reentry(candidates, income_needed=income_needed, days_to_catalyst=days_cat)
     if pick:
-        credit = pick.get("bid_credit", pick.get("credit", 0))
+        credit = pick.get("bid_credit")
+        if credit is None:
+            credit = pick.get("credit", 0)
         exp_label = str(pick.get("expiration", exp))[:10]
         if not exp_label:
             exp_label = f"~{pick.get('dte', 60)}d"
