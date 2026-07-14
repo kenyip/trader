@@ -292,23 +292,24 @@ STRUCTURE FOCUS: $STRUCT_LINE
 DEFAULT EVOLVE KNOBS: --top-symbols $TOP_SYMBOLS --mutants $MUTANTS --sleeve-usd $SLEEVE
 
 OPERATING CONTRACT (goal-driven, not a checklist):
-1) Orient from the latest evidence, then choose ONE highest-information loop. You may take or supersede NEXT and may propose an axis absent from prior reports.
-2) State the hypothesis and what would falsify it. Check only the validity prerequisites needed for that claim. If one path is data-blocked, either repair it or pursue a valid independent path; do not let one missing dataset freeze the whole research program.
-3) Use any relevant combination of research, simulation, tests, negative controls, new strategy DNA, new tools, or cross-symbol/time/regime comparisons. Commands below are available examples, never mandatory ritual:
+1) Orient from the latest evidence, then choose ONE highest-information strategy loop. You may take or supersede NEXT and may propose an axis absent from prior reports.
+2) Open with a strategy decision charter before acting: economic edge mechanism, candidate/family scope, current evidence-funnel stage (F0_MECHANISM→F1_TRAIN→F2_UNTOUCHED_HOLDOUT→F3_ROBUST_PAPER_PLAN→F4_OBSERVED_PAPER), predeclared falsifier, and the exact decision this wake will close (STRATEGY_ADVANCED | FAMILY_CLOSED | BLOCKER_REMOVED_AND_RETESTED | EVIDENCE_WAIT). Operational completion is not strategy progress.
+3) Check only the validity prerequisites needed for that claim. If one path is data-blocked, either repair it and retest the dependent experiment in this same wake, or pursue a valid independent path; do not let one missing dataset freeze the whole research program.
+4) Use any relevant combination of research, simulation, tests, negative controls, new strategy DNA, new tools, or cross-symbol/time/regime comparisons. Commands below are available examples, never mandatory ritual:
    - just research-tick-paper --sleeve-usd $SLEEVE
    - $EVOLVE_HINT
    - .venv/bin/python scripts/pcs_regime_stress.py --hyps "<ids>" --out .cache/platform/stress_regime_lab_${STAMP}.json
    - .venv/bin/python scripts/pcs_cost_stress.py --hyps "<ids>" --out .cache/platform/stress_cost_lab_${STAMP}.json
-4) Promotion claims require relevant B3/B4, non-vacuous after-cost evidence, and explicit risk. Proxy-only experiments are allowed for discovery when labeled, but cannot earn L1 without evidence appropriate to the claim. Tests must exercise behavior and failure boundaries relevant to the claim; avoid self-fulfilling fixtures or assertions that merely restate implementation output.
-5) Compare against the CURRENT living leader from readiness. If none exists, use explicit absolute risk/evidence gates and say there is no leader; historical candidates are context, not seats.
-6) A null result, rejected family, discovered flaw, or novel capability is valid progress when it changes what should be tried next. Honor orientation.json: closed families require a genuinely new evidence class to reopen, redirect_required forbids an unchanged repeat, and research_routes prevents a blocked forward option archive from globally forcing DIMINISHING_RETURNS while historical/capability work remains informative; it does not forbid an honest information-exhaustion stop. It is context, never an allowlist or a recipe selector. Include a one-line freedom audit.
-7) Durable executor residue (this is a PARTIAL phase, not a completed run):
-   - reports/trader-wakes/moa/${STAMP}/executor-closeout.md
+5) Promotion claims require relevant B3/B4, non-vacuous after-cost evidence, and explicit risk. Proxy-only experiments are allowed for discovery when labeled, but cannot earn L1 without evidence appropriate to the claim. Tests must exercise behavior and failure boundaries relevant to the claim; avoid self-fulfilling fixtures or assertions that merely restate implementation output.
+6) Compare against the CURRENT living leader from readiness. If none exists, use explicit absolute risk/evidence gates and say there is no leader; historical candidates are context, not seats.
+7) Close with exactly one strategy outcome. Tooling/tests/simulators/files alone are search information, not strategy advancement, unless the unlocked experiment is exercised in-wake to advance-or-close under BLOCKER_REMOVED_AND_RETESTED. Report search information separately from strategy advancement. Honor orientation.json: closed families require a genuinely new evidence class to reopen; strategy_pivot_required / consecutive_no_strategy_advance force a mechanism/evidence pivot; research_routes prevents a blocked forward option archive from globally forcing stop while historical work remains informative. Include a one-line freedom audit.
+8) Durable executor residue (this is a PARTIAL phase, not a completed run):
+   - reports/trader-wakes/moa/${STAMP}/executor-closeout.md (must include the strategy charter + closed outcome)
    - reports/trader-wakes/${STAMP}-moa-exec.md
    - Update reports/trader-wakes/LATEST.md + prepend INDEX.md
    - Update reports/readiness/LATEST.md if phase/B checks change
    - Refresh coverage: .venv/bin/python scripts/trader_income_coverage.py --write
-8) Do not commit, push, merge, or claim RUN COMPLETE in this phase. The challenger must critique and the finalizer must repair, verify, promote learning, and prepare clean integration.
+9) Do not commit, push, merge, or claim RUN COMPLETE in this phase. The challenger must critique and the finalizer must repair, verify, promote learning, and prepare clean integration.
 
 HARD STOPS:
 - No live / broker login / agentic arm / shadow auto-promote
@@ -344,14 +345,16 @@ READ FIRST:
 - reports/readiness/LATEST.md
 
 RUBRIC (PASS/FAIL + one line):
-1. Goal progress: did the wake materially improve the chance of finding a robust paper-testable edge?
-2. Creativity and independence: original hypothesis/axis or a justified reason to continue prior NEXT; no familiar-recipe tunnel
-3. Claim validity: only prerequisites relevant to the chosen experiment; invalid evidence fails closed or the claim is narrowed honestly
-4. Evidence and test quality: real tools/tests/sims with cited paths; tests include useful behavioral/boundary/negative checks rather than mirroring the implementation; observed/proxy semantics, populations, and rankings are labeled correctly
-5. Falsification: clear failure condition and honest promote/reject/learn judgment, including negative controls where useful
-6. Capital honesty: current living leader and relevant B3/B4/after-cost/risk gates before any seat; stale references are not seats
-7. Research freedom: a blocked data path or prompt rule did not unnecessarily freeze unrelated valid exploration; flag any removable restriction
-8. ONE highest-information NEXT seed; no live/shadow promotion
+1. Strategy charter: economic mechanism, candidate/family scope, funnel before/after, predeclared falsifier, and exactly one closed strategy outcome are explicit
+2. Strategy vs operations: tooling/capability-only work is not treated as strategy progress unless BLOCKER_REMOVED_AND_RETESTED with an in-wake advance-or-close retest
+3. Goal progress: did the wake improve the chance of a robust paper-testable edge or honestly close/wait with discriminating evidence?
+4. Creativity and independence: original hypothesis/axis or a justified reason to continue prior NEXT; no familiar-recipe tunnel; honor strategy_pivot_required when set
+5. Claim validity: only prerequisites relevant to the chosen experiment; invalid evidence fails closed or the claim is narrowed honestly
+6. Evidence and test quality: real tools/tests/sims with cited paths; tests include useful behavioral/boundary/negative checks rather than mirroring the implementation; observed/proxy semantics, populations, and rankings are labeled correctly
+7. Falsification: clear failure condition and honest promote/reject/learn judgment, including negative controls where useful
+8. Capital honesty: current living leader and relevant B3/B4/after-cost/risk gates before any seat; stale references are not seats
+9. Research freedom: a blocked data path or prompt rule did not unnecessarily freeze unrelated valid exploration; flag any removable restriction
+10. ONE highest-information NEXT seed; no live/shadow promotion
 
 OUTPUT:
 1) reports/trader-wakes/moa/${STAMP}/challenger-critique.md
@@ -400,8 +403,8 @@ FINALIZATION CONTRACT:
    - ## DURABLE — files/skills/memory updated, or evidence-backed no-promotion reason
    - ## LESSON — what future Trader now knows/can do
    - ## NEXT — exactly one seed or DIMINISHING_RETURNS
-   Include accepted/rejected critique findings and state that integration is pending the deterministic wrapper gate.
-7) Write reports/trader-wakes/moa/${STAMP}/compounding.json using the stable schema in docs/BUILD_LAB_ENVIRONMENT.md. Every useful delta needs a unique novelty_key and changed artifact paths; repaired critic findings need machinery + test paths, while rejected findings need evidence-backed rationale. Use DIMINISHING_RETURNS when no measurable delta exists.
+   Include accepted/rejected critique findings, the strategy charter/outcome, and state that integration is pending the deterministic wrapper gate.
+7) Write reports/trader-wakes/moa/${STAMP}/compounding.json using schema_version=2 in docs/BUILD_LAB_ENVIRONMENT.md. Required fields: economic_mechanism, candidate_or_family_scope, funnel_stage_before, funnel_stage_after, falsifier, outcome in {STRATEGY_ADVANCED, FAMILY_CLOSED, BLOCKER_REMOVED_AND_RETESTED, EVIDENCE_WAIT}, strategy_advancement{advanced,summary}, search_information{summary,delta_kinds}, useful_deltas, critic_findings, closed_families, data_dependencies, next. Every useful delta needs a unique novelty_key and changed artifact paths; capability/repair deltas need machinery + tests; repaired critic findings need machinery + test paths. Capability-only work fails closed unless outcome is BLOCKER_REMOVED_AND_RETESTED with retest_decision STRATEGY_ADVANCED|FAMILY_CLOSED and experiment residue in the same wake. EVIDENCE_WAIT requires evidence_wake_condition + data_dependencies. Legacy schema_version=1 outcomes (CAPABILITY/FALSIFIED/etc.) are history-only and invalid for new handoffs.
 8) Regenerate every touched derived report and ensure executor/challenger/merge/LATEST/INDEX/readiness surfaces agree.
 9) Do NOT commit, push, merge, switch branches, edit .gitignore merely to hide residue, or claim RUN COMPLETE. The deterministic wrapper performs integration only after your green handoff.
 

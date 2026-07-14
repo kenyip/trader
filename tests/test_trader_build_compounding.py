@@ -7,10 +7,12 @@ import unittest
 from pathlib import Path
 
 from scripts.trader_build_compounding import (
+    SCHEMA_VERSION,
     CompoundingError,
     assess_research_routes,
     build_context,
     snapshot,
+    strategy_advanced,
     validate,
 )
 
@@ -55,13 +57,26 @@ class TraderBuildCompoundingTest(unittest.TestCase):
         artifact.parent.mkdir(parents=True, exist_ok=True)
         artifact.write_text("material delta\n")
         row = {
-            "schema_version": 1,
+            "schema_version": SCHEMA_VERSION,
             "stamp": stamp,
             "loop_signature": "direction/pullback/rolling-origin",
-            "outcome": "FALSIFIED",
+            "economic_mechanism": "theta harvest after mild pullback",
+            "candidate_or_family_scope": "mild-pullback-pcs",
+            "funnel_stage_before": "F1_TRAIN",
+            "funnel_stage_after": "F1_TRAIN",
+            "falsifier": "train gate fails or holdout max_dd exceeds 75",
+            "outcome": "FAMILY_CLOSED",
+            "strategy_advancement": {
+                "advanced": False,
+                "summary": "family closed without stage movement",
+            },
+            "search_information": {
+                "summary": "closed a family with falsification residue",
+                "delta_kinds": ["falsification"],
+            },
             "useful_deltas": [
                 {
-                    "kind": "evidence",
+                    "kind": "falsification",
                     "summary": "closed a family",
                     "novelty_key": f"closed-{stamp}",
                     "artifacts": ["reports/delta.md"],
@@ -71,8 +86,24 @@ class TraderBuildCompoundingTest(unittest.TestCase):
             "closed_families": ["mild-pullback-pcs"],
             "data_dependencies": ["new market date"],
             "next": "one seed",
+            "retest_decision": None,
+            "evidence_wake_condition": "",
         }
         row.update(updates)
+        # Keep search_information.delta_kinds aligned when callers override useful_deltas only.
+        if "useful_deltas" in updates and "search_information" not in updates:
+            kinds = sorted(
+                {
+                    str(delta.get("kind"))
+                    for delta in row.get("useful_deltas", [])
+                    if isinstance(delta, dict) and delta.get("kind")
+                }
+            )
+            search = dict(row.get("search_information") or {})
+            search["delta_kinds"] = kinds
+            if not search.get("summary"):
+                search["summary"] = "search information"
+            row["search_information"] = search
         (run / "compounding.json").write_text(json.dumps(row) + "\n")
         return run, learning
 
@@ -86,16 +117,22 @@ class TraderBuildCompoundingTest(unittest.TestCase):
         result = build_context(self.repo, "2026-01-01T0200", out)
         self.assertEqual(result["closed_families"], ["mild-pullback-pcs"])
         self.assertTrue(result["redirect_required"])
-        self.assertIn("last two", result["redirect_reasons"][0])
+        self.assertTrue(result["strategy_pivot_required"])
+        self.assertEqual(result["consecutive_no_strategy_advance"], 2)
+        self.assertTrue(any("last two" in reason for reason in result["redirect_reasons"]))
 
     def test_forward_archive_dependency_cannot_globally_force_diminishing_returns(self):
         stamp = "2026-01-01T0159"
         run, _ = self._handoff(
             stamp,
-            outcome="DIMINISHING_RETURNS",
+            outcome="EVIDENCE_WAIT",
             useful_deltas=[],
-            next="DIMINISHING_RETURNS",
+            search_information={"summary": "waiting on archive density", "delta_kinds": []},
+            strategy_advancement={"advanced": False, "summary": "no advance; waiting on data"},
+            closed_families=[],
             data_dependencies=["forward option archive needs two more dates"],
+            evidence_wake_condition="wake when a third distinct NY market date is archived",
+            next="wait for third archive date",
         )
         self._git("add", str(run.relative_to(self.repo)))
         self._git("commit", "-m", stamp)
@@ -122,10 +159,14 @@ class TraderBuildCompoundingTest(unittest.TestCase):
         stamp = "2026-01-01T0159b"
         run, _ = self._handoff(
             stamp,
-            outcome="DIMINISHING_RETURNS",
+            outcome="EVIDENCE_WAIT",
             useful_deltas=[],
-            next="DIMINISHING_RETURNS",
+            search_information={"summary": "all open routes assessed", "delta_kinds": []},
+            strategy_advancement={"advanced": False, "summary": "no advance"},
+            closed_families=[],
             data_dependencies=["all materially novel open routes assessed"],
+            evidence_wake_condition="reassess only after a new evidence class appears",
+            next="DIMINISHING_RETURNS",
         )
         self._git("add", str(run.relative_to(self.repo)))
         self._git("commit", "-m", stamp)
@@ -173,16 +214,62 @@ class TraderBuildCompoundingTest(unittest.TestCase):
         self.assertTrue(result["global_build_blocked"])
         self.assertFalse(result["archive_density_alone_can_justify_diminishing_returns"])
 
-    def test_non_diminishing_handoff_requires_measurable_delta(self):
+    def test_family_closed_handoff_requires_falsification_delta(self):
         stamp = "2026-01-01T0200"
         self._handoff(stamp, useful_deltas=[])
         with self.assertRaisesRegex(CompoundingError, "measurable useful delta"):
             validate(self.repo, stamp, self.base, None)
 
-    def test_capability_delta_requires_machinery_and_test(self):
+    def test_legacy_schema_handoff_is_rejected_for_new_validation(self):
+        stamp = "2026-01-01T0199"
+        self._handoff(
+            stamp,
+            schema_version=1,
+            outcome="CAPABILITY",
+            useful_deltas=[
+                {
+                    "kind": "capability",
+                    "summary": "legacy capability",
+                    "novelty_key": "legacy-capability",
+                    "artifacts": ["scripts/existing.py", "tests/test_existing.py"],
+                }
+            ],
+        )
+        (self.repo / "scripts" / "existing.py").write_text("VALUE = 2\n")
+        (self.repo / "tests" / "test_existing.py").write_text("# changed\n")
+        with self.assertRaisesRegex(CompoundingError, "schema_version=2"):
+            validate(self.repo, stamp, self.base, None)
+
+    def test_capability_only_completion_fails_closed(self):
         stamp = "2026-01-01T0201"
         self._handoff(
             stamp,
+            outcome="FAMILY_CLOSED",
+            useful_deltas=[
+                {
+                    "kind": "capability",
+                    "summary": "tool only",
+                    "novelty_key": "tool-only",
+                    "artifacts": ["scripts/existing.py", "tests/test_existing.py"],
+                }
+            ],
+        )
+        (self.repo / "scripts" / "existing.py").write_text("VALUE = 2\n")
+        (self.repo / "tests" / "test_existing.py").write_text("# changed\n")
+        with self.assertRaisesRegex(CompoundingError, "capability-only handoff"):
+            validate(self.repo, stamp, self.base, None)
+
+    def test_capability_delta_requires_machinery_and_test(self):
+        stamp = "2026-01-01T0201b"
+        self._handoff(
+            stamp,
+            outcome="BLOCKER_REMOVED_AND_RETESTED",
+            retest_decision="FAMILY_CLOSED",
+            strategy_advancement={"advanced": False, "summary": "repaired then closed"},
+            search_information={
+                "summary": "repair + falsify",
+                "delta_kinds": ["capability", "falsification"],
+            },
             useful_deltas=[
                 {
                     "kind": "capability",
@@ -193,7 +280,13 @@ class TraderBuildCompoundingTest(unittest.TestCase):
                         "tests/test_existing.py",
                         "reports/delta.md",
                     ],
-                }
+                },
+                {
+                    "kind": "falsification",
+                    "summary": "retest closed family",
+                    "novelty_key": "retest-closed",
+                    "artifacts": ["reports/delta.md"],
+                },
             ],
         )
         with self.assertRaisesRegex(CompoundingError, "changed machinery"):
@@ -203,45 +296,164 @@ class TraderBuildCompoundingTest(unittest.TestCase):
         stamp = "2026-01-01T0201a"
         self._handoff(
             stamp,
-            outcome="CAPABILITY",
+            outcome="BLOCKER_REMOVED_AND_RETESTED",
+            retest_decision="FAMILY_CLOSED",
+            strategy_advancement={"advanced": False, "summary": "repaired then closed"},
             useful_deltas=[
                 {
                     "kind": "capability",
                     "summary": "one-sided change",
                     "novelty_key": "one-sided-capability",
                     "artifacts": ["scripts/existing.py", "tests/test_existing.py"],
-                }
+                },
+                {
+                    "kind": "falsification",
+                    "summary": "retest closed family",
+                    "novelty_key": "retest-closed-a",
+                    "artifacts": ["reports/delta.md"],
+                },
             ],
         )
         (self.repo / "scripts" / "existing.py").write_text("VALUE = 2\n")
         with self.assertRaisesRegex(CompoundingError, "changed tests"):
             validate(self.repo, stamp, self.base, None)
 
-    def test_capability_requires_test_artifact_and_accepts_dual_change(self):
+    def test_blocker_removed_and_retested_accepts_repair_plus_retest_close(self):
         stamp = "2026-01-01T0201aa"
         self._handoff(
             stamp,
-            outcome="CAPABILITY",
+            outcome="BLOCKER_REMOVED_AND_RETESTED",
+            retest_decision="FAMILY_CLOSED",
+            strategy_advancement={"advanced": False, "summary": "blocker removed; family closed on retest"},
             useful_deltas=[
                 {
                     "kind": "capability",
-                    "summary": "missing test path",
-                    "novelty_key": "missing-test-path",
-                    "artifacts": ["scripts/existing.py"],
+                    "summary": "fixed gate",
+                    "novelty_key": "fixed-gate",
+                    "artifacts": ["scripts/existing.py", "tests/test_existing.py"],
+                },
+                {
+                    "kind": "falsification",
+                    "summary": "retest closed family",
+                    "novelty_key": "retest-closed-b",
+                    "artifacts": ["reports/delta.md"],
+                },
+            ],
+        )
+        (self.repo / "scripts" / "existing.py").write_text("VALUE = 2\n")
+        (self.repo / "tests" / "test_existing.py").write_text("# changed\n")
+        result = validate(self.repo, stamp, self.base, None)
+        self.assertTrue(result["role_ready"])
+        self.assertEqual(result["outcome"], "BLOCKER_REMOVED_AND_RETESTED")
+        self.assertFalse(result["strategy_advanced"])
+
+    def test_blocker_without_retest_experiment_fails(self):
+        stamp = "2026-01-01T0201ab"
+        self._handoff(
+            stamp,
+            outcome="BLOCKER_REMOVED_AND_RETESTED",
+            retest_decision="FAMILY_CLOSED",
+            strategy_advancement={"advanced": False, "summary": "claimed retest"},
+            useful_deltas=[
+                {
+                    "kind": "capability",
+                    "summary": "fixed gate only",
+                    "novelty_key": "fixed-gate-only",
+                    "artifacts": ["scripts/existing.py", "tests/test_existing.py"],
                 }
             ],
         )
         (self.repo / "scripts" / "existing.py").write_text("VALUE = 2\n")
-        with self.assertRaisesRegex(CompoundingError, "test artifact"):
-            validate(self.repo, stamp, self.base, None)
-        row = json.loads((self.repo / "reports" / "trader-wakes" / "moa" / stamp / "compounding.json").read_text())
-        row["useful_deltas"][0]["artifacts"].append("tests/test_existing.py")
-        (self.repo / "reports" / "trader-wakes" / "moa" / stamp / "compounding.json").write_text(json.dumps(row) + "\n")
         (self.repo / "tests" / "test_existing.py").write_text("# changed\n")
-        self.assertTrue(validate(self.repo, stamp, self.base, None)["role_ready"])
+        with self.assertRaisesRegex(CompoundingError, "dependent experiment"):
+            validate(self.repo, stamp, self.base, None)
+
+    def test_strategy_advanced_requires_stage_movement(self):
+        stamp = "2026-01-01T0201ac"
+        self._handoff(
+            stamp,
+            outcome="STRATEGY_ADVANCED",
+            funnel_stage_before="F1_TRAIN",
+            funnel_stage_after="F1_TRAIN",
+            strategy_advancement={"advanced": True, "summary": "claimed advance"},
+            closed_families=[],
+            useful_deltas=[
+                {
+                    "kind": "candidate",
+                    "summary": "candidate moved",
+                    "novelty_key": "candidate-moved",
+                    "artifacts": ["reports/delta.md"],
+                }
+            ],
+        )
+        with self.assertRaisesRegex(CompoundingError, "funnel stage movement"):
+            validate(self.repo, stamp, self.base, None)
+
+    def test_strategy_advanced_accepts_stage_move(self):
+        stamp = "2026-01-01T0201ad"
+        self._handoff(
+            stamp,
+            outcome="STRATEGY_ADVANCED",
+            funnel_stage_before="F1_TRAIN",
+            funnel_stage_after="F2_UNTOUCHED_HOLDOUT",
+            strategy_advancement={
+                "advanced": True,
+                "summary": "named candidate survived untouched holdout",
+            },
+            closed_families=[],
+            useful_deltas=[
+                {
+                    "kind": "candidate",
+                    "summary": "candidate moved",
+                    "novelty_key": "candidate-moved-ok",
+                    "artifacts": ["reports/delta.md"],
+                }
+            ],
+        )
+        result = validate(self.repo, stamp, self.base, None)
+        self.assertTrue(result["strategy_advanced"])
+        self.assertEqual(result["funnel_stage_after"], "F2_UNTOUCHED_HOLDOUT")
+
+    def test_evidence_wait_requires_wake_condition_and_rejects_capability_laundering(self):
+        stamp = "2026-01-01T0201ae"
+        self._handoff(
+            stamp,
+            outcome="EVIDENCE_WAIT",
+            useful_deltas=[],
+            search_information={"summary": "waiting", "delta_kinds": []},
+            strategy_advancement={"advanced": False, "summary": "waiting"},
+            closed_families=[],
+            data_dependencies=["need future RTH session"],
+            evidence_wake_condition="",
+            next="wait for RTH",
+        )
+        with self.assertRaisesRegex(CompoundingError, "evidence_wake_condition"):
+            validate(self.repo, stamp, self.base, None)
+
+        self._handoff(
+            stamp,
+            outcome="EVIDENCE_WAIT",
+            strategy_advancement={"advanced": False, "summary": "waiting"},
+            closed_families=[],
+            data_dependencies=["need future RTH session"],
+            evidence_wake_condition="next RTH open",
+            next="wait for RTH",
+            useful_deltas=[
+                {
+                    "kind": "capability",
+                    "summary": "tool only",
+                    "novelty_key": "wait-tool-only",
+                    "artifacts": ["scripts/existing.py", "tests/test_existing.py"],
+                }
+            ],
+        )
+        (self.repo / "scripts" / "existing.py").write_text("VALUE = 3\n")
+        (self.repo / "tests" / "test_existing.py").write_text("# changed again\n")
+        with self.assertRaisesRegex(CompoundingError, "capability-only"):
+            validate(self.repo, stamp, self.base, None)
 
     def test_repaired_critic_finding_requires_existing_changed_machinery_and_tests(self):
-        stamp = "2026-01-01T0201b"
+        stamp = "2026-01-01T0201c"
         self._handoff(
             stamp,
             critic_findings=[
@@ -329,7 +541,7 @@ class TraderBuildCompoundingTest(unittest.TestCase):
             stamp,
             useful_deltas=[
                 {
-                    "kind": "evidence",
+                    "kind": "falsification",
                     "summary": "replayed",
                     "novelty_key": "closed-2026-01-01T0101",
                     "artifacts": ["reports/delta.md"],
@@ -361,6 +573,34 @@ class TraderBuildCompoundingTest(unittest.TestCase):
         result = validate(self.repo, stamp, self.base, baseline)
         self.assertTrue(result["role_ready"])
         self.assertIn("session text ignored", result["role_ready_basis"])
+
+    def test_legacy_capability_does_not_count_as_strategy_advanced(self):
+        legacy = {"schema_version": 1, "outcome": "CAPABILITY"}
+        candidate = {"schema_version": 1, "outcome": "CANDIDATE"}
+        self.assertFalse(strategy_advanced(legacy))
+        self.assertTrue(strategy_advanced(candidate))
+        self.assertTrue(
+            strategy_advanced(
+                {
+                    "schema_version": 2,
+                    "outcome": "BLOCKER_REMOVED_AND_RETESTED",
+                    "retest_decision": "STRATEGY_ADVANCED",
+                }
+            )
+        )
+
+    def test_three_no_advance_wakes_force_burst_stop(self):
+        for stamp in ("2026-01-01T0000", "2026-01-01T0100", "2026-01-01T0200"):
+            run, _ = self._handoff(stamp, loop_signature=f"sig-{stamp}")
+            self._git("add", str(run.relative_to(self.repo)))
+            self._git("commit", "-m", stamp)
+            self._git("push", "origin", "main")
+        result = build_context(
+            self.repo, "2026-01-01T0300", self.repo / "reports" / "current" / "orientation.json"
+        )
+        self.assertEqual(result["consecutive_no_strategy_advance"], 3)
+        self.assertTrue(result["strategy_burst_stop_required"])
+        self.assertTrue(any("stop the burst" in reason for reason in result["redirect_reasons"]))
 
 
 if __name__ == "__main__":

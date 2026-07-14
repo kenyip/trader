@@ -73,22 +73,37 @@ class TraderRunCompletionGateTest(unittest.TestCase):
         (run_dir / "compounding.json").write_text(
             json.dumps(
                 {
-                    "schema_version": 1,
+                    "schema_version": 2,
                     "stamp": stamp,
                     "loop_signature": "test-loop",
-                    "outcome": "FALSIFIED",
+                    "economic_mechanism": "test economic mechanism",
+                    "candidate_or_family_scope": "test-family",
+                    "funnel_stage_before": "F1_TRAIN",
+                    "funnel_stage_after": "F1_TRAIN",
+                    "falsifier": "holdout fails absolute gate",
+                    "outcome": "FAMILY_CLOSED",
+                    "strategy_advancement": {
+                        "advanced": False,
+                        "summary": "family closed in fixture",
+                    },
+                    "search_information": {
+                        "summary": "fixture falsification residue",
+                        "delta_kinds": ["falsification"],
+                    },
                     "useful_deltas": [
                         {
-                            "kind": "evidence",
+                            "kind": "falsification",
                             "summary": "test evidence",
                             "novelty_key": f"test-{stamp}",
                             "artifacts": [f"reports/trader-wakes/{stamp}-moa-exec.md"],
                         }
                     ],
                     "critic_findings": [],
-                    "closed_families": [],
+                    "closed_families": ["test-family"],
                     "data_dependencies": [],
                     "next": "one seed",
+                    "retest_decision": None,
+                    "evidence_wake_condition": "",
                 }
             ) + "\n",
             encoding="utf-8",

@@ -51,6 +51,12 @@ The sole authoritative durable BUILD goal is `configs/build_lab_free_goal.txt`; 
 
 Each BUILD wake is **goal-driven rather than recipe-driven**. Trader may explore any liquid symbol, strategy DNA, combination, entry/exit/management rule, regime, time, volatility, stand-aside condition, simulator, negative control, or research tool. Prior NEXT is context, not an order. Evidence validity remains non-negotiable: a flaw that can invalidate the chosen claim must be repaired, tested, or used to narrow that claim. A blocked observed-data path blocks dependent promotion claims but does not freeze unrelated valid exploration. Proxy work is allowed for discovery when labeled; it cannot earn L1 without evidence appropriate to the claim.
 
+### Strategy-run outcome contract
+
+`RUN COMPLETE` means the executor/challenger/finalizer/integration machinery closed cleanly; it does not itself mean the strategy program advanced. Each wake declares an economic mechanism, candidate/family scope, current stage, falsifier, and one decision to close. Stages are `F0_MECHANISM` → `F1_TRAIN` → `F2_UNTOUCHED_HOLDOUT` → `F3_ROBUST_PAPER_PLAN` → `F4_OBSERVED_PAPER`.
+
+A closeout must classify exactly one outcome: `STRATEGY_ADVANCED`, `FAMILY_CLOSED`, `BLOCKER_REMOVED_AND_RETESTED`, or `EVIDENCE_WAIT`. Tooling/capability-only work is not a complete strategy run unless the unlocked experiment is exercised to an advance-or-close decision in the same wake. Report search information separately from strategy advancement. Two consecutive no-advance wakes force a mechanism/evidence pivot; three stop the burst for search-design/data reassessment.
+
 See `docs/INCOME_STRATEGY_COVERAGE.md` for the structure matrix and gaps.
 
 ---
@@ -267,16 +273,29 @@ Added fail-closed prior-bar `ret_5d`, `ret_14d`, and EMA-stack entry bounds and 
 
 ## Cumulative improvement contract
 
-The zero-input wrapper generates `orientation.json` from prior integrated `compounding.json` records before the executor chooses a loop. This is decision context, not a strategy recipe or allowlist: it carries closed families, prior novelty keys, recent loop signatures/outcomes, and a redirect signal. A closed family may be reopened only when Trader names a genuinely new evidence class or repaired capability. A prior NEXT remains advisory.
+The zero-input wrapper generates `orientation.json` from prior integrated `compounding.json` records before the executor chooses a loop. This is decision context, not a strategy recipe or allowlist: it carries closed families, prior novelty keys, recent loop signatures/outcomes, consecutive no-strategy-advance count, and redirect/pivot signals. A closed family may be reopened only when Trader names a genuinely new evidence class or repaired capability. A prior NEXT remains advisory. Historical schema_version=1 records remain readable; new finalizer handoffs must use schema_version=2.
 
 Each finalizer writes one structured `compounding.json`:
 
 ```json
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "stamp": "YYYY-MM-DDTHHMM",
   "loop_signature": "stable family/axis/evidence-class identifier",
-  "outcome": "CANDIDATE|FALSIFIED|CAPABILITY|REPAIRED|DIMINISHING_RETURNS",
+  "economic_mechanism": "one named economic edge mechanism",
+  "candidate_or_family_scope": "named candidate or family under test",
+  "funnel_stage_before": "F0_MECHANISM|F1_TRAIN|F2_UNTOUCHED_HOLDOUT|F3_ROBUST_PAPER_PLAN|F4_OBSERVED_PAPER",
+  "funnel_stage_after": "F0_MECHANISM|F1_TRAIN|F2_UNTOUCHED_HOLDOUT|F3_ROBUST_PAPER_PLAN|F4_OBSERVED_PAPER",
+  "falsifier": "predeclared failure condition",
+  "outcome": "STRATEGY_ADVANCED|FAMILY_CLOSED|BLOCKER_REMOVED_AND_RETESTED|EVIDENCE_WAIT",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "whether a named candidate moved at least one funnel stage"
+  },
+  "search_information": {
+    "summary": "what search/info residue changed independently of strategy advancement",
+    "delta_kinds": ["candidate|falsification|capability|repair|evidence|stop_rule"]
+  },
   "useful_deltas": [
     {
       "kind": "candidate|falsification|capability|repair|evidence|stop_rule",
@@ -285,6 +304,8 @@ Each finalizer writes one structured `compounding.json`:
       "artifacts": ["repo/relative/path"]
     }
   ],
+  "retest_decision": "STRATEGY_ADVANCED|FAMILY_CLOSED|null",
+  "evidence_wake_condition": "required when outcome is EVIDENCE_WAIT",
   "critic_findings": [
     {
       "finding": "material finding",
@@ -300,12 +321,16 @@ Each finalizer writes one structured `compounding.json`:
 }
 ```
 
-The validator requires every non-diminishing wake to cite at least one changed artifact and a new novelty key. Capability/repair claims require changed machinery and tests. Repaired critic findings require repair and test artifacts; rejected findings require rationale. A no-delta wake must say `DIMINISHING_RETURNS`. Two repeated loop signatures or the prior diminishing-return outcome set `redirect_required` for the next orientation; this redirects an unchanged loop but never restricts symbol or strategy freedom.
+The validator requires every new handoff to declare the strategy charter fields above and exactly one strategy outcome. Operational `RUN COMPLETE` remains separate: clean integration does not imply strategy advancement. `STRATEGY_ADVANCED` requires funnel stage movement plus candidate/evidence residue. `FAMILY_CLOSED` requires non-empty `closed_families` plus a falsification delta. `BLOCKER_REMOVED_AND_RETESTED` requires a capability/repair delta and an in-wake dependent experiment exercised to `retest_decision` STRATEGY_ADVANCED or FAMILY_CLOSED. `EVIDENCE_WAIT` requires `evidence_wake_condition` and non-empty `data_dependencies`. Capability/tooling-only completions fail closed. `search_information.delta_kinds` must match `useful_deltas`. Capability/repair claims require changed machinery and tests. Repaired critic findings require repair and test artifacts; rejected findings require rationale. Legacy outcomes (`CANDIDATE|FALSIFIED|CAPABILITY|REPAIRED|DIMINISHING_RETURNS`) are history-only and invalid for new handoffs. Two consecutive wakes without strategy advancement set `strategy_pivot_required`; three set `strategy_burst_stop_required`. Repeated loop signatures also set `redirect_required`; this redirects an unchanged loop but never restricts symbol or strategy freedom.
 
-Finalizer role readiness is not a phrase in model output. Before the role starts, the wrapper snapshots hashes of `learning-promotion.md` and `compounding.json`; after a zero exit it validates that both materially changed and that the structured handoff passes the delta/finding rules. Session logs and prompt echoes are ignored. The deterministic prepare gate validates the handoff again.
+Finalizer role readiness is not a phrase in model output. Before the role starts, the wrapper snapshots hashes of `learning-promotion.md` and `compounding.json`; after a zero exit it validates that both materially changed and that the structured handoff passes the strategy-run delta/finding rules. Session logs and prompt echoes are ignored. The deterministic prepare gate validates the handoff again.
 
 Zero-input interruption recovery is fail-closed. A launch from a matching `trader/run-<stamp>` branch automatically resumes that stamp. Integration is idempotent across an already-created run commit and an already-fast-forwarded local main; divergence, dirty committed recovery state, mismatched metadata, or non-descendant history remains a blocker. No cleanup, reset, force push, or strategy choice is automated.
 
 ### 2026-07-12 — End-to-end completion and self-evolution gate
 
 A run audit found useful research and honest falsification but also a large uncommitted working tree, duplicate monitor semantics, and completion markers that did not prove durable integration. Trader now uses an executor → challenger → finalizer workflow followed by a deterministic branch/commit/push/fast-forward-main/remote-clean gate. Each run must promote lessons to the smallest durable surface and write `learning-promotion.md`; partial phases, red tests, dirty residue, unpushed commits, or unmerged branches are explicitly `RUN INCOMPLETE`. The full test baseline was restored by making live-PMCC integration assertions validate current selected package/date semantics instead of stale hard-coded state.
+
+### 2026-07-13 — Strategy-run outcome contract (schema v2)
+
+Operational completion was over-counting as progress while many wakes shipped only tooling/capability. New BUILD finalizer handoffs must use schema_version=2 with a strategy decision charter and exactly one of `STRATEGY_ADVANCED`, `FAMILY_CLOSED`, `BLOCKER_REMOVED_AND_RETESTED`, or `EVIDENCE_WAIT`. Capability-only residue fails closed unless the unlocked experiment is retested in the same wake to an advance-or-close decision. Search information and strategy advancement are separate machine-readable fields. Orientation now tracks consecutive no-advance streaks for pivot/burst-stop.

@@ -12,9 +12,32 @@ from zoneinfo import ZoneInfo
 from pathlib import Path
 from typing import Any
 
-SCHEMA_VERSION = 1
+# New finalizer handoffs must use schema 2. Historical schema-1 records remain
+# readable for orientation/progress, but are never accepted as a new handoff.
+SCHEMA_VERSION = 2
+LEGACY_SCHEMA_VERSION = 1
+READABLE_SCHEMA_VERSIONS = {LEGACY_SCHEMA_VERSION, SCHEMA_VERSION}
+
 DELTA_KINDS = {"candidate", "falsification", "capability", "repair", "evidence", "stop_rule"}
-OUTCOMES = {"CANDIDATE", "FALSIFIED", "CAPABILITY", "REPAIRED", "DIMINISHING_RETURNS"}
+LEGACY_OUTCOMES = {"CANDIDATE", "FALSIFIED", "CAPABILITY", "REPAIRED", "DIMINISHING_RETURNS"}
+STRATEGY_OUTCOMES = {
+    "STRATEGY_ADVANCED",
+    "FAMILY_CLOSED",
+    "BLOCKER_REMOVED_AND_RETESTED",
+    "EVIDENCE_WAIT",
+}
+OUTCOMES = STRATEGY_OUTCOMES  # new handoffs
+FUNNEL_STAGES = (
+    "F0_MECHANISM",
+    "F1_TRAIN",
+    "F2_UNTOUCHED_HOLDOUT",
+    "F3_ROBUST_PAPER_PLAN",
+    "F4_OBSERVED_PAPER",
+)
+FUNNEL_RANK = {name: index for index, name in enumerate(FUNNEL_STAGES)}
+RETEST_DECISIONS = {"STRATEGY_ADVANCED", "FAMILY_CLOSED"}
+EXPERIMENT_DELTA_KINDS = {"candidate", "falsification", "evidence"}
+CAPABILITY_DELTA_KINDS = {"capability", "repair"}
 
 HISTORICAL_SIM_MODULES = (
     "trader_platform/research/pcs_sim.py",
@@ -91,9 +114,32 @@ def _previous_records(repo: Path, current_stamp: str) -> list[dict[str, Any]]:
             row = _load(path)
         except CompoundingError:
             continue
-        if row.get("schema_version") == SCHEMA_VERSION:
+        if row.get("schema_version") in READABLE_SCHEMA_VERSIONS:
             rows.append(row)
     return rows
+
+
+def strategy_advanced(row: dict[str, Any]) -> bool:
+    """True when a completed wake advanced a named candidate at least one funnel stage."""
+    if not isinstance(row, dict):
+        return False
+    version = row.get("schema_version")
+    if version == SCHEMA_VERSION:
+        if row.get("outcome") == "STRATEGY_ADVANCED":
+            return True
+        if (
+            row.get("outcome") == "BLOCKER_REMOVED_AND_RETESTED"
+            and row.get("retest_decision") == "STRATEGY_ADVANCED"
+        ):
+            return True
+        advancement = row.get("strategy_advancement")
+        if isinstance(advancement, dict) and advancement.get("advanced") is True:
+            return True
+        return False
+    if version == LEGACY_SCHEMA_VERSION:
+        # Legacy CAPABILITY/REPAIRED/FALSIFIED never counted as strategy advancement.
+        return row.get("outcome") == "CANDIDATE"
+    return False
 
 
 def assess_research_routes(repo: Path) -> dict[str, Any]:
@@ -193,17 +239,39 @@ def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
         }
     )
     redirect_reasons: list[str] = []
-    if records and records[-1].get("outcome") == "DIMINISHING_RETURNS":
-        redirect_reasons.append("last completed wake declared DIMINISHING_RETURNS")
+    if records and records[-1].get("outcome") in {"DIMINISHING_RETURNS", "EVIDENCE_WAIT"}:
+        if records[-1].get("outcome") == "DIMINISHING_RETURNS":
+            redirect_reasons.append("last completed wake declared DIMINISHING_RETURNS")
+        else:
+            redirect_reasons.append("last completed wake declared EVIDENCE_WAIT")
     if len(signatures) >= 2 and signatures[-1] and signatures[-1] == signatures[-2]:
         redirect_reasons.append(f"last two completed wakes repeated loop signature {signatures[-1]!r}")
+
+    consecutive_no_advance = 0
+    for row in reversed(records):
+        if strategy_advanced(row):
+            break
+        consecutive_no_advance += 1
+    strategy_pivot_required = consecutive_no_advance >= 2
+    strategy_burst_stop_required = consecutive_no_advance >= 3
+    if strategy_pivot_required:
+        redirect_reasons.append(
+            f"{consecutive_no_advance} consecutive completed wakes without STRATEGY_ADVANCED; "
+            "pivot to a materially different economic mechanism or evidence class"
+        )
+    if strategy_burst_stop_required:
+        redirect_reasons.append(
+            "three or more consecutive completed wakes without STRATEGY_ADVANCED; "
+            "stop the burst and reassess search design/data rather than buying wake volume"
+        )
+
     research_routes = assess_research_routes(repo)
     last = records[-1] if records else {}
     last_dependency_text = " ".join(
         [str(last.get("next", "")), *(str(value) for value in last.get("data_dependencies", []))]
     ).lower()
     archive_dependent_stop = bool(
-        last.get("outcome") == "DIMINISHING_RETURNS"
+        last.get("outcome") in {"DIMINISHING_RETURNS", "EVIDENCE_WAIT"}
         and any(token in last_dependency_text for token in ("archive", "observed option", "market date"))
     )
     independent_route_open = any(
@@ -212,7 +280,7 @@ def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
     archive_stop_invalidated = archive_dependent_stop and independent_route_open
     if archive_stop_invalidated:
         redirect_reasons.append(
-            "archive-dependent DIMINISHING_RETURNS is invalidated by an executable independent research route"
+            "archive-dependent stop is invalidated by an executable independent research route"
         )
 
     payload = {
@@ -226,8 +294,14 @@ def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
         "recent_runs": [
             {
                 "stamp": row.get("stamp"),
+                "schema_version": row.get("schema_version"),
                 "loop_signature": row.get("loop_signature"),
                 "outcome": row.get("outcome"),
+                "strategy_advanced": strategy_advanced(row),
+                "economic_mechanism": row.get("economic_mechanism"),
+                "candidate_or_family_scope": row.get("candidate_or_family_scope"),
+                "funnel_stage_before": row.get("funnel_stage_before"),
+                "funnel_stage_after": row.get("funnel_stage_after"),
                 "novelty_keys": [
                     delta.get("novelty_key")
                     for delta in row.get("useful_deltas", [])
@@ -237,17 +311,33 @@ def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
             }
             for row in recent
         ],
+        "consecutive_no_strategy_advance": consecutive_no_advance,
+        "strategy_pivot_required": strategy_pivot_required,
+        "strategy_burst_stop_required": strategy_burst_stop_required,
         "redirect_required": bool(redirect_reasons),
         "redirect_reasons": redirect_reasons,
         "research_routes": research_routes,
         "archive_dependent_stop_invalidated": archive_stop_invalidated,
         "choice_rule": (
             "Closed families and prior NEXT are context, not allowlists. Reopen only with a named "
-            "new evidence class or repaired capability. A blocked observed-option route blocks only dependent "
-            "claims and cannot alone justify DIMINISHING_RETURNS while another historical/capability route remains "
-            "informative. Honest information-exhaustion stops remain valid after open routes are assessed for "
-            "material novelty."
+            "new evidence class or repaired capability. Operational completion is separate from strategy "
+            "advancement. A blocked observed-option route blocks only dependent claims and cannot alone "
+            "justify stop while another historical route remains informative. After two consecutive wakes "
+            "without STRATEGY_ADVANCED, pivot mechanism/evidence class; after three, stop the burst and "
+            "reassess search design/data. Honest information-exhaustion stops remain valid after open "
+            "routes are assessed for material novelty."
         ),
+        "strategy_run_contract": {
+            "required_outcome_set": sorted(STRATEGY_OUTCOMES),
+            "funnel_stages": list(FUNNEL_STAGES),
+            "rule": (
+                "Every BUILD wake must declare economic_mechanism, candidate_or_family_scope, "
+                "funnel_stage_before/after, falsifier, and exactly one strategy outcome. "
+                "Capability/tooling alone is not strategy progress unless the unlocked experiment "
+                "is exercised in-wake to STRATEGY_ADVANCED or FAMILY_CLOSED via "
+                "BLOCKER_REMOVED_AND_RETESTED."
+            ),
+        },
     }
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -285,36 +375,38 @@ def _changed_paths(repo: Path, base_head: str) -> set[str]:
     return changed
 
 
-def validate(repo: Path, stamp: str, base_head: str, baseline: Path | None) -> dict[str, Any]:
-    run = repo / "reports" / "trader-wakes" / "moa" / stamp
-    handoff_path = run / "compounding.json"
-    learning_path = run / "learning-promotion.md"
-    handoff = _load(handoff_path)
-    if handoff.get("schema_version") != SCHEMA_VERSION or handoff.get("stamp") != stamp:
-        raise CompoundingError("compounding handoff schema/stamp mismatch")
-    outcome = handoff.get("outcome")
-    if outcome not in OUTCOMES:
-        raise CompoundingError(f"invalid outcome: {outcome!r}")
-    signature = str(handoff.get("loop_signature", "")).strip()
-    if not signature:
-        raise CompoundingError("loop_signature is required")
-    next_seed = str(handoff.get("next", "")).strip()
-    if not next_seed:
-        raise CompoundingError("exactly one non-empty next value is required")
-    deltas = handoff.get("useful_deltas")
+def _require_nonempty_str(handoff: dict[str, Any], key: str) -> str:
+    value = str(handoff.get(key, "")).strip()
+    if not value:
+        raise CompoundingError(f"{key} is required")
+    return value
+
+
+def _require_stage(handoff: dict[str, Any], key: str) -> str:
+    value = _require_nonempty_str(handoff, key)
+    if value not in FUNNEL_RANK:
+        raise CompoundingError(f"invalid {key}: {value!r}")
+    return value
+
+
+def _validate_useful_deltas(
+    repo: Path,
+    deltas: list[Any],
+    changed: set[str],
+    *,
+    allow_empty: bool,
+) -> tuple[set[str], set[str]]:
     if not isinstance(deltas, list):
         raise CompoundingError("useful_deltas must be a list")
-    diminishing = outcome == "DIMINISHING_RETURNS"
-    if diminishing != (next_seed == "DIMINISHING_RETURNS"):
-        raise CompoundingError("DIMINISHING_RETURNS outcome and next must agree")
-    if not deltas and not diminishing:
-        raise CompoundingError("non-diminishing wake requires at least one measurable useful delta")
+    if not deltas and not allow_empty:
+        raise CompoundingError("non-wait strategy outcome requires at least one measurable useful delta")
 
-    changed = _changed_paths(repo, base_head)
     novelty_keys: set[str] = set()
+    kinds: set[str] = set()
     for index, delta in enumerate(deltas):
         if not isinstance(delta, dict) or delta.get("kind") not in DELTA_KINDS:
             raise CompoundingError(f"useful_deltas[{index}] has invalid kind")
+        kinds.add(str(delta["kind"]))
         summary = str(delta.get("summary", "")).strip()
         novelty = str(delta.get("novelty_key", "")).strip()
         artifacts = delta.get("artifacts")
@@ -329,7 +421,7 @@ def validate(repo: Path, stamp: str, base_head: str, baseline: Path | None) -> d
                 raise CompoundingError(f"missing useful-delta artifact: {value}")
         if not any(value in changed for value in artifact_names):
             raise CompoundingError(f"useful delta has no artifact changed from base: {novelty}")
-        if delta["kind"] in {"capability", "repair"}:
+        if delta["kind"] in CAPABILITY_DELTA_KINDS:
             machinery = [
                 value for value in artifact_names
                 if value.startswith(("scripts/", "trader_platform/"))
@@ -343,8 +435,10 @@ def validate(repo: Path, stamp: str, base_head: str, baseline: Path | None) -> d
                 raise CompoundingError(f"{delta['kind']} delta requires changed machinery")
             if not any(value in changed for value in tests):
                 raise CompoundingError(f"{delta['kind']} delta requires changed tests")
+    return novelty_keys, kinds
 
-    findings = handoff.get("critic_findings", [])
+
+def _validate_critic_findings(repo: Path, findings: Any, changed: set[str]) -> int:
     if not isinstance(findings, list):
         raise CompoundingError("critic_findings must be a list")
     for index, finding in enumerate(findings):
@@ -367,6 +461,184 @@ def validate(repo: Path, stamp: str, base_head: str, baseline: Path | None) -> d
                 raise CompoundingError(f"critic_findings[{index}] machinery was not changed")
             if not any(value in changed for value in tests):
                 raise CompoundingError(f"critic_findings[{index}] tests were not changed")
+    return len(findings)
+
+
+def _validate_strategy_contract(
+    handoff: dict[str, Any],
+    *,
+    kinds: set[str],
+) -> dict[str, Any]:
+    mechanism = _require_nonempty_str(handoff, "economic_mechanism")
+    scope = _require_nonempty_str(handoff, "candidate_or_family_scope")
+    stage_before = _require_stage(handoff, "funnel_stage_before")
+    stage_after = _require_stage(handoff, "funnel_stage_after")
+    falsifier = _require_nonempty_str(handoff, "falsifier")
+    outcome = handoff.get("outcome")
+    if outcome not in STRATEGY_OUTCOMES:
+        raise CompoundingError(f"invalid strategy outcome: {outcome!r}")
+
+    advancement = handoff.get("strategy_advancement")
+    if not isinstance(advancement, dict):
+        raise CompoundingError("strategy_advancement object is required")
+    advanced = advancement.get("advanced")
+    if advanced is not True and advanced is not False:
+        raise CompoundingError("strategy_advancement.advanced must be boolean")
+    adv_summary = str(advancement.get("summary", "")).strip()
+    if not adv_summary:
+        raise CompoundingError("strategy_advancement.summary is required")
+
+    search_info = handoff.get("search_information")
+    if not isinstance(search_info, dict):
+        raise CompoundingError("search_information object is required")
+    search_summary = str(search_info.get("summary", "")).strip()
+    if not search_summary:
+        raise CompoundingError("search_information.summary is required")
+    reported_kinds = search_info.get("delta_kinds")
+    if not isinstance(reported_kinds, list):
+        raise CompoundingError("search_information.delta_kinds must be a list")
+    if set(str(value) for value in reported_kinds) != kinds:
+        raise CompoundingError("search_information.delta_kinds must match useful_deltas kinds")
+
+    stage_advanced = FUNNEL_RANK[stage_after] > FUNNEL_RANK[stage_before]
+    if advanced and not stage_advanced:
+        raise CompoundingError("strategy_advancement.advanced requires funnel stage movement")
+    if stage_advanced and not advanced:
+        raise CompoundingError("funnel stage movement requires strategy_advancement.advanced=true")
+
+    closed_families = handoff.get("closed_families", [])
+    if not isinstance(closed_families, list):
+        raise CompoundingError("closed_families must be a list")
+    closed_nonempty = any(str(value).strip() for value in closed_families)
+
+    capability_only = bool(kinds) and kinds.issubset(CAPABILITY_DELTA_KINDS)
+    has_experiment = bool(kinds & EXPERIMENT_DELTA_KINDS)
+    has_capability = bool(kinds & CAPABILITY_DELTA_KINDS)
+
+    retest_decision = handoff.get("retest_decision")
+    evidence_wake_condition = str(handoff.get("evidence_wake_condition", "") or "").strip()
+    data_dependencies = handoff.get("data_dependencies", [])
+    if not isinstance(data_dependencies, list):
+        raise CompoundingError("data_dependencies must be a list")
+
+    if capability_only and outcome != "BLOCKER_REMOVED_AND_RETESTED":
+        raise CompoundingError(
+            "capability-only handoff is not a strategy outcome; "
+            "exercise the unlocked experiment in-wake or use BLOCKER_REMOVED_AND_RETESTED"
+        )
+
+    if outcome == "STRATEGY_ADVANCED":
+        if not advanced or not stage_advanced:
+            raise CompoundingError("STRATEGY_ADVANCED requires stage movement and advanced=true")
+        if not has_experiment:
+            raise CompoundingError("STRATEGY_ADVANCED requires candidate/evidence experiment residue")
+        if retest_decision not in (None, "", "STRATEGY_ADVANCED"):
+            raise CompoundingError("STRATEGY_ADVANCED retest_decision must be absent or STRATEGY_ADVANCED")
+    elif outcome == "FAMILY_CLOSED":
+        if advanced:
+            raise CompoundingError("FAMILY_CLOSED cannot claim strategy_advancement.advanced=true")
+        if stage_advanced:
+            raise CompoundingError("FAMILY_CLOSED cannot advance funnel stage")
+        if not closed_nonempty:
+            raise CompoundingError("FAMILY_CLOSED requires non-empty closed_families")
+        if "falsification" not in kinds:
+            raise CompoundingError("FAMILY_CLOSED requires a falsification useful delta")
+    elif outcome == "BLOCKER_REMOVED_AND_RETESTED":
+        if retest_decision not in RETEST_DECISIONS:
+            raise CompoundingError(
+                "BLOCKER_REMOVED_AND_RETESTED requires retest_decision "
+                "STRATEGY_ADVANCED or FAMILY_CLOSED"
+            )
+        if not has_capability:
+            raise CompoundingError(
+                "BLOCKER_REMOVED_AND_RETESTED requires a capability/repair useful delta"
+            )
+        if not has_experiment:
+            raise CompoundingError(
+                "BLOCKER_REMOVED_AND_RETESTED requires the dependent experiment to be exercised "
+                "with candidate/falsification/evidence residue in the same wake"
+            )
+        if retest_decision == "STRATEGY_ADVANCED":
+            if not advanced or not stage_advanced:
+                raise CompoundingError(
+                    "retest_decision STRATEGY_ADVANCED requires stage movement and advanced=true"
+                )
+        else:
+            if advanced or stage_advanced:
+                raise CompoundingError(
+                    "retest_decision FAMILY_CLOSED cannot claim stage advancement"
+                )
+            if not closed_nonempty:
+                raise CompoundingError(
+                    "retest_decision FAMILY_CLOSED requires non-empty closed_families"
+                )
+            if "falsification" not in kinds:
+                raise CompoundingError(
+                    "retest_decision FAMILY_CLOSED requires a falsification useful delta"
+                )
+    elif outcome == "EVIDENCE_WAIT":
+        if advanced or stage_advanced:
+            raise CompoundingError("EVIDENCE_WAIT cannot claim strategy advancement")
+        if not evidence_wake_condition:
+            raise CompoundingError("EVIDENCE_WAIT requires evidence_wake_condition")
+        if not any(str(value).strip() for value in data_dependencies):
+            raise CompoundingError("EVIDENCE_WAIT requires non-empty data_dependencies")
+        if capability_only:
+            raise CompoundingError(
+                "EVIDENCE_WAIT cannot be used to launder capability-only work"
+            )
+
+    return {
+        "economic_mechanism": mechanism,
+        "candidate_or_family_scope": scope,
+        "funnel_stage_before": stage_before,
+        "funnel_stage_after": stage_after,
+        "falsifier": falsifier,
+        "strategy_advanced": bool(advanced),
+        "search_information_summary": search_summary,
+    }
+
+
+def validate(repo: Path, stamp: str, base_head: str, baseline: Path | None) -> dict[str, Any]:
+    run = repo / "reports" / "trader-wakes" / "moa" / stamp
+    handoff_path = run / "compounding.json"
+    learning_path = run / "learning-promotion.md"
+    handoff = _load(handoff_path)
+    if handoff.get("schema_version") != SCHEMA_VERSION or handoff.get("stamp") != stamp:
+        raise CompoundingError(
+            f"compounding handoff requires schema_version={SCHEMA_VERSION} and matching stamp "
+            f"(legacy schema {LEGACY_SCHEMA_VERSION} is read-only history)"
+        )
+    outcome = handoff.get("outcome")
+    if outcome not in STRATEGY_OUTCOMES:
+        raise CompoundingError(
+            f"invalid outcome: {outcome!r}; required one of {sorted(STRATEGY_OUTCOMES)}"
+        )
+    signature = str(handoff.get("loop_signature", "")).strip()
+    if not signature:
+        raise CompoundingError("loop_signature is required")
+    next_seed = str(handoff.get("next", "")).strip()
+    if not next_seed:
+        raise CompoundingError("exactly one non-empty next value is required")
+
+    # EVIDENCE_WAIT may carry zero useful deltas when the only honest residue is the wait condition.
+    allow_empty_deltas = outcome == "EVIDENCE_WAIT"
+    changed = _changed_paths(repo, base_head)
+    deltas = handoff.get("useful_deltas")
+    if deltas is None:
+        deltas = []
+    novelty_keys, kinds = _validate_useful_deltas(
+        repo,
+        deltas,
+        changed,
+        allow_empty=allow_empty_deltas,
+    )
+    if next_seed == "DIMINISHING_RETURNS" and outcome not in {"EVIDENCE_WAIT"}:
+        # Still allowed as a NEXT seed after a closed decision, but not as a fake strategy outcome.
+        pass
+
+    contract = _validate_strategy_contract(handoff, kinds=kinds)
+    findings_count = _validate_critic_findings(repo, handoff.get("critic_findings", []), changed)
 
     previous = _previous_records(repo, stamp)
     prior_novelty = {
@@ -375,7 +647,7 @@ def validate(repo: Path, stamp: str, base_head: str, baseline: Path | None) -> d
         for delta in row.get("useful_deltas", [])
         if isinstance(delta, dict)
     }
-    if deltas and novelty_keys.issubset(prior_novelty):
+    if handoff.get("useful_deltas") and novelty_keys.issubset(prior_novelty):
         raise CompoundingError("handoff claims no new novelty key versus integrated prior records")
 
     if not learning_path.is_file():
@@ -397,13 +669,21 @@ def validate(repo: Path, stamp: str, base_head: str, baseline: Path | None) -> d
         "ok": True,
         "mode": "validate-handoff",
         "stamp": stamp,
+        "schema_version": SCHEMA_VERSION,
         "outcome": outcome,
         "loop_signature": signature,
-        "useful_delta_count": len(deltas),
+        "strategy_advanced": contract["strategy_advanced"],
+        "economic_mechanism": contract["economic_mechanism"],
+        "candidate_or_family_scope": contract["candidate_or_family_scope"],
+        "funnel_stage_before": contract["funnel_stage_before"],
+        "funnel_stage_after": contract["funnel_stage_after"],
+        "useful_delta_count": len(handoff.get("useful_deltas") or []),
         "novelty_keys": sorted(novelty_keys),
-        "critic_findings_closed": len(findings),
+        "critic_findings_closed": findings_count,
         "role_ready": True,
-        "role_ready_basis": "validated changed learning + structured handoff; session text ignored",
+        "role_ready_basis": (
+            "validated changed learning + structured strategy-run handoff; session text ignored"
+        ),
     }
 
 

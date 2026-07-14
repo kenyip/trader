@@ -85,9 +85,10 @@ def score_stamp(d: Path) -> dict:
         except (OSError, json.JSONDecodeError):
             compounding = {}
     if contract_version >= 3:
+        schema_version = compounding.get("schema_version")
         complete = (
             complete
-            and compounding.get("schema_version") == 1
+            and schema_version in {1, 2}
             and _tracked_on_origin_main(compounding_path)
         )
 
@@ -106,13 +107,41 @@ def score_stamp(d: Path) -> dict:
             }
         )
         types = [f"delta_{kind}" for kind in delta_kinds] or ["no_useful_delta"]
-        score = {
-            "CANDIDATE": 5,
-            "CAPABILITY": 4,
-            "REPAIRED": 4,
-            "FALSIFIED": 3,
-            "DIMINISHING_RETURNS": 1,
-        }.get(outcome, 0)
+        if compounding.get("schema_version") == 2:
+            advanced = bool(
+                outcome == "STRATEGY_ADVANCED"
+                or (
+                    outcome == "BLOCKER_REMOVED_AND_RETESTED"
+                    and compounding.get("retest_decision") == "STRATEGY_ADVANCED"
+                )
+                or (
+                    isinstance(compounding.get("strategy_advancement"), dict)
+                    and compounding["strategy_advancement"].get("advanced") is True
+                )
+            )
+            score = {
+                "STRATEGY_ADVANCED": 5,
+                "BLOCKER_REMOVED_AND_RETESTED": 5 if advanced else 4,
+                "FAMILY_CLOSED": 3,
+                "EVIDENCE_WAIT": 2,
+            }.get(outcome, 0)
+            if advanced:
+                types.append("strategy_advanced")
+            else:
+                types.append("strategy_no_advance")
+        else:
+            # Legacy schema-1 handoffs: capability/repair never counted as strategy advance.
+            score = {
+                "CANDIDATE": 5,
+                "CAPABILITY": 4,
+                "REPAIRED": 4,
+                "FALSIFIED": 3,
+                "DIMINISHING_RETURNS": 1,
+            }.get(outcome, 0)
+            if outcome == "CANDIDATE":
+                types.append("strategy_advanced")
+            else:
+                types.append("strategy_no_advance")
     else:
         explicit_scores = [
             int(value)
