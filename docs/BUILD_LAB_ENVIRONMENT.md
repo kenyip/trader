@@ -334,3 +334,7 @@ A run audit found useful research and honest falsification but also a large unco
 ### 2026-07-13 — Strategy-run outcome contract (schema v2)
 
 Operational completion was over-counting as progress while many wakes shipped only tooling/capability. New BUILD finalizer handoffs must use schema_version=2 with a strategy decision charter and exactly one of `STRATEGY_ADVANCED`, `FAMILY_CLOSED`, `BLOCKER_REMOVED_AND_RETESTED`, or `EVIDENCE_WAIT`. Capability-only residue fails closed unless the unlocked experiment is retested in the same wake to an advance-or-close decision. Search information and strategy advancement are separate machine-readable fields. Orientation now tracks consecutive no-advance streaks for pivot/burst-stop.
+
+### 2026-07-14 — Strategy-convergence evaluation surfaces
+
+`scripts/trader_build_progress.py` and `scripts/trader_build_monitor.py` answer **"are the new runs better?"** with a strategy-convergence scorecard first: BETTER / INFORMATIVE_BUT_NOT_CLOSER / INVALID_THRASH per run, strategy-advance count/rate, living candidates, furthest living funnel stage, consecutive no-advance streak, and pivot/stop state. Research-process/capability scores remain secondary context only and must never make a zero-advance board look closer to a living strategy. Doctrine: `docs/BUILD_PROGRESS_AND_CONFIDENCE.md`.

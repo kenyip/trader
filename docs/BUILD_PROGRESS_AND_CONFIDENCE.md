@@ -1,87 +1,69 @@
 # BUILD progress + real-trade confidence
 
 **Audience:** Ken monitor / Jarvis support. Trader still owns free exploration.
-**Updated:** 2026-07-10
+**Updated:** 2026-07-14
 
 ## What one dual-lab run is *for*
 
-One BUILD MoA (Sol executor → Grok challenger) should deliver **exactly one** of:
+One BUILD MoA (Sol executor → Grok challenger) should close **exactly one strategy-run outcome**
+under the machine-enforced contract (`compounding.json` schema v2):
 
-| Type | Progress if it lands | Examples from 2026-07-10 |
-|---|---|---|
-| **P1 New sim class** | Catalog gap → working sim + smoke | calendar_sim at 2123 |
-| **P2 Axis scoreboard** | Measurable grid/lab on time or direction | 36-cell DTE grid at 2017 |
-| **P3 Quality falsify** | Dated B3+B4; promote/reject vs quality bar | 1938 MU reject; 2100 reconfirm |
-| **P4 Discovery yield** | New defined-risk SHIP that *survives* B3+B4 competitively | **none yet** (honest) |
-| **P0 Noise** | Free evolve toys / re-runs with no new evidence | single-leg thrash |
+| Outcome | Strategy-convergence meaning |
+|---|---|
+| **STRATEGY_ADVANCED** | Named candidate moved ≥1 funnel stage with claim-appropriate evidence → **BETTER** |
+| **FAMILY_CLOSED** | Mechanism decisively falsified; unchanged reruns quarantined → **INFORMATIVE_BUT_NOT_CLOSER** |
+| **BLOCKER_REMOVED_AND_RETESTED** | Repair + in-wake retest to advance **or** close → **BETTER** only if retest advanced |
+| **EVIDENCE_WAIT** | Next discriminating test truly blocked on unavailable evidence → **INFORMATIVE_BUT_NOT_CLOSER** |
 
-**Good run** = P1 or P2 or (P3 with a decision) + ONE NEXT seed.
-**Great run** = P4 (true challenger to capital path) or B6 paper sample closed.
-**Wasted run** = only P0.
+Capability/tooling/tests/clean integration alone are **search information**, not strategy progress.
+Legacy schema v1 outcomes remain readable history (`CANDIDATE` = advance; `CAPABILITY` /
+`REPAIRED` / `FALSIFIED` / `DIMINISHING_RETURNS` = non-advance).
 
-## How we score progress per run (0–5)
+Funnel: `F0_MECHANISM` → `F1_TRAIN` → `F2_UNTOUCHED_HOLDOUT` → `F3_ROBUST_PAPER_PLAN` → `F4_OBSERVED_PAPER`.
 
-| Score | Meaning |
+## Primary scoreboard: strategy-convergence
+
+Command: `.venv/bin/python scripts/trader_build_progress.py [--limit N] [--write]`
+
+Leads with the answer to **"are the new runs better?"**:
+
+| Field | Meaning |
+|---|---|
+| **Strategy advances (BETTER)** | Count/rate of independently declared valid funnel advancements |
+| **INFORMATIVE_BUT_NOT_CLOSER** | Valid family closure / evidence wait / non-advancing retest / legacy informative non-advance |
+| **INVALID_THRASH** | Incomplete, contract-invalid, or forbidden loop repetition without new novelty |
+| **Living candidates** | Advanced scopes not later closed |
+| **Furthest living funnel stage** | Max stage among living candidates |
+| **Consecutive no-advance streak** | Integrated history streak without STRATEGY_ADVANCED / legacy CANDIDATE |
+| **Pivot/stop state** | `none` / `strategy_pivot_required` (≥2) / `strategy_burst_stop_required` (≥3) |
+
+Per-run verdicts:
+
+| Verdict | Requires |
+|---|---|
+| **BETTER** | `strategy_advanced(...)` true from the compounding contract |
+| **INFORMATIVE_BUT_NOT_CLOSER** | Valid non-advancing strategy outcome (see table above) |
+| **INVALID_THRASH** | Incomplete dual, missing/invalid handoff, or same `loop_signature` with no new novelty |
+
+**Rule:** a board full of capability/repair process scores with every row `strategy_no_advance`
+is **zero strategy advance**, not "high-value progress toward a trade."
+
+## Secondary context: research-process / capability score (0–5)
+
+Kept only as **clearly labeled secondary context**. It measures tooling, falsification density,
+and operational residue — **never strategy closeness**.
+
+| Score | Research-process meaning (not strategy) |
 |---:|---|
-| 0 | Failed / no closeout |
-| 1 | Re-stated known facts only |
-| 2 | Ran sims but no new axis/gap closed; rejects only |
-| 3 | Closed one falsify loop OR thin tool improvement |
-| 4 | New scoreboard **or** new sim scaffold **or** real quality challenger attempt with full B3+B4 |
-| 5 | Beats quality bar on non-vacuous after-cost **or** advances B6 multi-session paper toward live packet |
+| 0 | Failed / incomplete |
+| 1 | Re-stated known facts / stop only |
+| 2 | Thin sims / evidence wait residue |
+| 3 | Closed falsify loop or thin tool improvement |
+| 4 | Material capability/repair or full quality retest without stage advance |
+| 5 | Strategy advance **or** advancing retest (also BETTER) |
 
-Tonight’s complete dual passes (rough):
-
-| Stamp | Axis | Score | Why |
-|---|---|---:|---|
-| 1938 | discovery + falsify | 3 | MU SHIP rejected on regime |
-| 2017 | time grid | 4 | pcs_time_bias_grid + 36 cells |
-| 2100 | quality reconfirm | 2–3 | no DR SHIP; calendar *seeded* |
-| 2123 | calendar sim class | **5** for coverage / **2** for income edge | sim built; first DNA cost-fails |
-
-**Net:** coverage plumbing moved a lot; **income edge for real trades barely moved.**
-
-## Coverage map (what “better coverage” means)
-
-Track five independent axes (not hyp count):
-
-1. **Structure sim surface** — PCS/CCS/IC strong; calendar and diagonal partial; butterfly/debit missing
-2. **Symbol breadth** — research ranks multi-name; capital quality still TSLL-led
-3. **Time bias** — DTE×target×stop done; weekday/session + calendar IV term structure open
-4. **Direction/regime** — B3 per hyp; no PCS vs CCS vs IC regime scoreboard yet
-5. **Falsify depth** — B3/B4 exist; soft cost_hold ≠ after-cost edge; B6/B7 thin/absent
-
-**Coverage complete enough to *search* for income** ≠ **ready to risk real money**.
-
-Rough completeness today (monitor estimate):
-
-| Axis | ~% | Blocker for real trades |
-|---|---:|---|
-| Structure sims for core credit | 70 | OK for PCS search |
-| Structure sims for full income menu | 45 | calendar/diagonal realism; butterfly/debit |
-| Time bias | 50 | weekday/session; calendar term structure |
-| Direction scoreboard | 30 | dedicated multi-structure regime lab |
-| After-cost edge DNA | 10 | leader still soft-loss @5% slip |
-| Live-clock paper (B6) | 20 | multi-session open→manage→close |
-| Shadow (B7) | 0–10 | not run |
-| Funding / options level | 0 | RH agentic ~$0 |
-
-## How many runs?
-
-Not a fixed number — use **portfolio of loops**, then stop thrashing.
-
-### Recommended cadence (monitor defaults)
-
-| Goal | Runs (dual MoA) | Notes |
-|---|---:|---|
-| **Coverage sprint** (sim gaps + axes) | **8–12** focused BUILD | Prefer 1 gap/axis per run; densified crons can do 3–4/day off-hours |
-| **Edge hunt** on existing PCS/CCS/IC | **6–10** with defined-risk-only evolve | Stop if 3 straight runs = P0/P2 only |
-| **Paper prove (B6)** | **10–20 RTH sessions** | Not dual MoA — real clock paper open/manage/close |
-| **Confidence for first real $** | After edge + B6, not after N labs | See ladder below |
-
-**Rule of thumb:** if 3 consecutive BUILD duals score ≤2 with no new axis closed, **pause free pop36** and either (a) implement one missing sim, or (b) force B6 paper on the relative leader, or (c) stand down.
-
-Tonight: 4 useful duals already. **Another 6–10 coverage/edge duals + multi-day B6** is more honest than “20 more free evolves.”
+Historical P0–P4 prose labels (sim class / axis scoreboard / quality falsify / discovery yield)
+remain useful for pre-compounding stamps only.
 
 ## Confidence ladder for real trades (Ken gate)
 
@@ -100,7 +82,7 @@ All required:
 4. At least **one** structure class fully exercised (PCS is closest)
 5. Challenger PASS on the readiness claim (not just “more hyps”)
 
-→ Confidence: **sim-only**. Still **no real money.**
+→ Confidence: **sim-only**. Still **no real money.** Requires a BETTER funnel advance that survives these gates — not wake volume.
 
 ### L2 — Paper trading confidence (B6)
 On top of L1:
@@ -109,47 +91,40 @@ On top of L1:
 2. Realized paper PnL / max DD within risk limits for $3k sleeve
 3. Kill switch + risk governor exercised once in paper
 
-→ Confidence: **process works**. Still **no live** until Ken funds + arms.
-
 ### L3 — Shadow confidence (B7)
-On top of L2:
-
-1. Shadow propose→risk→log for a window with no silent failures
-2. No authority/credential creep
+On top of L2: shadow propose→risk→log window with no silent failures / no authority creep.
 
 ### L4 — First real-trade confidence (tiny)
-On top of L2 (B7 preferred but can be thin if Ken accepts):
-
-1. Account funded + options level OK
-2. Explicit Ken **arm** for one DNA / one max lot
-3. Size = **1-lot only**, max loss known
-4. Stand-aside is success when filters fail
-5. Kill criteria written (DD, consecutive losses, calendar days)
-
-**Suggested first real sleeve:** still **$3k paper-proven DNA**, 1-lot, not multi-name quota.
+Funded account + explicit Ken arm + 1-lot only + written kill criteria.
 
 ### What we will *not* use as confidence
-- Hyp count (124) or SHIP count alone
+- Dual-lab count, hyp count, or SHIP count alone
+- Research-process / capability score ≥4 with zero BETTER advances
 - Soft `cost_hold=true` with losses or zero trades
 - Single full-history SHIP without B3+B4
-- “Calendar sim exists” without after-cost survival
-- Challenger 8/8 on a *research* wake (that grades the loop, not live readiness)
+- “Sim exists” without after-cost survival
+- Challenger 8/8 on a *research* wake (grades the loop, not live readiness)
+- Operational `RUN COMPLETE` without strategy-run advancement
 
 ## Monitor checklist (Jarvis after each dual)
 
-1. Stamp / exits / models
-2. Progress type P0–P4 + score 0–5
-3. Did any DNA approach L1? (Y/N + why)
-4. Coverage axis moved?
-5. B6/B7/funding still blocked?
-6. Trader NEXT seed (support only — don’t override unless live-gate)
+1. Stamp / exits / models / complete?
+2. **Strategy verdict** BETTER / INFORMATIVE_BUT_NOT_CLOSER / INVALID_THRASH
+3. Living candidates + furthest funnel + no-advance streak / pivot-stop
+4. Did any DNA approach L1? (Y/N + why) — only relevant after BETTER
+5. Secondary research-process residue (capability/repair) — labeled, not lead
+6. B6/B7/funding still blocked?
+7. Trader NEXT seed (support only — don’t override unless live-gate)
 
 ## Commands
 
 ```bash
+.venv/bin/python scripts/trader_build_progress.py --limit 8
+.venv/bin/python scripts/trader_build_progress.py --write
+.venv/bin/python scripts/trader_build_monitor.py --write
 just trader-income-coverage
-just trader-build-lab   # or free-explore oneshot
+just trader-build-lab   # zero-input BUILD; Trader chooses the loop
 # after runs:
 ls reports/trader-wakes/moa/
-cat reports/readiness/LATEST.md | head -60
+cat reports/readiness/build-progress-LATEST.md | head -80
 ```
