@@ -1,0 +1,106 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-14T0053",
+  "loop_signature": "historical-underlying/pcs-gap-recovery/fully-warmed-lagged-ema60/chronological-dual-cost",
+  "economic_mechanism": "A completed session gaps down at least 1%, recovers to close at or above its open, and closes strictly above a fully warmed 60-session EMA known before the signal session; the confirmed panic absorption may leave elevated put premium that mean-reverts while the longer trend remains constructive.",
+  "candidate_or_family_scope": "One fixed-DNA next-bar 21-DTE approximately 0.20-delta $1-wide put credit spread across BAC, F, SOFI, PLTR, TSLL, SMCI, AMD, and AAPL at one-lot operating size.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "No named symbol passes both chronological 60% train and untouched 40% holdout on 5% adverse-leg slip and fixed-$0.01-per-leg entry/exit costs with n>=8, positive SHIP, one-lot max loss <=$300, aggregate and window drawdown <=$75, dense-negative windows <=5, and exact ledger, signal-lag, chronology, population, and capital-label integrity.",
+  "outcome": "BLOCKER_REMOVED_AND_RETESTED",
+  "retest_decision": "FAMILY_CLOSED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "No candidate moved beyond F0: the fully warmed unchanged retest completed 8/8 symbols with 0/8 complete train-and-untouched-holdout dual-cost passes and no registration-eligible ID."
+  },
+  "search_information": {
+    "summary": "Built reusable fail-closed gap/trend filters and a chronological control lab, repaired understated one-lot capital reporting plus the finalizer-discovered EMA60 warm-up defect, reran the exact experiment unchanged, closed the exact family, and forced the next search into an outcome-independent underlying event-study evidence class.",
+    "delta_kinds": [
+      "capability",
+      "repair",
+      "falsification",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "A reusable next-bar gap-recovery chronological lab now provides fail-closed downside-gap and pre-signal trend filters, dual proxy cost axes, placebo/complement controls, conjunctive train/holdout gates, and exact integrity labels.",
+      "novelty_key": "pcs-gap-recovery-lagged-feature-lab-v1",
+      "artifacts": [
+        "trader_platform/research/pcs_sim.py",
+        "scripts/pcs_gap_recovery_chronological_lab.py",
+        "tests/test_pcs_gap_recovery_chronological_lab.py"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "One-lot capital now uses the larger observed required-capital/loss value, and the declared EMA60 state now fails closed until 60 completed closes exist before the one-bar signal lag; both defects are boundary-tested.",
+      "novelty_key": "pcs-gap-recovery-capital-and-ema60-warmup-integrity-v1",
+      "artifacts": [
+        "scripts/pcs_gap_recovery_chronological_lab.py",
+        "tests/test_pcs_gap_recovery_chronological_lab.py"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "The repaired unchanged eight-symbol experiment remained 0/8: SOFI alone was dual-cost SHIP in train and reversed to -$24.59 at 5% slip and -$19.03 fixed cost in untouched holdout; no candidate survived the complete gate.",
+      "novelty_key": "pcs-down-gap-le-1pct-recovery-close-ge-open-close-gt-fully-warmed-pre-signal-ema60-21dte-fixed-dna-60-40-dualcost-8symbols-reject-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-14T0053/gap-recovery-chronological.json"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "After 16 completed wakes without strategy advancement, unchanged gap-recovery and nearby options-entry-filter reruns are quarantined; the next wake must pre-screen one genuinely new underlying mechanism before option pricing.",
+      "novelty_key": "search-design-evidence-pivot-after-16-no-advance-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-14T0053/merged-next-seed.md"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "F1: classify this operationally repaired run as strategy advancement.",
+      "status": "rejected",
+      "rationale": "The challenger finding was accepted by rejecting any advancement claim: outcome is BLOCKER_REMOVED_AND_RETESTED, retest_decision is FAMILY_CLOSED, advanced is false, and the funnel remains F0 to F0."
+    },
+    {
+      "finding": "F2: leave the exact gap-recovery novelty open to unchanged or nearby-threshold reruns.",
+      "status": "rejected",
+      "rationale": "The challenger quarantine is accepted: the exact fully warmed family key is closed and unchanged reruns require a genuinely new evidence class or mechanism."
+    },
+    {
+      "finding": "F3: retain a nearby options-entry-filter simulation as the next seed.",
+      "status": "rejected",
+      "rationale": "The merged NEXT accepts the challenger guard and forces one leakage-safe outcome-independent underlying event-study pre-screen before option pricing."
+    },
+    {
+      "finding": "F4: leave readiness pointing at the already completed gap-recovery experiment.",
+      "status": "rejected",
+      "rationale": "The stale readiness NEXT is replaced by SEARCH_DESIGN_EVIDENCE_PIVOT while B checks and BUILD/L0 authority remain unchanged."
+    },
+    {
+      "finding": "F5: quote nested simulator max_lots=3 as operating size for this family.",
+      "status": "rejected",
+      "rationale": "All capital claims use top-level candidate fields only: max_lots=1 and capital_fit_usd equal to observed one-lot max loss; nested generic theoretical capacity is not a seat or sizing claim."
+    },
+    {
+      "finding": "Finalizer evidence audit: the shifted EMA60 was labeled as a 60-session state even during its under-warmed first 59 observations.",
+      "status": "repaired",
+      "rationale": "The lab now requires min_periods=60 before shifting, the boundary test asserts the exact first-valid index and fail-closed nonfinite behavior, and the exact eight-symbol dependent experiment was rerun unchanged to the same family-close decision.",
+      "repair_artifacts": [
+        "scripts/pcs_gap_recovery_chronological_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_pcs_gap_recovery_chronological_lab.py"
+      ]
+    }
+  ],
+  "closed_families": [
+    "pcs-gap-recovery-down-gap-reclaimed-above-fully-warmed-lagged-ema60-21dte-dualcost-60-40"
+  ],
+  "data_dependencies": [],
+  "evidence_wake_condition": null,
+  "next": "SEARCH_DESIGN_EVIDENCE_PIVOT: build and exercise one leakage-safe, outcome-independent underlying event-study pre-screen with placebo/complement controls for one genuinely new economic mechanism; require chronological train and untouched-holdout survival before any option pricing, and close exactly one strategy decision without reopening the gap-recovery or nearby entry-filter family."
+}

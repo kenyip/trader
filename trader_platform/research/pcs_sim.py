@@ -290,6 +290,12 @@ def entry_filters_pass(row: pd.Series, cfg: dict[str, Any]) -> bool:
     """Apply optional current-row entry bounds without looking ahead."""
     bounds = (
         ("intraday_return", "entry_intraday_return_min", "entry_intraday_return_max"),
+        ("gap_return", "entry_gap_return_min", "entry_gap_return_max"),
+        (
+            "close_vs_lagged_ema60",
+            "entry_close_vs_lagged_ema60_min",
+            "entry_close_vs_lagged_ema60_max",
+        ),
         ("volume_surge", "entry_volume_surge_min", "entry_volume_surge_max"),
         ("ret_1d", "entry_ret_1d_min", "entry_ret_1d_max"),
         ("ret_5d", "entry_ret_5d_min", "entry_ret_5d_max"),
