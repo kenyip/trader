@@ -3,6 +3,8 @@
 **Audience:** Ken monitor / Jarvis support. Trader still owns free exploration.
 **Updated:** 2026-07-14
 
+**Alignment surface:** goals, directives, current gap, and clean-start vs search-restart decision live in [TRADER_RESTART_CHARTER.md](TRADER_RESTART_CHARTER.md). Use that doc to re-anchor when many wakes feel busy but strategy-convergence stays at zero advances.
+
 ## What one dual-lab run is *for*
 
 One BUILD MoA (Sol executor → Grok challenger) should close **exactly one strategy-run outcome**

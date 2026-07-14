@@ -3,6 +3,8 @@
 > **Pinned 2026-07-09.** Future sessions must not redefine this product.
 > Research-engine goal detail remains in root [GOAL.md](../GOAL.md).
 > Autonomy / live-sleeve rules: [AGENTIC_AUTONOMY_POLICY.md](AGENTIC_AUTONOMY_POLICY.md).
+> **Alignment / restart / clean-start vs tweak:** [TRADER_RESTART_CHARTER.md](TRADER_RESTART_CHARTER.md) — re-read before densified BUILD or doctrine changes.
+> **Progress honesty:** [BUILD_PROGRESS_AND_CONFIDENCE.md](BUILD_PROGRESS_AND_CONFIDENCE.md) — ops complete ≠ strategy closer.
 
 ---
 

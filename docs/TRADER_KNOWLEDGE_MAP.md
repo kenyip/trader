@@ -75,6 +75,10 @@ It should contain durable rules like:
 
 Repo code/docs are the right place for detailed playbooks and scripts:
 
+- `docs/TRADER_RESTART_CHARTER.md`: **anti-drift alignment** — north star, objectives, directives, snapshot vs goal, clean-start vs search-restart recommendation, pre-BUILD checklist
+- `docs/TRADER_PLATFORM_GOAL.md`: product north star + ranking / better-trades pins
+- `docs/BUILD_PROGRESS_AND_CONFIDENCE.md`: strategy-convergence scoreboard vs real-trade confidence ladder
+- `configs/build_lab_free_goal.txt`: sole zero-input BUILD program goal
 - `docs/DESK_BRIEF.md`: Income Engine daily desk brief playbook (I1) — checklist, output shape, data-quality rules
 - `scripts/desk_brief.py` + `just desk-brief`: raw gather (PMCC monitor/manage + short-premium live/positions + session banner)
 - `pmcc/positions.py` and `pmcc_manage.py`: live PMCC state, LEAPS-only state, premium clock, monitor output
