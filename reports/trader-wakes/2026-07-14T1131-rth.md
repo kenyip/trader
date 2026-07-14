@@ -40,9 +40,9 @@ VERIFICATION:
   - Scout JSON summary: 14/0/14.
   - Autonomy dry-run: ok=true, n_proposals=0, agentic_enabled=false.
   - Archive density unchanged this hour (already 3/3 + 13 exp on 2026-07-14).
-  - Git: clean `main` @ `b19a1a2` before write; RTH report-only commit intended (no strategy code mutation).
+  - Git: clean `main` @ `b19a1a2` before write; report-only commit `956cd5c` pushed to `origin/main` (no strategy code mutation).
 
-INTEGRATION: report-only commit on clean main when post-write status allows; no shadow/live/arm.
+INTEGRATION: `956cd5c` on `main` == `origin/main`; clean tree after push; no shadow/live/arm.
 
 LESSON: Unchanged 14/0/14 stand-aside at ~14:31 ET is success; do not force OPEN_PCS under bear_dte=0, do not invent paper probes without capital-fit multi-leg intents, and do not re-append the already densified same-date archive.
 
