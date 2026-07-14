@@ -1,0 +1,212 @@
+{
+  "archive_dependent_stop_invalidated": false,
+  "choice_rule": "Closed families and prior NEXT are context, not allowlists. Reopen only with a named new evidence class or repaired capability. Operational completion is separate from strategy advancement. A blocked observed-option route blocks only dependent claims and cannot alone justify stop while another historical route remains informative. After two consecutive wakes without STRATEGY_ADVANCED, pivot mechanism/evidence class; after three, stop the burst and reassess search design/data. Honest information-exhaustion stops remain valid after open routes are assessed for material novelty.",
+  "closed_families": [
+    "aapl-noauth-explicit-exdate-40event-aggregator-route",
+    "asymmetric-iron-condor-proxy",
+    "bac-friday-7dte-management",
+    "ccs-vol-expansion-daily-bar",
+    "collared-covered-call-proxy",
+    "double-diagonal-symmetric-14-60-neutral-high-iv-proxy-seed-2026-07-13-cycle",
+    "free-definedrisk_chronological-prereg-seed-1754-pop36-train60-cycle",
+    "free-definedriskfull-sample-dry-pop-seed-1645-cycle",
+    "pcs-bullish-momentum-daily-bar",
+    "pcs-close-shock-daily-bar",
+    "pcs-gap-recovery-down-gap-reclaimed-above-fully-warmed-lagged-ema60-21dte-dualcost-60-40",
+    "pcs-mild-pullback-daily-bar",
+    "pcs-multi-horizon-trend-pullback-daily-bar",
+    "pcs-vol-compression-daily-bar",
+    "session-time-7dte-one-point-pcs-ccs-ic-proxy-seed-2026-07-13-cycle"
+  ],
+  "consecutive_no_strategy_advance": 16,
+  "generated_at": "2026-07-14T09:25:44.063353+00:00",
+  "prior_novelty_keys": [
+    "aapl-noauth-exdate-40event-route-close-v1",
+    "apple-newsroom-dividend-bounded-crosscheck-v1",
+    "assignment-guard-catalog-threshold-precedence-controls-v1",
+    "build-compounding-v1-structured-handoff-recovery-role-validation",
+    "build-lab-integrate-only-cli-recovery-parser-v1",
+    "capped-population-structure-coverage-label-v1",
+    "ccs-realized-vol-expansion-rolling-origin-8x3-reject",
+    "chronological-free-definedrisk_prereg-train-holdout-v1",
+    "dividend-archive-known-at-coverage-boundary-v1",
+    "double-diagonal-14-60-eight-symbol-dual-cost-reject-v1",
+    "double-diagonal-american-intrinsic-signed-liquidation-capital-v1",
+    "double-diagonal-chronological-conjunctive-gate-runner-v1",
+    "double-diagonal-same-inward-simulator-v1",
+    "dry-evolve-pre-registration-absolute-gate-v1",
+    "free-definedrisk_chronological-prereg-seed-1754-pop36-reject-v1",
+    "free-definedriskpop36-reject-2026-07-13-cycle",
+    "income-coverage-session-time-state-regression-v1",
+    "nasdaq-declaration-dividend-archive-provider-v1",
+    "pcs-down-gap-le-1pct-recovery-close-ge-open-close-gt-fully-warmed-pre-signal-ema60-21dte-fixed-dna-60-40-dualcost-8symbols-reject-v1",
+    "pcs-gap-recovery-capital-and-ema60-warmup-integrity-v1",
+    "pcs-gap-recovery-lagged-feature-lab-v1",
+    "pcs-hv-ratio-nonnumeric-fail-closed-train-holdout-negative-control",
+    "pcs-intraday-calendar-dte-exit-bucket-integrity-v1",
+    "pcs-mild-pullback-rolling-origin-8x3-reject",
+    "pcs-multi-horizon-entry-filter-nonnumeric-fail-closed",
+    "pcs-multi-horizon-trend-pullback-rolling-origin-8x3-reject",
+    "pcs-realized-vol-compression-rolling-origin-8x3-reject",
+    "pre-registration-capital-label-population-boundaries-v1",
+    "search-design-evidence-pivot-after-16-no-advance-v1",
+    "session-time-30m-prior-session-chronological-lab-v1",
+    "session-time-8x3-densified-dual-cost-reject-2026-07-13-cycle",
+    "session-time-8x3-dual-cost-reject-2026-07-13-cycle",
+    "session-time-coverage-60-usable-canonical-surface-v1",
+    "session-time-underlying-archive-daily-warmup-provenance-v1",
+    "short-call-dividend-known-at-assignment-guard-v1",
+    "stockanalysis-aapl-exdate-exact-set-gate-v1",
+    "unrounded-proxy-absolute-gates-v1"
+  ],
+  "prior_record_count": 16,
+  "recent_runs": [
+    {
+      "candidate_or_family_scope": null,
+      "economic_mechanism": null,
+      "funnel_stage_after": null,
+      "funnel_stage_before": null,
+      "loop_signature": "historical-underlying/session-time-30m/pcs-ccs-ic/chronological-dual-cost",
+      "next": "Promote an append-safe provenance-recorded raw 30-minute underlying archive for BAC/F/SOFI/PLTR/TSLL/SMCI/AMD/AAPL, expand usable prior-session feature dates toward retained raw history without lookahead, then rerun exactly once the locked PCS/CCS/IC open/midday/late chronological dual-cost train-to-holdout specification with unchanged DNA/gates and no holdout retune; keep L0 and do not register, promote, paper, shadow, arm, or live.",
+      "novelty_keys": [
+        "session-time-30m-prior-session-chronological-lab-v1",
+        "session-time-8x3-dual-cost-reject-2026-07-13-cycle",
+        "pcs-intraday-calendar-dte-exit-bucket-integrity-v1",
+        "income-coverage-session-time-state-regression-v1"
+      ],
+      "outcome": "FALSIFIED",
+      "schema_version": 1,
+      "stamp": "2026-07-13T0515",
+      "strategy_advanced": false
+    },
+    {
+      "candidate_or_family_scope": null,
+      "economic_mechanism": null,
+      "funnel_stage_after": null,
+      "funnel_stage_before": null,
+      "loop_signature": "historical-underlying/session-time-30m-archive-daily-warmup/locked-pcs-ccs-ic-dual-cost",
+      "next": "Run one free defined-risk multi-structure discovery across top research symbols using PCS/CCS/IC plus at most one already-simmed under-covered catalog structure, then apply exact B3+B4 and fixed-$0.01-per-leg falsification to every SHIP against non-vacuous dual-cost positive PnL, one-lot max_loss_usd <= $300, window max DD <= $75, and dense-negative windows <= 5; register nothing unless complete gates pass, keep L0/proxy labels, and do not reopen closed families or paper/shadow/arm/live.",
+      "novelty_keys": [
+        "session-time-underlying-archive-daily-warmup-provenance-v1",
+        "session-time-8x3-densified-dual-cost-reject-2026-07-13-cycle",
+        "session-time-coverage-60-usable-canonical-surface-v1"
+      ],
+      "outcome": "FALSIFIED",
+      "schema_version": 1,
+      "stamp": "2026-07-13T1415",
+      "strategy_advanced": false
+    },
+    {
+      "candidate_or_family_scope": null,
+      "economic_mechanism": null,
+      "funnel_stage_after": null,
+      "funnel_stage_before": null,
+      "loop_signature": "historical-underlying/free-defined-risk/dry-evolve/pre-registration-absolute-gate",
+      "next": "Build one chronological pre-registration adapter that performs fixed-seed train-only free defined-risk multi-structure evolve selection and evaluates every selected DNA once on an untouched chronological holdout with the existing absolute gates; require train AND holdout, register nothing on the first pass, keep proxy/L0 labels, and do not reopen closed families or paper/shadow/arm/live.",
+      "novelty_keys": [
+        "dry-evolve-pre-registration-absolute-gate-v1",
+        "free-definedriskpop36-reject-2026-07-13-cycle",
+        "pre-registration-capital-label-population-boundaries-v1"
+      ],
+      "outcome": "CAPABILITY",
+      "schema_version": 1,
+      "stamp": "2026-07-13T1645",
+      "strategy_advanced": false
+    },
+    {
+      "candidate_or_family_scope": null,
+      "economic_mechanism": null,
+      "funnel_stage_after": null,
+      "funnel_stage_before": null,
+      "loop_signature": "historical-underlying/free-defined-risk/chronological-train-selection/untouched-holdout-absolute-gate",
+      "next": "Implement and run one predeclared lagged gap-recovery 21-DTE put-credit-spread class on a fixed outcome-rank-free multi-symbol set: prior completed day opens at least 1% below its previous close, recovers to close at or above open, and closes above lagged EMA60; enter only on the following bar; use fixed DNA, controls, chronological 60/40 train-to-untouched-holdout, non-vacuous 5% and fixed-$0.01-per-leg costs, max_loss_usd<=300, window max DD<=75, dense-negative<=5, train AND holdout; register nothing first pass, keep L0/proxy, no paper/shadow/arm/live.",
+      "novelty_keys": [
+        "chronological-free-definedrisk_prereg-train-holdout-v1",
+        "unrounded-proxy-absolute-gates-v1",
+        "capped-population-structure-coverage-label-v1",
+        "free-definedrisk_chronological-prereg-seed-1754-pop36-reject-v1"
+      ],
+      "outcome": "CAPABILITY",
+      "schema_version": 1,
+      "stamp": "2026-07-13T1754",
+      "strategy_advanced": false
+    },
+    {
+      "candidate_or_family_scope": "One fixed-DNA next-bar 21-DTE approximately 0.20-delta $1-wide put credit spread across BAC, F, SOFI, PLTR, TSLL, SMCI, AMD, and AAPL at one-lot operating size.",
+      "economic_mechanism": "A completed session gaps down at least 1%, recovers to close at or above its open, and closes strictly above a fully warmed 60-session EMA known before the signal session; the confirmed panic absorption may leave elevated put premium that mean-reverts while the longer trend remains constructive.",
+      "funnel_stage_after": "F0_MECHANISM",
+      "funnel_stage_before": "F0_MECHANISM",
+      "loop_signature": "historical-underlying/pcs-gap-recovery/fully-warmed-lagged-ema60/chronological-dual-cost",
+      "next": "SEARCH_DESIGN_EVIDENCE_PIVOT: build and exercise one leakage-safe, outcome-independent underlying event-study pre-screen with placebo/complement controls for one genuinely new economic mechanism; require chronological train and untouched-holdout survival before any option pricing, and close exactly one strategy decision without reopening the gap-recovery or nearby entry-filter family.",
+      "novelty_keys": [
+        "pcs-gap-recovery-lagged-feature-lab-v1",
+        "pcs-gap-recovery-capital-and-ema60-warmup-integrity-v1",
+        "pcs-down-gap-le-1pct-recovery-close-ge-open-close-gt-fully-warmed-pre-signal-ema60-21dte-fixed-dna-60-40-dualcost-8symbols-reject-v1",
+        "search-design-evidence-pivot-after-16-no-advance-v1"
+      ],
+      "outcome": "BLOCKER_REMOVED_AND_RETESTED",
+      "schema_version": 2,
+      "stamp": "2026-07-14T0053",
+      "strategy_advanced": false
+    }
+  ],
+  "redirect_reasons": [
+    "16 consecutive completed wakes without STRATEGY_ADVANCED; pivot to a materially different economic mechanism or evidence class",
+    "three or more consecutive completed wakes without STRATEGY_ADVANCED; stop the burst and reassess search design/data rather than buying wake volume"
+  ],
+  "redirect_required": true,
+  "research_routes": {
+    "archive_density_alone_can_justify_diminishing_returns": false,
+    "executable_routes": [
+      "historical_underlying_proxy_discovery",
+      "simulator_capability_work"
+    ],
+    "global_build_blocked": false,
+    "routes": {
+      "historical_underlying_proxy_discovery": {
+        "claim_limit": "discovery/falsification only; cannot earn L1",
+        "executable": true,
+        "historical_dataset_count": 63,
+        "option_mark_provenance": "black_scholes_proxy",
+        "simulator_count": 8
+      },
+      "observed_historical_option_replay": {
+        "archive_market_dates_by_symbol": {
+          "TSLL": 2
+        },
+        "blocked_reason": "no broad historical observed option surfaces with complete entry/exit joins",
+        "claim_limit": "three dates validate capture/join plumbing or begin cost calibration; they do not establish strategy edge or L1",
+        "executable": false,
+        "maximum_observed_market_dates": 2,
+        "minimum_plumbing_dates": 3,
+        "plumbing_gate_met": false
+      },
+      "simulator_capability_work": {
+        "claim_limit": "strategy-free capability/negative-control work",
+        "executable": true
+      }
+    },
+    "rule": "A blocked observed-option route blocks only observed-option claims. Archive density alone cannot justify DIMINISHING_RETURNS while another independent route remains informative; honest information-exhaustion stops remain valid."
+  },
+  "schema_version": 2,
+  "source": "integrated prior compounding.json records",
+  "stamp": "2026-07-14T0225",
+  "strategy_burst_stop_required": true,
+  "strategy_pivot_required": true,
+  "strategy_run_contract": {
+    "funnel_stages": [
+      "F0_MECHANISM",
+      "F1_TRAIN",
+      "F2_UNTOUCHED_HOLDOUT",
+      "F3_ROBUST_PAPER_PLAN",
+      "F4_OBSERVED_PAPER"
+    ],
+    "required_outcome_set": [
+      "BLOCKER_REMOVED_AND_RETESTED",
+      "EVIDENCE_WAIT",
+      "FAMILY_CLOSED",
+      "STRATEGY_ADVANCED"
+    ],
+    "rule": "Every BUILD wake must declare economic_mechanism, candidate_or_family_scope, funnel_stage_before/after, falsifier, and exactly one strategy outcome. Capability/tooling alone is not strategy progress unless the unlocked experiment is exercised in-wake to STRATEGY_ADVANCED or FAMILY_CLOSED via BLOCKER_REMOVED_AND_RETESTED."
+  }
+}

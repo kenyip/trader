@@ -26769,3 +26769,27 @@ hypotheses:
         note: defined_risk_bp_proxy=max_loss_usd (not cash CSP)
         median_max_loss_usd: 160.53
         p95_max_loss_usd: 163.73
+- id: hyp_spy_turn_of_month_pcs_21d_020d_1w
+  name: SPY first-session turn-of-month 5-session PCS
+  thesis: Beginning-of-month retirement, payroll, and institutional allocation flows
+    create a five-session bullish SPY drift suitable for one fixed 21-DTE approximately
+    0.20-delta $1-wide put credit spread.
+  sleeve: premium
+  instruments:
+  - SPY
+  entry_logic_ref: scripts/spy_turn_of_month_event_study.py
+  exit_logic_ref: profit_target_50pct|loss_2x_credit|mandatory_5_sessions
+  status: rejected
+  evidence_links:
+  - reports/trader-wakes/moa/2026-07-14T0225/spy-tom-event-study.json
+  - reports/trader-wakes/2026-07-14T0225-moa-exec.md
+  null_results:
+  - '2026-07-14 FAMILY_CLOSED: adjusted-underlying train and untouched-holdout
+    event returns failed paired tenth-session and exact weekday-matched complement
+    bootstrap gates; conditional option pricing correctly did not run.'
+  created: '2026-07-14T09:56:46+00:00'
+  updated: '2026-07-14T09:56:46+00:00'
+  notes: 'quarantine_key=spy-first-session-tom-5session-v1; unchanged reruns prohibited;
+    structure=put_credit_spread; capital_fit_usd=100 structural upper bound; max_loss_usd=100
+    structural upper bound before credit; max_lots=1; option_marks=NOT_RUN_UNDERLYING_GATE_FAILED;
+    never_auto_live=true'

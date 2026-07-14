@@ -1,0 +1,121 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-14T0225",
+  "loop_signature": "historical-underlying/spy-first-session-turn-of-month/paired-controls/chronological-60-40",
+  "economic_mechanism": "Beginning-of-month retirement, payroll, and institutional allocation flows create a short bullish SPY drift over the next five completed trading sessions.",
+  "candidate_or_family_scope": "Exact SPY_TOM_PCS_21D_020D_1W family: SPY first completed trading session of each month, five-session underlying hold, and only conditionally a one-lot 21-DTE approximately 0.20-delta $1-wide put credit spread with fixed management; no day, symbol, DTE, width, or threshold mutation.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "Close the family if either chronological 60% train or untouched 40% holdout fails any predeclared adjusted-underlying gate against the tenth-session placebo or deterministic weekday-matched session-12-to-17 complement, with positive robust paired excess and no-worse 2% drawdown required; option pricing must remain uncalled after underlying failure. If underlying gates pass, close unless the exact conditional PCS survives train and holdout dual-cost, density, capital, drawdown, dense-negative-window, and integrity gates.",
+  "outcome": "BLOCKER_REMOVED_AND_RETESTED",
+  "retest_decision": "FAMILY_CLOSED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "No candidate advanced beyond F0: the repaired unchanged 126-month study failed paired-control gates in both train and untouched holdout, so option pricing remained at zero calls and no option expectancy was claimed."
+  },
+  "search_information": {
+    "summary": "Built a reusable adjusted-underlying event-study gate with paired placebo/complement controls and conditional option isolation; retained the calendar-impossible November 2018 complement as transparent missingness rather than dropping the month, lagged the dormant option volatility proxy to prior completed bars, enforced strict JSON evidence, reran unchanged, closed the exact TOM family, and quarantined nearby mutants.",
+    "delta_kinds": [
+      "capability",
+      "repair",
+      "falsification",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "A reusable leakage-safe event-study runner now builds outcome-independent monthly event labels, tenth-session placebo and deterministic weekday-matched complement rows, chronological 60/40 gates with block-bootstrap lower bounds, and a fail-closed conditional option boundary.",
+      "novelty_key": "spy-tom-paired-calendar-control-event-study-capability-v1",
+      "artifacts": [
+        "scripts/spy_turn_of_month_event_study.py",
+        "tests/test_spy_turn_of_month_event_study.py"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Population purity retains a complete month when an exact complement is calendar-impossible, the dormant 30-session option volatility estimate uses only prior completed bars, and unavailable controls serialize as strict JSON null; each boundary is behaviorally tested before the unchanged rerun.",
+      "novelty_key": "spy-tom-population-lag-and-strict-json-integrity-v1",
+      "artifacts": [
+        "scripts/spy_turn_of_month_event_study.py",
+        "tests/test_spy_turn_of_month_event_study.py"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "The repaired unchanged study closed the exact SPY first-session five-session TOM family: 126 months, train 75 and holdout 51; event-minus-complement mean -0.0732% and -0.2354%, negative bootstrap LB90 versus both controls in both partitions, holdout 2% drawdown frequency 33.33% versus complement 25.49%, and pricing_calls=0.",
+      "novelty_key": "spy-first-session-tom-5session-paired-controls-60-40-family-close-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-14T0225/spy-tom-event-study.json"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "The TOM mechanism, day/DTE/width/symbol mutants, and nearby options-filter volume are quarantined; after the long no-advance burst, the next wake must reassess remaining open economic mechanisms before selecting one new discriminating study or stop to redesign.",
+      "novelty_key": "search-design-reassessment-after-spy-tom-close-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-14T0225/merged-next-seed.md"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "F1: represent the run as a bare FAMILY_CLOSED and omit the population-purity repair/retest semantics.",
+      "status": "rejected",
+      "rationale": "The challenger classification is preserved as outcome BLOCKER_REMOVED_AND_RETESTED with retest_decision FAMILY_CLOSED, advancement false, and F0 to F0; the canonical strategy artifact itself remains labeled FAMILY_CLOSED."
+    },
+    {
+      "finding": "F2: leave the TOM novelty open to unchanged day, DTE, width, symbol, or threshold mutants.",
+      "status": "rejected",
+      "rationale": "The exact paired-control family and nearby mutants are quarantined in the hypothesis audit, schema-v2 closed_families, merged NEXT, and final reports."
+    },
+    {
+      "finding": "F3: accept missing executor closeout, moa-exec, compounding, learning, and durable hypothesis evidence links as non-blocking residue.",
+      "status": "rejected",
+      "rationale": "Finalization closed each required artifact and changed the rejected hypothesis evidence link from ignored cache state to the tracked canonical JSON."
+    },
+    {
+      "finding": "F4: treat the challenger-focused four-test run as sufficient final verification.",
+      "status": "rejected",
+      "rationale": "Finalizer verification expanded the focused suite to six behavior/boundary/negative-control tests, ran all 248 unittests, compiled changed Python, ran platform smoke, and validated exact artifact invariants."
+    },
+    {
+      "finding": "F5: permit the dormant option branch to use a same-entry-bar 30-session volatility estimate if the branch is reused later.",
+      "status": "repaired",
+      "rationale": "The volatility proxy now shifts one completed bar after the fully formed 30-return window; the boundary test proves an entry-bar close shock cannot alter that entry's volatility and first validity occurs only after the lag.",
+      "repair_artifacts": [
+        "scripts/spy_turn_of_month_event_study.py"
+      ],
+      "test_artifacts": [
+        "tests/test_spy_turn_of_month_event_study.py"
+      ]
+    },
+    {
+      "finding": "F6: leave readiness, LATEST, merge, INDEX, and coverage surfaces at challenger-partial or stale counts.",
+      "status": "rejected",
+      "rationale": "Final surfaces are regenerated to finalizer-green, 246 hypotheses including one rejected TOM audit, 70 evolve artifacts, no living leader, and the merged reassessment NEXT with BUILD/L0 authority unchanged."
+    },
+    {
+      "finding": "F7: continue TOM or nearby options-entry-filter volume despite the burst-stop requirement.",
+      "status": "rejected",
+      "rationale": "Exactly one NEXT requires a search-design reassessment across remaining open mechanisms and explicitly bans TOM mutants and familiar options-filter volume."
+    },
+    {
+      "finding": "Finalizer evidence audit: allow non-standard NaN tokens for the calendar-impossible complement in the canonical JSON artifact.",
+      "status": "repaired",
+      "rationale": "Unavailable values are normalized to JSON null, generation sets allow_nan=false, and a strict serialization boundary test covers the November 2018 case; the exact strategy metrics and decision were unchanged on rerun.",
+      "repair_artifacts": [
+        "scripts/spy_turn_of_month_event_study.py"
+      ],
+      "test_artifacts": [
+        "tests/test_spy_turn_of_month_event_study.py"
+      ]
+    }
+  ],
+  "closed_families": [
+    "spy-turn-of-month-first-session-5day-pcs-21dte-020delta-1wide-dualcost-60-40-v1"
+  ],
+  "data_dependencies": [],
+  "evidence_wake_condition": null,
+  "next": "SEARCH_DESIGN_REASSESSMENT_AFTER_TOM_CLOSE: inventory remaining open non-quarantined economic mechanisms and select exactly one outcome-independent underlying pre-screen with placebo/complement controls and chronological train-to-untouched-holdout evaluation before option pricing; if no materially novel mechanism can be stated, stop and redesign rather than buy familiar PCS volume; do not reopen TOM mutants or nearby options-filter volume."
+}
