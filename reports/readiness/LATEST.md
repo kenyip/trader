@@ -13,6 +13,8 @@
 
 ---
 
+**2026-07-15T0730 RTH condition (mid-session ~10:30 ET):** Freshness pass (engine day 2026-07-15 for TSLL/TSLA/AMD/SMCI/PLTR/BAC/SOFI/XOM; live YF intraday drift vs engine, not multi-day stale; XOM session-day recovered vs open lag). Scout reconfirm 14 eligible / 0 intents / 14 STAND_ASIDE (TSLL/TSLA/SMCI bearish; PLTR neutral thin premium). Historical PCS reference `b195f5fe` (no living leader) honest bear STAND_ASIDE (`bear_dte=0`). Real paper open risk 0 (stub smoke ignored). Autonomy dry-run 0 proposals; agentic still blocked. Archive already **3/3** / `provider_backtest_eligible=true` — no densify thrash. No paper place, evolve, shadow, arm, or live. C-row: opportunity filters fail → stand-aside success; B6 still waiting non-bear capital-fit OPEN_PCS. Same class as 0631 open. Checkout clean on integrated `main` before report write. Capital path empty; living leader none.
+
 # Go-live readiness scoreboard — 2026-07-15T0631 RTH open + concurrent BUILD (BUILD/L0; capital path empty)
 
 Source: `docs/GO_LIVE_READINESS.md`. Honest pass/fail. Not an arm.
