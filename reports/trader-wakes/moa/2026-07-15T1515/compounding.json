@@ -1,0 +1,131 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-15T1515",
+  "loop_signature": "build|time-series-20d-breakout-continuation|prior-only-same-symbol-matched-controls|train60|f1-advance|holdout-unread",
+  "economic_mechanism": "Gradual information diffusion and trend-following demand may cause a completed close at least 2% above the prior completed 20-session high, while above a fully warmed prior-completed SMA100, to retain positive fixed-ten-session underlying continuation versus earlier same-symbol near-high non-breakout controls.",
+  "candidate_or_family_scope": "MULTINAME_BREAKOUT_BULL_CALL_14D_V1 / TIME_SERIES_20D_BREAKOUT_CONTINUATION on the frozen AAPL, MSFT, NVDA, AMZN, META, GOOGL, AMD, TSLA adjusted-close panel; next-session entry after the completed-bar signal; prior-only same-symbol controls matched without replacement; non-overlapping pair windows; chronological 60/40 blueprint split; one-lot future 14-DTE $1-wide bull-call debit spread is structural only, capital_fit_usd=max_loss_usd=100, max_lots=1 before closing friction.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F1_TRAIN",
+  "falsifier": "On the chronological first 60% of the frozen matched blueprints: fewer than 80 pairs or 6 represented symbols, non-positive treated mean after the labeled symmetric 20-bps underlying absolute-level sensitivity, non-positive paired excess, non-positive one-sided 90% five-pair-block bootstrap lower bound, or any chronology, reuse, overlap, or match-bound violation closes the exact family.",
+  "outcome": "BLOCKER_REMOVED_AND_RETESTED",
+  "retest_decision": "STRATEGY_ADVANCED",
+  "strategy_advancement": {
+    "advanced": true,
+    "summary": "The mandatory prior-epoch three-wake no-advance burst stop was resolved by an accurate written reassessment, a new evidence-class epoch, and a materially different prior-only within-symbol event-study implementation. The frozen retest passed all six train checks with 168 pairs across eight symbols, +1.5533% paired excess, and +0.2947% LB90, advancing only F0_MECHANISM to F1_TRAIN under L0. Holdout 113 remains outcome-unread and option pricing remains zero."
+  },
+  "search_information": {
+    "summary": "This wake replaced threshold variation inside exhausted cross-sectional/event-calendar designs with a prior-only within-symbol event-time continuation design, exercised it in-wake, preserved the narrow pooled advance, and repaired final claim semantics plus epoch-orientation integrity after challenger/finalizer review.",
+    "delta_kinds": [
+      "candidate",
+      "repair",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "repair",
+      "summary": "Built and finalizer-hardened the breakout train lab: strict chronology/holdout boundaries, explicit fixed-horizon versus untested managed-path semantics, approximate 10-session/14-DTE alignment, symmetric-cost cancellation warning, mandatory non-gating holdout concentration diagnostics, and an explicit thin-breadth negative control; also corrected the prior-epoch reassessment/config truth.",
+      "novelty_key": "breakout_f1_claim_boundary_and_epoch_orientation_repair_v1",
+      "artifacts": [
+        "scripts/breakout_continuation_train_lab.py",
+        "tests/test_breakout_continuation_train_lab.py",
+        "docs/SEARCH_DESIGN_REASSESSMENT_2026-07-15T1515.md",
+        "configs/search_epoch.json"
+      ]
+    },
+    {
+      "kind": "candidate",
+      "summary": "Exercised the frozen multi-name breakout continuation family and preserved a narrow pooled F1 train advance: 281 outcome-independent blueprints, 168 train pairs across eight symbols, +1.5533% paired excess, +0.2947% LB90, zero integrity violations, 113 holdout rows outcome-unread, and zero option-pricing calls; concentration diagnostics prevent universal or robust-paper overclaim.",
+      "novelty_key": "multiname_breakout_bull_call_14d_v1_f1_train_advance",
+      "artifacts": [
+        "reports/trader-wakes/2026-07-15T1515-moa-exec.md",
+        "reports/trader-wakes/2026-07-15T1515-moa-merge.md",
+        "reports/readiness/LATEST.md"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "Honored the prior epoch's three-wake no-advance burst stop, kept its exact closed families quarantined, and opened the time-series-breakout-payoff epoch with exactly one frozen holdout continuation seed rather than resuming threshold churn.",
+      "novelty_key": "viable_path_burst_stop_to_breakout_epoch_transition",
+      "artifacts": [
+        "configs/search_epoch.json",
+        "docs/SEARCH_DESIGN_REASSESSMENT_2026-07-15T1515.md",
+        "reports/trader-wakes/INDEX.md"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "The pooled train pass is concentration-fragile: MSFT/NVDA paired means are negative, leave-TSLA-out LB90 is negative, and only the middle chronological tertile has a positive LB90.",
+      "status": "repaired",
+      "rationale": "The payload now predeclares per-symbol, leave-one-symbol-out, and chronological-tertile diagnostics as mandatory non-gating reporting if the untouched holdout is opened; final readiness and wake surfaces explicitly reject universal-by-symbol, temporal-uniformity, or TSLA-independence claims.",
+      "repair_artifacts": [
+        "scripts/breakout_continuation_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_breakout_continuation_train_lab.py"
+      ]
+    },
+    {
+      "finding": "The fixed ten-session outcome had been described as if the proposed early invalidation and 50%-of-maximum option management were simulated.",
+      "status": "repaired",
+      "rationale": "Exit and management fields now distinguish the measured fixed-ten-session underlying outcome from an explicitly untested future option plan.",
+      "repair_artifacts": [
+        "scripts/breakout_continuation_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_breakout_continuation_train_lab.py"
+      ]
+    },
+    {
+      "finding": "A ten-session underlying continuation result does not establish payoff capture for a 14-DTE debit spread.",
+      "status": "repaired",
+      "rationale": "The machine-readable payload and derived surfaces now label the relationship as approximate directional pre-screening only and disclaim theta, vega, bid/ask, option-cost, and managed-exit evidence.",
+      "repair_artifacts": [
+        "scripts/breakout_continuation_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_breakout_continuation_train_lab.py"
+      ]
+    },
+    {
+      "finding": "Symmetric 20-bps subtraction cancels from treated-minus-control excess and is not a differential friction or option-cost robustness test.",
+      "status": "repaired",
+      "rationale": "Claim scope now identifies it as symmetric absolute-level underlying sensitivity, states that it does not stress paired excess, and rejects any option execution-cost interpretation.",
+      "repair_artifacts": [
+        "scripts/breakout_continuation_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_breakout_continuation_train_lab.py"
+      ]
+    },
+    {
+      "finding": "Minimum-symbol breadth needed an explicit adversarial test, and holdout serialization had to remain outcome-free.",
+      "status": "repaired",
+      "rationale": "A new negative control constructs otherwise passing return/bootstrap evidence in one symbol and proves the breadth gate fails when two are required; existing strict-JSON tests continue to prove no holdout outcome metric is serialized.",
+      "repair_artifacts": [
+        "scripts/breakout_continuation_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_breakout_continuation_train_lab.py"
+      ]
+    },
+    {
+      "finding": "Executor full-suite success was self-attested and required independent finalizer verification.",
+      "status": "rejected",
+      "rationale": "This was an evidence requirement rather than a code defect. The finalizer independently ran focused 8/8, adjacent 29/29, compile, exact substantive reproduction, coverage, platform smoke, and the full 312/312 suite; exact commands and results are recorded in learning-promotion.md."
+    },
+    {
+      "finding": "NEXT must prevent option pricing or retuning before a one-shot untouched holdout decision.",
+      "status": "rejected",
+      "rationale": "The merged NEXT already preserves the frozen 281-blueprint geometry, opens the reserved 113 exactly once, keeps concentration diagnostics non-gating, and prohibits option pricing unless F2 advances; no corrective machinery was required."
+    }
+  ],
+  "closed_families": [],
+  "data_dependencies": [
+    "Frozen adjusted-close cache inputs for the exact eight-symbol 2016-01-01 to end-exclusive 2026-07-15 panel",
+    "Reserved final 113 outcome-independent blueprints reconstructed under the unchanged matcher and read exactly once",
+    "No option marks or option surfaces unless the untouched pooled holdout advances F1_TRAIN to F2_UNTOUCHED_HOLDOUT"
+  ],
+  "next": "BREAKOUT_UNTOUCHED_HOLDOUT_ONCE: reconstruct the exact frozen 281 blueprints under unchanged panel, signal, match bounds, horizon, and 20-bps label; select the reserved final 113 without retuning; read outcomes exactly once; decide F1 to F2 advance or FAMILY_CLOSED under the unchanged pooled discovery gate; mandatorily report per-symbol, leave-one-symbol-out, and chronological-tertile concentration diagnostics as non-gating context; price no options unless holdout advances; no registry, seat, paper, shadow, arm, broker, or live."
+}

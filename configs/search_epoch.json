@@ -1,31 +1,59 @@
 {
-  "epoch_id": "2026-07-15-viable-path",
+  "epoch_id": "2026-07-15-time-series-breakout-payoff",
   "status": "active",
-  "started_stamp": "2026-07-15T0024",
+  "started_stamp": "2026-07-15T1515",
   "reassessment_complete": true,
-  "reassessment_doc": "docs/SEARCH_DESIGN_REASSESSMENT_2026-07-15.md",
+  "reassessment_doc": "docs/SEARCH_DESIGN_REASSESSMENT_2026-07-15T1515.md",
   "post_pause_doc": "docs/CONTINUOUS_DENSIFY_POST_PAUSE.md",
   "charter_doc": "docs/TRADER_RESTART_CHARTER.md",
   "goal_doc": "configs/build_lab_free_goal.txt",
-  "prior_epoch_id": "2026-07-14-reassess",
-  "summary": "Second densify epoch after three F0 FAMILY_CLOSED and zero STRATEGY_ADVANCED in 2026-07-14-reassess. Quarantine those exact families. Prefer independent defined-risk income, stand-aside policy, structure classes not yet closed, and Ken soft prior (theta + swing with positive long bias; TSLA/TSLL allowed). Success = first STRATEGY_ADVANCED F0\u2192F1 under discovery bar.",
-  "epoch_closed_families_from_prior": [
-    "pcs-monday-45dte-exit21-vs-exit5-train-proxy",
-    "MONTHLY_CROSS_SECTION_LOW_HV_FORWARD_DRIFT",
-    "MONTHLY_CROSS_SECTION_12_1_MOMENTUM_FORWARD_DRIFT"
-  ],
+  "prior_epoch_id": "2026-07-15-viable-path",
+  "summary": "Successor epoch after three F0 no-advance closes in 2026-07-15-viable-path. The first frozen within-symbol event-time continuation experiment advanced only F0 to pooled F1/L0. The next and only candidate action is the unchanged one-shot untouched holdout; prior closed families remain quarantined and option pricing remains forbidden unless F2 advances.",
+  "mechanism_lane": "time-series 20-session breakout continuation with a conditional bounded positive-delta debit expression",
+  "primary_evidence_class": "within-symbol prior-only matched event study with untouched chronological holdout",
+  "frozen_first_experiment": {
+    "candidate_id": "MULTINAME_BREAKOUT_BULL_CALL_14D_V1",
+    "symbols": [
+      "AAPL",
+      "MSFT",
+      "NVDA",
+      "AMZN",
+      "META",
+      "GOOGL",
+      "AMD",
+      "TSLA"
+    ],
+    "history_start": "2016-01-01",
+    "history_end_exclusive": "2026-07-15",
+    "breakout_lookback_sessions": 20,
+    "breakout_ratio_min": 1.02,
+    "control_breakout_ratio_bounds": [
+      0.95,
+      1.0
+    ],
+    "trend_lookback_sessions": 100,
+    "forward_sessions": 10,
+    "train_fraction": 0.6,
+    "minimum_train_pairs": 80,
+    "minimum_train_symbols": 6,
+    "round_trip_underlying_cost_bps": 20,
+    "bootstrap_confidence": 0.9,
+    "bootstrap_block_length_pairs": 5
+  },
   "discovery_bar": {
-    "purpose": "Signal-only progress for F0\u2192F1 and F1\u2192F2 on labeled proxy or claim-appropriate data",
+    "purpose": "Signal-only progress for F0→F1 and F1→F2 on labeled proxy or claim-appropriate data",
     "required": [
       "no future leakage / chronological integrity",
-      "labeled cost semantics (proxy vs observed)",
-      "non-vacuous trade count on the claimed partition",
+      "outcome-independent selection",
+      "labeled cost semantics and provenance",
+      "non-vacuous predeclared population floor",
       "predeclared falsifier",
+      "complete Layered Edge Stack",
       "train before untouched holdout when claiming F2"
     ],
     "may_use_looser_risk_thresholds": true,
     "cannot_earn_L1_or_capital_seat": true,
-    "notes": "Discovery survivors are research signals only until capital-seat bar clears."
+    "notes": "Discovery survivors are research signals only until the capital-seat bar clears; proxy-only or underlying-only evidence cannot grant paper eligibility."
   },
   "capital_seat_bar": {
     "purpose": "L1 sim edge / paper-path eligibility for the $3k sleeve",
@@ -36,24 +64,43 @@
       "defined-risk preferred or explicit worst-case bound fitting sleeve",
       "non-vacuous after-cost edge on dual cost axes",
       "B3 density / multi-regime evidence appropriate to claim",
-      "competitive max-loss and window DD vs absolute gates",
-      "honest claim scope; proxy alone cannot earn L1"
+      "competitive max-loss and window DD versus absolute gates",
+      "claim-appropriate option-payoff and fill evidence",
+      "proxy-only or underlying-only evidence cannot earn L1"
     ]
   },
   "ken_soft_research_prior": {
     "status": "hypothesis_class_only_not_mandate",
     "text": "Prefer exploring small repeatable profits from time decay and price swings while preserving a positive long-term directional bias; TSLA/TSLL high-beta liquid options are welcome when capital-fit, not as a plumbing tunnel."
   },
-  "epoch_success_definition": "First STRATEGY_ADVANCED that moves a named candidate at least F0\u2192F1 under discovery bar with claim-appropriate evidence; capital seat still requires capital_seat_bar for L1/paper.",
+  "prior_epoch": {
+    "epoch_id": "2026-07-15-viable-path",
+    "started_stamp": "2026-07-15T0024",
+    "completed_wakes_without_strategy_advance": 3,
+    "disposition": "burst stopped; closed families remain quarantined"
+  },
+  "epoch_success_definition": "Advance MULTINAME_BREAKOUT_BULL_CALL_14D_V1 from F1_TRAIN to F2_UNTOUCHED_HOLDOUT under the unchanged pooled discovery gate, or close the exact family; no option stage or capital seat unless F2 first advances.",
+  "epoch_closed_families_from_prior": [
+    "TSLL_TSLA_5D_TRACKING_SHORTFALL_REBOUND",
+    "ONE_RISK_UNIT_CADENCE_POLICY_F0: exact ONE_RISK_UNIT_CADENCE_PCS_V1 global-one-unit fixed-priority catalog-14-DTE PCS implementation across the frozen eight-symbol panel and dual cost axes",
+    "MONTHLY_OPEX_POST_EXPIRY_BROAD_INDEX_DRIFT: exact SPY/QQQ/IWM/DIA first-Friday-control next-session five-session 60/40 10-bps three-month-block-bootstrap specification"
+  ],
   "do_not": [
     "reopen closed families without a genuinely new evidence class",
-    "peek reserved holdouts after F0 fail",
+    "retune the frozen breakout panel, signal, match bounds, horizon, split, or cost label before the one-shot holdout decision",
+    "peek reserved holdout outcomes outside the one-shot validator",
+    "price options before the untouched holdout advances to F2",
     "treat capability-only completion as strategy progress",
-    "promote discovery-only survivors to capital path",
+    "promote discovery-only survivors to the capital path",
     "auto shadow/live/arm",
     "force paper under failing RTH filters",
     "densify through burst-stop without a new written reassessment"
   ],
-  "activated_at": "2026-07-15T00:24:16.091078-07:00",
-  "activated_from": "configs/search_epoch_next.json"
+  "notes": [
+    "Epoch opened by the 2026-07-15T1515 wake.",
+    "The first experiment advanced only to F1_TRAIN/L0; option pricing deliberately did not run.",
+    "The next wake must resolve the frozen untouched holdout as F2 advance or exact-family close."
+  ],
+  "activated_at": "2026-07-15T15:15:00-07:00",
+  "activated_from": "docs/SEARCH_DESIGN_REASSESSMENT_2026-07-15T1515.md"
 }
