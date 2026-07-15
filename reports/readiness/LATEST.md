@@ -1,3 +1,16 @@
+# Go-live readiness scoreboard — search epoch 2026-07-14-reassess (L0 BUILD; capital path empty)
+
+**Search restart (2026-07-14):** Active epoch `2026-07-14-reassess` (`configs/search_epoch.json`). Written reassessment: `docs/SEARCH_DESIGN_REASSESSMENT_2026-07-14.md`. Charter: `docs/TRADER_RESTART_CHARTER.md`.
+
+- Prior-epoch no-advance streak / `DIMINISHING_RETURNS` is **historical context only** — pivot/burst-stop now count **inside this epoch only** (currently 0 epoch wakes).
+- **Discovery bar** for F0→F1 / F1→F2 signals (labeled discovery OK; **not L1** and cannot grant a capital seat).
+- **Capital-seat bar** for paper-path eligibility (max loss ≤$300, window DD ≤$75, dual-cost non-vacuous, dense B3). Still **not L1** until a living seat clears those gates.
+- Living leader **none**; capital path **empty**; paper/shadow/arm/live unchanged.
+- Cron: RTH eval active; BUILD densify **daily 16:45 + evening 20:00 PT** resumed for the new epoch (other densify slots still paused). Cron script timeout raised to 10800s for dual labs.
+- Next strategy action: zero-input `just trader-build-lab` choosing an open mechanism outside closed families.
+
+---
+
 # Go-live readiness scoreboard — 2026-07-14T1231 RTH reconfirm + 0859 MoA (BUILD/L0; capital path empty)
 
 Source: `docs/GO_LIVE_READINESS.md`. Honest pass/fail. Not an arm.

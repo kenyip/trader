@@ -602,6 +602,55 @@ class TraderBuildCompoundingTest(unittest.TestCase):
         self.assertTrue(result["strategy_burst_stop_required"])
         self.assertTrue(any("stop the burst" in reason for reason in result["redirect_reasons"]))
 
+    def test_active_search_epoch_resets_burst_stop_and_supersedes_prior_dr(self):
+        for stamp in ("2026-01-01T0000", "2026-01-01T0100", "2026-01-01T0200"):
+            run, _ = self._handoff(
+                stamp,
+                loop_signature=f"sig-{stamp}",
+                outcome="FAMILY_CLOSED" if stamp != "2026-01-01T0200" else "EVIDENCE_WAIT",
+                next="DIMINISHING_RETURNS" if stamp == "2026-01-01T0200" else "continue",
+            )
+            if stamp == "2026-01-01T0200":
+                row = json.loads((run / "compounding.json").read_text())
+                row["outcome"] = "DIMINISHING_RETURNS"
+                # schema v2 doesn't allow DIMINISHING_RETURNS for new handoffs, but
+                # orientation still reads historical schema-1 style stops; force v1.
+                row["schema_version"] = 1
+                row.pop("strategy_advancement", None)
+                row.pop("economic_mechanism", None)
+                (run / "compounding.json").write_text(json.dumps(row) + "\n")
+            self._git("add", str(run.relative_to(self.repo)))
+            self._git("commit", "-m", stamp)
+            self._git("push", "origin", "main")
+        epoch_path = self.repo / "configs" / "search_epoch.json"
+        epoch_path.parent.mkdir(parents=True, exist_ok=True)
+        epoch_path.write_text(
+            json.dumps(
+                {
+                    "epoch_id": "test-epoch",
+                    "status": "active",
+                    "started_stamp": "2026-01-01T0300",
+                    "reassessment_complete": True,
+                    "discovery_bar": {"purpose": "signal", "cannot_earn_L1_or_capital_seat": True},
+                    "capital_seat_bar": {"max_loss_usd_one_lot": 300, "window_max_dd_usd": 75},
+                }
+            )
+            + "\n"
+        )
+        result = build_context(
+            self.repo, "2026-01-01T0400", self.repo / "reports" / "current" / "orientation.json"
+        )
+        self.assertEqual(result["epoch_record_count"], 0)
+        self.assertEqual(result["consecutive_no_strategy_advance"], 0)
+        self.assertFalse(result["strategy_burst_stop_required"])
+        self.assertFalse(result["strategy_pivot_required"])
+        self.assertEqual(result["search_epoch"]["epoch_id"], "test-epoch")
+        self.assertTrue(result["search_epoch"]["reassessment_complete"])
+        self.assertTrue(any("superseded by completed search-design" in r for r in result["redirect_reasons"]))
+        self.assertFalse(any("last completed wake declared DIMINISHING_RETURNS" in r for r in result["redirect_reasons"]))
+        self.assertIn("discovery_bar", result)
+        self.assertIn("capital_seat_bar", result)
+
 
 if __name__ == "__main__":
     unittest.main()

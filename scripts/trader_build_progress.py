@@ -40,6 +40,8 @@ try:
         LEGACY_SCHEMA_VERSION,
         SCHEMA_VERSION,
         STRATEGY_OUTCOMES,
+        load_search_epoch,
+        records_for_epoch,
         strategy_advanced,
     )
 except ImportError:  # pragma: no cover
@@ -50,6 +52,8 @@ except ImportError:  # pragma: no cover
         LEGACY_SCHEMA_VERSION,
         SCHEMA_VERSION,
         STRATEGY_OUTCOMES,
+        load_search_epoch,
+        records_for_epoch,
         strategy_advanced,
     )
 
@@ -459,8 +463,12 @@ def living_strategy_state(records: list[dict[str, Any]] | None = None) -> dict[s
     }
 
 
-def consecutive_no_strategy_advance(records: list[dict[str, Any]] | None = None) -> int:
+def consecutive_no_strategy_advance(
+    records: list[dict[str, Any]] | None = None, *, epoch_scope: bool = True
+) -> int:
     rows = records if records is not None else _iter_integrated_compounding()
+    if epoch_scope:
+        rows = records_for_epoch(rows, load_search_epoch(REPO))
     streak = 0
     for row in reversed(rows):
         if strategy_advanced(row):
@@ -522,8 +530,12 @@ def render_scoreboard(rows: list[dict[str, Any]], *, all_records: list[dict[str,
 
     records = all_records if all_records is not None else _iter_integrated_compounding()
     living = living_strategy_state(records)
-    streak = consecutive_no_strategy_advance(records)
+    historical_streak = consecutive_no_strategy_advance(records, epoch_scope=False)
+    streak = consecutive_no_strategy_advance(records, epoch_scope=True)
     pivot = pivot_stop_state(streak)
+    epoch = load_search_epoch(REPO) or {}
+    epoch_id = epoch.get("epoch_id") or "none"
+    epoch_started = epoch.get("started_stamp") or "—"
 
     # Secondary research-process stats (clearly labeled; never strategy closeness).
     process_scores = [r["research_process_score_0_5"] for r in complete]
@@ -541,6 +553,7 @@ def render_scoreboard(rows: list[dict[str, Any]], *, all_records: list[dict[str,
         "",
         "## Strategy-convergence scorecard",
         "",
+        f"- Search epoch: **{epoch_id}** (started_stamp `{epoch_started}`)",
         f"- Stamps scored: **{len(rows)}** (complete **{len(complete)}**)",
         f"- Strategy advances (BETTER): **{advance_count}** · rate **{advance_rate:.0%}** of complete",
         f"- INFORMATIVE_BUT_NOT_CLOSER: **{len(informative)}** · INVALID_THRASH: **{len(thrash)}**",
@@ -551,7 +564,8 @@ def render_scoreboard(rows: list[dict[str, Any]], *, all_records: list[dict[str,
             else " (none)"
         ),
         f"- Furthest living funnel stage: **{living['furthest_living_funnel_stage'] or '—'}**",
-        f"- Consecutive no-advance streak (integrated history): **{pivot['consecutive_no_strategy_advance']}**",
+        f"- Consecutive no-advance streak (**active epoch**): **{pivot['consecutive_no_strategy_advance']}**",
+        f"- Historical no-advance streak (all integrated, context only): **{historical_streak}**",
         f"- Pivot/stop state: **{pivot['pivot_stop_state']}**"
         + (
             f" (pivot≥2={pivot['strategy_pivot_required']}, burst-stop≥3={pivot['strategy_burst_stop_required']})"

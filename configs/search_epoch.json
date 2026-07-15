@@ -1,0 +1,44 @@
+{
+  "epoch_id": "2026-07-14-reassess",
+  "status": "active",
+  "started_stamp": "2026-07-14T1600",
+  "reassessment_complete": true,
+  "reassessment_doc": "docs/SEARCH_DESIGN_REASSESSMENT_2026-07-14.md",
+  "charter_doc": "docs/TRADER_RESTART_CHARTER.md",
+  "goal_doc": "configs/build_lab_free_goal.txt",
+  "summary": "Search restart on the existing platform after zero STRATEGY_ADVANCED and burst-stop. Closed families remain quarantined. Consecutive no-advance streak for pivot/burst-stop counts only wakes in this epoch.",
+  "discovery_bar": {
+    "purpose": "Signal-only progress for F0→F1 and F1→F2 on labeled proxy or claim-appropriate data",
+    "required": [
+      "no future leakage / chronological integrity",
+      "labeled cost semantics (proxy vs observed)",
+      "non-vacuous trade count on the claimed partition",
+      "predeclared falsifier",
+      "train before untouched holdout when claiming F2"
+    ],
+    "may_use_looser_risk_thresholds": true,
+    "cannot_earn_L1_or_capital_seat": true,
+    "notes": "Discovery survivors are research signals only until capital-seat bar clears."
+  },
+  "capital_seat_bar": {
+    "purpose": "L1 sim edge / paper-path eligibility for the $3k sleeve",
+    "max_loss_usd_one_lot": 300,
+    "window_max_dd_usd": 75,
+    "dense_negative_windows_max": 5,
+    "required": [
+      "defined-risk preferred or explicit worst-case bound fitting sleeve",
+      "non-vacuous after-cost edge on dual cost axes",
+      "B3 density / multi-regime evidence appropriate to claim",
+      "competitive max-loss and window DD vs absolute gates",
+      "honest claim scope; proxy alone cannot earn L1"
+    ]
+  },
+  "epoch_success_definition": "First STRATEGY_ADVANCED that moves a named candidate at least F0→F1 under discovery bar with claim-appropriate evidence; capital seat still requires capital_seat_bar for L1/paper.",
+  "do_not": [
+    "reopen closed families without a genuinely new evidence class",
+    "treat capability-only completion as strategy progress",
+    "promote discovery-only survivors to capital path",
+    "auto shadow/live/arm",
+    "force paper under failing RTH filters"
+  ]
+}

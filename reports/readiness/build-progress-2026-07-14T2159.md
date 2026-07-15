@@ -1,4 +1,4 @@
-# BUILD strategy-convergence scoreboard — 2026-07-14T2202
+# BUILD strategy-convergence scoreboard — 2026-07-14T2159
 
 Primary question: **are the new runs better toward a living strategy?**
 Uses the machine-enforced strategy-run outcome contract (`compounding.json` schema v2;
@@ -7,15 +7,13 @@ scores are **not** strategy closeness. See `docs/BUILD_PROGRESS_AND_CONFIDENCE.m
 
 ## Strategy-convergence scorecard
 
-- Search epoch: **2026-07-14-reassess** (started_stamp `2026-07-14T1600`)
 - Stamps scored: **12** (complete **12**)
 - Strategy advances (BETTER): **0** · rate **0%** of complete
 - INFORMATIVE_BUT_NOT_CLOSER: **12** · INVALID_THRASH: **0**
 - Living candidates: **0** (none)
 - Furthest living funnel stage: **—**
-- Consecutive no-advance streak (**active epoch**): **0**
-- Historical no-advance streak (all integrated, context only): **19**
-- Pivot/stop state: **none** (pivot≥2=False, burst-stop≥3=False)
+- Consecutive no-advance streak (integrated history): **19**
+- Pivot/stop state: **strategy_burst_stop_required** (pivot≥2=True, burst-stop≥3=True)
 
 ### Per-run strategy verdicts
 

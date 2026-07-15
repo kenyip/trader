@@ -107,12 +107,12 @@ def main() -> int:
 
     if pivot["strategy_burst_stop_required"]:
         drift.append(
-            f"ALERT: {streak} consecutive integrated wakes without strategy advance "
+            f"ALERT: {streak} consecutive epoch wakes without strategy advance "
             "(strategy_burst_stop_required — stop burst; reassess search design/data)"
         )
     elif pivot["strategy_pivot_required"]:
         drift.append(
-            f"ALERT: {streak} consecutive integrated wakes without strategy advance "
+            f"ALERT: {streak} consecutive epoch wakes without strategy advance "
             "(strategy_pivot_required — pivot mechanism/evidence class)"
         )
     if len(scores) >= 3 and all(v == VERDICT_THRASH for _, v, *_ in scores[-3:]):
@@ -169,7 +169,7 @@ def main() -> int:
         f"- BETTER / INFORMATIVE / THRASH: **{better_n}** / **{informative_n}** / **{thrash_n}**",
         f"- Living candidates: **{living['living_candidate_count']}** · furthest stage: "
         f"**{living['furthest_living_funnel_stage'] or '—'}**",
-        f"- Consecutive no-advance streak: **{streak}** · pivot/stop: **{pivot['pivot_stop_state']}**",
+        f"- Consecutive no-advance streak (**active epoch**): **{streak}** · pivot/stop: **{pivot['pivot_stop_state']}**",
         f"- Latest wake file present: **{LATEST.exists()}**",
         f"- Readiness language: **{'L1-positive?' if l1 else 'L0/BUILD (expected until edge)'}**",
         f"- Lock: **{'yes' if LOCK.exists() else 'no'}**",

@@ -55,6 +55,48 @@ class CompoundingError(RuntimeError):
     pass
 
 
+SEARCH_EPOCH_PATH = Path("configs/search_epoch.json")
+
+
+def load_search_epoch(repo: Path) -> dict[str, Any] | None:
+    """Load optional active search epoch (anti-drift + streak scoping)."""
+    path = repo / SEARCH_EPOCH_PATH
+    if not path.is_file():
+        return None
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(value, dict):
+        return None
+    status = str(value.get("status") or "active").strip().lower()
+    if status != "active":
+        return None
+    return value
+
+
+def _epoch_started_stamp(epoch: dict[str, Any] | None) -> str | None:
+    if not isinstance(epoch, dict):
+        return None
+    stamp = str(epoch.get("started_stamp") or "").strip()
+    return stamp or None
+
+
+def records_for_epoch(
+    records: list[dict[str, Any]], epoch: dict[str, Any] | None
+) -> list[dict[str, Any]]:
+    """Return records at-or-after the active epoch started_stamp (exclusive prior history)."""
+    started = _epoch_started_stamp(epoch)
+    if not started:
+        return list(records)
+    scoped: list[dict[str, Any]] = []
+    for row in records:
+        stamp = str(row.get("stamp") or "").strip()
+        if stamp and stamp >= started:
+            scoped.append(row)
+    return scoped
+
+
 def _load(path: Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -220,6 +262,8 @@ def assess_research_routes(repo: Path) -> dict[str, Any]:
 
 def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
     records = _previous_records(repo, stamp)
+    epoch = load_search_epoch(repo)
+    epoch_records = records_for_epoch(records, epoch)
     closed = sorted(
         {
             str(family)
@@ -228,6 +272,8 @@ def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
             if str(family).strip()
         }
     )
+    # Recent / signature thrash checks stay global so repeated DNA is still visible,
+    # but pivot/burst-stop streaks are epoch-scoped after a search restart.
     recent = records[-5:]
     signatures = [str(row.get("loop_signature", "")) for row in recent]
     novelty = sorted(
@@ -239,16 +285,36 @@ def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
         }
     )
     redirect_reasons: list[str] = []
-    if records and records[-1].get("outcome") in {"DIMINISHING_RETURNS", "EVIDENCE_WAIT"}:
-        if records[-1].get("outcome") == "DIMINISHING_RETURNS":
+    last_global = records[-1] if records else {}
+    last_global_stamp = str(last_global.get("stamp") or "").strip()
+    epoch_started = _epoch_started_stamp(epoch)
+    last_is_pre_epoch = bool(
+        epoch_started and last_global_stamp and last_global_stamp < epoch_started
+    )
+    if (
+        records
+        and last_global.get("outcome") in {"DIMINISHING_RETURNS", "EVIDENCE_WAIT"}
+        and not (last_is_pre_epoch and isinstance(epoch, dict) and epoch.get("reassessment_complete"))
+    ):
+        if last_global.get("outcome") == "DIMINISHING_RETURNS":
             redirect_reasons.append("last completed wake declared DIMINISHING_RETURNS")
         else:
             redirect_reasons.append("last completed wake declared EVIDENCE_WAIT")
+    elif (
+        last_is_pre_epoch
+        and isinstance(epoch, dict)
+        and epoch.get("reassessment_complete")
+        and last_global.get("outcome") in {"DIMINISHING_RETURNS", "EVIDENCE_WAIT"}
+    ):
+        redirect_reasons.append(
+            "prior-epoch stop/wait was superseded by completed search-design reassessment; "
+            f"active epoch {epoch.get('epoch_id')!r} starts at stamp {epoch_started!r}"
+        )
     if len(signatures) >= 2 and signatures[-1] and signatures[-1] == signatures[-2]:
         redirect_reasons.append(f"last two completed wakes repeated loop signature {signatures[-1]!r}")
 
     consecutive_no_advance = 0
-    for row in reversed(records):
+    for row in reversed(epoch_records):
         if strategy_advanced(row):
             break
         consecutive_no_advance += 1
@@ -256,23 +322,24 @@ def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
     strategy_burst_stop_required = consecutive_no_advance >= 3
     if strategy_pivot_required:
         redirect_reasons.append(
-            f"{consecutive_no_advance} consecutive completed wakes without STRATEGY_ADVANCED; "
+            f"{consecutive_no_advance} consecutive epoch wakes without STRATEGY_ADVANCED; "
             "pivot to a materially different economic mechanism or evidence class"
         )
     if strategy_burst_stop_required:
         redirect_reasons.append(
-            "three or more consecutive completed wakes without STRATEGY_ADVANCED; "
+            "three or more consecutive epoch wakes without STRATEGY_ADVANCED; "
             "stop the burst and reassess search design/data rather than buying wake volume"
         )
 
     research_routes = assess_research_routes(repo)
-    last = records[-1] if records else {}
+    last = last_global
     last_dependency_text = " ".join(
         [str(last.get("next", "")), *(str(value) for value in last.get("data_dependencies", []))]
     ).lower()
     archive_dependent_stop = bool(
         last.get("outcome") in {"DIMINISHING_RETURNS", "EVIDENCE_WAIT"}
         and any(token in last_dependency_text for token in ("archive", "observed option", "market date"))
+        and not (last_is_pre_epoch and isinstance(epoch, dict) and epoch.get("reassessment_complete"))
     )
     independent_route_open = any(
         name != "observed_historical_option_replay" for name in research_routes["executable_routes"]
@@ -283,12 +350,44 @@ def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
             "archive-dependent stop is invalidated by an executable independent research route"
         )
 
+    discovery_bar = (epoch or {}).get("discovery_bar") if isinstance(epoch, dict) else None
+    capital_seat_bar = (epoch or {}).get("capital_seat_bar") if isinstance(epoch, dict) else None
+    if not isinstance(discovery_bar, dict):
+        discovery_bar = {
+            "purpose": "F0→F1 / F1→F2 signal only",
+            "cannot_earn_L1_or_capital_seat": True,
+        }
+    if not isinstance(capital_seat_bar, dict):
+        capital_seat_bar = {
+            "purpose": "L1 / paper-path eligibility",
+            "max_loss_usd_one_lot": 300,
+            "window_max_dd_usd": 75,
+            "dense_negative_windows_max": 5,
+        }
+
     payload = {
         "schema_version": SCHEMA_VERSION,
         "stamp": stamp,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source": "integrated prior compounding.json records",
         "prior_record_count": len(records),
+        "epoch_record_count": len(epoch_records),
+        "search_epoch": {
+            "epoch_id": (epoch or {}).get("epoch_id") if isinstance(epoch, dict) else None,
+            "started_stamp": epoch_started,
+            "reassessment_complete": bool(
+                isinstance(epoch, dict) and epoch.get("reassessment_complete")
+            ),
+            "reassessment_doc": (epoch or {}).get("reassessment_doc")
+            if isinstance(epoch, dict)
+            else None,
+            "charter_doc": (epoch or {}).get("charter_doc") if isinstance(epoch, dict) else None,
+            "epoch_success_definition": (epoch or {}).get("epoch_success_definition")
+            if isinstance(epoch, dict)
+            else None,
+        },
+        "discovery_bar": discovery_bar,
+        "capital_seat_bar": capital_seat_bar,
         "closed_families": closed,
         "prior_novelty_keys": novelty,
         "recent_runs": [
@@ -321,11 +420,13 @@ def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
         "choice_rule": (
             "Closed families and prior NEXT are context, not allowlists. Reopen only with a named "
             "new evidence class or repaired capability. Operational completion is separate from strategy "
-            "advancement. A blocked observed-option route blocks only dependent claims and cannot alone "
-            "justify stop while another historical route remains informative. After two consecutive wakes "
-            "without STRATEGY_ADVANCED, pivot mechanism/evidence class; after three, stop the burst and "
-            "reassess search design/data. Honest information-exhaustion stops remain valid after open "
-            "routes are assessed for material novelty."
+            "advancement. Use discovery_bar for F0→F1/F1→F2 signals and capital_seat_bar for L1/paper seats; "
+            "discovery survivors never earn L1 alone. A blocked observed-option route blocks only dependent "
+            "claims and cannot alone justify stop while another historical route remains informative. "
+            "After two consecutive epoch wakes without STRATEGY_ADVANCED, pivot mechanism/evidence class; "
+            "after three, stop the burst and reassess search design/data. Prior-epoch DIMINISHING_RETURNS "
+            "is superseded once configs/search_epoch.json marks reassessment_complete. Honest "
+            "information-exhaustion stops remain valid after open routes are assessed for material novelty."
         ),
         "strategy_run_contract": {
             "required_outcome_set": sorted(STRATEGY_OUTCOMES),
@@ -335,7 +436,8 @@ def build_context(repo: Path, stamp: str, out: Path) -> dict[str, Any]:
                 "funnel_stage_before/after, falsifier, and exactly one strategy outcome. "
                 "Capability/tooling alone is not strategy progress unless the unlocked experiment "
                 "is exercised in-wake to STRATEGY_ADVANCED or FAMILY_CLOSED via "
-                "BLOCKER_REMOVED_AND_RETESTED."
+                "BLOCKER_REMOVED_AND_RETESTED. STRATEGY_ADVANCED at F0→F1 may use discovery_bar when "
+                "claim scope is labeled L0 discovery; capital path/L1 still requires capital_seat_bar."
             ),
         },
     }

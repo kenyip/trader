@@ -277,7 +277,7 @@ class TraderBuildProgressTest(unittest.TestCase):
         self.assertEqual(living["living_candidate_count"], 1)
         self.assertEqual(living["living_candidates"], ["pcs-leader"])
         self.assertEqual(living["furthest_living_funnel_stage"], "F2_UNTOUCHED_HOLDOUT")
-        self.assertEqual(progress.consecutive_no_strategy_advance(records), 1)
+        self.assertEqual(progress.consecutive_no_strategy_advance(records, epoch_scope=False), 1)
         # After closing the living candidate, living empties and streak grows from end.
         records.append(
             {
@@ -291,7 +291,7 @@ class TraderBuildProgressTest(unittest.TestCase):
         living2 = progress.living_strategy_state(records)
         self.assertEqual(living2["living_candidate_count"], 0)
         self.assertIsNone(living2["furthest_living_funnel_stage"])
-        self.assertEqual(progress.consecutive_no_strategy_advance(records), 2)
+        self.assertEqual(progress.consecutive_no_strategy_advance(records, epoch_scope=False), 2)
         self.assertEqual(progress.pivot_stop_state(2)["pivot_stop_state"], "strategy_pivot_required")
         self.assertEqual(progress.pivot_stop_state(3)["pivot_stop_state"], "strategy_burst_stop_required")
 

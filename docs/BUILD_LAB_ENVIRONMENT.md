@@ -55,7 +55,18 @@ Each BUILD wake is **goal-driven rather than recipe-driven**. Trader may explore
 
 `RUN COMPLETE` means the executor/challenger/finalizer/integration machinery closed cleanly; it does not itself mean the strategy program advanced. Each wake declares an economic mechanism, candidate/family scope, current stage, falsifier, and one decision to close. Stages are `F0_MECHANISM` → `F1_TRAIN` → `F2_UNTOUCHED_HOLDOUT` → `F3_ROBUST_PAPER_PLAN` → `F4_OBSERVED_PAPER`.
 
-A closeout must classify exactly one outcome: `STRATEGY_ADVANCED`, `FAMILY_CLOSED`, `BLOCKER_REMOVED_AND_RETESTED`, or `EVIDENCE_WAIT`. Tooling/capability-only work is not a complete strategy run unless the unlocked experiment is exercised to an advance-or-close decision in the same wake. Report search information separately from strategy advancement. Two consecutive no-advance wakes force a mechanism/evidence pivot; three stop the burst for search-design/data reassessment.
+A closeout must classify exactly one outcome: `STRATEGY_ADVANCED`, `FAMILY_CLOSED`, `BLOCKER_REMOVED_AND_RETESTED`, or `EVIDENCE_WAIT`. Tooling/capability-only work is not a complete strategy run unless the unlocked experiment is exercised to an advance-or-close decision in the same wake. Report search information separately from strategy advancement. Two consecutive no-advance **epoch** wakes force a mechanism/evidence pivot; three stop the burst for search-design/data reassessment.
+
+### Discovery bar vs capital-seat bar
+
+Do not force capital-seat absolute gates to be the only pass/fail for early funnel learning.
+
+| Bar | Stages | Purpose | Can grant L1 / capital seat? |
+|---|---|---|---|
+| **Discovery bar** | F0→F1, F1→F2 signals | Chronology, labeled costs, non-vacuous n, falsifier; looser risk thresholds OK when claim is labeled L0 discovery | **No** |
+| **Capital-seat bar** | L1 / paper eligibility | Dual-cost non-vacuous edge, B3 density, max loss ≤$300, window DD ≤$75, dense-neg ≤5, defined-risk preferred | **Yes** (still not live) |
+
+Config: `configs/search_epoch.json`. Reassessment: `docs/SEARCH_DESIGN_REASSESSMENT_2026-07-14.md`. Alignment charter: `docs/TRADER_RESTART_CHARTER.md`.
 
 See `docs/INCOME_STRATEGY_COVERAGE.md` for the structure matrix and gaps.
 

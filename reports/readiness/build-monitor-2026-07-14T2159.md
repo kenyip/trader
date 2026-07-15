@@ -1,4 +1,4 @@
-# BUILD fast-track monitor — 2026-07-14T2202 PDT
+# BUILD fast-track monitor — 2026-07-14T2159 PDT
 
 Monitor-only. Program goal: **strategy-funnel advancement → L1 high-confidence strategy** (then B6 paper). Research-process/capability residue is secondary context. Ken/Jarvis do not micromanage axes.
 
@@ -6,7 +6,7 @@ Monitor-only. Program goal: **strategy-funnel advancement → L1 high-confidence
 - Complete duals scored (recent): **6**
 - BETTER / INFORMATIVE / THRASH: **0** / **6** / **0**
 - Living candidates: **0** · furthest stage: **—**
-- Consecutive no-advance streak (**active epoch**): **0** · pivot/stop: **none**
+- Consecutive no-advance streak: **0** · pivot/stop: **none**
 - Latest wake file present: **True**
 - Readiness language: **L1-positive?**
 - Lock: **no**
@@ -41,7 +41,7 @@ Monitor-only. Program goal: **strategy-funnel advancement → L1 high-confidence
 ## Progress script (strategy-first)
 
 ```
-# BUILD strategy-convergence scoreboard — 2026-07-14T2202
+# BUILD strategy-convergence scoreboard — 2026-07-14T2159
 
 Primary question: **are the new runs better toward a living strategy?**
 Uses the machine-enforced strategy-run outcome contract (`compounding.json` schema v2;
@@ -50,15 +50,13 @@ scores are **not** strategy closeness. See `docs/BUILD_PROGRESS_AND_CONFIDENCE.m
 
 ## Strategy-convergence scorecard
 
-- Search epoch: **2026-07-14-reassess** (started_stamp `2026-07-14T1600`)
 - Stamps scored: **10** (complete **10**)
 - Strategy advances (BETTER): **0** · rate **0%** of complete
 - INFORMATIVE_BUT_NOT_CLOSER: **10** · INVALID_THRASH: **0**
 - Living candidates: **0** (none)
 - Furthest living funnel stage: **—**
-- Consecutive no-advance streak (**active epoch**): **0**
-- Historical no-advance streak (all integrated, context only): **19**
-- Pivot/stop state: **none** (pivot≥2=False, burst-stop≥3=False)
+- Consecutive no-advance streak (integrated history): **19**
+- Pivot/stop state: **strategy_burst_stop_required** (pivot≥2=True, burst-stop≥3=True)
 
 ### Per-run strategy verdicts
 
@@ -96,5 +94,6 @@ Verdict definitions:
 |---|---:|---|---|---|
 | `2026-07-12T2315` | 3 | delta_capability, delta_falsification, strategy_no_advance | 0/0 | gpt-5.6-sol→grok-4.5 |
 | `2026-07-13T0026` | 3 | delta_capability, delta_falsification, delta_repair, strategy_no_advance | 0/0 | gpt-5.6-sol→grok-4.5 |
-| `2026-07-13T0515` | 3 | delta_capability, delta_falsification, delta_repair, strategy_no_advance
+| `2026-07-13T0515` | 3 | delta_capability, delta_falsification, delta_repair, strategy_no_advance | 0/0 | gpt-5.6-sol→grok-4.5 |
+| `2026-07-13T1415` | 3 | delta_capability, delta_falsification, delta_repair, strategy
 ```

@@ -242,6 +242,6 @@ Many runs were real work and real falsification, but they did **not** get close 
 
 ## History
 
-### 2026-07-14 — Charter created
+### 2026-07-14 — Search restart executed
 
-Ken asked for a durable goals/objectives alignment surface and a clean-start vs tweak evaluation after concern that many runs still produced no viable strategy. Snapshot, closed-family themes, and search-restart recommendation recorded here.
+Search-design reassessment completed in `docs/SEARCH_DESIGN_REASSESSMENT_2026-07-14.md`. Active epoch `2026-07-14-reassess` in `configs/search_epoch.json`. Discovery bar vs capital-seat bar codified in goal/BUILD lab/orientation. Pivot/burst-stop streak is epoch-scoped so prior no-advance history no longer freezes new strategy work.
