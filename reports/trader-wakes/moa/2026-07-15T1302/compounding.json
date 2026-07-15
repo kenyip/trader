@@ -1,0 +1,112 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-15T1302",
+  "loop_signature": "portfolio-cadence/global-one-unit/catalog-14d-pcs/dual-cost/train-only",
+  "economic_mechanism": "Simultaneous bullish and neutral put-credit-spread signals create hidden concentration; a deterministic global one-open-risk-unit admission policy with outcome-free symbol priority was tested for preserving per-trade expectancy while reducing marked portfolio drawdown.",
+  "candidate_or_family_scope": "Canonical family ONE_RISK_UNIT_CADENCE_POLICY_F0, candidate ONE_RISK_UNIT_CADENCE_PCS_V1, class PORTFOLIO_CADENCE_CONCENTRATION_CONTROL: one-lot catalog 14-DTE $2-wide lagged PCS on AAPL, AMD, BAC, F, PLTR, SMCI, SOFI, and TSLL; fixed one-global-unit admission, fixed outcome-free priority, unchanged management, dual train cost axes, and unread holdout.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "Close unless the exact complete 5% adverse-price and fixed-$0.01-per-leg train axes each independently have at least 20 admitted trades, positive capped PnL, marked maximum drawdown at most $75, one-lot max loss at most $300, positive uncapped expectancy, capped expectancy retention at least 75%, marked-DD reduction at least 25%, exact one-unit/cluster/ledger integrity, and a null/unread/uninvoked holdout payload.",
+  "outcome": "FAMILY_CLOSED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "No funnel movement. The 5% axis had negative capped and uncapped expectancy with $330.51 marked DD; the fixed-$0.01 axis remained positive but had $288.63 marked DD. Both breached the frozen $75 bound, so the exact one-global-unit/fixed-priority cadence closed at F0 without reading holdout."
+  },
+  "search_information": {
+    "summary": "The wake decisively separated path-risk improvement from strategy edge: a global unit cap reduced drawdown by 31.78% and 51.62% on the two axes but could not satisfy the conjunction of positive expectancy and absolute sleeve-risk gates. Finalizer hardening made the exact-axis, unread-holdout, identity, and invocation semantics machine-tested.",
+    "delta_kinds": [
+      "falsification",
+      "repair",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "falsification",
+      "summary": "Closed the exact one-global-risk-unit/fixed-priority 14-DTE PCS cadence on complete dual-cost train evidence while preserving the 282-row holdout unread.",
+      "novelty_key": "close-one-global-unit-cadence-dual-cost-2026-07-15T1302",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-15T1302/one-risk-unit-cadence.json",
+        "reports/trader-wakes/2026-07-15T1302-moa-merge.md",
+        "reports/readiness/LATEST.md"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Hardened the decision against missing cost axes and inspected holdout payloads, separated canonical family/candidate/class identity, fixed actual 14-DTE reporting, and relabeled train work as axis-by-symbol backtest invocations.",
+      "novelty_key": "cadence-payload-axis-holdout-identity-hardening-2026-07-15T1302",
+      "artifacts": [
+        "scripts/one_risk_unit_cadence_lab.py",
+        "tests/test_one_risk_unit_cadence_lab.py",
+        "reports/trader-wakes/moa/2026-07-15T1302/one-risk-unit-cadence.json"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "Quarantined unchanged one-global-unit/fixed-priority cadence reruns and redirected the active epoch at no-advance streak two to a predeclared monthly-OPEX/post-expiry drift mechanism.",
+      "novelty_key": "pivot-cadence-to-monthly-opex-after-two-no-advances-2026-07-15T1302",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-15T1302/merged-next-seed.md",
+        "reports/readiness/LATEST.md",
+        "reports/trader-wakes/INDEX.md"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "Executor surfaces mislabeled the catalog DNA as 21 DTE and conflated the canonical family with a descriptive class tag; pricing-call wording could be mistaken for only 16 option marks.",
+      "status": "repaired",
+      "rationale": "The runner now emits separate canonical family, candidate, and class fields plus train/holdout backtest-invocation counters; tests assert those identifiers and the catalog seed's actual 14 DTE, and all living finalizer surfaces use the corrected semantics.",
+      "repair_artifacts": [
+        "scripts/one_risk_unit_cadence_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_one_risk_unit_cadence_lab.py"
+      ]
+    },
+    {
+      "finding": "Dual-cost acceptance needed an explicit payload-level conjunction so a partial axis map could not pass vacuously.",
+      "status": "repaired",
+      "rationale": "strategy_decision requires exact equality with the frozen axis set before conjunctive pass evaluation; a missing-axis negative control must return FAMILY_CLOSED.",
+      "repair_artifacts": [
+        "scripts/one_risk_unit_cadence_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_one_risk_unit_cadence_lab.py"
+      ]
+    },
+    {
+      "finding": "Unread holdout invariants needed payload-level fail-closed coverage beyond self-reported zero calls.",
+      "status": "repaired",
+      "rationale": "The decision now requires null holdout metrics, zero holdout backtest invocations and trade rows, and false outcome-read status; tests independently force non-null metrics and a nonzero invocation and require FAMILY_CLOSED.",
+      "repair_artifacts": [
+        "scripts/one_risk_unit_cadence_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_one_risk_unit_cadence_lab.py"
+      ]
+    },
+    {
+      "finding": "The positive fixed-$0.01 capped result could be used to rescue or retune the family despite the failed 5% expectancy and both absolute drawdown gates.",
+      "status": "rejected",
+      "rationale": "The predeclared decision is conjunctive across both axes. One positive axis and relative drawdown reduction cannot override negative 5% expectancy or $288-$330 marked DD versus the $75 bound; the exact family remains closed and unchanged reruns are quarantined."
+    },
+    {
+      "finding": "L0 Black-Scholes/listed-Friday proxy results could be overstated as observed fills, broad population generalization, or paper/capital-seat readiness.",
+      "status": "rejected",
+      "rationale": "Reports and readiness retain explicit L0 proxy semantics, population imbalance, unobserved liquidity/assignment/intraday path, no living leader or capital seat, and no registry/paper/shadow/arm/live authority."
+    },
+    {
+      "finding": "Executor self-reported checks and the challenger-inspected SHA could be treated as finalizer verification after the payload hardening.",
+      "status": "rejected",
+      "rationale": "Finalizer independently reran focused 28/28, compile, exact experiment, substantive reproduction, coverage, platform smoke, and full 297/297. The challenger SHA remains historical; living surfaces cite final SHA 1cc2585e... with substantively unchanged strategy metrics."
+    }
+  ],
+  "closed_families": [
+    "ONE_RISK_UNIT_CADENCE_POLICY_F0: exact ONE_RISK_UNIT_CADENCE_PCS_V1 global-one-unit fixed-priority catalog-14-DTE PCS implementation across the frozen eight-symbol panel and dual cost axes"
+  ],
+  "data_dependencies": [],
+  "retest_decision": null,
+  "evidence_wake_condition": "",
+  "next": "MONTHLY_OPEX_POST_EXPIRY_DRIFT_F0: in the next zero-input BUILD wake, run a train-only third-Friday monthly-OPEX/post-expiry underlying drift study on liquid broad indexes with outcome-free same-month non-OPEX-Friday controls; require non-vacuous after-cost drift, positive paired excess, and a positive dependence-aware uncertainty lower bound before any option pricing or holdout read; do not reopen cadence, tracking-shortfall, monthly cross-section, VRP, TOM, or session-time closed families; no registry auto-promote, paper force, shadow, arm, broker, or live action."
+}

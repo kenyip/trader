@@ -1,0 +1,39 @@
+# Learning promotion — 2026-07-15T1302
+
+Strategy charter/outcome: the wake tested whether a deterministic one-global-risk-unit admission policy could turn overlapping bullish/neutral lagged put-credit-spread signals into a $3,000-sleeve candidate by preserving expectancy while reducing marked portfolio drawdown. The canonical family is `ONE_RISK_UNIT_CADENCE_POLICY_F0`, candidate `ONE_RISK_UNIT_CADENCE_PCS_V1`, and class tag `PORTFOLIO_CADENCE_CONCENTRATION_CONTROL`. Frozen DNA was one-lot catalog 14-DTE, $2-wide PCS on AAPL/AMD/BAC/F/PLTR/SMCI/SOFI/TSLL, one completed-bar signal lag, fixed outcome-free symbol priority, and unchanged simulator management. Both the 5% adverse-price and fixed-$0.01-per-leg train axes had to independently pass n>=20, positive capped PnL, marked DD <=$75, max loss <=$300, positive uncapped expectancy, >=75% expectancy retention, >=25% DD reduction, one-unit/cluster integrity, exact ledgers, and complete source/holdout integrity. Outcome is `FAMILY_CLOSED`, `F0_MECHANISM -> F0_MECHANISM`, strategy advancement false.
+
+Accepted challenger findings: preserve the close/no-rescue decision; correct all living 21-DTE residue to the actual catalog 14 DTE; separate canonical family, candidate, and class labels; report 16 train operations as 2 axes × 8 symbol backtest invocations rather than option marks; keep proxy costs/marked paths at L0; state the drawdown reduction without implying that it rescues expectancy or the absolute $75 risk gate; and add explicit final-payload protections for exact dual-axis conjunction and unread holdout. The finalizer repaired the runner, tests, canonical JSON, executor/public/readiness surfaces, and exact NEXT accordingly.
+
+Rejected interpretations: the positive fixed-$0.01 axis cannot rescue the negative 5% axis or either axis's $75 DD failure; relative DD improvement is not a capital-seat result; proxy Black-Scholes/listed-Friday data is not observed-fill evidence; a 31-trade admitted sample does not establish broad population generalization; holdout inspection is forbidden after train failure; unchanged one-global-unit/fixed-priority reruns, threshold/DTE/symbol retunes, registry promotion, paper forcing, shadow, arm, broker, or live action cannot close this wake.
+
+## VERIFICATION
+
+- `.venv/bin/python -m unittest -v tests.test_one_risk_unit_cadence_lab tests.test_pcs_expiry_grid tests.test_defined_risk_fixed_cost` -> `Ran 28 tests in 0.131s`, `OK`. Behavioral/boundary/negative controls cover outcome-independent admission, fixed same-day priority, consumed exit dates, negative-stream rejection, marked-ledger reconciliation, exact dual-axis conjunction, missing-axis fail-close, unread/null holdout payload, zero holdout backtest invocations, and canonical family/candidate/class plus 14-DTE identity; shared PCS lag/expiry/fixed-cost regressions remain green.
+- `.venv/bin/python -m py_compile scripts/one_risk_unit_cadence_lab.py tests/test_one_risk_unit_cadence_lab.py` -> exit `0`.
+- `.venv/bin/python scripts/one_risk_unit_cadence_lab.py --out reports/trader-wakes/moa/2026-07-15T1302/one-risk-unit-cadence.json` plus unchanged-source rerun to `/tmp/cadence-finalizer.json` -> both emitted `FAMILY_CLOSED`; substantive payloads were equal after excluding only `generated_at` (`SUBSTANTIVE_REPRODUCTION_OK`). Final SHA-256 `1cc2585ec09c70e06acd6b40af22f4e84b1a007c3c0f5934fbb4ccd03d1bad18`; canonical family/candidate/class exact, `long_dte=14`, axis set `{pct_5,fixed_001}`, 16 train backtest invocations, zero holdout backtest invocations/trade rows, null holdout metrics, unread outcomes.
+- `.venv/bin/python scripts/trader_income_coverage.py --stamp 2026-07-15T1302` plus dated/LATEST `cmp` -> exit `0`, `COVERAGE_SURFACES_IDENTICAL`; 21 catalog structures, 246 hypotheses, 70 evolve artifacts, living leader none.
+- `just platform-smoke` -> exit `0`, `platform smoke OK`; `agentic_live` remained blocked at the Robinhood Stage1 OAuth gate.
+- `.venv/bin/python -m unittest discover -s tests` -> `Ran 297 tests in 13.297s`, `OK`.
+- Schema-v2 handoff validation, complete-diff secret/debris audit, `git diff --check`, and deterministic wrapper rehearsal are recorded below after finalizer artifact validation.
+
+## DURABLE
+
+Every material challenger finding is reconciled:
+
+1. `scripts/one_risk_unit_cadence_lab.py` now emits canonical family `ONE_RISK_UNIT_CADENCE_POLICY_F0`, candidate `ONE_RISK_UNIT_CADENCE_PCS_V1`, class `PORTFOLIO_CADENCE_CONCENTRATION_CONTROL`, and unambiguous train/holdout backtest-invocation counters. Its decision helper requires the exact frozen cost-axis set and every unread-holdout/integrity boundary; missing axes and inspected holdout fail closed.
+2. `tests/test_one_risk_unit_cadence_lab.py` adds explicit negative controls for a missing cost axis and non-null/invoked holdout, plus a canonical identity assertion proving the catalog seed is 14 DTE. Existing outcome-independence, tie, exit-date, negative-stream, and ledger tests remain intact.
+3. `reports/trader-wakes/moa/2026-07-15T1302/one-risk-unit-cadence.json` is the final tracked experiment: 5% raw/admitted 39/31, capped -$165.80 and marked DD $330.51; fixed-$0.01 raw/admitted 181/81, capped +$646.77 and marked DD $288.63. Both fail the complete gate. Holdout 282 rows remains unread. The exact one-global-unit/fixed-priority family is closed and quarantined.
+4. Executor, merge, LATEST, INDEX, readiness, merged NEXT, and wake-stamped coverage surfaces use the same 14-DTE identity, canonical labels, final artifact/hash, outcome, no-advance streak two, and monthly-OPEX pivot. Challenger SHA `76206f14…` remains historical evidence of the challenger-inspected payload; finalizer schema/integrity hardening regenerated the substantively unchanged strategy metrics at SHA `1cc2585e…`.
+5. The profile-local `trader-self-evolution` skill now records the reusable cadence pitfall: concentration control cannot manufacture edge; exact cost-axis conjunction and unread-holdout payload boundaries must fail closed; train work must be labeled as axis×symbol backtest invocations; family/candidate/class/catalog DTE labels remain separate.
+
+Dated outcome and current project truth are promoted through the tracked experiment, final wake/LATEST/INDEX, readiness, coverage, `learning-promotion.md`, and schema-v2 `compounding.json`. Profile memory is unchanged because this is dated project evidence plus a reusable procedure, not a stable Ken preference or routing fact.
+
+Integration is pending the deterministic wrapper gate. The finalizer did not stage the real Git index, commit, push, merge, switch branches, edit `.gitignore`, place an order, or claim `RUN COMPLETE`.
+
+## LESSON
+
+Future Trader can distinguish path-risk improvement from a usable portfolio edge. A global one-risk-unit cap may reduce drawdown materially, but it does not rescue a negative cost axis or an absolute drawdown breach. The strategy decision must require the complete frozen axis set, conjunctive pass on every axis, and an explicitly unread/null/zero holdout payload; reporting must separate canonical family, candidate, class, actual catalog DTE, and axis×symbol backtest invocations. When any frozen expectancy or absolute risk gate fails, close and quarantine the exact cadence without reading holdout or retuning inspected knobs.
+
+## NEXT
+
+`MONTHLY_OPEX_POST_EXPIRY_DRIFT_F0`: in the next zero-input BUILD wake, pivot to a train-only third-Friday monthly-OPEX/post-expiry underlying drift study on liquid broad indexes with outcome-free same-month non-OPEX-Friday controls; require non-vacuous after-cost drift, positive paired excess, and a positive dependence-aware uncertainty lower bound before any option pricing or holdout read; do not reopen cadence, tracking-shortfall, monthly cross-section, VRP, TOM, or session-time closed families; no registry auto-promote, paper force, shadow, arm, broker, or live action.
