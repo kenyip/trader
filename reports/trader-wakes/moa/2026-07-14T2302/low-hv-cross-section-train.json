@@ -1,0 +1,1013 @@
+{
+  "all_train_rows_are_inspected_development_data": true,
+  "authority": "research only; no registry, paper, shadow, funding, broker, arm, or live authority",
+  "candidate_id": "CROSS_SECTION_LOW_HV_PCS_21D_V1",
+  "candidate_or_family_scope": "monthly bottom-three versus top-three prior-HV ranks in a fixed 14-name present-day liquid-equity universe, non-overlapping 21-session forward episodes",
+  "capital_basis": "structural upper bound for one future $1-wide PCS before net credit and closing friction; not an observed or simulated trade loss",
+  "capital_fit_usd": 100.0,
+  "claim_scope": "split/dividend-adjusted underlying closes only; fixed present-day universe with explicit survivorship/listing bias; train-only L0 discovery; no option marks, costs, fills, L1, capital-seat, or paper eligibility claim",
+  "closed_family": "MONTHLY_CROSS_SECTION_LOW_HV_FORWARD_DRIFT",
+  "config": {
+    "bootstrap_block_length": 3,
+    "bootstrap_confidence": 0.9,
+    "bootstrap_samples": 10000,
+    "forward_sessions": 21,
+    "hv_lookback_sessions": 60,
+    "minimum_train_episodes": 24,
+    "non_overlapping_episodes": true,
+    "quantile_count_each_side": 3,
+    "symbols": [
+      "AAPL",
+      "MSFT",
+      "NVDA",
+      "AMZN",
+      "META",
+      "GOOGL",
+      "AMD",
+      "NFLX",
+      "TSLA",
+      "AVGO",
+      "MU",
+      "JPM",
+      "XOM",
+      "BAC"
+    ],
+    "train_fraction": 0.6
+  },
+  "data_provenance": {
+    "common_panel": {
+      "end": "2026-07-13",
+      "join": "inner join on trading dates; no forward fill",
+      "rows": 2645,
+      "start": "2016-01-04"
+    },
+    "sources": {
+      "AAPL": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/AAPL_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "f42266ee2f6a836bb6966cd7233c024952dc59a665c444d4c7ea01f15ede32a9",
+        "start": "2016-01-04"
+      },
+      "AMD": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/AMD_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "fa76f83d12346e8b34ada3731e95978e5208c3b6d03395df0e36f9b210974a92",
+        "start": "2016-01-04"
+      },
+      "AMZN": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/AMZN_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "ec39f2c09dd8497d93ddf1fa146282e9583e3e6b6b5e3d3d744d12c5575b5ed8",
+        "start": "2016-01-04"
+      },
+      "AVGO": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/AVGO_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "d56e2da876d49a8d870bd4a9cae22533bbf10c07360ec7c12dedb70f4d34033a",
+        "start": "2016-01-04"
+      },
+      "BAC": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/BAC_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "a323605b5928d38719df1a4ea17b58b8087d20d87c438a6841741fe1f2d74175",
+        "start": "2016-01-04"
+      },
+      "GOOGL": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/GOOGL_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "a59aaf9ecf4fc131f64a617a36fbbe2ef8cd7abcf698d158a68f42034516bade",
+        "start": "2016-01-04"
+      },
+      "JPM": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/JPM_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "e63c802751e2ed9580ffcd4ed8b7b55d8a60f3ad688d0148089a08b6c4d2738b",
+        "start": "2016-01-04"
+      },
+      "META": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 0,
+        "end": "2026-07-14",
+        "path": ".cache/platform/low_hv_cross_section/META_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2646,
+        "sha256": "9bb4731860c050f99ef03984e10a4d7a00ece124befa465e74667aa8dfcc5b74",
+        "start": "2016-01-04"
+      },
+      "MSFT": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/MSFT_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "73a5dc254ddab84635e2f636b42f898fa0078f6cac49ac472f5decf184632d1a",
+        "start": "2016-01-04"
+      },
+      "MU": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/MU_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "1791f18b9b5578a96c5e984ded5366849cf6334190aa7929195b509abc8c292d",
+        "start": "2016-01-04"
+      },
+      "NFLX": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/NFLX_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "ca0a5e72f85f620b67ae5c539fd9015cce631156ffcdafbd0920a43aff97653a",
+        "start": "2016-01-04"
+      },
+      "NVDA": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/NVDA_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "a1cc2e59dfa6e0d8fe3a155a821e85b5b3d651c17f35dce7dd5c1b7307502324",
+        "start": "2016-01-04"
+      },
+      "TSLA": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/TSLA_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "40ae1fa43e715258cf44548d4c2d0028a0848a6fcba3b716866a3372593415a4",
+        "start": "2016-01-04"
+      },
+      "XOM": {
+        "adjustment_semantics": "yfinance auto_adjust=True",
+        "discarded_trailing_unsettled_rows": 1,
+        "end": "2026-07-13",
+        "path": ".cache/platform/low_hv_cross_section/XOM_2016-01-01_2026-07-15_auto_adjust.csv",
+        "rows": 2645,
+        "sha256": "3818639cc41ec13de5a865b357ee847f27730e593ccd92af0a83f1fa7b8a9d94",
+        "start": "2016-01-04"
+      }
+    }
+  },
+  "decision": "CLOSE_FIXED_LOW_HV_CROSS_SECTION_TRAIN_FAMILY",
+  "dominant_failure_mechanism": "the fixed monthly low-HV group had positive absolute train drift but did not establish incremental edge over the same-date high-HV control under the frozen mean/bootstrap gate",
+  "economic_mechanism": "within a fixed liquid-equity cross-section, names with the lowest prior completed 60-session realized volatility retain a more stable positive 21-session drift than the contemporaneous highest-volatility control group; a later bounded bullish PCS expression would harvest that conditional drift plus time decay",
+  "f2_or_l1_claim": false,
+  "falsifier": "on the chronological first 60% of eligible non-overlapping monthly episodes, fewer than 24 episodes, non-positive low-HV mean return, non-positive low-minus-high mean, or a non-positive one-sided 90% circular-block-bootstrap lower bound closes the exact family",
+  "funnel_stage_after": "F0_MECHANISM",
+  "funnel_stage_before": "F0_MECHANISM",
+  "generated_at": "2026-07-15T06:25:16.051984+00:00",
+  "max_loss_usd": 100.0,
+  "max_lots": 1,
+  "mechanism_family": "MONTHLY_CROSS_SECTION_LOW_HV_FORWARD_DRIFT",
+  "one_lot_max_loss_usd": 100.0,
+  "option_stage": {
+    "option_mark_provenance": null,
+    "planned_structure": "put_credit_spread",
+    "planned_width_usd": 1.0,
+    "pricing_calls": 0,
+    "pricing_run": false,
+    "status": "NOT_RUN_TRAIN_GATE_FAILED"
+  },
+  "paper_only": true,
+  "phase": "BUILD_L0_UNDERLYING_DISCOVERY",
+  "population_validity": {
+    "generalization_allowed": false,
+    "listing_bias": true,
+    "population_pure": true,
+    "population_type": "fixed present-day liquid US equities only",
+    "ranking_complete": true,
+    "survivorship_bias": true
+  },
+  "registration_eligible": false,
+  "schema_version": 1,
+  "sleeve_usd": 3000.0,
+  "strategy_outcome": "FAMILY_CLOSED",
+  "structure": "conditional_put_credit_spread_not_yet_priced",
+  "train": {
+    "bootstrap_block_length": 3,
+    "bootstrap_samples": 10000,
+    "episodes": [
+      {
+        "entry_date": "2016-04-01",
+        "exit_date": "2016-05-02",
+        "high_hv_mean_return": 0.05509090424491011,
+        "high_hv_symbols": [
+          "NFLX",
+          "MU",
+          "AMD"
+        ],
+        "low_hv_mean_return": -0.02889391496981582,
+        "low_hv_symbols": [
+          "GOOGL",
+          "XOM",
+          "MSFT"
+        ],
+        "paired_excess_return": -0.08398481921472593,
+        "rank_date": "2016-03-31"
+      },
+      {
+        "entry_date": "2016-06-01",
+        "exit_date": "2016-06-30",
+        "high_hv_mean_return": 0.037548977757962954,
+        "high_hv_symbols": [
+          "NFLX",
+          "MU",
+          "AMD"
+        ],
+        "low_hv_mean_return": -0.021215617545108183,
+        "low_hv_symbols": [
+          "XOM",
+          "GOOGL",
+          "JPM"
+        ],
+        "paired_excess_return": -0.05876459530307114,
+        "rank_date": "2016-05-31"
+      },
+      {
+        "entry_date": "2016-07-01",
+        "exit_date": "2016-08-02",
+        "high_hv_mean_return": 0.09151418722624576,
+        "high_hv_symbols": [
+          "NFLX",
+          "MU",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.04400297933015088,
+        "low_hv_symbols": [
+          "XOM",
+          "GOOGL",
+          "META"
+        ],
+        "paired_excess_return": -0.04751120789609487,
+        "rank_date": "2016-06-30"
+      },
+      {
+        "entry_date": "2016-09-01",
+        "exit_date": "2016-10-03",
+        "high_hv_mean_return": 0.021665186405281256,
+        "high_hv_symbols": [
+          "NFLX",
+          "MU",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.033188858431408695,
+        "low_hv_symbols": [
+          "AMZN",
+          "XOM",
+          "GOOGL"
+        ],
+        "paired_excess_return": 0.01152367202612744,
+        "rank_date": "2016-08-31"
+      },
+      {
+        "entry_date": "2016-11-01",
+        "exit_date": "2016-12-01",
+        "high_hv_mean_return": 0.07412845165368043,
+        "high_hv_symbols": [
+          "MU",
+          "NFLX",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.007864349276424468,
+        "low_hv_symbols": [
+          "JPM",
+          "GOOGL",
+          "META"
+        ],
+        "paired_excess_return": -0.06626410237725595,
+        "rank_date": "2016-10-31"
+      },
+      {
+        "entry_date": "2017-01-03",
+        "exit_date": "2017-02-02",
+        "high_hv_mean_return": 0.09912654913516088,
+        "high_hv_symbols": [
+          "NFLX",
+          "AMD",
+          "NVDA"
+        ],
+        "low_hv_mean_return": 0.012471293411760712,
+        "low_hv_symbols": [
+          "XOM",
+          "AAPL",
+          "GOOGL"
+        ],
+        "paired_excess_return": -0.08665525572340016,
+        "rank_date": "2016-12-30"
+      },
+      {
+        "entry_date": "2017-03-01",
+        "exit_date": "2017-03-30",
+        "high_hv_mean_return": 0.061172500906986595,
+        "high_hv_symbols": [
+          "MU",
+          "NVDA",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.0038539959482752164,
+        "low_hv_symbols": [
+          "GOOGL",
+          "MSFT",
+          "XOM"
+        ],
+        "paired_excess_return": -0.05731850495871138,
+        "rank_date": "2017-02-28"
+      },
+      {
+        "entry_date": "2017-04-03",
+        "exit_date": "2017-05-03",
+        "high_hv_mean_return": -0.09551122518382955,
+        "high_hv_symbols": [
+          "TSLA",
+          "NVDA",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.0759317084390408,
+        "low_hv_symbols": [
+          "MSFT",
+          "GOOGL",
+          "META"
+        ],
+        "paired_excess_return": 0.17144293362287036,
+        "rank_date": "2017-03-31"
+      },
+      {
+        "entry_date": "2017-06-01",
+        "exit_date": "2017-06-30",
+        "high_hv_mean_return": 0.06853324558297162,
+        "high_hv_symbols": [
+          "TSLA",
+          "NVDA",
+          "AMD"
+        ],
+        "low_hv_mean_return": -0.006649276480294897,
+        "low_hv_symbols": [
+          "XOM",
+          "MSFT",
+          "META"
+        ],
+        "paired_excess_return": -0.07518252206326652,
+        "rank_date": "2017-05-31"
+      },
+      {
+        "entry_date": "2017-07-03",
+        "exit_date": "2017-08-02",
+        "high_hv_mean_return": 0.08759017230237169,
+        "high_hv_symbols": [
+          "MU",
+          "NVDA",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.06077720826812542,
+        "low_hv_symbols": [
+          "XOM",
+          "MSFT",
+          "META"
+        ],
+        "paired_excess_return": -0.026812964034246274,
+        "rank_date": "2017-06-30"
+      },
+      {
+        "entry_date": "2017-09-01",
+        "exit_date": "2017-10-03",
+        "high_hv_mean_return": 0.016426685090032384,
+        "high_hv_symbols": [
+          "TSLA",
+          "NVDA",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.044574244166196264,
+        "low_hv_symbols": [
+          "XOM",
+          "JPM",
+          "MSFT"
+        ],
+        "paired_excess_return": 0.02814755907616388,
+        "rank_date": "2017-08-31"
+      },
+      {
+        "entry_date": "2017-11-01",
+        "exit_date": "2017-12-01",
+        "high_hv_mean_return": -0.035205837018565424,
+        "high_hv_symbols": [
+          "NVDA",
+          "MU",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.00861839052546809,
+        "low_hv_symbols": [
+          "XOM",
+          "JPM",
+          "GOOGL"
+        ],
+        "paired_excess_return": 0.04382422754403351,
+        "rank_date": "2017-10-31"
+      },
+      {
+        "entry_date": "2018-01-02",
+        "exit_date": "2018-02-01",
+        "high_hv_mean_return": 0.08977342369146872,
+        "high_hv_symbols": [
+          "TSLA",
+          "MU",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.07892335659552512,
+        "low_hv_symbols": [
+          "XOM",
+          "JPM",
+          "GOOGL"
+        ],
+        "paired_excess_return": -0.010850067095943605,
+        "rank_date": "2017-12-29"
+      },
+      {
+        "entry_date": "2018-03-01",
+        "exit_date": "2018-04-02",
+        "high_hv_mean_return": -0.06532685347495815,
+        "high_hv_symbols": [
+          "NVDA",
+          "AMD",
+          "MU"
+        ],
+        "low_hv_mean_return": -0.04815195503107276,
+        "low_hv_symbols": [
+          "JPM",
+          "XOM",
+          "BAC"
+        ],
+        "paired_excess_return": 0.017174898443885388,
+        "rank_date": "2018-02-28"
+      },
+      {
+        "entry_date": "2018-05-01",
+        "exit_date": "2018-05-31",
+        "high_hv_mean_return": 0.137924855272201,
+        "high_hv_symbols": [
+          "AMD",
+          "TSLA",
+          "MU"
+        ],
+        "low_hv_mean_return": 0.05317574061486008,
+        "low_hv_symbols": [
+          "XOM",
+          "JPM",
+          "AAPL"
+        ],
+        "paired_excess_return": -0.08474911465734092,
+        "rank_date": "2018-04-30"
+      },
+      {
+        "entry_date": "2018-06-01",
+        "exit_date": "2018-07-02",
+        "high_hv_mean_return": 0.04282083285940075,
+        "high_hv_symbols": [
+          "AMD",
+          "TSLA",
+          "MU"
+        ],
+        "low_hv_mean_return": -0.015856160819361104,
+        "low_hv_symbols": [
+          "XOM",
+          "JPM",
+          "AAPL"
+        ],
+        "paired_excess_return": -0.05867699367876185,
+        "rank_date": "2018-05-31"
+      },
+      {
+        "entry_date": "2018-08-01",
+        "exit_date": "2018-08-30",
+        "high_hv_mean_return": 0.12981219662936963,
+        "high_hv_symbols": [
+          "TSLA",
+          "META",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.09742642211055215,
+        "low_hv_symbols": [
+          "AAPL",
+          "MSFT",
+          "AMZN"
+        ],
+        "paired_excess_return": -0.03238577451881748,
+        "rank_date": "2018-07-31"
+      },
+      {
+        "entry_date": "2018-09-04",
+        "exit_date": "2018-10-03",
+        "high_hv_mean_return": -0.005857721295529528,
+        "high_hv_symbols": [
+          "META",
+          "AMD",
+          "TSLA"
+        ],
+        "low_hv_mean_return": 0.03433446386035547,
+        "low_hv_symbols": [
+          "XOM",
+          "MSFT",
+          "JPM"
+        ],
+        "paired_excess_return": 0.040192185155885,
+        "rank_date": "2018-08-31"
+      },
+      {
+        "entry_date": "2018-11-01",
+        "exit_date": "2018-12-03",
+        "high_hv_mean_return": 0.04285076405008548,
+        "high_hv_symbols": [
+          "NFLX",
+          "TSLA",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.02439584889784537,
+        "low_hv_symbols": [
+          "XOM",
+          "JPM",
+          "BAC"
+        ],
+        "paired_excess_return": -0.018454915152240108,
+        "rank_date": "2018-10-31"
+      },
+      {
+        "entry_date": "2019-01-02",
+        "exit_date": "2019-02-01",
+        "high_hv_mean_return": 0.21127551824151683,
+        "high_hv_symbols": [
+          "NFLX",
+          "NVDA",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.09364253636239694,
+        "low_hv_symbols": [
+          "JPM",
+          "XOM",
+          "BAC"
+        ],
+        "paired_excess_return": -0.11763298187911989,
+        "rank_date": "2018-12-31"
+      },
+      {
+        "entry_date": "2019-03-01",
+        "exit_date": "2019-04-01",
+        "high_hv_mean_return": 0.08641523276115319,
+        "high_hv_symbols": [
+          "TSLA",
+          "NVDA",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.022523526378143144,
+        "low_hv_symbols": [
+          "JPM",
+          "XOM",
+          "GOOGL"
+        ],
+        "paired_excess_return": -0.06389170638301005,
+        "rank_date": "2019-02-28"
+      },
+      {
+        "entry_date": "2019-05-01",
+        "exit_date": "2019-05-31",
+        "high_hv_mean_return": -0.1360301957445621,
+        "high_hv_symbols": [
+          "MU",
+          "TSLA",
+          "AMD"
+        ],
+        "low_hv_mean_return": -0.09485375019790014,
+        "low_hv_symbols": [
+          "XOM",
+          "MSFT",
+          "AAPL"
+        ],
+        "paired_excess_return": 0.04117644554666196,
+        "rank_date": "2019-04-30"
+      },
+      {
+        "entry_date": "2019-06-03",
+        "exit_date": "2019-07-02",
+        "high_hv_mean_return": 0.1995881179658773,
+        "high_hv_symbols": [
+          "MU",
+          "TSLA",
+          "AMD"
+        ],
+        "low_hv_mean_return": 0.08735153475110402,
+        "low_hv_symbols": [
+          "XOM",
+          "MSFT",
+          "JPM"
+        ],
+        "paired_excess_return": -0.11223658321477328,
+        "rank_date": "2019-05-31"
+      },
+      {
+        "entry_date": "2019-08-01",
+        "exit_date": "2019-08-30",
+        "high_hv_mean_return": 0.01877165580348783,
+        "high_hv_symbols": [
+          "MU",
+          "AMD",
+          "TSLA"
+        ],
+        "low_hv_mean_return": -0.022856805821234505,
+        "low_hv_symbols": [
+          "XOM",
+          "JPM",
+          "MSFT"
+        ],
+        "paired_excess_return": -0.041628461624722335,
+        "rank_date": "2019-07-31"
+      },
+      {
+        "entry_date": "2019-09-03",
+        "exit_date": "2019-10-02",
+        "high_hv_mean_return": -0.023397584400994004,
+        "high_hv_symbols": [
+          "TSLA",
+          "MU",
+          "AMD"
+        ],
+        "low_hv_mean_return": -0.006722199091587407,
+        "low_hv_symbols": [
+          "XOM",
+          "JPM",
+          "AMZN"
+        ],
+        "paired_excess_return": 0.0166753853094066,
+        "rank_date": "2019-08-30"
+      },
+      {
+        "entry_date": "2019-11-01",
+        "exit_date": "2019-12-03",
+        "high_hv_mean_return": 0.040960637016487,
+        "high_hv_symbols": [
+          "MU",
+          "AMD",
+          "TSLA"
+        ],
+        "low_hv_mean_return": -0.002421321853634676,
+        "low_hv_symbols": [
+          "AMZN",
+          "GOOGL",
+          "XOM"
+        ],
+        "paired_excess_return": -0.043381958870121674,
+        "rank_date": "2019-10-31"
+      },
+      {
+        "entry_date": "2020-01-02",
+        "exit_date": "2020-02-03",
+        "high_hv_mean_return": 0.25393159931001646,
+        "high_hv_symbols": [
+          "AMD",
+          "MU",
+          "TSLA"
+        ],
+        "low_hv_mean_return": 0.04008451990809144,
+        "low_hv_symbols": [
+          "MSFT",
+          "GOOGL",
+          "JPM"
+        ],
+        "paired_excess_return": -0.21384707940192502,
+        "rank_date": "2019-12-31"
+      },
+      {
+        "entry_date": "2020-03-02",
+        "exit_date": "2020-03-31",
+        "high_hv_mean_return": -0.1278238647736798,
+        "high_hv_symbols": [
+          "NVDA",
+          "AMD",
+          "TSLA"
+        ],
+        "low_hv_mean_return": -0.23117388176156514,
+        "low_hv_symbols": [
+          "JPM",
+          "GOOGL",
+          "BAC"
+        ],
+        "paired_excess_return": -0.10335001698788535,
+        "rank_date": "2020-02-28"
+      },
+      {
+        "entry_date": "2020-04-01",
+        "exit_date": "2020-05-01",
+        "high_hv_mean_return": 0.2603372142347182,
+        "high_hv_symbols": [
+          "NVDA",
+          "AVGO",
+          "TSLA"
+        ],
+        "low_hv_mean_return": 0.17806841183832778,
+        "low_hv_symbols": [
+          "AMZN",
+          "GOOGL",
+          "NFLX"
+        ],
+        "paired_excess_return": -0.0822688023963904,
+        "rank_date": "2020-03-31"
+      },
+      {
+        "entry_date": "2020-06-01",
+        "exit_date": "2020-06-30",
+        "high_hv_mean_return": 0.09529834596968219,
+        "high_hv_symbols": [
+          "MU",
+          "BAC",
+          "TSLA"
+        ],
+        "low_hv_mean_return": 0.05770282916068418,
+        "low_hv_symbols": [
+          "AMZN",
+          "NFLX",
+          "GOOGL"
+        ],
+        "paired_excess_return": -0.03759551680899801,
+        "rank_date": "2020-05-29"
+      },
+      {
+        "entry_date": "2020-07-01",
+        "exit_date": "2020-07-31",
+        "high_hv_mean_return": 0.11825902239962265,
+        "high_hv_symbols": [
+          "MU",
+          "BAC",
+          "TSLA"
+        ],
+        "low_hv_mean_return": 0.08939915445848452,
+        "low_hv_symbols": [
+          "AAPL",
+          "MSFT",
+          "AMZN"
+        ],
+        "paired_excess_return": -0.028859867941138123,
+        "rank_date": "2020-06-30"
+      },
+      {
+        "entry_date": "2020-08-03",
+        "exit_date": "2020-09-01",
+        "high_hv_mean_return": 0.27170748230087716,
+        "high_hv_symbols": [
+          "BAC",
+          "AMD",
+          "TSLA"
+        ],
+        "low_hv_mean_return": 0.09585493991831669,
+        "low_hv_symbols": [
+          "GOOGL",
+          "MSFT",
+          "AVGO"
+        ],
+        "paired_excess_return": -0.17585254238256048,
+        "rank_date": "2020-07-31"
+      },
+      {
+        "entry_date": "2020-10-01",
+        "exit_date": "2020-10-30",
+        "high_hv_mean_return": -0.10876209554514527,
+        "high_hv_symbols": [
+          "NVDA",
+          "AMD",
+          "TSLA"
+        ],
+        "low_hv_mean_return": 0.018373078579824103,
+        "low_hv_symbols": [
+          "JPM",
+          "GOOGL",
+          "AVGO"
+        ],
+        "paired_excess_return": 0.12713517412496936,
+        "rank_date": "2020-09-30"
+      },
+      {
+        "entry_date": "2020-11-02",
+        "exit_date": "2020-12-02",
+        "high_hv_mean_return": 0.17887602822518053,
+        "high_hv_symbols": [
+          "NFLX",
+          "NVDA",
+          "TSLA"
+        ],
+        "low_hv_mean_return": 0.1911920238289626,
+        "low_hv_symbols": [
+          "JPM",
+          "BAC",
+          "AVGO"
+        ],
+        "paired_excess_return": 0.012315995603782076,
+        "rank_date": "2020-10-30"
+      },
+      {
+        "entry_date": "2021-01-04",
+        "exit_date": "2021-02-03",
+        "high_hv_mean_return": 0.12181434102973283,
+        "high_hv_symbols": [
+          "BAC",
+          "XOM",
+          "TSLA"
+        ],
+        "low_hv_mean_return": 0.13434567175968706,
+        "low_hv_symbols": [
+          "AVGO",
+          "MSFT",
+          "GOOGL"
+        ],
+        "paired_excess_return": 0.01253133072995423,
+        "rank_date": "2020-12-31"
+      },
+      {
+        "entry_date": "2021-03-01",
+        "exit_date": "2021-03-30",
+        "high_hv_mean_return": -0.08988639596560488,
+        "high_hv_symbols": [
+          "MU",
+          "NFLX",
+          "TSLA"
+        ],
+        "low_hv_mean_return": -0.007971220487788052,
+        "low_hv_symbols": [
+          "MSFT",
+          "JPM",
+          "AMZN"
+        ],
+        "paired_excess_return": 0.08191517547781683,
+        "rank_date": "2021-02-26"
+      },
+      {
+        "entry_date": "2021-04-01",
+        "exit_date": "2021-05-03",
+        "high_hv_mean_return": 0.009741743687979865,
+        "high_hv_symbols": [
+          "NVDA",
+          "MU",
+          "TSLA"
+        ],
+        "low_hv_mean_return": 0.0380583895849278,
+        "low_hv_symbols": [
+          "JPM",
+          "MSFT",
+          "AMZN"
+        ],
+        "paired_excess_return": 0.028316645896947934,
+        "rank_date": "2021-03-31"
+      },
+      {
+        "entry_date": "2021-06-01",
+        "exit_date": "2021-06-30",
+        "high_hv_mean_return": 0.10980276638407964,
+        "high_hv_symbols": [
+          "NVDA",
+          "MU",
+          "TSLA"
+        ],
+        "low_hv_mean_return": -0.0012127416291755437,
+        "low_hv_symbols": [
+          "JPM",
+          "BAC",
+          "MSFT"
+        ],
+        "paired_excess_return": -0.11101550801325519,
+        "rank_date": "2021-05-28"
+      },
+      {
+        "entry_date": "2021-07-01",
+        "exit_date": "2021-08-02",
+        "high_hv_mean_return": 0.06272019889535822,
+        "high_hv_symbols": [
+          "AMD",
+          "NVDA",
+          "TSLA"
+        ],
+        "low_hv_mean_return": 0.03931605494923559,
+        "low_hv_symbols": [
+          "MSFT",
+          "GOOGL",
+          "JPM"
+        ],
+        "paired_excess_return": -0.023404143946122634,
+        "rank_date": "2021-06-30"
+      },
+      {
+        "entry_date": "2021-09-01",
+        "exit_date": "2021-10-01",
+        "high_hv_mean_return": -0.05998250170644115,
+        "high_hv_symbols": [
+          "NVDA",
+          "MU",
+          "AMD"
+        ],
+        "low_hv_mean_return": -0.035478737992583574,
+        "low_hv_symbols": [
+          "MSFT",
+          "GOOGL",
+          "AVGO"
+        ],
+        "paired_excess_return": 0.024503763713857575,
+        "rank_date": "2021-08-31"
+      },
+      {
+        "entry_date": "2021-11-01",
+        "exit_date": "2021-12-01",
+        "high_hv_mean_return": 0.10466326250556712,
+        "high_hv_symbols": [
+          "AMD",
+          "NVDA",
+          "TSLA"
+        ],
+        "low_hv_mean_return": 0.06539609206685111,
+        "low_hv_symbols": [
+          "AVGO",
+          "AMZN",
+          "AAPL"
+        ],
+        "paired_excess_return": -0.03926717043871601,
+        "rank_date": "2021-10-29"
+      },
+      {
+        "entry_date": "2022-01-03",
+        "exit_date": "2022-02-02",
+        "high_hv_mean_return": -0.19667745974997908,
+        "high_hv_symbols": [
+          "AMD",
+          "NVDA",
+          "TSLA"
+        ],
+        "low_hv_mean_return": -0.0366729890422132,
+        "low_hv_symbols": [
+          "JPM",
+          "MSFT",
+          "GOOGL"
+        ],
+        "paired_excess_return": 0.16000447070776588,
+        "rank_date": "2021-12-31"
+      },
+      {
+        "entry_date": "2022-03-01",
+        "exit_date": "2022-03-30",
+        "high_hv_mean_return": 0.1243370738022083,
+        "high_hv_symbols": [
+          "NFLX",
+          "TSLA",
+          "META"
+        ],
+        "low_hv_mean_return": 0.03521105558915938,
+        "low_hv_symbols": [
+          "XOM",
+          "BAC",
+          "JPM"
+        ],
+        "paired_excess_return": -0.08912601821304893,
+        "rank_date": "2022-02-28"
+      }
+    ],
+    "gate_checks": {
+      "minimum_train_episodes": true,
+      "paired_excess_bootstrap_lb90_positive": false,
+      "positive_low_hv_mean_return": true,
+      "positive_paired_excess_mean": false,
+      "zero_integrity_violations": true
+    },
+    "gate_pass": false,
+    "high_hv_mean_return": 0.055349242755404315,
+    "integrity_violations": [],
+    "low_hv_mean_return": 0.02804483968108953,
+    "n_episodes": 43,
+    "paired_excess_bootstrap_lb90": -0.04161816483305848,
+    "paired_excess_mean": -0.027304403074314778,
+    "paired_excess_median": -0.03759551680899801,
+    "paired_excess_positive_frequency": 0.3488372093023256
+  },
+  "untouched_holdout": {
+    "first_entry_date": "2022-04-01",
+    "first_rank_date": "2022-03-31",
+    "last_exit_date": "2026-07-01",
+    "last_rank_date": "2026-05-29",
+    "n_blueprints": 30,
+    "outcome_metrics_read": false,
+    "simulation_run": false
+  }
+}

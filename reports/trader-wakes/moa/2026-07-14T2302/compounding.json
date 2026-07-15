@@ -1,0 +1,107 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-14T2302",
+  "loop_signature": "historical-underlying/monthly-cross-section-low-hv-vs-high-hv/fixed-14/train-only-21session",
+  "economic_mechanism": "Within a fixed liquid-equity cross-section, names with the lowest prior completed 60-session realized volatility should retain a steadier positive 21-session forward drift than contemporaneous highest-volatility controls; only a surviving selector could later condition a bounded one-lot put credit spread for directional drift plus time decay.",
+  "candidate_or_family_scope": "Candidate CROSS_SECTION_LOW_HV_PCS_21D_V1 in family MONTHLY_CROSS_SECTION_LOW_HV_FORWARD_DRIFT: monthly bottom-three versus top-three lagged-HV ranks over the fixed present-day 14-name panel AAPL, MSFT, NVDA, AMZN, META, GOOGL, AMD, NFLX, TSLA, AVGO, MU, JPM, XOM, BAC; non-overlapping 21-session episodes; chronological first 60% only; structural future one-lot $1-wide PCS context with capital_fit_usd=max_loss_usd=100 and max_lots=1.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "On the chronological first 60% of eligible non-overlapping monthly episodes, fewer than 24 episodes, non-positive low-HV mean return, non-positive low-minus-high mean return, a non-positive one-sided 90% circular-block-bootstrap lower bound, or any chronology, overlap, population-completeness, or strict-serialization violation closes the exact family before holdout or option pricing.",
+  "outcome": "FAMILY_CLOSED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "No candidate advanced beyond F0. Train n=43 and low-HV absolute drift was +2.804%, but the high-HV control was +5.535%, paired excess was -2.730%, and bootstrap LB90 was -4.162%. The final 30-blueprint holdout remained unread and pricing_calls stayed zero."
+  },
+  "search_information": {
+    "summary": "The new train-only cross-sectional harness decisively closed one predeclared low-HV selector without spending holdout or option pricing. It preserves lagged completed-HV ranking, disjoint same-date controls, non-overlapping episodes, strict JSON/provenance, and explicit survivorship limits. Finalizer reconciliation added the positive-absolute-drift/non-positive-excess reject path, corrected failure semantics, and activated the two-wake epoch pivot without claiming a three-wake burst stop.",
+    "delta_kinds": [
+      "capability",
+      "evidence",
+      "falsification",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "falsification",
+      "summary": "The exact MONTHLY_CROSS_SECTION_LOW_HV_FORWARD_DRIFT family closed at F0 on the frozen fixed-panel train gate: n43, positive absolute low-HV drift but negative paired excess and negative LB90, 30 holdout blueprints unread, no option pricing, registration, or capital seat.",
+      "novelty_key": "monthly-low-hv-fixed14-21session-paired-edge-family-close-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-14T2302/low-hv-cross-section-train.json",
+        "reports/trader-wakes/2026-07-14T2302-moa-merge.md"
+      ]
+    },
+    {
+      "kind": "capability",
+      "summary": "A reusable train-only cross-sectional selector lab now implements lagged completed-HV ranks, disjoint same-date controls, non-overlapping chronology, untouched-holdout reservation, deterministic circular-block bootstrap, strict JSON, adjusted-close provenance, and both positive-advance and positive-absolute-drift/non-positive-excess reject-path tests.",
+      "novelty_key": "low-hv-cross-section-train-harness-and-paired-reject-control-v1",
+      "artifacts": [
+        "scripts/low_hv_cross_section_train_lab.py",
+        "tests/test_low_hv_cross_section_train_lab.py"
+      ]
+    },
+    {
+      "kind": "evidence",
+      "summary": "The finalizer regenerated the canonical artifact with corrected relative-edge failure wording and reproduced its entire substantive payload excluding only generated_at: FAMILY_CLOSED, train n43, low +2.804%, high +5.535%, excess -2.730%, LB90 -4.162%, holdout n30 unread, pricing_calls0, SHA-256 9ab27b71c7fb2a0ed4cc0c0a41426ae709ba5cc7b0cf449058ecceca2f5187f2.",
+      "novelty_key": "low-hv-cross-section-finalizer-substantive-reproduction-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-14T2302/low-hv-cross-section-train.json",
+        "reports/trader-wakes/moa/2026-07-14T2302/learning-promotion.md"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "This second consecutive no-advance close in active epoch 2026-07-14-reassess activates strategy_pivot_required but not strategy_burst_stop_required. Nearby low-HV knobs and post-hoc high-HV inversion on the same panel are quarantined; the sole next seed requires a materially different mechanism or evidence class.",
+      "novelty_key": "active-epoch-low-hv-second-close-pivot-quarantine-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-14T2302/merged-next-seed.md",
+        "reports/readiness/LATEST.md"
+      ]
+    }
+  ],
+  "retest_decision": null,
+  "evidence_wake_condition": null,
+  "critic_findings": [
+    {
+      "finding": "The reusable harness lacks an explicit reject-path boundary where absolute low-HV drift is positive but paired selector edge is non-positive.",
+      "status": "repaired",
+      "rationale": "The new fixture keeps low-HV returns positive while the higher-drift high-HV control makes paired excess negative; it asserts positive_low_hv_mean_return=true, positive_paired_excess_mean=false, gate_pass=false, FAMILY_CLOSED, and the corrected dominant-failure label.",
+      "repair_artifacts": [
+        "scripts/low_hv_cross_section_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_low_hv_cross_section_train_lab.py"
+      ]
+    },
+    {
+      "finding": "The final close may retain the stale PENDING executor outcome and omit the top-level executor report.",
+      "status": "rejected",
+      "rationale": "executor-closeout.md now records the realized decision and metrics, and reports/trader-wakes/2026-07-14T2302-moa-exec.md supplies the missing finalizer-reconciled executor evidence surface."
+    },
+    {
+      "finding": "The dominant failure can be described as low-HV failing to produce positive absolute drift.",
+      "status": "rejected",
+      "rationale": "Low-HV mean was +2.804%; the failed gates were paired excess mean -2.730% and bootstrap LB90 -4.162%. Living code, artifact, closeout, merge, readiness, and learning surfaces now describe missing incremental edge."
+    },
+    {
+      "finding": "Observed high-HV outperformance can be promoted immediately by inverting the inspected low-HV hypothesis.",
+      "status": "rejected",
+      "rationale": "That would be post-hoc outcome reuse. The exact family and nearby same-panel knobs are quarantined; a high-HV thesis requires a new predeclared mechanism, population, and falsifier."
+    },
+    {
+      "finding": "This close creates a three-wake active-epoch burst stop.",
+      "status": "rejected",
+      "rationale": "Orientation entered with one active-epoch no-advance close. Accepting 2302 makes the streak two: strategy_pivot_required=true and strategy_burst_stop_required=false."
+    },
+    {
+      "finding": "Holdout inspection, option pricing, registration, capital-seat language, or a global BUILD freeze are needed to complete this decision.",
+      "status": "rejected",
+      "rationale": "The predeclared train gate failed decisively, so holdout and pricing remain untouched. No L1/seat/paper authority exists, while other open mechanisms and evidence classes remain available under the mandatory pivot."
+    }
+  ],
+  "closed_families": [
+    "MONTHLY_CROSS_SECTION_LOW_HV_FORWARD_DRIFT"
+  ],
+  "data_dependencies": [],
+  "next": "STRATEGY_PIVOT_REQUIRED after two consecutive active-epoch no-advance closes: before another strategy-volume wake, inventory and execute exactly one materially different open economic mechanism or evidence class outside quarantined families. Predeclare the mechanism, avoid fixed present-day survivorship convenience where feasible or label non-generalizing L0, freeze the train falsifier, and inspect untouched holdout only after train survival. Do not retune or invert the closed low-HV selector or price options before underlying advancement. No paper/shadow/arm/live."
+}
