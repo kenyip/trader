@@ -5,6 +5,7 @@
 > Autonomy / live-sleeve rules: [AGENTIC_AUTONOMY_POLICY.md](AGENTIC_AUTONOMY_POLICY.md).
 > **Alignment / restart / clean-start vs tweak:** [TRADER_RESTART_CHARTER.md](TRADER_RESTART_CHARTER.md) — re-read before densified BUILD or doctrine changes.
 > **Progress honesty:** [BUILD_PROGRESS_AND_CONFIDENCE.md](BUILD_PROGRESS_AND_CONFIDENCE.md) — ops complete ≠ strategy closer.
+> **Layered edge doctrine:** [TRADER_LAYERED_EDGE_DOCTRINE.md](TRADER_LAYERED_EDGE_DOCTRINE.md) — forecast → payoff → regime → risk → evidence before strategy advancement.
 
 ---
 
@@ -59,20 +60,27 @@ Right: “Rank by capital/regime/cost/falsify; wire missing paths in parallel so
 Wrong: “Keep XOM CCS because we need a non-TSLL peer.”
 Right: “Keep only DNA that wins (or ties) on trade quality; multi-name is a search space, not a portfolio mandate.”
 
-### Edge stack (first principles)
+### Layered Edge Stack (first principles)
 
-1. **Regime** — trend / vol / stress classification
-2. **Options structure** — skew, term, premium richness, liquidity
-3. **Technical** — price/volume structure, levels
-4. **Fundamental / catalysts** — earnings, product, macro, flow
-5. **Emotional swings** — overreaction windows for tactical entries
+Trader does **not** search for “an options strategy.” Trader searches for a repeatable market forecast that can be expressed through a defined-risk option payoff, works only in named regimes, has explicit entry/exit/risk rules, and can be falsified before it reaches paper or live.
 
-Sleeves that use the stack:
+Every trade-shaped BUILD candidate must include the Layered Edge Stack from [TRADER_LAYERED_EDGE_DOCTRINE.md](TRADER_LAYERED_EDGE_DOCTRINE.md):
 
-- **Premium income** — sell/manage defined-risk or managed premium
-- **Tactical quick in/out** — short-horizon asymmetric trades
-- **Core long bias** — when regime supports; not forced always-on
-- **Cash / stand-aside** — valid and preferred under bad edges
+1. **Market / underlying** — why this symbol set, index, or options surface?
+2. **Forecast type** — direction, non-collapse, range, realized-vs-implied vol, timing, skew, convexity, or relative value?
+3. **Economic mechanism** — why should this forecast repeat after costs?
+4. **Option structure** — which payoff shape monetizes the forecast?
+5. **Greek exposures** — intended delta/theta/vega/gamma/skew/term exposure and dangerous unintended exposure.
+6. **Regime envelope** — when should it work and when must it stand aside?
+7. **Entry trigger** — observable, lag-safe condition that opens the trade.
+8. **Exit / management** — harvest, cut, roll, time stop, or thesis invalidation.
+9. **Risk / capital fit** — `capital_fit_usd`, one-lot `max_loss_usd`, `max_lots`, overlap, drawdown budget.
+10. **Evidence / falsifier** — train/holdout/stress/paper/observed-fill evidence appropriate to the claim.
+11. **Confidence stage** — F0/F1/F2/F3/F4 and L0/L1/L2/L3/L4 permission.
+
+Initial preferred research lanes are long-biased theta income via bull put / put credit spreads, directional swing capture via call debit spreads, and long-biased diagonal income. These are preferences, not allowlists: Trader may supersede them only by naming a better economic mechanism and completing the full stack.
+
+`STRATEGY_ADVANCED` requires a complete stack plus claim-appropriate evidence. Tooling, plumbing, coverage, vague “promising” language, or option-structure enthusiasm without a repeatable forecast is not strategy advancement.
 
 ### Promotion path (non-negotiable)
 
