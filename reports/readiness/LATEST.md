@@ -2,12 +2,13 @@
 
 **Search restart (2026-07-14):** Active epoch `2026-07-14-reassess` (`configs/search_epoch.json`). Written reassessment: `docs/SEARCH_DESIGN_REASSESSMENT_2026-07-14.md`. Charter: `docs/TRADER_RESTART_CHARTER.md`.
 
-- Prior-epoch no-advance streak / `DIMINISHING_RETURNS` is **historical context only** — pivot/burst-stop now count **inside this epoch only** (currently 0 epoch wakes).
+- Prior-epoch no-advance streak / `DIMINISHING_RETURNS` is **historical context only** — pivot/burst-stop now count **inside this epoch only** (0 integrated epoch wakes; finalized `2203` becomes wake 1 after deterministic integration).
 - **Discovery bar** for F0→F1 / F1→F2 signals (labeled discovery OK; **not L1** and cannot grant a capital seat).
 - **Capital-seat bar** for paper-path eligibility (max loss ≤$300, window DD ≤$75, dual-cost non-vacuous, dense B3). Still **not L1** until a living seat clears those gates.
 - Living leader **none**; capital path **empty**; paper/shadow/arm/live unchanged.
 - Cron: RTH eval active; BUILD densify **daily 16:45 + evening 20:00 PT** resumed for the new epoch (other densify slots still paused). Cron script timeout raised to 10800s for dual labs.
 - Next strategy action: zero-input `just trader-build-lab` choosing an open mechanism outside closed families.
+- **2026-07-14T2203 finalizer green; deterministic integration pending:** `FAMILY_CLOSED` F0→F0 for exact family `pcs-monday-45dte-exit21-vs-exit5-train-proxy`; canonical SHA `39113fe2…`. Eight of eight complete, zero dual-cost train passes, all 5% rows negative, fixed cost negative 7/8, AAPL fixed `+$128.60` fails with 5% `-$470.44`, final 40% untouched. Dominant failure is cost-adjusted expectancy under PT/regime-dominated management with sparse calendar-stop contrast (17 candidate stop exits; F/SOFI path-identical), not pure early-vs-late gamma isolation. Living rows now state `capital_fit_usd=max_loss_usd=$85.76..$235.43`, `operating_max_lots=max_lots=1`, and separate theoretical capacity. Finalizer green: focused 37/37, lab 5/5, compile, substantive reproduction, coverage, smoke, full 269/269. No leader, seat, B-check, registry, paper, shadow, arm, or live change. If integrated, epoch no-advance streak = 1; pivot/burst-stop false. **ONE NEXT:** lagged monthly cross-sectional low-HV underlying pre-screen using prior completed 60-session HV, same-date top-quartile controls, chronological underlying train→untouched holdout, and option marks only after underlying advance; not a PCS-stop mutation.
 
 ---
 
@@ -324,4 +325,4 @@ Trader free on symbol/strategy for **discovery**. Capital path is **earned by tr
 
 ## Phase decision
 
-Stay **BUILD / L0**. Challenger PASS 8/8 accepted the densified session-time reject: 24/24 complete, 1 train dual-cost pass, 0 complete train+holdout passes; max one-lot loss `$223.36`; densified family remains closed with no living leader or capital path. Focused 31/31 re-green; full suite/smoke re-verify and integration remain finalizer/deterministic-gate work. No register/paper/shadow/arm/live.
+Stay **BUILD / L0**. The `2203` finalizer closes `pcs-monday-45dte-exit21-vs-exit5-train-proxy` at F0 after 8/8 complete and 0 dual-cost train passes; holdout remains untouched and canonical proxy evidence is substantively reproduced. The one-lot max-loss range is `$85.76..$235.43`; all candidate DD rows exceed `$75`; living leader and capital path remain empty. Focused 37/37, lab 5/5, compile, coverage, smoke, reproduction, and full 269/269 are green; deterministic integration remains pending. No register/paper/shadow/arm/live.

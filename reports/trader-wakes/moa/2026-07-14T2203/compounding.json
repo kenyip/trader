@@ -1,0 +1,91 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-14T2203",
+  "loop_signature": "historical-underlying/pcs-monday-45dte/exit21-vs-exit5/train-only-dual-cost",
+  "economic_mechanism": "In bullish or neutral regimes, Monday-entered 45-DTE put credit spreads may harvest front-loaded theta while a 21-DTE calendar exit avoids late-cycle gamma and tail exposure relative to an otherwise-identical 5-DTE-stop control.",
+  "candidate_or_family_scope": "Exact family pcs-monday-45dte-exit21-vs-exit5-train-proxy: one-lot $1-wide approximately 0.20-delta 45-DTE Monday put credit spreads with a 21-DTE stop versus an otherwise-identical 5-DTE-stop control across BAC, F, SOFI, PLTR, TSLL, SMCI, AMD, and AAPL; train-only Black-Scholes proxy evidence, capital_fit_usd/max_loss_usd $85.76..$235.43, operating max_lots=1.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "Close the exact family if no symbol's chronological first 60% has at least eight non-vacuous trades on each labeled proxy cost axis, positive PnL on both axes, exact ledger/no-same-bar integrity, one-lot max_loss_usd at or below $300, and candidate worst-axis PnL strictly above the identical 5-DTE-stop control; qualifying pooled worst-axis PnL must also be positive. Do not spend the final 40% holdout when train fails.",
+  "outcome": "FAMILY_CLOSED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "No candidate advanced beyond F0. All eight symbols completed, no symbol passed both train cost axes, every 5% row was negative, seven of eight fixed-$0.01 rows were negative, and AAPL's +$128.60 fixed-cost result paired with -$470.44 at 5% slip. The final 40% holdout remained untouched."
+  },
+  "search_information": {
+    "summary": "The fixed-DNA train-only causal-management lab closed one exact Monday 45-DTE PCS family without spending holdout. Candidate calendar stops occurred only 17 times across 16 candidate symbol/cost rows, with F and SOFI path-identical to control and profit-target/regime exits dominant, so the result is a cost-adjusted expectancy failure under sparsely exercised calendar-stop contrast rather than pure early-theta/late-gamma isolation. The finalizer also repaired ambiguous lot labels so all living rows distinguish theoretical sleeve capacity from the one-lot operating cap and reproduced the unchanged strategy result.",
+    "delta_kinds": [
+      "evidence",
+      "falsification",
+      "repair"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "falsification",
+      "summary": "The exact fixed-DNA pcs-monday-45dte-exit21-vs-exit5-train-proxy family closed at F0: 8/8 completed, 0 dual-cost train passes, all 5% rows negative, seven fixed-cost rows negative, no holdout simulation, no registry write, and no candidate or capital seat.",
+      "novelty_key": "pcs-monday-45dte-exit21-vs-exit5-train-proxy-family-close-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-14T2203/pcs-early-exit-train.json",
+        "reports/trader-wakes/2026-07-14T2203-moa-merge.md"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "The reusable train-only causal-management lab now fails closed on invalid, vacuous, or inexact controls and labels max_loss_usd plus one-lot operating capacity explicitly; shared summarizer capacity is retained only as theoretical_max_lots. Behavioral and negative-control tests cover candidate/control purity, dual-cost gates, chronology-safe ranking, calendar-stop diagnostics, and operating-versus-theoretical lot labels.",
+      "novelty_key": "pcs-train-causal-control-integrity-and-capital-label-repair-v1",
+      "artifacts": [
+        "scripts/pcs_early_exit_train_lab.py",
+        "tests/test_pcs_early_exit_train_lab.py"
+      ]
+    },
+    {
+      "kind": "evidence",
+      "summary": "The finalizer regenerated the canonical artifact after the label repair and reproduced every substantive field except generated_at: 8 rows, 32 candidate/control cost rows, 17 candidate calendar-stop exits, explicit one-lot operating fields, and the unchanged FAMILY_CLOSED decision at canonical SHA-256 39113fe2aa6fa071a09902470fad3e39a30cf765a2dfdf32e1d42986a9c6446e.",
+      "novelty_key": "pcs-early-exit-finalizer-substantive-reproduction-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-14T2203/pcs-early-exit-train.json",
+        "reports/trader-wakes/moa/2026-07-14T2203/learning-promotion.md"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "The evidence isolates a pure early-theta versus late-gamma calendar-stop mechanism.",
+      "status": "rejected",
+      "rationale": "Calendar-stop contrast was sparse: 17 candidate dte_stop exits across 16 candidate symbol/cost rows, F and SOFI were path-identical to control, and profit-target/regime-flip exits dominated. Final surfaces describe a cost-adjusted expectancy failure under sparsely exercised calendar-stop contrast."
+    },
+    {
+      "finding": "The close should quarantine all Monday PCS or all 45-DTE management variants.",
+      "status": "rejected",
+      "rationale": "The durable close is limited to pcs-monday-45dte-exit21-vs-exit5-train-proxy and nearby stop nudges or symbol cherry-picks of the same DNA. A genuinely new mechanism or evidence class is not globally frozen."
+    },
+    {
+      "finding": "Axis max_lots=3 can remain beside a top-level one-lot operating cap without explicit qualification.",
+      "status": "repaired",
+      "rationale": "Living axis rows now retain shared-summarizer capacity as theoretical_max_lots while setting operating_max_lots=1 and max_lots=1; top-level rows now state capital_fit_usd, max_loss_usd, one_lot_max_loss_usd, operating_max_lots=1, and max_lots=1. The canonical experiment was rerun and its strategy decision was unchanged.",
+      "repair_artifacts": [
+        "scripts/pcs_early_exit_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_pcs_early_exit_train_lab.py"
+      ]
+    },
+    {
+      "finding": "The challenger's four-test rerun is sufficient final verification.",
+      "status": "rejected",
+      "rationale": "The finalizer independently ran 37 focused behavioral/boundary/negative-control/regression tests, five new-lab tests, compile, substantive experiment reproduction, platform smoke, coverage regeneration, and the full 269-test suite; all passed."
+    },
+    {
+      "finding": "The low-HV NEXT may rank on contemporaneous volatility or reach option marks before underlying validation.",
+      "status": "rejected",
+      "rationale": "The sole NEXT requires prior completed 60-session HV known before each rank month, same-date top-quartile controls, chronological underlying train then untouched holdout, and option marks only after the underlying mechanism advances."
+    }
+  ],
+  "closed_families": [
+    "pcs-monday-45dte-exit21-vs-exit5-train-proxy"
+  ],
+  "data_dependencies": [],
+  "evidence_wake_condition": null,
+  "next": "Build and run one lagged monthly cross-sectional low-realized-volatility underlying pre-screen over a fixed liquid multi-name universe: rank only on prior completed 60-session HV known before each rank month, compare bottom-quartile forward returns with same-date top-quartile controls, use chronological train then untouched holdout on the underlying mechanism, and reach option marks only if that mechanism advances under a predeclared falsifier; do not retune the closed PCS stop family or take paper/shadow/arm/live action."
+}
