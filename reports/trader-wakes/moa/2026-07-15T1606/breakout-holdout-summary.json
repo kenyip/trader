@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "stamp": "2026-07-15T1606",
+  "phase": "BUILD",
+  "paper_only": true,
+  "candidate_id": "MULTINAME_BREAKOUT_BULL_CALL_14D_V1",
+  "strategy_outcome": "STRATEGY_ADVANCED",
+  "funnel_stage_before": "F1_TRAIN",
+  "funnel_stage_after": "F2_UNTOUCHED_HOLDOUT",
+  "bar_claimed": "discovery_bar_L0_only",
+  "claim_labels": {
+    "funnel_claim_f2": true,
+    "l1_claim": false,
+    "legacy_source_note": "The immutable one-shot cache used the overloaded f2_or_l1_claim field; this durable surface supersedes that label. F2 discovery is not L1 or capital-seat authority."
+  },
+  "authority": {
+    "l0_discovery": true,
+    "l1_or_capital_seat": false,
+    "paper_or_higher": false,
+    "shadow_or_live": false
+  },
+  "source_artifact": {
+    "path": ".cache/platform/breakout_continuation_holdout_2026-07-15T1606.json",
+    "sha256": "dd30bee303b7e08dc5932f1bbd69177dcf26c63141b0b09a7aabd7a2baf40e7d",
+    "bytes": 94859
+  },
+  "population_verification": {
+    "exact_population_reproduced": true,
+    "matched_blueprints": 281,
+    "train_blueprints": 168,
+    "holdout_blueprints": 113,
+    "all_identity_sha256": "80ea8b636da55b234c7f20c076d2f5fa72d7d063f93cde472a2ea646a26efce8",
+    "train_identity_sha256": "afbbc104603ec3bff5363ae99bf361a18b904c5f589f76a3a24a379514986fc1",
+    "holdout_identity_sha256": "9f8b3077a8a0a7be480ef38922f9db196c54a36c7674a1b23199833f8750e434"
+  },
+  "data_verification": {
+    "all_source_hashes_match": true,
+    "network_calls": 0,
+    "common_panel_rows": 2646,
+    "common_panel_start": "2016-01-04",
+    "common_panel_end": "2026-07-14"
+  },
+  "holdout": {
+    "one_shot_open": true,
+    "n_pairs": 113,
+    "symbols_with_pairs": ["AAPL", "AMD", "AMZN", "GOOGL", "META", "MSFT", "NVDA", "TSLA"],
+    "pairs_by_symbol": {
+      "AAPL": 14,
+      "AMD": 16,
+      "AMZN": 16,
+      "GOOGL": 15,
+      "META": 16,
+      "MSFT": 9,
+      "NVDA": 19,
+      "TSLA": 8
+    },
+    "treated_mean_return_after_cost": 0.022298429107554533,
+    "control_mean_return_after_cost": -0.014955184853565303,
+    "paired_excess_mean": 0.03725361396111984,
+    "paired_excess_median": 0.01857473867835402,
+    "paired_excess_positive_frequency": 0.584070796460177,
+    "paired_excess_bootstrap_lb90": 0.018623657692392246,
+    "gate_pass": true,
+    "gate_checks": {
+      "minimum_holdout_pairs": true,
+      "minimum_symbol_breadth": true,
+      "positive_treated_mean_after_cost": true,
+      "positive_paired_excess_mean": true,
+      "paired_excess_bootstrap_lb90_positive": true,
+      "zero_integrity_violations": true
+    },
+    "integrity_violations": []
+  },
+  "non_gating_concentration": {
+    "role": "mandatory_non_gating_context",
+    "leave_one_symbol_out_lb90_all_positive": true,
+    "weak_symbol_slices": {
+      "AMZN": {
+        "n_pairs": 16,
+        "treated_mean_return_after_cost": -0.004573354985447579,
+        "paired_excess_mean": 0.0010384756773655149,
+        "paired_excess_bootstrap_lb90": -0.02789000566663792
+      },
+      "META": {
+        "n_pairs": 16,
+        "treated_mean_return_after_cost": -0.0023666881865636175,
+        "paired_excess_mean": -0.025217260392694375,
+        "paired_excess_bootstrap_lb90": -0.06180212520203117
+      },
+      "MSFT": {
+        "n_pairs": 9,
+        "treated_mean_return_after_cost": 0.008945356954106427,
+        "paired_excess_mean": 0.008762435629057097,
+        "paired_excess_bootstrap_lb90": -0.015286454436075335
+      }
+    },
+    "chronological_tertiles": [
+      {
+        "tertile": 1,
+        "n_pairs": 38,
+        "first_treated_signal_date": "2022-03-24",
+        "last_treated_signal_date": "2023-10-25",
+        "treated_mean_return_after_cost": -0.0005878333948729847,
+        "paired_excess_mean": 0.016188158297163305,
+        "paired_excess_bootstrap_lb90": -0.014790924642865421
+      },
+      {
+        "tertile": 2,
+        "n_pairs": 38,
+        "first_treated_signal_date": "2023-11-01",
+        "last_treated_signal_date": "2024-12-10",
+        "treated_mean_return_after_cost": 0.02657479705071303,
+        "paired_excess_mean": 0.04040726479126693,
+        "paired_excess_bootstrap_lb90": 0.016622069333509532
+      },
+      {
+        "tertile": 3,
+        "n_pairs": 37,
+        "first_treated_signal_date": "2025-01-06",
+        "last_treated_signal_date": "2026-05-28",
+        "treated_mean_return_after_cost": 0.04141129379004705,
+        "paired_excess_mean": 0.05564952162827546,
+        "paired_excess_bootstrap_lb90": 0.02002674996056592
+      }
+    ]
+  },
+  "option_stage": {
+    "pricing_calls": 0,
+    "option_payoff_simulated": false,
+    "authority": "none"
+  },
+  "next_option_freeze_constraints": {
+    "freeze_partition": "original_168_development_blueprints_only",
+    "opened_113_role": "inspected_secondary_stress_only",
+    "retune_from_secondary_stress": false,
+    "structure": "one_lot_14_dte_1_usd_wide_bull_call_debit_spread",
+    "primary_metric": "absolute_after_cost_option_pnl_and_path_risk",
+    "paired_underlying_excess_can_rescue_failure": false,
+    "hard_time_stop_sessions": 10,
+    "hold_to_expiry_is_primary_exit": false,
+    "cost_axes": ["adverse_fixed_dollar_multileg", "adverse_percentage_multileg"],
+    "listing_grid_required": true,
+    "missing_listing_fails_closed": true,
+    "symbol_time_concentration_required": true,
+    "max_loss_usd_one_lot": 300.0,
+    "window_max_drawdown_usd": 75.0,
+    "authority_limit": "L0_proxy_no_L1_or_capital_seat"
+  },
+  "risk": {
+    "structure": "conditional_bull_call_debit_spread_not_yet_priced",
+    "capital_fit_usd": 100.0,
+    "one_lot_max_loss_usd": 100.0,
+    "max_lots": 1,
+    "portfolio_overlap": "at most one correlated breakout risk unit"
+  },
+  "evidence_critique": "The unchanged pooled discovery gate passed and every leave-one-symbol-out pooled LB90 remained positive, but the first chronological tertile and the AMZN, META, and MSFT slices were weak. These were predeclared non-gating diagnostics and do not retroactively alter F2; they constrain the next option-payoff/stability work and prohibit L1 or paper claims. Fixed-present-day universe selection, adjusted underlying closes, proxy absolute-level sensitivity, no option payoff, no observed option costs, and no fill/path management remain explicit limitations.",
+  "freedom_audit": "Symbol and strategy freedom remained open; this wake chose the reserved breakout holdout because it was the active epoch's highest-information one-shot evidence, not because the caller assigned a symbol or structure."
+}

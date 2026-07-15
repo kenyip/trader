@@ -1,0 +1,119 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-15T1606",
+  "loop_signature": "build|multiname-breakout-continuation|frozen-281|one-shot-113-holdout|f1-to-f2-l0|finalizer-claim-authority-repair",
+  "economic_mechanism": "Gradual information diffusion and trend-following demand may sustain ten-session continuation after a completed close at least 2% above the prior completed 20-session high while above a fully warmed prior-completed SMA100.",
+  "candidate_or_family_scope": "MULTINAME_BREAKOUT_BULL_CALL_14D_V1 / TIME_SERIES_20D_BREAKOUT_CONTINUATION on the frozen AAPL, MSFT, NVDA, AMZN, META, GOOGL, AMD, and TSLA adjusted-close panel; next-session entry; prior-only same-symbol controls; non-overlapping pair windows; chronological 168/113 development/holdout split; future one-lot 14-DTE $1-wide bull-call debit spread remains structural only with capital_fit_usd=100, max_loss_usd=100 before closing friction, and max_lots=1.",
+  "funnel_stage_before": "F1_TRAIN",
+  "funnel_stage_after": "F2_UNTOUCHED_HOLDOUT",
+  "falsifier": "On the exact final 40% frozen partition: fewer than 80 pairs or six symbols; non-positive treated mean after the same labeled symmetric 20-bps underlying sensitivity; non-positive paired excess mean; non-positive one-sided 90% circular five-pair-block bootstrap lower bound; changed source/population/train-prefix identity; or any chronology, control-reuse, overlap, match-bound, finite-value, or strict-JSON violation.",
+  "outcome": "STRATEGY_ADVANCED",
+  "strategy_advancement": {
+    "advanced": true,
+    "summary": "The frozen 113-pair holdout passed all six unchanged pooled discovery gates: treated +2.2298%, control -1.4955%, paired excess +3.7254%, LB90 +1.8624%, eight-symbol breadth, and zero integrity violations. The candidate advanced only F1_TRAIN to F2_UNTOUCHED_HOLDOUT under L0; pricing_calls remains zero and no L1, capital-seat, paper, shadow, or live authority followed."
+  },
+  "search_information": {
+    "summary": "The wake closed the active epoch's one-shot evidence decision, added fail-closed source/population/overwrite machinery, separated F2 funnel progress from L1 authority, and froze claim-aligned downstream option constraints while retaining heterogeneous symbol/time diagnostics as mandatory non-gating context.",
+    "delta_kinds": [
+      "candidate",
+      "repair",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "candidate",
+      "summary": "Advanced the exact pooled breakout-continuation candidate from F1 to F2/L0 on 113 reserved pairs while preserving zero option or capital authority and explicit one-lot structural bounds.",
+      "novelty_key": "multiname_breakout_bull_call_14d_v1_f2_holdout_finalized_2026_07_15",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-15T1606/breakout-holdout-summary.json",
+        "reports/trader-wakes/moa/2026-07-15T1606/strategy-decision-charter.md",
+        "configs/search_epoch.json",
+        "reports/readiness/LATEST.md"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Repaired the overloaded F2-or-L1 label and encoded the challenger-required development-only option freeze, absolute after-cost PnL/path-risk objective, ten-session primary stop, dual cost axes, listing fail-close, and concentration diagnostics as tested runner output.",
+      "novelty_key": "breakout_f2_authority_and_option_freeze_constraints_repair_v1",
+      "artifacts": [
+        "scripts/breakout_continuation_holdout_lab.py",
+        "tests/test_breakout_continuation_holdout_lab.py",
+        "reports/trader-wakes/moa/2026-07-15T1606/breakout-holdout-summary.json",
+        "configs/search_epoch.json"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "Closed the active epoch at F2/L0 and barred relabeling the opened 113 rows as a newly untouched option holdout; downstream DNA must freeze on the original 168 development rows and use the 113 only as inspected secondary stress.",
+      "novelty_key": "breakout_f2_downstream_holdout_reuse_stop_rule_final_v1",
+      "artifacts": [
+        "configs/search_epoch.json",
+        "reports/trader-wakes/moa/2026-07-15T1606/merged-next-seed.md",
+        "reports/trader-wakes/moa/2026-07-15T1606/breakout-holdout-summary.json"
+      ]
+    }
+  ],
+  "critic_findings": [
+    {
+      "finding": "N1: f2_or_l1_claim conflated F2 funnel progress with L1 authority.",
+      "status": "repaired",
+      "rationale": "Future payloads now emit separate funnel_claim_f2 and l1_claim fields, strip an inherited legacy flag, and retain the independent fail-closed authority block. The immutable one-shot cache was not rewritten; its tracked summary explicitly supersedes the legacy label.",
+      "repair_artifacts": [
+        "scripts/breakout_continuation_holdout_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_breakout_continuation_holdout_lab.py"
+      ]
+    },
+    {
+      "finding": "N2: the next option stage must optimize absolute after-cost option PnL and path risk rather than rely on control underperformance or underlying paired excess.",
+      "status": "repaired",
+      "rationale": "The runner now emits primary_metric=absolute_after_cost_option_pnl_and_path_risk and paired_underlying_excess_can_rescue_failure=false; tests assert both boundaries and the merged NEXT uses the same reject-unless semantics.",
+      "repair_artifacts": [
+        "scripts/breakout_continuation_holdout_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_breakout_continuation_holdout_lab.py"
+      ]
+    },
+    {
+      "finding": "N3: option payoff work must remain aligned to the measured ten-session horizon, fail closed on missing listings, and report symbol/time concentration.",
+      "status": "repaired",
+      "rationale": "The runner now freezes a hard ten-session primary stop, marks hold-to-expiry non-primary, requires listed-expiry/strike availability, fails closed on missing listings, and requires symbol/time concentration; focused tests assert these constraints.",
+      "repair_artifacts": [
+        "scripts/breakout_continuation_holdout_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_breakout_continuation_holdout_lab.py"
+      ]
+    },
+    {
+      "finding": "N4: search_epoch.json rounded paired-excess and LB90 values differently from the canonical summary.",
+      "status": "rejected",
+      "rationale": "Rejected as a strategy or implementation defect, but accepted as a truth-surface cleanup: the config is now pinned to the exact canonical summary values 0.03725361396111984 and 0.018623657692392246, and the finalizer consistency command proved exact equality plus canonical SHA/size."
+    },
+    {
+      "finding": "N5: finalization required the full repository suite, not only focused tests.",
+      "status": "rejected",
+      "rationale": "This was a verification requirement rather than an executor code defect. Finalization ran 36 focused/adjacent tests and the full 319-test unittest suite; both returned OK."
+    },
+    {
+      "finding": "N6: the new validator capability must not be reported as strategy advancement by itself.",
+      "status": "rejected",
+      "rationale": "No capability-only advancement claim remains. Strategy advancement is tied to the frozen 113-pair experiment; validator and label repairs are separately recorded as search-information and repair deltas."
+    },
+    {
+      "finding": "Weak AMZN/META slices, thin MSFT support, and a weak early chronological tertile should narrow the claim.",
+      "status": "rejected",
+      "rationale": "Rejected only as a reason to mutate or retroactively fail the predeclared pooled gate. Accepted as mandatory scope limitation: durable surfaces make no universal-by-symbol or temporal-uniformity claim and require concentration reporting in the next option stage."
+    }
+  ],
+  "closed_families": [],
+  "data_dependencies": [
+    "Frozen adjusted-close source files and exact 281-blueprint population remain the historical F2 evidence base.",
+    "A claim-aligned option specification must be frozen on only the original 168 development rows before any use of the opened 113 rows as secondary stress.",
+    "Fresh live-clock paper and claim-appropriate option/fill evidence remain required before F4 or any higher authority."
+  ],
+  "next": "BREAKOUT_F2_OPTION_PAYOFF_FREEZE: freeze one exact listed-expiry/strike/debit/management 14-DTE $1-wide bull-call specification on only the original 168 development rows; require non-vacuous positive absolute after-cost option PnL under adverse fixed-dollar and percentage multi-leg costs, one-lot max loss <=$300, window max DD <=$75, listing availability, symbol/time concentration, a hard 10-session primary stop, and no same-bar reentry; use the opened 113 only as labeled secondary stress without retuning; keep evidence L0/no L1 and require fresh live-clock paper before F4."
+}

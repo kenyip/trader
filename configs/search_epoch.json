@@ -1,6 +1,6 @@
 {
   "epoch_id": "2026-07-15-time-series-breakout-payoff",
-  "status": "active",
+  "status": "completed",
   "started_stamp": "2026-07-15T1515",
   "reassessment_complete": true,
   "reassessment_doc": "docs/SEARCH_DESIGN_REASSESSMENT_2026-07-15T1515.md",
@@ -8,7 +8,7 @@
   "charter_doc": "docs/TRADER_RESTART_CHARTER.md",
   "goal_doc": "configs/build_lab_free_goal.txt",
   "prior_epoch_id": "2026-07-15-viable-path",
-  "summary": "Successor epoch after three F0 no-advance closes in 2026-07-15-viable-path. The first frozen within-symbol event-time continuation experiment advanced only F0 to pooled F1/L0. The next and only candidate action is the unchanged one-shot untouched holdout; prior closed families remain quarantined and option pricing remains forbidden unless F2 advances.",
+  "summary": "Successor epoch after three F0 no-advance closes in 2026-07-15-viable-path. The frozen within-symbol event-time continuation experiment advanced from F0 to pooled F1/L0, then the exact one-shot 113-pair holdout passed the unchanged pooled gate and advanced to F2_UNTOUCHED_HOLDOUT/L0. The epoch success definition is satisfied; option pricing remains absent and no L1, capital seat, paper, shadow, arm, or live authority follows.",
   "mechanism_lane": "time-series 20-session breakout continuation with a conditional bounded positive-delta debit expression",
   "primary_evidence_class": "within-symbol prior-only matched event study with untouched chronological holdout",
   "frozen_first_experiment": {
@@ -80,6 +80,20 @@
     "disposition": "burst stopped; closed families remain quarantined"
   },
   "epoch_success_definition": "Advance MULTINAME_BREAKOUT_BULL_CALL_14D_V1 from F1_TRAIN to F2_UNTOUCHED_HOLDOUT under the unchanged pooled discovery gate, or close the exact family; no option stage or capital seat unless F2 first advances.",
+  "epoch_result": {
+    "stamp": "2026-07-15T1606",
+    "outcome": "STRATEGY_ADVANCED",
+    "funnel_stage_before": "F1_TRAIN",
+    "funnel_stage_after": "F2_UNTOUCHED_HOLDOUT",
+    "holdout_pairs": 113,
+    "holdout_symbols": 8,
+    "paired_excess_mean": 0.03725361396111984,
+    "paired_excess_bootstrap_lb90": 0.018623657692392246,
+    "gate_pass": true,
+    "pricing_calls": 0,
+    "authority": "none",
+    "summary_path": "reports/trader-wakes/moa/2026-07-15T1606/breakout-holdout-summary.json"
+  },
   "epoch_closed_families_from_prior": [
     "TSLL_TSLA_5D_TRACKING_SHORTFALL_REBOUND",
     "ONE_RISK_UNIT_CADENCE_POLICY_F0: exact ONE_RISK_UNIT_CADENCE_PCS_V1 global-one-unit fixed-priority catalog-14-DTE PCS implementation across the frozen eight-symbol panel and dual cost axes",
@@ -87,9 +101,9 @@
   ],
   "do_not": [
     "reopen closed families without a genuinely new evidence class",
-    "retune the frozen breakout panel, signal, match bounds, horizon, split, or cost label before the one-shot holdout decision",
-    "peek reserved holdout outcomes outside the one-shot validator",
-    "price options before the untouched holdout advances to F2",
+    "retune the frozen breakout panel, signal, match bounds, horizon, split, or cost label after the one-shot holdout result",
+    "represent the opened 113-pair holdout as unread or as a new untouched option holdout",
+    "price options before freezing strike/expiry/debit/management on the original 168 development rows and labeling any holdout use as secondary stress",
     "treat capability-only completion as strategy progress",
     "promote discovery-only survivors to the capital path",
     "auto shadow/live/arm",
@@ -97,10 +111,11 @@
     "densify through burst-stop without a new written reassessment"
   ],
   "notes": [
-    "Epoch opened by the 2026-07-15T1515 wake.",
-    "The first experiment advanced only to F1_TRAIN/L0; option pricing deliberately did not run.",
-    "The next wake must resolve the frozen untouched holdout as F2 advance or exact-family close."
+    "Epoch opened by the 2026-07-15T1515 wake and completed by the 2026-07-15T1606 one-shot holdout wake.",
+    "The exact 113-pair holdout advanced to F2_UNTOUCHED_HOLDOUT/L0; symbol/time heterogeneity remains mandatory context.",
+    "Option pricing has not run. Any next option specification must freeze on the original 168 development rows; the opened 113 rows are secondary stress only, not a new untouched option holdout."
   ],
   "activated_at": "2026-07-15T15:15:00-07:00",
-  "activated_from": "docs/SEARCH_DESIGN_REASSESSMENT_2026-07-15T1515.md"
+  "activated_from": "docs/SEARCH_DESIGN_REASSESSMENT_2026-07-15T1515.md",
+  "completed_at": "2026-07-15T16:06:00-07:00"
 }
