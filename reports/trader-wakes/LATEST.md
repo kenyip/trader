@@ -2,8 +2,8 @@
 
 Phase: BUILD / L0 discovery
 Role: GPT 5.6 Sol finalizer (single writer)
-Status: MOA_FINALIZE_READY
-Integration: pending deterministic wrapper gate; not RUN COMPLETE
+Status: RUN COMPLETE
+Integration: complete; deterministic wrapper integrated/pushed/postflight-verified as `d6ee8dba463ee9e617ff3b3e927a1c077906217a`
 
 ## Scoped charter
 
@@ -49,7 +49,7 @@ No challenger finding was rejected on substance. Entries marked `rejected` in `c
 - Full suite: 402 tests, OK.
 - Strict compile of changed Python/test files: exit 0.
 - Two independent exact-byte-cache replays: normalized SHA-256 `8d38697a...1cd3` both times; outcome `FAMILY_CLOSED`, train gate false, holdout outcomes unread, option pricing not run.
-- Deterministic prepare-mode completion gate, final diff/secret/debris scan, and clean pre-integration handoff are recorded in `reports/trader-wakes/moa/2026-07-16T0242/learning-promotion.md`.
+- Deterministic prepare-mode and wrapper postflight gates passed; full integration receipt is `.cache/platform/completion/2026-07-16T0242.json` (`completion=true`, `integrated=true`, `pushed=true`, `clean=true`).
 
 ## Durable learning
 

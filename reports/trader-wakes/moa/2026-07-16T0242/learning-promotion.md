@@ -24,7 +24,7 @@ Challenger reconciliation:
 - Repaired: added machine-readable matching-distance/extreme-pair evidence in `scripts/beige_book_range_compression_train_lab.py` with row-level reconstruction tests; added completed-epoch `completed_stamp` upper-bound scoping in `scripts/trader_build_compounding.py` with an independent-wake exclusion regression.
 - Rejected only as machinery defects, not on substance: the accepted strategy judgment, report naming, LB90/option/capital boundaries, readiness update, and finalizer-owned verification required report/process reconciliation rather than code repair. Exact status/rationale for all nine findings is machine-readable in `compounding.json`.
 
-Integration remains pending the deterministic wrapper gate. This artifact is a green handoff candidate, not a `RUN COMPLETE` receipt.
+Integration subsequently passed the deterministic wrapper gate: `RUN COMPLETE` as `d6ee8dba463ee9e617ff3b3e927a1c077906217a`; postflight receipt confirms clean pushed `main`.
 
 ## DURABLE
 

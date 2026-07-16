@@ -1,10 +1,10 @@
 # Agentic go-live readiness — LATEST
 
-As-of: 2026-07-16T0242 MoA finalizer handoff
+As-of: 2026-07-16T0242 RUN COMPLETE (`d6ee8db`); integrated/pushed/postflight-complete on `main == origin/main`
 Phase: BUILD
 Status: NOT READY
 Authority: research-only; no broker session, funding, shadow promotion, arming, or live orders
-Integration: pending deterministic wrapper gate; this is not a RUN COMPLETE receipt
+Integration: complete; wrapper postflight receipt confirms clean pushed main
 
 ## Current strategy-convergence state
 

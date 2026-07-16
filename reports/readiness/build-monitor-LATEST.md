@@ -1,4 +1,4 @@
-# BUILD fast-track monitor — 2026-07-16T0323 PDT
+# BUILD fast-track monitor — 2026-07-16T0334 PDT
 
 Monitor-only. Program goal: **strategy-funnel advancement → L1 high-confidence strategy** (then B6 paper). Research-process/capability residue is secondary context. Ken/Jarvis do not micromanage axes.
 
@@ -9,28 +9,28 @@ Monitor-only. Program goal: **strategy-funnel advancement → L1 high-confidence
 - Consecutive no-advance streak (**active epoch**): **1** · pivot/stop: **none**
 - Latest wake file present: **True**
 - Readiness language: **L1-positive?**
-- Lock: **yes**
+- Lock: **no**
 
 ## Recent complete duals (strategy verdict first)
 
 | stamp | verdict | advanced | process_score* | outcome | kind |
 |---|---|---:|---:|---|---|
-| `2026-07-15T2045` | **INFORMATIVE_BUT_NOT_CLOSER** | no | 4 | BLOCKER_REMOVED_AND_RETESTED | delta_capability, delta_falsification, delta_repair, delta_stop_rule, strategy_no_advance |
 | `2026-07-15T2152` | **INFORMATIVE_BUT_NOT_CLOSER** | no | 2 | EVIDENCE_WAIT | delta_evidence, delta_repair, delta_stop_rule, strategy_no_advance |
 | `2026-07-15T2254` | **INFORMATIVE_BUT_NOT_CLOSER** | no | 3 | FAMILY_CLOSED | delta_capability, delta_falsification, delta_stop_rule, strategy_no_advance |
 | `2026-07-15T2344` | **INFORMATIVE_BUT_NOT_CLOSER** | no | 3 | FAMILY_CLOSED | delta_capability, delta_falsification, delta_stop_rule, strategy_no_advance |
 | `2026-07-16T0029` | **INFORMATIVE_BUT_NOT_CLOSER** | no | 4 | BLOCKER_REMOVED_AND_RETESTED | delta_falsification, delta_repair, delta_stop_rule, strategy_no_advance |
 | `2026-07-16T0112` | **INFORMATIVE_BUT_NOT_CLOSER** | no | 4 | BLOCKER_REMOVED_AND_RETESTED | delta_falsification, delta_repair, delta_stop_rule, strategy_no_advance |
+| `2026-07-16T0242` | **INFORMATIVE_BUT_NOT_CLOSER** | no | 3 | FAMILY_CLOSED | delta_capability, delta_falsification, delta_repair, delta_stop_rule, strategy_no_advance |
 
 *process_score is research-process/capability secondary context only; it must not be read as strategy closeness.
 
 ## Drift / alerts
 
-- INFO: dual running (lock age 40m)
+- none
 
 ## Current NEXT (from readiness/LATEST.md)
 
-- See readiness/LATEST.md; no NEXT assertion parsed.
+- `MACRO_INFORMATION_RESOLUTION_TWO_CLOSE_PIVOT_REASSESSMENT` — reconcile the completed FOMC bullish-drift close with the independent Beige Book range-compression close. Treat CPI as adjacency context, not an order. Close exactly one decision: open a genuinely different CPI/inflation-surprise route only after freezing an accessible official prior-known source, coverage, time, control, uncertainty, and no-option F0 semantics before outcomes, or pivot away from scheduled macro information-resolution to a materially different non-quarantined mechanism/evidence class. Do not inspect either sealed holdout, retune either closed family, force an option wrapper, extend the completed FOMC epoch, or claim registry/paper/shadow/arm/broker/funding/live authority.
 
 ## Confidence ladder
 
@@ -41,7 +41,7 @@ Monitor-only. Program goal: **strategy-funnel advancement → L1 high-confidence
 ## Progress script (strategy-first)
 
 ```
-# BUILD strategy-convergence scoreboard — 2026-07-16T0323
+# BUILD strategy-convergence scoreboard — 2026-07-16T0334
 
 Primary question: **are the new runs better toward a living strategy?**
 Uses the machine-enforced strategy-run outcome contract (`compounding.json` schema v2;
@@ -51,13 +51,13 @@ scores are **not** strategy closeness. See `docs/BUILD_PROGRESS_AND_CONFIDENCE.m
 ## Strategy-convergence scorecard
 
 - Search epoch: **FOMC_POLICY_INFORMATION_RESOLUTION_DRIFT_V1** (status `completed`, started_stamp `2026-07-16T0112`)
-- Stamps scored: **10** (complete **9**)
+- Stamps scored: **10** (complete **10**)
 - Strategy advances (BETTER): **0** · rate **0%** of complete
-- INFORMATIVE_BUT_NOT_CLOSER: **9** · INTEGRATION_PENDING: **0** · INVALID_THRASH: **1**
+- INFORMATIVE_BUT_NOT_CLOSER: **10** · INTEGRATION_PENDING: **0** · INVALID_THRASH: **0**
 - Living candidates: **0** (none)
 - Furthest living funnel stage: **—**
 - Consecutive no-advance streak (**configured epoch**): **1**
-- Historical no-advance streak (all integrated, context only): **11**
+- Historical no-advance streak (all integrated, context only): **12**
 - Pivot/stop state: **none** (pivot≥2=False, burst-stop≥3=False)
 
 ### Per-run strategy verdicts
@@ -73,7 +73,7 @@ scores are **not** strategy closeness. See `docs/BUILD_PROGRESS_AND_CONFIDENCE.m
 | `2026-07-15T2344` | **INFORMATIVE_BUT_NOT_CLOSER** | no | FAMILY_CLOSED | F0_MECHANISM→F0_MECHANISM | Exact CROSS_SECTION_RESIDUAL_REVERSAL… | 3 |
 | `2026-07-16T0029` | **INFORMATIVE_BUT_NOT_CLOSER** | no | BLOCKER_REMOVED_AND_RETESTED | F2_UNTOUCHED_HOLDOUT→F2_UNTOUCHED_HOLDOUT | Exact MULTINAME_BREAKOUT_BULL_CALL_14… | 4 |
 | `2026-07-16T0112` | **INFORMATIVE_BUT_NOT_CLOSER** | no | BLOCKER_REMOVED_AND_RETESTED | F0_MECHANISM→F0_MECHANISM | Exact FOMC_INFORMATION_RESOLUTION_SPY… | 4 |
-| `2026-07-16T0242` | **INVALID_THRASH** | no | FAMILY_CLOSED | F0_MECHANISM→F0_MECHANISM | Exact BEIGE_BOOK_RANGE_COMPRESSION_SP… | 0 |
+| `2026-07-16T0242` | **INFORMATIVE_BUT_NOT_CLOSER** | no | FAMILY_CLOSED | F0_MECHANISM→F0_MECHANISM | Exact BEIGE_BOOK_RANGE_COMPRESSION_SP… | 3 |
 
 Verdict definitions:
 
@@ -89,5 +89,5 @@ Verdict definitions:
 
 ## Secondary context (research-process / capability — not strategy closeness)
 
-- Avg research-process score (complete): *
+- Avg research-process score
 ```

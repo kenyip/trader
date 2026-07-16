@@ -1,4 +1,4 @@
-# BUILD strategy-convergence scoreboard — 2026-07-16T0323
+# BUILD strategy-convergence scoreboard — 2026-07-16T0333
 
 Primary question: **are the new runs better toward a living strategy?**
 Uses the machine-enforced strategy-run outcome contract (`compounding.json` schema v2;
@@ -8,13 +8,13 @@ scores are **not** strategy closeness. See `docs/BUILD_PROGRESS_AND_CONFIDENCE.m
 ## Strategy-convergence scorecard
 
 - Search epoch: **FOMC_POLICY_INFORMATION_RESOLUTION_DRIFT_V1** (status `completed`, started_stamp `2026-07-16T0112`)
-- Stamps scored: **12** (complete **11**)
+- Stamps scored: **12** (complete **12**)
 - Strategy advances (BETTER): **0** · rate **0%** of complete
-- INFORMATIVE_BUT_NOT_CLOSER: **11** · INTEGRATION_PENDING: **0** · INVALID_THRASH: **1**
+- INFORMATIVE_BUT_NOT_CLOSER: **12** · INTEGRATION_PENDING: **0** · INVALID_THRASH: **0**
 - Living candidates: **0** (none)
 - Furthest living funnel stage: **—**
 - Consecutive no-advance streak (**configured epoch**): **1**
-- Historical no-advance streak (all integrated, context only): **11**
+- Historical no-advance streak (all integrated, context only): **12**
 - Pivot/stop state: **none** (pivot≥2=False, burst-stop≥3=False)
 
 ### Per-run strategy verdicts
@@ -32,7 +32,7 @@ scores are **not** strategy closeness. See `docs/BUILD_PROGRESS_AND_CONFIDENCE.m
 | `2026-07-15T2344` | **INFORMATIVE_BUT_NOT_CLOSER** | no | FAMILY_CLOSED | F0_MECHANISM→F0_MECHANISM | Exact CROSS_SECTION_RESIDUAL_REVERSAL… | 3 |
 | `2026-07-16T0029` | **INFORMATIVE_BUT_NOT_CLOSER** | no | BLOCKER_REMOVED_AND_RETESTED | F2_UNTOUCHED_HOLDOUT→F2_UNTOUCHED_HOLDOUT | Exact MULTINAME_BREAKOUT_BULL_CALL_14… | 4 |
 | `2026-07-16T0112` | **INFORMATIVE_BUT_NOT_CLOSER** | no | BLOCKER_REMOVED_AND_RETESTED | F0_MECHANISM→F0_MECHANISM | Exact FOMC_INFORMATION_RESOLUTION_SPY… | 4 |
-| `2026-07-16T0242` | **INVALID_THRASH** | no | FAMILY_CLOSED | F0_MECHANISM→F0_MECHANISM | Exact BEIGE_BOOK_RANGE_COMPRESSION_SP… | 0 |
+| `2026-07-16T0242` | **INFORMATIVE_BUT_NOT_CLOSER** | no | FAMILY_CLOSED | F0_MECHANISM→F0_MECHANISM | Exact BEIGE_BOOK_RANGE_COMPRESSION_SP… | 3 |
 
 Verdict definitions:
 
@@ -48,7 +48,7 @@ Verdict definitions:
 
 ## Secondary context (research-process / capability — not strategy closeness)
 
-- Avg research-process score (complete): **3.27 / 5**
+- Avg research-process score (complete): **3.25 / 5**
 - High process-score runs (≥4): **4** · Low (≤2): **1**
 - These counts measure tooling, falsification density, and operational residue.
   A window of **4+ capability runs with strategy_no_advance is still zero strategy advance.**
@@ -66,7 +66,7 @@ Verdict definitions:
 | `2026-07-15T2344` | 3 | delta_capability, delta_falsification, delta_stop_rule, strategy_no_advance | 0/0 | gpt-5.6-sol→grok-4.5 |
 | `2026-07-16T0029` | 4 | delta_falsification, delta_repair, delta_stop_rule, strategy_no_advance | 0/0 | gpt-5.6-sol→grok-4.5 |
 | `2026-07-16T0112` | 4 | delta_falsification, delta_repair, delta_stop_rule, strategy_no_advance | 0/0 | gpt-5.6-sol→grok-4.5 |
-| `2026-07-16T0242` | 0 | failed_or_incomplete | 0/0 | gpt-5.6-sol→grok-4.5 |
+| `2026-07-16T0242` | 3 | delta_capability, delta_falsification, delta_repair, delta_stop_rule, strategy_no_advance | 0/0 | gpt-5.6-sol→grok-4.5 |
 
 ## Real-trade confidence (manual ladder)
 
