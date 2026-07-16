@@ -122,6 +122,19 @@ class TraderRunCompletionGateTest(unittest.TestCase):
         branch = f"trader/run-{stamp}"
         self._git("switch", "-c", branch)
         self._write_required_artifacts(stamp)
+        orientation = self.repo / "reports" / "trader-wakes" / "moa" / stamp / "orientation.json"
+        orientation.write_text(
+            json.dumps(
+                {
+                    "prior_novelty_keys": [
+                        "credit-risk-off-spy-forward-downside-family-close-v1",
+                        "train-only-defined-risk-candidate-factory-v1",
+                    ]
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
         self._git("add", "-A")
         result = prepare(self.repo, stamp, self.base, branch)
         self.assertTrue(result["ok"])

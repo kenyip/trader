@@ -1,0 +1,138 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-16T0454",
+  "loop_signature": "build|official-sec-form4-clustered-buying|fixed-liquid-panel|prior-same-symbol-controls|train60|10session|family-close|burst-stop",
+  "economic_mechanism": "Multiple officers/directors spending their own capital on timely disclosed direct open-market common-share purchases may convey issuer-specific valuation information that diffuses over ten sessions.",
+  "candidate_or_family_scope": "Exact SEC_FORM4_CLUSTERED_INSIDER_BUYING_CALL_21D_V1 / SEC_FORM4_CLUSTERED_OPEN_MARKET_BUYING_FORWARD_UPDRIFT on the frozen present-day liquid single-name panel: original timely Form 4, non-derivative P/A/D common equity, officer/director, transaction value at least $10,000, two distinct owners and accessions, aggregate at least $100,000 within 20 calendar days, first-public filing signal, next-session-close entry, ten-session exit, prior-only same-symbol controls, chronological 60/40 train/sealed holdout, and zero option pricing. Future conditional one-lot 18-24 DTE $2-wide bull-call debit spread only: capital_fit_usd=200, frictionless planning max_loss_usd=200 before closing friction, max_lots=1.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "Close the exact family unless train has at least 24 matched pairs across at least six signal years and six symbols, control support at least 70%, event mean after 10 bps above 0.25%, paired excess above 0.20%, circular three-pair-block LB90 above zero, event positive frequency at least 55%, event-return worst-decile mean after 10 bps at least -8%, and zero source/chronology/control/overlap/holdout integrity violations; do not read holdout outcomes or price options.",
+  "outcome": "FAMILY_CLOSED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "The exact family remains F0 and is closed. Six matched train pairs covered only 2016 and 2019 across five symbols; event/control/paired means after 10 bps were +1.482930%/+1.016569%/+0.466362%, paired median -1.224306%, circular block LB90 -2.665298%, event hit rate 50%, and event-return worst-decile -5.585214%. Density, year, symbol, LB90, and hit gates failed. No F1/F2/L1, living candidate, quality leader, capital seat, registry, paper, shadow, arm, broker, funding, or live authority was earned."
+  },
+  "search_information": {
+    "summary": "The wake added and exercised an official SEC Form 4 archive lab with strict filters, first-public-date chronology, prior-only controls, sealed holdout identities, stable persisted-byte provenance, and strict JSON. Finalizer made the event-return tail label machine-explicit without changing rows or outcome. The third consecutive active-epoch no-advance decision completed the epoch at burst stop and forces search-design reassessment before another strategy test.",
+    "delta_kinds": [
+      "capability",
+      "repair",
+      "falsification",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "Added a reusable official SEC quarterly Form 3/4/5 archive adapter and train-only clustered-buying event-study runner with hash-cited persisted inputs, strict filing/transaction filters, lag-safe next-session entry, deterministic prior-only same-symbol controls, sealed holdout identities, strict JSON, and explicit one-lot planning boundaries; behavior, parser, chronology, positive, and negative controls are executable tests.",
+      "novelty_key": "sec-form4-official-archive-train-lab-2026-07-16T0454-v1",
+      "artifacts": [
+        "scripts/sec_form4_clustered_buying_train_lab.py",
+        "tests/test_sec_form4_clustered_buying_train_lab.py",
+        "reports/trader-wakes/moa/2026-07-16T0454/sec-form4-clustered-buying-train.json"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Claim evaluation now reopens the persisted SEC bytes after a first download, and the claim exposes event_return_worst_decile_mean plus an event-specific tail gate/methodology label so paired-excess tail cannot be inferred. Regressions prove persisted-byte consumption and event-versus-paired tail separation; the unchanged real-data decision replay remains FAMILY_CLOSED.",
+      "novelty_key": "sec-form4-persisted-replay-event-tail-label-repair-2026-07-16T0454-v1",
+      "artifacts": [
+        "scripts/sec_form4_clustered_buying_train_lab.py",
+        "tests/test_sec_form4_clustered_buying_train_lab.py",
+        "reports/trader-wakes/moa/2026-07-16T0454/sec-form4-clustered-buying-train.json"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "Closed both stable IDs for the exact high-specificity Form 4 cluster geometry after the frozen train conjunction failed at n6, two years, five symbols, LB90 -2.665298%, and 50% event hit rate. Median/max prior-control distance 641.5/1,254 sessions further weakens local specificity; the six matched holdout identities remain unread and option pricing is zero.",
+      "novelty_key": "sec-form4-clustered-buying-family-close-2026-07-16T0454-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-16T0454/sec-form4-clustered-buying-train.json",
+        "reports/trader-wakes/moa/2026-07-16T0454/executor-closeout.md",
+        "reports/trader-wakes/2026-07-16T0454-moa-merge.md",
+        "reports/readiness/LATEST.md"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "Counted the 0335 sector-leader, 0408 credit-risk, and 0454 Form 4 closes as three consecutive no-advance decisions; completed POST_REASSESSMENT_INDEPENDENT_DEFINED_RISK_DISCOVERY_V1 at 0454 with pivot and burst-stop true, retained the prior reassessment path, and prohibited a fourth strategy test before a dedicated reassessment decides successor charter versus DIMINISHING_RETURNS.",
+      "novelty_key": "post-reassessment-third-close-burst-stop-2026-07-16T0454-v1",
+      "artifacts": [
+        "configs/search_epoch.json",
+        "docs/SEARCH_EPOCH_2026-07-16T0335.md",
+        "reports/trader-wakes/moa/2026-07-16T0454/merged-next-seed.md",
+        "reports/readiness/LATEST.md",
+        "reports/trader-wakes/moa/2026-07-16T0454/compounding.json"
+      ]
+    }
+  ],
+  "retest_decision": null,
+  "evidence_wake_condition": null,
+  "evidence_wait_reaffirmation": false,
+  "critic_findings": [
+    {
+      "finding": "N1: label the -5.585214% worst-decile metric as event-return tail rather than paired excess.",
+      "status": "repaired",
+      "rationale": "The canonical claim, gate key, methodology boundary, charter, and living reports now say event-return worst-decile after 10 bps. A negative-control test constructs different event and paired tails and asserts the serialized event-specific field and gate.",
+      "repair_artifacts": [
+        "scripts/sec_form4_clustered_buying_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_sec_form4_clustered_buying_train_lab.py"
+      ]
+    },
+    {
+      "finding": "N2: keep the ten-session F0 underlying horizon distinct from the 18-24 DTE planning bull-call expression and its unmeasured theta/vega/debit path.",
+      "status": "rejected",
+      "rationale": "Rejected as an observed defect because the charter and claim already separate the fixed ten-session underlying test from the future conditional option plan, report option_pricing_calls=0, and deny F1/L1/paper authority. Finalizer living surfaces reinforce that the planning expression is unvalidated and not a 21D option result."
+    },
+    {
+      "finding": "N3: preserve 641.5/1,254-session control-distance weakness as a recurring local-specificity problem.",
+      "status": "rejected",
+      "rationale": "Rejected as a missing-evidence defect because both machine fields were already present and independently reproduced. The finalizer promotes them into the completed epoch record, readiness, finalizer report, search-information summary, and reassessment NEXT without widening control tolerances."
+    },
+    {
+      "finding": "N4: preserve the bulk Form 4 owner-attribution L0 limitation and prohibit a same-geometry reopen without a new predeclared evidence class.",
+      "status": "rejected",
+      "rationale": "Rejected as an unhandled defect because executor evidence already required two accessions, explicitly disclosed that bulk transaction rows are not owner-attributed, kept authority at L0, and quarantined same-geometry owner-join polish. Finalizer reports retain that boundary."
+    },
+    {
+      "finding": "N5: keep present-day-panel survivorship as an L0 scope limit, not a free panel-expansion reopen.",
+      "status": "rejected",
+      "rationale": "Rejected as an unhandled defect because the claim's population boundary and exact-family quarantine already state the current-panel limitation and forbid panel expansion as novelty. No panel, threshold, sign, horizon, or option-wrapper salvage was performed."
+    },
+    {
+      "finding": "N6: after acceptance, advance the active-epoch count from two to three, set burst stop, and preserve phase ownership of integration state.",
+      "status": "rejected",
+      "rationale": "Rejected as a challenger-phase defect because streak two/burst false was the correct pre-finalizer state. Finalizer now records the accepted third decision, sets pivot=true and burst=true, completes the epoch at completed_stamp 2026-07-16T0454, retains its reassessment path, and does not open a successor before the dedicated reassessment."
+    },
+    {
+      "finding": "N7: independently rerun focused behavior/boundary/negative controls and the full unittest suite rather than inherit executor counts.",
+      "status": "rejected",
+      "rationale": "Rejected as a code defect because this is finalizer process ownership. learning-promotion.md records the exact independently rerun commands and results; no executor full-suite count is used as final proof."
+    }
+  ],
+  "closed_families": [
+    "SEC_FORM4_CLUSTERED_INSIDER_BUYING_CALL_21D_V1",
+    "SEC_FORM4_CLUSTERED_OPEN_MARKET_BUYING_FORWARD_UPDRIFT"
+  ],
+  "data_dependencies": [
+    "No new data are required to preserve the exact family close. Reopening requires a materially different corporate-information mechanism or predeclared evidence class, not looser cluster thresholds, a single-insider variant, panel expansion, owner-join polish, or an option wrapper after inspecting n6.",
+    "A future acceptance-timestamped EDGAR design would need filing acceptance provenance and a materially different predeclared information event before outcomes; it cannot reuse this exact cluster as a threshold salvage.",
+    "Any future option expression requires actual listed contract geometry, debit/quote friction, theta/vega path, management, and assignment/exercise evidence; this F0 run priced zero options."
+  ],
+  "no_advance_context": {
+    "epoch_id": "POST_REASSESSMENT_INDEPENDENT_DEFINED_RISK_DISCOVERY_V1",
+    "epoch_status_after_integration": "completed",
+    "started_stamp": "2026-07-16T0335",
+    "completed_stamp": "2026-07-16T0454",
+    "record_count_before": 2,
+    "consecutive_no_strategy_advance_before": 2,
+    "record_count_after_integration": 3,
+    "consecutive_no_strategy_advance_after_integration": 3,
+    "strategy_pivot_required": true,
+    "strategy_burst_stop_required": true,
+    "reason": "The 0335 sector-leader, 0408 credit-risk-off, and 0454 Form 4 clustered-buying closes are the three counted decisions in the successor epoch; no candidate advanced, so the epoch terminates at its predeclared burst stop."
+  },
+  "next": "SEARCH_DESIGN_REASSESS_AFTER_FORM4_CLUSTER_DENSITY_UNCERTAINTY_CLOSE: stop the completed three-no-advance burst. Reconcile the 0335 sector-leader, 0408 credit-risk-off, and 0454 Form 4 closes; inventory genuinely open mechanisms and point-in-time data classes not covered by nearby-retune quarantines; diagnose recurring sparse-event, remote-control, uncertainty-bound, and horizon/expression weaknesses; then either write a successor epoch with a revised charter and predeclared success criterion or declare DIMINISHING_RETURNS. Do not open sealed holdouts, loosen the Form 4 geometry, or launch a fourth strategy test before reassessment."
+}

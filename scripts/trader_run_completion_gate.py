@@ -46,7 +46,7 @@ REQUIRED_LEARNING_HEADINGS = (
 SECRET_MARKERS = (
     re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
     re.compile(
-        r"(?:ghp_[A-Za-z0-9]{16,}|github_pat_[A-Za-z0-9_]{16,}|"
+        r"(?<![A-Za-z0-9])(?:ghp_[A-Za-z0-9]{16,}|github_pat_[A-Za-z0-9_]{16,}|"
         r"sk-(?:proj-)?[A-Za-z0-9_-]{16,}|xox[baprs]-[A-Za-z0-9-]{16,})"
     ),
     re.compile(r"AKIA[0-9A-Z]{16}"),

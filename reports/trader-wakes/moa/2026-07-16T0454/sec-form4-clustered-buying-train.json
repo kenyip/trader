@@ -1,0 +1,817 @@
+{
+  "all_train_rows_are_inspected_development_data": true,
+  "authority": "research only; no L1, capital seat, registry, paper, shadow, broker, funding, arm, or live authority",
+  "candidate_id": "SEC_FORM4_CLUSTERED_INSIDER_BUYING_CALL_21D_V1",
+  "capital_fit_usd": 200.0,
+  "claim_bar": "L0_DISCOVERY_ONLY",
+  "closed_families": [
+    "SEC_FORM4_CLUSTERED_INSIDER_BUYING_CALL_21D_V1",
+    "SEC_FORM4_CLUSTERED_OPEN_MARKET_BUYING_FORWARD_UPDRIFT"
+  ],
+  "cluster_filter": {
+    "calendar_days": 20,
+    "minimum_aggregate_value_usd": 100000.0,
+    "minimum_distinct_accessions": 2,
+    "minimum_distinct_owner_ciks": 2,
+    "overlapping_signal_suppression_days": 20
+  },
+  "dominant_failure_mechanism": "The exact official clustered-buying geometry failed the frozen train discovery conjunction. Only these gates failed: minimum_24_train_pairs, minimum_6_signal_years, minimum_6_distinct_symbols, paired_excess_block_bootstrap_lb90_positive, positive_frequency_at_least_55pct; event_mean_after_10bps=0.014829300908510479; paired_excess_mean=0.0046636150087760635; lb90=-0.02665297570800738.",
+  "economic_mechanism": "Multiple officers/directors spending their own capital on timely disclosed direct open-market common-share purchases may convey issuer-specific valuation information that diffuses over ten sessions.",
+  "f2_claim": false,
+  "failed_gates": [
+    "minimum_24_train_pairs",
+    "minimum_6_signal_years",
+    "minimum_6_distinct_symbols",
+    "paired_excess_block_bootstrap_lb90_positive",
+    "positive_frequency_at_least_55pct"
+  ],
+  "family_id": "SEC_FORM4_CLUSTERED_OPEN_MARKET_BUYING_FORWARD_UPDRIFT",
+  "filing_filter": {
+    "acquired_disposed": "A",
+    "document_type": "original Form 4 only",
+    "maximum_filing_delay_calendar_days": 5,
+    "minimum_transaction_value_usd": 10000.0,
+    "ownership": "D",
+    "relationship": "Officer or Director",
+    "security": "common/ordinary/capital stock excluding preferred, units, depositary, restricted, phantom",
+    "transaction_code": "P"
+  },
+  "forecast_type": "issuer_specific_bullish_ten_session_drift",
+  "frozen_panel": [
+    "AAPL",
+    "MSFT",
+    "NVDA",
+    "AMZN",
+    "META",
+    "GOOGL",
+    "AMD",
+    "NFLX",
+    "TSLA",
+    "COIN",
+    "PLTR",
+    "SMCI",
+    "AVGO",
+    "MU",
+    "JPM",
+    "XOM",
+    "BAC",
+    "F",
+    "SOFI",
+    "AAL",
+    "PFE",
+    "SNAP",
+    "CCL"
+  ],
+  "funnel_stage_after": "F0_MECHANISM",
+  "funnel_stage_before": "F0_MECHANISM",
+  "generated_at": "2026-07-16T12:27:56.044704+00:00",
+  "holdout": {
+    "first_signal_date": "2021-08-19",
+    "identity_fields": [
+      "symbol",
+      "signal_date",
+      "entry_date",
+      "exit_date",
+      "control_feature_date",
+      "control_entry_date",
+      "control_exit_date"
+    ],
+    "identity_sha256": "dbff0318d403e9ef14c77d74e48a5b7f03a2956e07ceda020efa69134ec47791",
+    "last_signal_date": "2023-11-09",
+    "n_eligible_signals": 6,
+    "n_matched_pairs": 6,
+    "option_pricing_calls": 0,
+    "outcome_metrics_read": false,
+    "simulation_run": false
+  },
+  "l1_claim": false,
+  "max_loss_label": "frictionless_planning_structural_debit_cap_before_closing_friction",
+  "max_loss_usd": 200.0,
+  "max_lots": 1,
+  "methodology_boundaries": {
+    "bulk_data_limit": "quarterly data has filing date but not acceptance timestamp; next-session entry avoids same-day timing ambiguity",
+    "controls": "prior-only same-symbol, no-reuse, same broad-market SMA100 state, nearest ret20 within 5pp; outcome fully realized before signal",
+    "cost": "10 bps underlying round-trip hurdle, not option spread/fill friction",
+    "holdout": "chronological final 40% identity only; outcomes unread; no option simulation",
+    "option_marks": "zero; future bull-call expression is planning context only",
+    "point_in_time": "signal is original Form 4 filing date; entry is first session close strictly after filing",
+    "population": "fixed present-day panel has survivorship and ticker-alias limitations",
+    "tail_metric": "worst-decile mean is computed from event returns after 10 bps, not paired excess"
+  },
+  "option_pricing_calls": 0,
+  "paper_only": true,
+  "phase": "BUILD_L0_UNDERLYING_DISCOVERY",
+  "planned_option_structure": "future_conditional_18_24dte_2wide_bull_call_debit_spread",
+  "population": {
+    "cluster_signals": 13,
+    "control_unmatched": [
+      {
+        "reason": "no_prior_same_regime_control",
+        "signal_date": "2020-03-19",
+        "symbol": "XOM"
+      }
+    ],
+    "holdout_eligible": 6,
+    "price_complete_blueprints": 13,
+    "price_rejects": [],
+    "qualified_accessions": 153,
+    "train_eligible": 7
+  },
+  "price_data_provenance": {
+    "AAL": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "end": "2026-07-15",
+      "path": ".cache/platform/sec_form4_prices/AAL_2014-01-01_2026-07-16_auto_adjust_ohlcv.csv",
+      "requested_end_exclusive": "2026-07-16",
+      "requested_start": "2014-01-01",
+      "rows": 3151,
+      "sha256": "2b0aa4d5b774c05f87eff403fa755ed5e6b03a1a058c56f89c631453ce7969f9",
+      "start": "2014-01-02"
+    },
+    "AVGO": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "end": "2026-07-15",
+      "path": ".cache/platform/sec_form4_prices/AVGO_2014-01-01_2026-07-16_auto_adjust_ohlcv.csv",
+      "requested_end_exclusive": "2026-07-16",
+      "requested_start": "2014-01-01",
+      "rows": 3151,
+      "sha256": "56527b22aaad52a6cc46eaefd94b893c81a41c18c1885ead1e270d2bf2089bd9",
+      "start": "2014-01-02"
+    },
+    "BAC": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "end": "2026-07-15",
+      "path": ".cache/platform/sec_form4_prices/BAC_2014-01-01_2026-07-16_auto_adjust_ohlcv.csv",
+      "requested_end_exclusive": "2026-07-16",
+      "requested_start": "2014-01-01",
+      "rows": 3151,
+      "sha256": "6a10bd3af76ebe65d06dd6f026e756d4e14d67a29adfe9f45870d9780ac07926",
+      "start": "2014-01-02"
+    },
+    "CCL": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "end": "2026-07-15",
+      "path": ".cache/platform/sec_form4_prices/CCL_2014-01-01_2026-07-16_auto_adjust_ohlcv.csv",
+      "requested_end_exclusive": "2026-07-16",
+      "requested_start": "2014-01-01",
+      "rows": 3151,
+      "sha256": "dbae2b536c6a7b9c27f70909d3026182ef27d9ad44001dff777f2bdb7749b160",
+      "start": "2014-01-02"
+    },
+    "F": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "end": "2026-07-15",
+      "path": ".cache/platform/sec_form4_prices/F_2014-01-01_2026-07-16_auto_adjust_ohlcv.csv",
+      "requested_end_exclusive": "2026-07-16",
+      "requested_start": "2014-01-01",
+      "rows": 3151,
+      "sha256": "430bb3b37aa9e302994653c2b98bd74490290c69f1ff304a04e92396c2156f11",
+      "start": "2014-01-02"
+    },
+    "SOFI": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "end": "2026-07-15",
+      "path": ".cache/platform/sec_form4_prices/SOFI_2014-01-01_2026-07-16_auto_adjust_ohlcv.csv",
+      "requested_end_exclusive": "2026-07-16",
+      "requested_start": "2014-01-01",
+      "rows": 1388,
+      "sha256": "6e1d7e8fca83a8c3dbe427bb42cf6d500e81bdf229cfc9b3bccbfd11c783d790",
+      "start": "2021-01-04"
+    },
+    "SPY": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "end": "2026-07-15",
+      "path": ".cache/platform/sec_form4_prices/SPY_2014-01-01_2026-07-16_auto_adjust_ohlcv.csv",
+      "requested_end_exclusive": "2026-07-16",
+      "requested_start": "2014-01-01",
+      "rows": 3151,
+      "sha256": "93c59c8198210ebd1f21947233c87808eed7b9bf63ea15b4fcacecf227a3b49f",
+      "start": "2014-01-02"
+    },
+    "TSLA": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "end": "2026-07-15",
+      "path": ".cache/platform/sec_form4_prices/TSLA_2014-01-01_2026-07-16_auto_adjust_ohlcv.csv",
+      "requested_end_exclusive": "2026-07-16",
+      "requested_start": "2014-01-01",
+      "rows": 3151,
+      "sha256": "14bb3d42ecef51d308f9b6d7982191d6855dc2d0bb8d902151ff78998e8f0d7d",
+      "start": "2014-01-02"
+    },
+    "XOM": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "end": "2026-07-15",
+      "path": ".cache/platform/sec_form4_prices/XOM_2014-01-01_2026-07-16_auto_adjust_ohlcv.csv",
+      "requested_end_exclusive": "2026-07-16",
+      "requested_start": "2014-01-01",
+      "rows": 3151,
+      "sha256": "946cab23a7646ebd57f7336341f68e48efcada2410d8e9106a39fa03a6adf17d",
+      "start": "2014-01-02"
+    }
+  },
+  "schema_version": "sec_form4_clustered_buying_train_lab.v1",
+  "sec_data_provenance": {
+    "quarterly_archives": [
+      {
+        "archive_label": "2014q1_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2014q1_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "784f13d1c1015b01c3d513915e7f1c50151b25aa4965704ac279041c5fc6f7aa",
+        "submission_rows": 603,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2014q1_form345.zip",
+        "zip_bytes": 14560119
+      },
+      {
+        "archive_label": "2014q2_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2014q2_form345.zip",
+        "qualified_accession_rows": 0,
+        "sha256": "54a109f0ed7f94b8bbc2b2a68bfac2aab63ec34e722ddcdc3ddee40703209310",
+        "submission_rows": 529,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2014q2_form345.zip",
+        "zip_bytes": 11012390
+      },
+      {
+        "archive_label": "2014q3_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2014q3_form345.zip",
+        "qualified_accession_rows": 0,
+        "sha256": "86c00d07b7056a0f2a124e313180ea064ed145f514e54cc3a8513dbf40a0fa22",
+        "submission_rows": 378,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2014q3_form345.zip",
+        "zip_bytes": 8979142
+      },
+      {
+        "archive_label": "2014q4_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2014q4_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "b37ac4d70bc97cff746e20f475c6cc392288e047f2a21d30c007868123793aa7",
+        "submission_rows": 416,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2014q4_form345.zip",
+        "zip_bytes": 10294808
+      },
+      {
+        "archive_label": "2015q1_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2015q1_form345.zip",
+        "qualified_accession_rows": 2,
+        "sha256": "36698eefccea88e8737868a43eb6dd2e0c726f2d026bce3dd0fcacdef382dfd6",
+        "submission_rows": 499,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2015q1_form345.zip",
+        "zip_bytes": 14689945
+      },
+      {
+        "archive_label": "2015q2_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2015q2_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "e07bc99bf94a1375f6e8df86189f5193ac3f276d388a7646a2ed71bcffe3b539",
+        "submission_rows": 466,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2015q2_form345.zip",
+        "zip_bytes": 11336215
+      },
+      {
+        "archive_label": "2015q3_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2015q3_form345.zip",
+        "qualified_accession_rows": 4,
+        "sha256": "f50e2e584aa552e2abc6d0cbb9a2e92217c8e2ec8c3cd79c1103dd5ca2123c4e",
+        "submission_rows": 377,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2015q3_form345.zip",
+        "zip_bytes": 8908570
+      },
+      {
+        "archive_label": "2015q4_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2015q4_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "a31dc71e838e9b81e77ff6d528af3be0f1a39b7fcfe0c2486a89dd0a369910fa",
+        "submission_rows": 446,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2015q4_form345.zip",
+        "zip_bytes": 9384596
+      },
+      {
+        "archive_label": "2016q1_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2016q1_form345.zip",
+        "qualified_accession_rows": 5,
+        "sha256": "5b3bd7e2bcc3c8468c3b6d3bcb1f8ca77596ca4ea7ccf696682e84d98a6bdc0b",
+        "submission_rows": 535,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2016q1_form345.zip",
+        "zip_bytes": 13630106
+      },
+      {
+        "archive_label": "2016q2_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2016q2_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "b99ffbceff8e31d49c6a01bc475ec8c7105c2895632b9eb3d72066db94c252a7",
+        "submission_rows": 490,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2016q2_form345.zip",
+        "zip_bytes": 10388337
+      },
+      {
+        "archive_label": "2016q3_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2016q3_form345.zip",
+        "qualified_accession_rows": 2,
+        "sha256": "5a25d3c6cb874875904b2be0059bb4784e4da28b315af30b15568fd250bd0dde",
+        "submission_rows": 405,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2016q3_form345.zip",
+        "zip_bytes": 8704557
+      },
+      {
+        "archive_label": "2016q4_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2016q4_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "3fd9daf61e256a9463958dc57f90eb9885c9d9f00e98a2d437346d78991252bd",
+        "submission_rows": 497,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2016q4_form345.zip",
+        "zip_bytes": 9107157
+      },
+      {
+        "archive_label": "2017q1_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2017q1_form345.zip",
+        "qualified_accession_rows": 0,
+        "sha256": "e3c135d06aeb13ccb7554e4b89cd4ade40faf9d0d39c8c6a7010b3f3260e5371",
+        "submission_rows": 604,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2017q1_form345.zip",
+        "zip_bytes": 14209324
+      },
+      {
+        "archive_label": "2017q2_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2017q2_form345.zip",
+        "qualified_accession_rows": 2,
+        "sha256": "071c75391305e5e5f01db18fd5c954da3800164a15fdad8b1161098fecd63786",
+        "submission_rows": 482,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2017q2_form345.zip",
+        "zip_bytes": 10633369
+      },
+      {
+        "archive_label": "2017q3_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2017q3_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "ca64bbc6a5a728c80e9532d91028b5a19bd8f8f8d179344e30e9eb361bb1bd18",
+        "submission_rows": 390,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2017q3_form345.zip",
+        "zip_bytes": 7972500
+      },
+      {
+        "archive_label": "2017q4_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2017q4_form345.zip",
+        "qualified_accession_rows": 0,
+        "sha256": "d529e3ebe7d1f4f022580eabb703b25ef66b42199dbb8adfe06e988d99bca06d",
+        "submission_rows": 463,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2017q4_form345.zip",
+        "zip_bytes": 9036107
+      },
+      {
+        "archive_label": "2018q1_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2018q1_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "8541f5c8a975ec99bf21964a77593775e02f55200a7fdf4c0711a7c858a9e2fb",
+        "submission_rows": 597,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2018q1_form345.zip",
+        "zip_bytes": 13941852
+      },
+      {
+        "archive_label": "2018q2_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2018q2_form345.zip",
+        "qualified_accession_rows": 3,
+        "sha256": "3e0942f34eae067a676b4482e927297216d8adc7449ac27ea8860f643724d05b",
+        "submission_rows": 517,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2018q2_form345.zip",
+        "zip_bytes": 10757463
+      },
+      {
+        "archive_label": "2018q3_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2018q3_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "c5c7e1f946b80dd2419356974a717d1e92b875436f7dad4b6b8e2094f867682e",
+        "submission_rows": 399,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2018q3_form345.zip",
+        "zip_bytes": 8493817
+      },
+      {
+        "archive_label": "2018q4_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2018q4_form345.zip",
+        "qualified_accession_rows": 3,
+        "sha256": "03dd59b0da4e10e98425a0961d04126707b127b8b8f33e13092b80deed087a9f",
+        "submission_rows": 428,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2018q4_form345.zip",
+        "zip_bytes": 9225725
+      },
+      {
+        "archive_label": "2019q1_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2019q1_form345.zip",
+        "qualified_accession_rows": 0,
+        "sha256": "3206a941a818d1210857277b8dff86900df8aa00e10902bfa2fa8879b1011a5d",
+        "submission_rows": 505,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2019q1_form345.zip",
+        "zip_bytes": 13745081
+      },
+      {
+        "archive_label": "2019q2_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2019q2_form345.zip",
+        "qualified_accession_rows": 10,
+        "sha256": "0d6d5fb5cc922dee8ca7451156a44ba76c5e1db65b02bb6473fe16354087c308",
+        "submission_rows": 438,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2019q2_form345.zip",
+        "zip_bytes": 10594521
+      },
+      {
+        "archive_label": "2019q3_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2019q3_form345.zip",
+        "qualified_accession_rows": 9,
+        "sha256": "d3ae11e56f9ec064e95b074e808bd08c19a7a1320fcfd146708bc80543a963bd",
+        "submission_rows": 394,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2019q3_form345.zip",
+        "zip_bytes": 8188905
+      },
+      {
+        "archive_label": "2019q4_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2019q4_form345.zip",
+        "qualified_accession_rows": 3,
+        "sha256": "df28aa75bf703f0c202c59d94046e84e8e082a97a49965a4b66149d3184e540c",
+        "submission_rows": 426,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2019q4_form345.zip",
+        "zip_bytes": 8416016
+      },
+      {
+        "archive_label": "2020q1_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2020q1_form345.zip",
+        "qualified_accession_rows": 7,
+        "sha256": "3c3bc3fefa4dbe32cb68f052ac4ea32cae16099bb2b104a0bd8d242465e004a8",
+        "submission_rows": 519,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2020q1_form345.zip",
+        "zip_bytes": 13886112
+      },
+      {
+        "archive_label": "2020q2_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2020q2_form345.zip",
+        "qualified_accession_rows": 3,
+        "sha256": "665be773d41b30fae10f4dea03096a0e33a7557b0acbb3fab9f1cd5796ee2b22",
+        "submission_rows": 416,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2020q2_form345.zip",
+        "zip_bytes": 10237249
+      },
+      {
+        "archive_label": "2020q3_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2020q3_form345.zip",
+        "qualified_accession_rows": 6,
+        "sha256": "5b89d93d94b70a649355bd47ec5a68a0450e40cc12f082b2817079589aa541b1",
+        "submission_rows": 385,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2020q3_form345.zip",
+        "zip_bytes": 8765495
+      },
+      {
+        "archive_label": "2020q4_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2020q4_form345.zip",
+        "qualified_accession_rows": 2,
+        "sha256": "0abb3ec65cb2ef4ef15d0e3f4c7ba782a2801b9998d32b5b36c3f44cc4130af3",
+        "submission_rows": 484,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2020q4_form345.zip",
+        "zip_bytes": 10162651
+      },
+      {
+        "archive_label": "2021q1_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2021q1_form345.zip",
+        "qualified_accession_rows": 4,
+        "sha256": "3ea90731d424e9b0324f00a6bab1ad603cc9419d9366025f7d7120fffc2a73c5",
+        "submission_rows": 588,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2021q1_form345.zip",
+        "zip_bytes": 15891333
+      },
+      {
+        "archive_label": "2021q2_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2021q2_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "7277d43d94cda0fdb83d7e6f4d9021a3baa2d886a963c0cd97b65e6875aec3b6",
+        "submission_rows": 651,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2021q2_form345.zip",
+        "zip_bytes": 12494758
+      },
+      {
+        "archive_label": "2021q3_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2021q3_form345.zip",
+        "qualified_accession_rows": 6,
+        "sha256": "8323d1ceb62ebbdc27da242533501f8abea7ef9703bc374dc28cef7379aa0070",
+        "submission_rows": 567,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2021q3_form345.zip",
+        "zip_bytes": 10198876
+      },
+      {
+        "archive_label": "2021q4_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2021q4_form345.zip",
+        "qualified_accession_rows": 5,
+        "sha256": "cd630b3ba9402d578b9ec88d637f022248f1452476de9066b4813823200e3fca",
+        "submission_rows": 614,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2021q4_form345.zip",
+        "zip_bytes": 10818822
+      },
+      {
+        "archive_label": "2022q1_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2022q1_form345.zip",
+        "qualified_accession_rows": 13,
+        "sha256": "bc733530b3360ec59b624041043a4b50619feba4cd8a13aea441d171d6d2c2c5",
+        "submission_rows": 640,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2022q1_form345.zip",
+        "zip_bytes": 14253893
+      },
+      {
+        "archive_label": "2022q2_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2022q2_form345.zip",
+        "qualified_accession_rows": 14,
+        "sha256": "fc091183d24d25283826e7e11e0318a8027995a9d77ea8bc4667589eb2b4d8f5",
+        "submission_rows": 487,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2022q2_form345.zip",
+        "zip_bytes": 10603723
+      },
+      {
+        "archive_label": "2022q3_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2022q3_form345.zip",
+        "qualified_accession_rows": 0,
+        "sha256": "846c1115906b1c45dd8761da076a32ea0cb9f8995dae76f81d0cd93b7e05b032",
+        "submission_rows": 380,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2022q3_form345.zip",
+        "zip_bytes": 8024500
+      },
+      {
+        "archive_label": "2022q4_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2022q4_form345.zip",
+        "qualified_accession_rows": 5,
+        "sha256": "6c6a909bd2eaaa0a24ccf5f0071b404670c115845d2939bc592bf3ce420dcdb9",
+        "submission_rows": 403,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2022q4_form345.zip",
+        "zip_bytes": 8400983
+      },
+      {
+        "archive_label": "2023q1_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2023q1_form345.zip",
+        "qualified_accession_rows": 4,
+        "sha256": "0b476188f52a0862e71886eb31a81f6345fc6616403b52188484aef0438cfcfb",
+        "submission_rows": 573,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2023q1_form345.zip",
+        "zip_bytes": 13882049
+      },
+      {
+        "archive_label": "2023q2_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2023q2_form345.zip",
+        "qualified_accession_rows": 6,
+        "sha256": "7e636787231ae0f00accf5c3627298402dedd1aefffd7c50fb48292e5d3a8fbb",
+        "submission_rows": 490,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2023q2_form345.zip",
+        "zip_bytes": 10742628
+      },
+      {
+        "archive_label": "2023q3_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2023q3_form345.zip",
+        "qualified_accession_rows": 3,
+        "sha256": "26947559fbd710ca4fb007e2ff0481b13ebc3ca47153e77a9b0bc84db250a48e",
+        "submission_rows": 432,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2023q3_form345.zip",
+        "zip_bytes": 8202487
+      },
+      {
+        "archive_label": "2023q4_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2023q4_form345.zip",
+        "qualified_accession_rows": 7,
+        "sha256": "be19822ad9116ea6c1a55303b1f2e23864f21101e42d2da0455a6ff2b33e1a9e",
+        "submission_rows": 507,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2023q4_form345.zip",
+        "zip_bytes": 8497639
+      },
+      {
+        "archive_label": "2024q1_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2024q1_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "8e9bb34335416829a88e4ca7d09bb8aaceca689da9718fef22c298d6f18c9b04",
+        "submission_rows": 763,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2024q1_form345.zip",
+        "zip_bytes": 13874620
+      },
+      {
+        "archive_label": "2024q2_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2024q2_form345.zip",
+        "qualified_accession_rows": 6,
+        "sha256": "782abee663e466b243f953625ae319da93c3e896816007d5a375e558c94dc7c1",
+        "submission_rows": 572,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2024q2_form345.zip",
+        "zip_bytes": 10286787
+      },
+      {
+        "archive_label": "2024q3_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2024q3_form345.zip",
+        "qualified_accession_rows": 0,
+        "sha256": "8b55b4ffd91e56770fc0e71f9b73e6886f3c60fac8b7266e4b3e5586d2857910",
+        "submission_rows": 546,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2024q3_form345.zip",
+        "zip_bytes": 8163472
+      },
+      {
+        "archive_label": "2024q4_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2024q4_form345.zip",
+        "qualified_accession_rows": 2,
+        "sha256": "44763a00aa8a2077747bc015f12c6a4c09ba7cae4a2d031bf24398f9db9e52f3",
+        "submission_rows": 497,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2024q4_form345.zip",
+        "zip_bytes": 8954329
+      },
+      {
+        "archive_label": "2025q1_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2025q1_form345.zip",
+        "qualified_accession_rows": 2,
+        "sha256": "37f6b4287df129b88acf0782498540640d055b1c893320877e329945b534a8c2",
+        "submission_rows": 675,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2025q1_form345.zip",
+        "zip_bytes": 12804783
+      },
+      {
+        "archive_label": "2025q2_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2025q2_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "64e7f81328933b1281bd8737961048d76d2ab3d5d1d2d7149a32ec061b0e3ff2",
+        "submission_rows": 590,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2025q2_form345.zip",
+        "zip_bytes": 9860984
+      },
+      {
+        "archive_label": "2025q3_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2025q3_form345.zip",
+        "qualified_accession_rows": 1,
+        "sha256": "9c57f272b7230500771f661bc1fe181527ed6b76a6f45d23a910c7fc7e9fcfa4",
+        "submission_rows": 485,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2025q3_form345.zip",
+        "zip_bytes": 7956025
+      },
+      {
+        "archive_label": "2025q4_form345.zip",
+        "cache_path": ".cache/platform/sec_form345/2025q4_form345.zip",
+        "qualified_accession_rows": 2,
+        "sha256": "6af26a68f5834eab96dff2c568530d9213638d3e6c9d1256e4f6c9f8af1d2d28",
+        "submission_rows": 465,
+        "url": "https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/2025q4_form345.zip",
+        "zip_bytes": 8309708
+      }
+    ],
+    "source_is_official_sec": true,
+    "source_page": "https://www.sec.gov/data-research/sec-markets-data/insider-transactions-data-sets"
+  },
+  "strategy_advancement": false,
+  "strategy_outcome": "FAMILY_CLOSED",
+  "train": {
+    "bootstrap_block_length_pairs": 3,
+    "bootstrap_samples": 10000,
+    "control_mean_return_after_10bps": 0.010165685899734414,
+    "control_support": 0.8571428571428571,
+    "event_mean_return_after_10bps": 0.014829300908510479,
+    "event_return_worst_decile_mean": -0.055852143102086416,
+    "gate_checks": {
+      "event_mean_after_10bps_above_25bps": true,
+      "event_return_worst_decile_at_least_negative_8pct": true,
+      "minimum_24_train_pairs": false,
+      "minimum_6_distinct_symbols": false,
+      "minimum_6_signal_years": false,
+      "minimum_70pct_control_support": true,
+      "paired_excess_block_bootstrap_lb90_positive": false,
+      "paired_excess_mean_above_20bps": true,
+      "positive_frequency_at_least_55pct": false,
+      "zero_integrity_violations": true
+    },
+    "gate_pass": false,
+    "integrity_violations": [],
+    "max_control_distance_sessions": 1254,
+    "median_control_distance_sessions": 641.5,
+    "n_matched_pairs": 6,
+    "n_train_eligible_signals": 7,
+    "paired_excess_block_bootstrap_lb90": -0.02665297570800738,
+    "paired_excess_mean": 0.0046636150087760635,
+    "paired_excess_median": -0.01224306093003702,
+    "pairs": [
+      {
+        "aggregate_value_usd": 1296900.0,
+        "control_distance_sessions": 120,
+        "control_entry_date": "2015-08-28",
+        "control_exit_date": "2015-09-14",
+        "control_feature_date": "2015-08-27",
+        "control_raw_return": -0.021309174005176734,
+        "control_return_after_10bps": -0.022309174005176735,
+        "entry_date": "2016-02-23",
+        "event_raw_return": 0.07809939804940536,
+        "event_return_after_10bps": 0.07709939804940535,
+        "exit_date": "2016-03-08",
+        "feature_date": "2016-02-19",
+        "n_accessions": 2,
+        "n_distinct_owners": 2,
+        "paired_excess": 0.09940857205458209,
+        "ret20_match_gap": 0.001150100237258589,
+        "signal_date": "2016-02-22",
+        "symbol": "BAC"
+      },
+      {
+        "aggregate_value_usd": 203262.0,
+        "control_distance_sessions": 1239,
+        "control_entry_date": "2014-06-23",
+        "control_exit_date": "2014-07-08",
+        "control_feature_date": "2014-06-20",
+        "control_raw_return": 0.013625507461358044,
+        "control_return_after_10bps": 0.012625507461358043,
+        "entry_date": "2019-05-28",
+        "event_raw_return": 0.01431492193413364,
+        "event_return_after_10bps": 0.013314921934133639,
+        "exit_date": "2019-06-11",
+        "feature_date": "2019-05-23",
+        "n_accessions": 2,
+        "n_distinct_owners": 2,
+        "paired_excess": 0.0006894144727755958,
+        "ret20_match_gap": 0.00010370786095781348,
+        "signal_date": "2019-05-24",
+        "symbol": "F"
+      },
+      {
+        "aggregate_value_usd": 2375100.0,
+        "control_distance_sessions": 109,
+        "control_entry_date": "2018-12-26",
+        "control_exit_date": "2019-01-10",
+        "control_feature_date": "2018-12-24",
+        "control_raw_return": -0.007742316852273334,
+        "control_return_after_10bps": -0.008742316852273335,
+        "entry_date": "2019-06-05",
+        "event_raw_return": 0.09387333053540492,
+        "event_return_after_10bps": 0.09287333053540492,
+        "exit_date": "2019-06-19",
+        "feature_date": "2019-06-03",
+        "n_accessions": 6,
+        "n_distinct_owners": 6,
+        "paired_excess": 0.10161564738767825,
+        "ret20_match_gap": 0.0009546479802288177,
+        "signal_date": "2019-06-04",
+        "symbol": "AAL"
+      },
+      {
+        "aggregate_value_usd": 1327162.5,
+        "control_distance_sessions": 1254,
+        "control_entry_date": "2014-07-11",
+        "control_exit_date": "2014-07-25",
+        "control_feature_date": "2014-07-10",
+        "control_raw_return": -0.0032605494224742237,
+        "control_return_after_10bps": -0.004260549422474224,
+        "entry_date": "2019-07-08",
+        "event_raw_return": -0.02843608575532386,
+        "event_return_after_10bps": -0.02943608575532386,
+        "exit_date": "2019-07-22",
+        "feature_date": "2019-07-03",
+        "n_accessions": 2,
+        "n_distinct_owners": 2,
+        "paired_excess": -0.025175536332849635,
+        "ret20_match_gap": 9.965735649153373e-05,
+        "signal_date": "2019-07-05",
+        "symbol": "CCL"
+      },
+      {
+        "aggregate_value_usd": 8090668.62,
+        "control_distance_sessions": 933,
+        "control_entry_date": "2015-11-17",
+        "control_exit_date": "2015-12-02",
+        "control_feature_date": "2015-11-16",
+        "control_raw_return": 0.0077738783384069254,
+        "control_return_after_10bps": 0.006773878338406925,
+        "entry_date": "2019-08-06",
+        "event_raw_return": -0.054852143102086415,
+        "event_return_after_10bps": -0.055852143102086416,
+        "exit_date": "2019-08-20",
+        "feature_date": "2019-08-02",
+        "n_accessions": 2,
+        "n_distinct_owners": 2,
+        "paired_excess": -0.06262602144049334,
+        "ret20_match_gap": 1.8503808831615842e-05,
+        "signal_date": "2019-08-05",
+        "symbol": "F"
+      },
+      {
+        "aggregate_value_usd": 312535.6,
+        "control_distance_sessions": 350,
+        "control_entry_date": "2018-03-27",
+        "control_exit_date": "2018-04-11",
+        "control_feature_date": "2018-03-26",
+        "control_raw_return": 0.07790676987856582,
+        "control_return_after_10bps": 0.07690676987856582,
+        "entry_date": "2019-08-19",
+        "event_raw_return": -0.008023616210470763,
+        "event_return_after_10bps": -0.009023616210470764,
+        "exit_date": "2019-09-03",
+        "feature_date": "2019-08-15",
+        "n_accessions": 2,
+        "n_distinct_owners": 2,
+        "paired_excess": -0.08593038608903658,
+        "ret20_match_gap": 0.0005269180544226204,
+        "signal_date": "2019-08-16",
+        "symbol": "TSLA"
+      }
+    ],
+    "positive_frequency": 0.5,
+    "round_trip_underlying_cost_bps": 10.0,
+    "signal_years": [
+      2016,
+      2019
+    ],
+    "symbols": [
+      "AAL",
+      "BAC",
+      "CCL",
+      "F",
+      "TSLA"
+    ]
+  }
+}
