@@ -112,12 +112,14 @@
   "evidence_wake_condition": "Re-evaluate only after the archive reaches 12 distinct weekday RTH dates, 3 short-expiry cycles, 20 non-overlapping candidate paths, and 8 frozen one-to-one controls. Before those floors, append provenance-safe data and report path eligibility/admission/control support counters only.",
   "epoch_success_definition": "Advance the exact observed term-carry mechanism from F0 only after the frozen 12-date, 3-cycle, 20-path, 8-control population passes both control-relative gates with clean chronology and executable marks; otherwise close it without changing geometry or opening the final 40% reserve.",
   "epoch_progress": {
-    "completed_strategy_decisions": 1,
-    "consecutive_no_strategy_advance": 1,
-    "strategy_pivot_required": false,
+    "completed_strategy_decisions": 2,
+    "consecutive_no_strategy_advance": 2,
+    "strategy_pivot_required": true,
     "strategy_burst_stop_required": false,
-    "last_outcome": "EVIDENCE_WAIT",
+    "last_outcome": "FAMILY_CLOSED",
     "last_strategy_advance": null,
+    "last_decision_candidate": "BROAD_SECTOR_BREADTH_THRUST_SPY_BULL_CALL_21D_V1",
+    "last_decision_stamp": "2026-07-15T2254",
     "pure_append_reaffirmations_count_toward_streak": false
   },
   "pure_append_streak_policy": "A schema-v2 EVIDENCE_WAIT handoff with evidence_wait_reaffirmation=true is a pure data-collection reaffirmation and does not increment the strategy no-advance pivot/burst-stop streak.",

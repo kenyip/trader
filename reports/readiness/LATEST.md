@@ -1,85 +1,81 @@
 # Trader platform readiness — latest
 
-Updated: 2026-07-15 — MoA stamp 2026-07-15T2152 `RUN COMPLETE`; integrated/pushed/postflight-complete as `fe0943f` with `main == origin/main` and a clean checkout.
+Updated: 2026-07-15 — MoA stamp 2026-07-15T2254 finalizer handoff `MOA_FINALIZE_READY`; deterministic integration pending. Last completed integrated main remains 2026-07-15T2152 at `fe0943f`.
 
 Phase: BUILD
 Sleeve: $3,000 Agentic research sleeve
 Authority: research/paper-safe only; no shadow/live auto-promotion, broker access, funding, or live orders.
 
-## Decision readiness
+## Current strategy decision
 
-- Final outcome: `EVIDENCE_WAIT` for exact `TSLL_OBSERVED_TERM_CARRY_DIAGONAL_V1` at `F0_MECHANISM -> F0_MECHANISM`; strategy advancement false.
-- Mechanism: observed short-front call term-structure extrinsic carry against a farther-dated call in a lag-safe non-bearish TSLA/TSLL regime.
-- Conditional structure: buy one observed listed 60–90 DTE 0.60–0.75 delta TSLL call; sell one higher-strike 14–21 DTE 0.20–0.35 delta call; front/back extrinsic-per-day >=1.25; each leg half-spread <=`$0.10`.
-- Capital admission: observed debit plus `$50` closing/assignment reserve <=`$300`; `capital_fit_usd=$300` is a research admission budget; one-lot structural `max_loss_usd=UNPROVEN` under assignment/gap/exercise/liquidation mechanics; `max_lots=1`; no overlapping TSLA/TSLL bullish option risk.
-- Management: +25%/−25% package-debit exits, five-session stop, short<=7 DTE, regime/event/dividend/assignment exits, no roll or same-session re-entry.
-- Current evidence: TSLL archive 1,990 observed rows, 1,390 weekday-RTH and 600 non-RTH, with 3 archive-date labels but only 2 eligible weekday-RTH session dates, 1 distinct eligible 14–21 DTE short-expiry cycle (`2026-07-31`), 0 complete observed package paths, and 0 frozen controls.
-- Current context: research run 36 scored 30/30 with zero errors, ranked TSLL first, and labels TSLL bearish. Current action is stand aside.
-- No option-path PnL was evaluated. No mispricing, after-cost edge, F1/F2/L1, living leader, capital seat, registry, paper intent, or B-check authority change exists.
+- Finalizer outcome: exact `FAMILY_CLOSED` for `BROAD_SECTOR_BREADTH_THRUST_SPY_BULL_CALL_21D_V1` / `BROAD_SECTOR_BREADTH_THRUST_FORWARD_DRIFT` at `F0_MECHANISM -> F0_MECHANISM`; strategy advancement false.
+- Mechanism: sector breadth acceleration inside a positive SPY trend was hypothesized to produce incremental ten-session upside over high-breadth non-thrust controls.
+- Conditional structure: future one-lot 18–24 DTE `$2`-wide SPY bull-call debit spread only after underlying train and later untouched-holdout evidence; no option stage ran.
+- Capital context: `capital_fit_usd=$200`, same-expiry one-lot frictionless `max_loss_usd=$200` width/debit bound only when debit is `<= $200`, `max_lots=1`, and no overlapping SPY/QQQ/IWM or sector-option positive-delta Agentic risk. This is structural research context, not L1 admission.
+- Fixed signal: completed SPY close above SMA100, positive 60-session return, sector breadth >=`9/11`, breadth increase >=`3/11` over five sessions, next completed-close entry.
+- Prior-only control: same regime and breadth >=`9/11`, breadth change <=`1/11`, outcome-independent matching, no reuse/overlap, control exit before treated signal.
+- Evidence: 34 frozen pairs on an inner-joined SPY + eleven-sector adjusted-close panel; train20 / holdout14 unread. XLC limits the common start to 2018-06-19.
+- Train after labeled 10-bps underlying sensitivity: treated/control means `+0.245246%`/`+0.370614%`; paired mean `-0.125368%`; LB90 `-0.883946%`; positive frequency `65%`; thin worst-decile `n=2`, mean `-6.981542%`; integrity0.
+- Year counts: `2019:3, 2020:4, 2021:8, 2022:1, 2023:4`; five years fail the frozen eight-year density gate. Do not drop XLC or loosen density after inspection.
+- Match quality min/median/max: calendar sessions `12/68/360`; breadth `0/0/0.181818`; return-60 `0.006056/0.030272/0.102795`; HV-ratio `0.004050/0.245795/0.484548`. Controls are coarse prior-only matches, not tight local pairs.
+- Failed gates: eight-year density, treated mean >`0.50%`, paired excess >=`0.25%`, positive paired LB90, thin worst-decile >=`-3%`, and treated superiority. Positive hit rate does not rescue absent incremental edge.
+- Exact family and nearby same-panel 8–10/11 breadth, thrust/control-band, 5–15-session horizon, SMA50/SMA100, and same-novelty retunes are quarantined; reopening requires a materially new economic mechanism or evidence class.
+- Holdout identity `c7012028...`; outcomes unread; option pricing0. No F1/F2/L1, living leader, capital seat, registry, paper intent, or B-check authority change.
+
+## Parked observed candidate
+
+- `TSLL_OBSERVED_TERM_CARRY_DIAGONAL_V1` remains candidate-scoped `EVIDENCE_WAIT` at F0.
+- Current archive state from the last integrated run: 1,990 observed rows = 1,390 weekday-RTH + 600 non-RTH; 2 eligible RTH dates; 1 eligible 14–21 DTE short-expiry cycle; 0 complete paths; 0 frozen controls.
+- Frozen wake floor remains >=12 distinct weekday-RTH dates, >=3 short-expiry cycles, >=20 complete non-overlapping paths, and >=8 frozen one-to-one controls; evaluate development 60% only and keep final 40% unread.
+- `$300` remains an observed-diagonal admission budget, not structural loss proof; diagonal one-lot `max_loss_usd` is unproven under assignment/gap/exercise/liquidation.
+- Black-Scholes and this breadth study cannot proxy-satisfy the observed-term-carry claim.
 
 ## Epoch / anti-thrash
 
-- Prior epoch `2026-07-15-tail-hazard-discovery` stopped after three exact no-advance wakes. Recent-downshock, downside-semivariance, and SPY theta-carry families remain quarantined.
-- Reassessment: `docs/SEARCH_DESIGN_REASSESSMENT_2026-07-15T2152.md`.
-- Active successor epoch: `TSLL_OBSERVED_TERM_CARRY_DIAGONAL_V1`, started `2026-07-15T2152`, status `active`.
-- Successor progress: one completed initial strategy decision, one `EVIDENCE_WAIT`, no strategy advance, `consecutive_no_strategy_advance=1`, pivot false, burst-stop false.
-- Evidence-wake condition: >=12 distinct weekday-RTH dates spanning >=3 distinct 14–21 DTE short-expiry cycles, >=20 complete non-overlapping observed package paths, and >=8 frozen same-snapshot one-to-one non-rich controls; evaluate development 60% only and keep final 40% unread for later F1→F2.
-- Later pure data-append reaffirmations must set `evidence_wait_reaffirmation=true` and do not increment strategy no-advance pivot/burst-stop streaks. The initial 2152 wait is not a reaffirmation and counts once.
-- This wait is candidate-scoped. Historical underlying/Black-Scholes L0 discovery remains globally executable for genuinely independent non-quarantined mechanisms and cannot satisfy this observed claim or earn L1.
-- Preserve sealed evidence: downside-semivariance identity `72a6d184...`, SPY option outcomes 2022-07-12..2026-07-13, and this candidate's final chronological 40%.
-
-## Frozen claim contract
-
-- Forecast type: `term_structure_extrinsic_carry` with a mild bullish directional overlay, not realized-versus-implied volatility.
-- Control geometry: same snapshot and long leg; one-to-one; control richness ratio `[0.80,1.10]`; deterministic outcome-independent candidate/control tie-breaks; match by short delta, DTE, moneyness distance, then friction; no control reuse or substitution; exclude a path if no valid control exists.
-- Outcome gates: >=8 controls, >=55% candidate-over-control wins, and candidate median net return >=5 percentage points above control, plus the absolute PnL/PF/DD/ES90/chronology gates in the charter.
-- Capital: the `$300` admission budget is not structural max loss. No capital-path claim is allowed until assignment/gap/exercise/liquidation evidence supports a real one-lot bound.
+- Active successor epoch started at 2026-07-15T2152 and remains active.
+- After finalizer reconciliation: two completed strategy decisions, two consecutive no-advance outcomes, `strategy_pivot_required=true`, `strategy_burst_stop_required=false`; latest outcome is the independent breadth-thrust `FAMILY_CLOSED`.
+- Next off-hours strategy decision must pivot to a materially different mechanism or evidence class outside sector-breadth / participation-thrust continuation and all integrated closed families.
+- Pure distinct-RTH append reaffirmations for the parked diagonal retain `evidence_wait_reaffirmation=true` and do not add to the streak.
+- Preserved sealed evidence: breadth holdout `c7012028...`, downside-semivariance `72a6d184...`, SPY option outcomes 2022-07-12..2026-07-13, and observed-diagonal final 40%.
 
 ## Evidence validity boundaries
 
-- The old three-date `provider_backtest_eligible=true` flag was a capture/join plumbing floor, not historical edge evidence, and counted a Saturday off-hours snapshot.
-- Repaired density semantics now report 3 archive-date labels, dates containing any non-RTH rows, fully excluded dates, 2 eligible weekday-RTH market dates, and `provider_backtest_eligible=false`. Only weekday-RTH rows count toward market-date/expiration density.
-- Aggregate median chain half-spread `$0.625` is not a candidate fill assumption; every admitted candidate/control leg must independently pass the `$0.10` half-spread gate.
-- Black-Scholes or assumed-IV substitution cannot satisfy the observed-term-structure claim.
-- No contract pair has passed regime, event, term-slope, liquidity, admission, complete-path, or control gates.
-- Forward observations must retain contract identity, quote timestamps, same-snapshot underlying spot, executable NBBO entry/exit marks, no future leakage, no same-date capture churn, and one-position cadence.
-- Current bearish TSLL regime is an explicit stand-aside, not a strategy failure or paper trigger.
+- Breadth features use completed adjusted closes; entry is next completed close; no forward fill or option marks.
+- Present-day fixed sector membership and listing survivorship are explicit; XLC listing truncates common history.
+- Ten-session close-to-close underlying returns do not establish the full 18–24 DTE option path, IV/skew or IV crush, debit fills, assignment, intraday path, or early-exit performance.
+- The labeled 10-bps underlying sensitivity is not an option transaction-cost model.
+- The high-breadth non-thrust control is economically stronger on train; positive treated hit rate cannot rescue missing incremental edge.
+- Current living leader remains none. Historical candidates and the future `$200` spread shape are context, not seats.
 
 ## Verification
 
-- focused behavioral/boundary/negative-control/regression/handoff suite: `Ran 59 tests in 8.877s — OK`
-- required full unittest suite: `Ran 368 tests in 18.730s — OK`
-- full pytest suite: `378 passed, 18 subtests passed in 21.25s`
-- config JSON, compileall, and `git diff --check`: exit `0`
-- archive recomputation: 1,990 total / 1,390 RTH / 600 non-RTH / 3 archive labels / 2 eligible RTH dates / 13 RTH expirations / provider eligibility false
-- coverage: 21 structures / 246 hypotheses / 70 evolve artifacts / no living leader; dated and LATEST SHA-256 `9f6afe641685294441e4a0762dfc728494e5a147c51249da875e1789dae380c9`
-- schema-v2 handoff: exit `0`; `ok=true`; `role_ready=true`; `outcome=EVIDENCE_WAIT`; strategy advancement false; 4 useful deltas; 3 critic findings closed
-- deterministic wrapper postflight: `ok=true`; integrated/pushed/postflight-complete as `fe0943f`; `main == origin/main`; checkout clean; run branch deleted
+- Repair TDD: machine-boolean assertion failed on the prior prose string, then passed after repair.
+- New lab tests: 5/5 passed.
+- Focused behavioral/boundary/negative-control/regression: 13 passed in 1.15s.
+- Full unittest discovery: 373 passed in 19.168s.
+- Full pytest: 383 passed, 18 subtests passed in 21.78s.
+- Deterministic canonical regeneration: same economic metrics, failed gates, train pairs, and sealed holdout; finalizer artifact SHA-256 `0180dfe59ec20a8b6699116edc21ae20d57953520f5ebf03b1a7716df49252cf`.
+- Coverage: 21 structures / 246 hypotheses / 70 evolve artifacts / no living leader; dated report `reports/readiness/income-coverage-2026-07-15T2334.md` and LATEST agree.
+- Schema-v2 handoff, compile/JSON/diff/secret audit, and deterministic prepare readiness are finalizer close gates; commit/push/merge/postflight remain wrapper-owned.
 
 ## Readiness blockers
 
 1. No capital-path candidate has claim-appropriate after-cost option-payoff evidence plus path quality sufficient for L1/capital-seat authority.
-2. `TSLL_OBSERVED_TERM_CARRY_DIAGONAL_V1` has 0 complete observed package paths and 0 controls; it remains F0 `EVIDENCE_WAIT`.
-3. Current TSLL regime is bearish and exact admitted-leg liquidity is unproven.
-4. One-lot structural max loss is unproven under diagonal assignment/gap/exercise/liquidation scenarios; `$300` is admission budget only.
-5. Broad observed historical option entry/exit joins remain unavailable. This blocks observed-option/L1 claims only, not unrelated historical L0 discovery.
-6. Any future F3 candidate still requires live-clock paper quotes/fills before F4/shadow/live authority.
-7. Stamp `2026-07-15T2152` is integrated/pushed/postflight-complete as `fe0943f`; no execution authority changed.
+2. The breadth-thrust family is closed at F0; its untouched reserve cannot be opened or same-panel retuned to salvage the claim.
+3. The observed TSLL diagonal has 0 complete paths/controls and unproven structural max loss.
+4. Broad observed historical option entry/exit joins remain unavailable; this blocks observed-option/L1 claims only, not unrelated L0 discovery.
+5. Any future F3 candidate still requires live-clock paper quotes/fills before F4/shadow/live authority.
+6. Stamp 2026-07-15T2254 is finalizer-ready but not integrated; deterministic wrapper commit/push/fast-forward/postflight is still required before `RUN COMPLETE`.
 
 Coverage: `reports/readiness/income-coverage-LATEST.md`
-Final wake: `reports/trader-wakes/2026-07-15T2152-moa-merge.md`
-Executor wake: `reports/trader-wakes/2026-07-15T2152-moa-exec.md`
-Executor closeout: `reports/trader-wakes/moa/2026-07-15T2152/executor-closeout.md`
-Challenger: `reports/trader-wakes/moa/2026-07-15T2152/challenger-critique.md`
-Strategy charter: `reports/trader-wakes/moa/2026-07-15T2152/strategy-charter.md`
-Compounding: `reports/trader-wakes/moa/2026-07-15T2152/compounding.json`
-Learning: `reports/trader-wakes/moa/2026-07-15T2152/learning-promotion.md`
+Finalizer wake: `reports/trader-wakes/2026-07-15T2254-moa-merge.md`
+Executor wake: `reports/trader-wakes/2026-07-15T2254-moa-exec.md`
+Challenger critique: `reports/trader-wakes/moa/2026-07-15T2254/challenger-critique.md`
+Executor closeout: `reports/trader-wakes/moa/2026-07-15T2254/executor-closeout.md`
+Strategy charter: `reports/trader-wakes/moa/2026-07-15T2254/strategy-charter.md`
+Compounding: `reports/trader-wakes/moa/2026-07-15T2254/compounding.json`
+Learning: `reports/trader-wakes/moa/2026-07-15T2254/learning-promotion.md`
 
 ## Exactly one NEXT seed
 
-`TSLL_OBSERVED_TERM_CARRY_DATA_OR_INDEPENDENT_L0`:
-1. Distinct weekday-RTH session and frozen condition unmet: append exactly one all-expiration TSLL snapshot; report only RTH density, complete-path eligibility, `$300` admission rate, and frozen control support; no outcome/PnL evaluation or same-date churn.
-2. Off-hours and condition unmet: autonomously choose a genuinely independent non-quarantined L0 mechanism across the full universe; do not proxy-satisfy or mutate the parked observed diagonal.
-3. Frozen condition met: resume exact `TSLL_OBSERVED_TERM_CARRY_DIAGONAL_V1` on the development 60% under its predeclared falsifier; keep final 40% unread for later F1→F2.
-
-Pure append reaffirmations set `evidence_wait_reaffirmation=true` and do not increment pivot/burst-stop streaks. No registry/paper force, shadow, arm, broker, funding, or live action.
+`TSLL_OBSERVED_TERM_CARRY_DATA_OR_MATERIALLY_DIFFERENT_L0_PIVOT`: use exactly one branch per wake—distinct weekday-RTH and frozen 12-date/3-cycle/20-path/8-control floor unmet -> append one provenance-safe all-expiration TSLL snapshot and report counters only (`EVIDENCE_WAIT`, reaffirmation streak-exempt); off-hours -> pivot to a materially different non-quarantined mechanism/evidence class outside sector-breadth directional continuation and all integrated closed families; observed floor met -> evaluate exact parked `TSLL_OBSERVED_TERM_CARRY_DIAGONAL_V1` development 60% and keep final 40% unread. No same-date churn, same-panel breadth retune, holdout salvage, registry/paper force, shadow, arm, broker, funding, or live action.

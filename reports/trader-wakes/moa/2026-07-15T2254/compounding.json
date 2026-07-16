@@ -1,0 +1,128 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-15T2254",
+  "loop_signature": "build|sector-breadth-participation-thrust|spy-direction-up|prior-high-breadth-nonthrust-control|train60|10session|family-close",
+  "economic_mechanism": "Rapid expansion from narrow to broad sector participation inside an already positive SPY trend may reflect distributed institutional demand and slow position diffusion, creating incremental ten-session upside versus high-breadth but non-thrust same-regime controls.",
+  "candidate_or_family_scope": "Exact BROAD_SECTOR_BREADTH_THRUST_SPY_BULL_CALL_21D_V1 / BROAD_SECTOR_BREADTH_THRUST_FORWARD_DRIFT on SPY with fixed present-day XLB/XLC/XLE/XLF/XLI/XLK/XLP/XLRE/XLU/XLV/XLY breadth panel; future conditional one-lot 18-24 DTE $2-wide SPY bull-call debit spread only, capital_fit_usd=200, frictionless structural max_loss_usd=200 only when debit <=200, max_lots=1; zero option pricing and no capital seat.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "Close at F0 for fewer than 20 train pairs or eight signal years; any chronology/overlap/reuse violation; treated ten-session mean after labeled 10 bps <=+0.50%; positive frequency <55%; paired excess <+0.25%; one-sided 90% three-signal-date block-bootstrap lower bound <=0; worst-decile mean below -3.00%; or high-breadth non-thrust control equal/better.",
+  "outcome": "FAMILY_CLOSED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "No funnel movement: exact breadth-thrust mechanism and nearby same-panel retunes closed at F0; no option, F1/F2/L1, capital-seat, registry, paper, shadow, arm, broker, funding, or live authority."
+  },
+  "search_information": {
+    "summary": "The wake falsified one new participation-acceleration mechanism and added tested machine-readable match geometry, authority labels, density/tail boundaries, and an anti-retune quarantine without opening the sealed holdout.",
+    "delta_kinds": [
+      "capability",
+      "falsification",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "falsification",
+      "summary": "Train n20 across five years failed mechanism specificity: treated +0.245246% versus control +0.370614%, paired -0.125368%, LB90 -0.883946%, thin worst-decile n2 -6.981542%; holdout14 remained unread.",
+      "novelty_key": "sector-breadth-thrust-specificity-family-close-2026-07-15T2254-v1",
+      "artifacts": [
+        "scripts/sector_breadth_thrust_train_lab.py",
+        "tests/test_sector_breadth_thrust_train_lab.py",
+        "reports/trader-wakes/2026-07-15T2254-moa-merge.md",
+        "reports/trader-wakes/moa/2026-07-15T2254/learning-promotion.md"
+      ]
+    },
+    {
+      "kind": "capability",
+      "summary": "Breadth event/control evidence now serializes calendar/breadth/return/HV match distances, year counts, worst-decile n, boolean advancement, split F2/L1 authority, and explicit option-horizon limits, all under behavioral and negative-control tests.",
+      "novelty_key": "sector-breadth-match-quality-and-machine-claim-boundaries-2026-07-15T2254-v1",
+      "artifacts": [
+        "scripts/sector_breadth_thrust_train_lab.py",
+        "tests/test_sector_breadth_thrust_train_lab.py"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "Quarantine expands beyond the exact thresholds to nearby same-panel breadth/thrust/control/SMA and 5-15-session horizon retunes; reopening requires a materially new mechanism or evidence class.",
+      "novelty_key": "sector-breadth-same-panel-retune-quarantine-2026-07-15T2254-v1",
+      "artifacts": [
+        "scripts/sector_breadth_thrust_train_lab.py",
+        "tests/test_sector_breadth_thrust_train_lab.py",
+        "reports/trader-wakes/moa/2026-07-15T2254/merged-next-seed.md",
+        "reports/readiness/LATEST.md"
+      ]
+    }
+  ],
+  "retest_decision": null,
+  "evidence_wake_condition": "",
+  "evidence_wait_reaffirmation": false,
+  "critic_findings": [
+    {
+      "finding": "F1 quarantine was too narrow and allowed nearby same-panel threshold, horizon, and SMA polish after train inspection.",
+      "status": "repaired",
+      "rationale": "Canonical machinery now enumerates the nearby same-panel retune class and requires a materially new mechanism or evidence class to reopen; unit coverage asserts the quarantine surface.",
+      "repair_artifacts": [
+        "scripts/sector_breadth_thrust_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_sector_breadth_thrust_train_lab.py"
+      ]
+    },
+    {
+      "finding": "F2/F3 match-quality diagnostics were absent and strategy_advancement was a prose string instead of a boolean.",
+      "status": "repaired",
+      "rationale": "Train residue now serializes four match-distance summaries and machine boolean false with a separate summary; the finalizer reproduced 12/68/360 calendar distances and the exact economic metrics.",
+      "repair_artifacts": [
+        "scripts/sector_breadth_thrust_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_sector_breadth_thrust_train_lab.py"
+      ]
+    },
+    {
+      "finding": "F4/F5/F6/F7 durable registration and claim labels needed closed-family orientation residue, year-density context, thin-tail n, and explicit underlying-versus-option horizon limits.",
+      "status": "repaired",
+      "rationale": "The handoff registers candidate/family/nearby-retune closures; machinery emits year counts, dynamic panel floor, worst_decile_n=2, and no full-DTE option validation language under tests.",
+      "repair_artifacts": [
+        "scripts/sector_breadth_thrust_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_sector_breadth_thrust_train_lab.py"
+      ]
+    },
+    {
+      "finding": "F8 suggested the epoch counting might need correction beyond the executor update.",
+      "status": "rejected",
+      "rationale": "No further correction is warranted: configs/search_epoch.json records completed_strategy_decisions=2, consecutive_no_strategy_advance=2, strategy_pivot_required=true, strategy_burst_stop_required=false, latest FAMILY_CLOSED, and preserves the explicit pure-RTH-append streak exemption exactly as the challenger independently accepted."
+    },
+    {
+      "finding": "F9 required an independent finalizer rerun of focused and full verification rather than relying on executor counts.",
+      "status": "repaired",
+      "rationale": "Finalizer reran focused 13/13, full unittest 373/373, and full pytest 383 plus 18 subtests green after the repair test failed first and then passed.",
+      "repair_artifacts": [
+        "scripts/sector_breadth_thrust_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_sector_breadth_thrust_train_lab.py"
+      ]
+    },
+    {
+      "finding": "F10 preferred split funnel and authority labels when touching the legacy combined f2_or_l1_claim flag.",
+      "status": "repaired",
+      "rationale": "Compatibility flag remains false and new explicit f2_claim=false and l1_or_capital_seat_claim=false fields are asserted by tests.",
+      "repair_artifacts": [
+        "scripts/sector_breadth_thrust_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_sector_breadth_thrust_train_lab.py"
+      ]
+    }
+  ],
+  "closed_families": [
+    "BROAD_SECTOR_BREADTH_THRUST_FORWARD_DRIFT",
+    "BROAD_SECTOR_BREADTH_THRUST_SPY_BULL_CALL_21D_V1",
+    "BROAD_SECTOR_BREADTH_THRUST_FORWARD_DRIFT: same present-day SPY plus eleven-sector panel with nearby breadth 8-10/11, five-session thrust/control-band, 5-15-session horizon, SMA50/SMA100, or same novelty-class retunes without a materially new mechanism or control design"
+  ],
+  "data_dependencies": [],
+  "next": "TSLL_OBSERVED_TERM_CARRY_DATA_OR_MATERIALLY_DIFFERENT_L0_PIVOT: use exactly one branch per wake—distinct weekday-RTH and frozen 12-date/3-cycle/20-path/8-control floor unmet -> append one provenance-safe all-expiration TSLL snapshot and report counters only, EVIDENCE_WAIT reaffirmation streak-exempt; off-hours -> materially different non-quarantined mechanism/evidence class outside sector-breadth directional continuation and all integrated closed families; observed floor met -> evaluate exact parked diagonal development 60% and keep final 40% unread. No same-date churn, same-panel breadth retune, holdout salvage, registry/paper force, shadow, arm, broker, funding, or live action."
+}
