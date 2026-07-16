@@ -111,7 +111,7 @@ This advances archive density plumbing only. It does **not** create a capital-fi
 
 ## INTEGRATION
 
-- RTH reports committed on clean `main` after closeout (see commit SHA in LATEST if advanced)
+- Commit `287accd` on `main` → pushed `origin/main`; `HEAD == origin/main`; clean tree after push
 - No broker / arm / shadow / live / evolve `--apply`
 - Caches under `.cache/` remain untracked
 
