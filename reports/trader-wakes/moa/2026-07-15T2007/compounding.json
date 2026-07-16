@@ -1,0 +1,123 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-15T2007",
+  "loop_signature": "build|tail-hazard-epoch|cross-section-downside-semivariance-etf|train60|plain-hv-specificity|family-close-pivot",
+  "economic_mechanism": "Persistent cross-sectional left-tail heterogeneity from sector cyclicality, concentration, and risk-transfer demand should make the lowest prior downside-semivariance ETF less likely than the highest-ranked control to breach a 5% close barrier over the next ten sessions inside a lag-safe broad-market uptrend.",
+  "candidate_or_family_scope": "LOW_DOWNSIDE_SEMIVARIANCE_ETF_PCS_21D_V1 / noncollapse|cross_section_low_downside_semivariance_60d|liquid_etfs_spy_qqq_iwm_xlf_xle_xlk_xli_xlv|spy_sma100_uptrend_positive60d|10session_close_barrier5pct|pcs21d2wide_planned on a fixed present-day SPY, QQQ, IWM, XLF, XLE, XLK, XLI, XLV panel; future conditional one-lot 18-24 DTE $2-wide PCS only, capital_fit_usd=200, max_loss_usd=200 structural width bound before credit/closing friction, max_lots=1; zero option pricing.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "Close if train has fewer than 60 rank dates or six represented symbols on either selected side; low-rank 5% close-barrier breach exceeds 10%; high-minus-low edge is below five percentage points; one-sided 90% complete-rank-date block-bootstrap lower bound is non-positive; low-rank worst-decile close path is no milder than high-rank control; semivariance edge is no stronger than the same-date plain-HV diagnostic; or chronology, overlap, source hash, population, finite-value, strict-JSON, unread-holdout, or integrity fails.",
+  "outcome": "FAMILY_CLOSED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "The exact downside-semivariance ETF non-collapse family remained at F0. Absolute hazard, relative edge, uncertainty, tail, breadth, density, and integrity passed, but the frozen mechanism-specificity gate failed because same-date plain HV separated the endpoint more strongly. Holdout and option pricing remain sealed."
+  },
+  "search_information": {
+    "summary": "The wake added and exercised a lag-safe ETF downside-semivariance/direct-barrier lab with complete-rank-date bootstrap, a same-date plain-HV specificity comparator, strict holdout identity, and one-lot authority labels; it decisively closed the exact mechanism, repaired the sole-failure label, and forced the second-no-advance material pivot.",
+    "delta_kinds": [
+      "capability",
+      "falsification",
+      "repair",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "Added a train-first fixed-panel ETF tail-hazard lab that uses completed-bar features, next-session entry, globally non-overlapping ten-session paths, complete-rank-date circular blocks, same-date plain-HV specificity, strict JSON, sealed holdout identity, and explicit one-lot planning/authority boundaries.",
+      "novelty_key": "downside-semivariance-etf-barrier-lab-complete-rank-date-v1",
+      "artifacts": [
+        "scripts/downside_semivariance_etf_barrier_train_lab.py",
+        "tests/test_downside_semivariance_etf_barrier_train_lab.py",
+        "reports/trader-wakes/moa/2026-07-15T2007/downside-semivariance-etf-train.json"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "Closed the exact downside-semivariance ETF non-collapse family at F0 on 178 train rank dates: low/high breach 4.4944%/11.2360%, semivariance edge +6.7416pp, LB90 +3.9326pp, but plain-HV edge +7.8652pp; failed gate exactly semivariance_edge_exceeds_plain_hv, holdout 119 unread, pricing calls zero.",
+      "novelty_key": "low-downside-semivariance-etf-specificity-family-close-2026-07-15T2007-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-15T2007/downside-semivariance-etf-train.json",
+        "reports/trader-wakes/moa/2026-07-15T2007/executor-closeout.md",
+        "reports/trader-wakes/2026-07-15T2007-moa-merge.md",
+        "reports/readiness/LATEST.md"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Repaired the claim-bearing dominant-failure label so a sole specificity failure cannot be overstated as an absolute, relative, uncertainty, tail, or breadth failure; regression assertions require specificity-only wording and reject the word absolute on that path.",
+      "novelty_key": "semivariance-specificity-only-dominant-failure-label-v1",
+      "artifacts": [
+        "scripts/downside_semivariance_etf_barrier_train_lab.py",
+        "tests/test_downside_semivariance_etf_barrier_train_lab.py",
+        "reports/trader-wakes/moa/2026-07-15T2007/downside-semivariance-etf-train.json"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "Recorded two consecutive active-epoch no-advances (1912 and 2007), set strategy_pivot_required=true for the next wake, rejected laundering the inspected plain-HV comparator into a successor label, preserved rank-family and holdout quarantines, and selected one materially different SPY regime-only theta-carry proxy-PnL seed.",
+      "novelty_key": "tail-hazard-epoch-second-no-advance-theta-carry-pivot-2026-07-15T2007-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-15T2007/merged-next-seed.md",
+        "reports/trader-wakes/2026-07-15T2007-moa-merge.md",
+        "reports/trader-wakes/LATEST.md",
+        "reports/trader-wakes/INDEX.md",
+        "reports/readiness/LATEST.md"
+      ]
+    }
+  ],
+  "retest_decision": null,
+  "evidence_wake_condition": null,
+  "critic_findings": [
+    {
+      "finding": "The payload overstated a full multi-gate failure even though only semivariance_edge_exceeds_plain_hv failed.",
+      "status": "repaired",
+      "rationale": "Current machinery emits mechanism non-specificity only when specificity is the sole failed gate, names the plain-HV comparator, states every other frozen gate passed, and a focused assertion rejects absolute-failure wording on that path.",
+      "repair_artifacts": [
+        "scripts/downside_semivariance_etf_barrier_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_downside_semivariance_etf_barrier_train_lab.py"
+      ]
+    },
+    {
+      "finding": "Holdout end wording blurred the last rank date with the later final exit date.",
+      "status": "repaired",
+      "rationale": "The closeout now distinguishes rank dates 2019-11-13 through 2026-06-16 from exits through 2026-07-02. Machinery serializes both last_rank_date and last_exit_date, and the payload test verifies a sealed identity without outcomes.",
+      "repair_artifacts": [
+        "scripts/downside_semivariance_etf_barrier_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_downside_semivariance_etf_barrier_train_lab.py"
+      ]
+    },
+    {
+      "finding": "The integrated NEXT can continue the inspected plain-HV absolute-barrier rank lane after the second epoch no-advance.",
+      "status": "rejected",
+      "rationale": "Living surfaces use only SPY_INDEX_THETA_CARRY_PCS_21D_DUAL_COST_F0, a regime-only single-index theta-carry proxy option-PnL mechanism with no cross-sectional HV or semivariance rank. The inspected plain-HV comparator is not promoted."
+    },
+    {
+      "finding": "Readiness can remain a NEXT-only patch while its decision block still describes the now-superseded 1912 wake.",
+      "status": "rejected",
+      "rationale": "Readiness is fully rewritten for stamp 2007 with the exact FAMILY_CLOSED decision, sole failed gate, concentration and close-only boundaries, sealed holdout, no authority change, no-advance streak two, pivot required, and the merged NEXT."
+    },
+    {
+      "finding": "Severe SPY/XLV low-rank and XLE high-rank concentration supports a broad ETF-selection or capital claim.",
+      "status": "rejected",
+      "rationale": "Concentration is explicitly limiting: the fixed present-day panel can support only the exact in-sample mechanism close, not generalization, F1, L1, a capital seat, or a paper intent."
+    },
+    {
+      "finding": "Absolute hazard quality or positive relative evidence can nearly promote the family despite the frozen specificity failure.",
+      "status": "rejected",
+      "rationale": "Mechanism specificity was conjunctive and failed. Strategy advancement is false; the 119-blueprint holdout remains outcome-unread, pricing calls are zero, and no F1/F2/L1/registry/paper/shadow/arm/live authority exists."
+    }
+  ],
+  "closed_families": [
+    "noncollapse|cross_section_low_downside_semivariance_60d|liquid_etfs_spy_qqq_iwm_xlf_xle_xlk_xli_xlv|spy_sma100_uptrend_positive60d|10session_close_barrier5pct|pcs21d2wide_planned"
+  ],
+  "data_dependencies": [
+    "No new data are required to preserve this F0 family close; any future L1 or paper authority would require claim-appropriate option marks, listed contract grids, two-leg costs/fills, and managed-path evidence.",
+    "The sealed 72a6d18430031f03421d27a2680f53d42f099357a5c6685b1b3db2ce1a7dcd5d holdout belongs to the closed rank experiment and must not be spent on the successor mechanism."
+  ],
+  "next": "SPY_INDEX_THETA_CARRY_PCS_21D_DUAL_COST_F0: freeze a regime-only SPY one-lot 18-24 DTE $2-wide PCS (short 0.18-0.25 delta, minimum $0.30 credit, positive bids, two-leg NBBO width <=$0.20 when quotes exist, 50% harvest, 5% underlying-close invalidation, hard approximately ten-session stop), capital_fit_usd=200, structural max_loss_usd=200 before credit/friction, max_lots=1; evaluate chronological train then untouched holdout proxy option path PnL under both 5% adverse leg slip and $0.01-per-leg half-spread with non-vacuous trade, max-loss, window-DD, chronology, and integrity gates. No cross-sectional HV/semivariance rank, no use of holdout 72a6d184..., and no L1, registry, paper force, shadow, arm, broker, or live action from proxy evidence."
+}
