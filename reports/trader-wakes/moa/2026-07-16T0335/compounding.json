@@ -1,0 +1,117 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-16T0335",
+  "loop_signature": "build|monthly-sector-relative-strength-leader-continuation|nine-original-sector-etfs|same-date-nonleader-control|train60|20session|family-close",
+  "economic_mechanism": "Monthly institutional and benchmark sector reallocations may be implemented over multiple sessions, so a liquid sector ETF that is already the 63-session relative-strength leader, remains above its 126-session trend, and leads the cross-sectional median materially may continue upward and outperform its same-date sector peers for another trading month.",
+  "candidate_or_family_scope": "Exact MONTHLY_SECTOR_LEADER_CONTINUATION_BULL_CALL_35D_V1 / SECTOR_ALLOCATION_RELATIVE_STRENGTH_CONTINUATION on the frozen nine-original Select Sector SPDR panel; completed month-end 63-session leader with positive return, close above SMA126, and at least five-percentage-point lead over the panel median; next-close entry, 20-session exit, same-date equal-weight eight-nonleader control, 10-bps underlying hurdle, chronological 60/40 train/sealed holdout, and zero option pricing. Conditional future one-lot 30-45 DTE $2-wide bull-call debit spread only: capital_fit_usd=200, planning structural max_loss_usd=200 before debit slippage/closing friction, max_lots=1.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "Close the exact family if the chronological first 60% has fewer than 60 signals or ten signal years; any chronology, month-end, window, overlap, population, holdout-seal, option-pricing, or strict-JSON violation; leader mean after 10 bps <=0.50%; leader positive frequency <55%; paired excess versus equal-weight nonleaders <0.30%; paired-excess circular three-date-block LB90 <=0; worst-decile leader return <-8%; or the nonleader control is equal or better.",
+  "outcome": "FAMILY_CLOSED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "The exact sector-allocation relative-strength continuation mechanism failed six frozen economic/risk gates in 102 train signals across 17 years and remains closed at F0. No F1, F2, L1, living candidate, quality leader, capital seat, registry, paper, shadow, arm, broker, funding, or live authority was earned."
+  },
+  "search_information": {
+    "summary": "The wake added and exercised a reusable train-only monthly dynamic-leader lab with fixed nine-sector population, completed month-end to next-close chronology, non-overlapping 20-session windows, same-date nonleader specificity control, deterministic circular-block uncertainty, sealed chronological holdout identity, strict JSON, source hashes, deterministic cache replay, and fail-closed option/capital labels. It decisively found anti-edge rather than a survivor.",
+    "delta_kinds": [
+      "capability",
+      "falsification",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "Added a reusable train-only monthly sector-leader lab with fixed-panel validation, exact month-end/next-close chronology, non-overlap enforcement, same-date peer control, sealed holdout identity, strict JSON, and behavioral, boundary, positive, negative, and leakage controls.",
+      "novelty_key": "monthly-sector-leader-train-lab-fixed-panel-controls-2026-07-16T0335-v1",
+      "artifacts": [
+        "scripts/monthly_sector_leader_train_lab.py",
+        "tests/test_monthly_sector_leader_train_lab.py",
+        "reports/trader-wakes/moa/2026-07-16T0335/monthly-sector-leader-train.json"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "The frozen 102-signal/17-year train population produced leader mean -0.130819% after 10 bps versus +0.732793% for nonleaders, paired excess -0.863612%, circular-block LB90 -1.455459%, leader hit rate 48.0392%, and worst-decile -9.375157%; six gates failed, so both canonical IDs close at F0 with the 69-signal holdout unread and option pricing absent.",
+      "novelty_key": "sector-allocation-relative-strength-continuation-family-close-2026-07-16T0335-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-16T0335/monthly-sector-leader-train.json",
+        "reports/trader-wakes/moa/2026-07-16T0335/executor-closeout.md",
+        "reports/trader-wakes/2026-07-16T0335-moa-merge.md",
+        "reports/readiness/LATEST.md"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "Quarantined both canonical sector-leader IDs plus nearby same-panel formation, separation, SMA, hold, top-two, and rank-weight retunes; the sole NEXT requires a candidate factory to predeclare at least two independent non-quarantined mechanisms and exercise to exactly one named strategy decision in-wake rather than count scaffolding as progress.",
+      "novelty_key": "sector-leader-quarantine-and-exercised-factory-next-2026-07-16T0335-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-16T0335/merged-next-seed.md",
+        "reports/trader-wakes/2026-07-16T0335-moa-merge.md",
+        "reports/trader-wakes/INDEX.md",
+        "reports/readiness/LATEST.md"
+      ]
+    }
+  ],
+  "retest_decision": null,
+  "evidence_wake_condition": null,
+  "evidence_wait_reaffirmation": false,
+  "critic_findings": [
+    {
+      "finding": "Accept FAMILY_CLOSED at F0 for MONTHLY_SECTOR_LEADER_CONTINUATION_BULL_CALL_35D_V1 / SECTOR_ALLOCATION_RELATIVE_STRENGTH_CONTINUATION, preserve the unread holdout and no-option boundary, and quarantine nearby same-panel retunes.",
+      "status": "rejected",
+      "rationale": "Rejected only as a machinery-repair finding because independent recomputation and focused tests confirmed the executor's strategy judgment. The obligation is accepted in the finalizer, closed_families, readiness, index, and sole NEXT; the 69-signal holdout remains outcome-unread and both observed and proxy option marks remain false."
+    },
+    {
+      "finding": "Write the missing schema-version-2 compounding handoff with FAMILY_CLOSED, aliases, unique novelty keys, search-information separation, and no-advance context.",
+      "status": "rejected",
+      "rationale": "Rejected as a code defect because this was a required finalizer role artifact rather than broken machinery. The obligation is completed by this schema-version-2 file, which passes validate-handoff and records both aliases, three unique novelty keys, strategy_advancement=false, separate search information, and explicit epoch counters."
+    },
+    {
+      "finding": "Register both the mechanism-family ID and candidate ID on orientation/readiness closed-family surfaces.",
+      "status": "rejected",
+      "rationale": "Rejected as a machinery defect. The obligation is accepted directly: both IDs are present in closed_families here, the merged NEXT quarantine, and readiness. The next generated orientation consumes this integrated compounding record and therefore inherits both IDs."
+    },
+    {
+      "finding": "Harmonize the funnel label so the machine handoff says closed at F0 rather than inventing F0_MECHANISM_CLOSED as a funnel stage.",
+      "status": "rejected",
+      "rationale": "Rejected as a claim-code defect because the canonical claim already has funnel_stage_before=F0_MECHANISM and funnel_stage_after=F0_MECHANISM. This handoff uses the same valid machine stage and outcome=FAMILY_CLOSED; historical executor prose using F0_MECHANISM_CLOSED is retained only as readable shorthand, not a machine stage."
+    },
+    {
+      "finding": "Reconfirm focused, adjacent, and full-suite verification rather than inheriting executor counts.",
+      "status": "rejected",
+      "rationale": "Rejected as a code defect because this is finalizer process ownership. The obligation was independently completed: the focused/adjacent unittest command ran 50 tests OK, the mandated full unittest discovery ran 409 tests OK, strict compile and just test exited zero, and exact-cache replay matched after removing only generated_at. Exact commands and results are in learning-promotion.md."
+    },
+    {
+      "finding": "Keep XLE/XLU leader concentration and zero XLI train signals diagnostic only, not a post-hoc salvage path.",
+      "status": "rejected",
+      "rationale": "Rejected as an observed defect because neither the code, claim, readiness, nor finalizer uses concentration to move a gate or rescue the mechanism. The frozen same-panel retune family remains quarantined."
+    },
+    {
+      "finding": "Strengthen the factory NEXT anti-theater rule: predeclare at least two independent non-quarantined mechanisms with complete Layered Edge Stacks and frozen specificity controls, then close exactly one named decision in the same wake.",
+      "status": "rejected",
+      "rationale": "Rejected as a machinery defect because the finding changes the next-wake charter, not current code. It is accepted verbatim in the merged NEXT, finalizer/LATEST, readiness, and stop-rule delta; factory scaffolding alone cannot count as strategy progress."
+    }
+  ],
+  "closed_families": [
+    "MONTHLY_SECTOR_LEADER_CONTINUATION_BULL_CALL_35D_V1",
+    "SECTOR_ALLOCATION_RELATIVE_STRENGTH_CONTINUATION"
+  ],
+  "data_dependencies": [
+    "No new data are required to preserve this exact family close; reopening requires an independent panel construction, observed option-flow evidence, or a materially different economic mechanism/evidence class rather than same-panel knob retuning.",
+    "Any later option-stage candidate requires a separate frozen charter and claim-appropriate option debit, volatility, fill, path, friction, assignment, and management evidence before L1 or paper authority."
+  ],
+  "no_advance_context": {
+    "configured_epoch_id": "FOMC_POLICY_INFORMATION_RESOLUTION_DRIFT_V1",
+    "configured_epoch_status": "completed",
+    "epoch_record_count_before": 1,
+    "epoch_consecutive_no_strategy_advance_before": 1,
+    "epoch_record_count_after_integration": 1,
+    "epoch_consecutive_no_strategy_advance_after_integration": 1,
+    "reason": "This independent sector-allocation wake is later than the completed epoch's inclusive completed_stamp and remains visible in global history without inflating that completed epoch's streak.",
+    "strategy_pivot_required": false,
+    "strategy_burst_stop_required": false
+  },
+  "next": "TRAIN_ONLY_DEFINED_RISK_CANDIDATE_FACTORY_V1: predeclare at least two genuinely independent, non-quarantined economic mechanisms, each with a complete Layered Edge Stack and frozen specificity control before outcome access; exercise the cheap train-only factory in the same wake and close exactly one named survivor as STRATEGY_ADVANCED F0->F1 or one named mechanism as FAMILY_CLOSED. The factory itself is not strategy progress. Do not retune SECTOR_ALLOCATION_RELATIVE_STRENGTH_CONTINUATION / MONTHLY_SECTOR_LEADER_CONTINUATION_BULL_CALL_35D_V1, open this stamp's sealed holdout, or claim L1, capital seat, paper, shadow, arm, broker, funding, or live authority from scaffolding."
+}

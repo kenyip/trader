@@ -1,0 +1,1223 @@
+{
+  "all_train_rows_are_inspected_development_data": true,
+  "candidate_id": "MONTHLY_SECTOR_LEADER_CONTINUATION_BULL_CALL_35D_V1",
+  "capital_seat_claim": false,
+  "claim_scope": "split/dividend-adjusted daily sector-ETF closes only; frozen nine-original-SPDR panel; train-only L0 discovery; no option marks, IV, debit, fill, F2, L1, capital-seat, or paper claim",
+  "config": {
+    "bootstrap_block_length_signal_dates": 3,
+    "bootstrap_samples": 10000,
+    "end_exclusive": "2026-07-16",
+    "forward_sessions": 20,
+    "min_leader_median_spread": 0.05,
+    "min_leader_return_63": 0.0,
+    "minimum_signal_years": 10,
+    "minimum_train_signals": 60,
+    "momentum_sessions": 63,
+    "require_above_sma": true,
+    "round_trip_underlying_cost_bps": 10.0,
+    "start": "1998-12-01",
+    "symbols": [
+      "XLB",
+      "XLE",
+      "XLF",
+      "XLI",
+      "XLK",
+      "XLP",
+      "XLU",
+      "XLV",
+      "XLY"
+    ],
+    "train_fraction": 0.6,
+    "trend_sessions": 126
+  },
+  "dominant_failure_mechanism": "mechanism-specific paired_excess failure: monthly sector leaders did not beat the same-date equal-weight nonleader basket under the frozen magnitude/uncertainty gates",
+  "economic_mechanism": "slow institutional and benchmark sector reallocation may sustain intermediate-term leadership for one additional trading month",
+  "f2_claim": false,
+  "f2_or_l1_claim": false,
+  "failed_gates": [
+    "leader_mean_return_above_0_50pct",
+    "leader_positive_frequency_at_least_55pct",
+    "paired_excess_mean_at_least_0_30pct",
+    "paired_excess_bootstrap_lb90_positive",
+    "leader_worst_decile_at_least_negative_8pct",
+    "nonleader_equal_weight_control_is_weaker"
+  ],
+  "falsifier": "fewer than 60 train signals or ten years; chronology/month-end/window/overlap/population failure; leader mean after 10 bps <=0.50%; positive frequency <55%; paired excess versus equal-weight nonleaders <0.30%; paired-excess date-block LB90 <=0; worst decile <-8%; or nonleader control equal/better",
+  "forecast_type": "direction_up_and_cross_sectional_outperformance",
+  "funnel_stage_after": "F0_MECHANISM",
+  "funnel_stage_before": "F0_MECHANISM",
+  "generated_at": "2026-07-16T10:43:27.898965+00:00",
+  "holdout": {
+    "first_signal_date": "2015-04-30",
+    "identity_fields": [
+      "signal_date",
+      "entry_date",
+      "exit_date",
+      "leader",
+      "peers"
+    ],
+    "identity_sha256": "2691ebb857fc6552890c9b559535e6ed30cb49007410ca957d06d794f11fb464",
+    "last_exit_date": "2026-06-01",
+    "last_signal_date": "2026-04-30",
+    "n_frozen_signals": 69,
+    "outcome_metrics_read": false,
+    "simulation_run": false
+  },
+  "l1_or_capital_seat_claim": false,
+  "layered_edge_stack": {
+    "capital_fit_usd": 200.0,
+    "confidence_stage": "F0_MECHANISM_CLOSED",
+    "dangerous_greeks_and_exposures": [
+      "negative_theta_if_continuation_stalls",
+      "implied_volatility_contraction",
+      "capped_upside",
+      "gap_loss",
+      "sector_concentration",
+      "short_call_assignment_and_expiration_handling"
+    ],
+    "economic_mechanism": "slow institutional/benchmark sector reallocation",
+    "entry_trigger": "completed calendar month-end signal; next completed close entry",
+    "evidence_falsifier": "frozen train gates above; holdout sealed",
+    "exit_management": "underlying discovery exits after 20 sessions; future option plan +50%/-50% debit, five DTE, trend invalidation, assignment guard, no roll",
+    "forecast_type": "absolute upward drift and relative outperformance over 20 sessions",
+    "intended_greeks": [
+      "positive_delta",
+      "positive_gamma",
+      "bounded_negative_theta"
+    ],
+    "market_underlying": "dynamic leader from frozen nine original Select Sector SPDR ETFs",
+    "max_loss_usd": 200.0,
+    "max_lots": 1,
+    "option_structure": "future conditional one-lot 30-45 DTE $2-wide bull call debit spread",
+    "portfolio_overlap": "no concurrent Agentic exposure in selected sector ETF or broad-index positive-delta unit",
+    "regime_envelope": "leader positive 63-session return, close above SMA126, and at least five-percentage-point lead over panel median",
+    "stand_aside": "incomplete panel, failed month-end/momentum/trend/separation/path gate, option liquidity/debit or max-loss failure, or overlapping sector/index positive-delta risk"
+  },
+  "mechanism_family": "SECTOR_ALLOCATION_RELATIVE_STRENGTH_CONTINUATION",
+  "methodology_boundaries": {
+    "chronology": "features through completed month-end close; entry at next completed close",
+    "control": "same-date equal-weight basket of eight nonleaders selected without outcome access",
+    "dependence": "circular three-signal-date block bootstrap of complete paired-excess rows",
+    "history_floor": "nine original sector ETFs preserve approximately 1999-forward history but retain present-day survivorship and do not reconstruct historical sector composition",
+    "holdout_outcomes_read": false,
+    "horizon_option_alignment": "20-session underlying continuation does not validate a full 30-45 DTE option path, implied volatility, debit fills, or early-exit economics",
+    "l1_or_paper_eligibility": false,
+    "observed_option_marks": false,
+    "proxy_option_marks": false
+  },
+  "novelty_key": "direction_up_relative|nine_original_sector_etfs|month_end|63session_leader|positive_above_sma126|leader_minus_median_5pct|20session|same_date_nonleader_control|bull_call_debit_spread_35d_2wide_planned",
+  "paper_only": true,
+  "phase": "BUILD_L0_UNDERLYING_DISCOVERY",
+  "population_purity": {
+    "common_panel_start_date": "1998-12-22",
+    "historical_sector_membership_not_reconstructed": true,
+    "join": "inner join; no forward fill",
+    "late_listings_excluded": [
+      "XLC",
+      "XLRE"
+    ],
+    "optionability_not_historically_reconstructed": true,
+    "panel": [
+      "XLB",
+      "XLE",
+      "XLF",
+      "XLI",
+      "XLK",
+      "XLP",
+      "XLU",
+      "XLV",
+      "XLY"
+    ],
+    "present_day_survivorship_bias": true
+  },
+  "provenance": {
+    "XLB": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "discarded_trailing_unsettled_rows": 0,
+      "end": "2026-07-15",
+      "path": ".cache/platform/monthly_sector_leader/XLB_1998-12-01_2026-07-16_auto_adjust.csv",
+      "rows": 6931,
+      "sha256": "82e47aec73f33e3dcc0c15ea4efbe76ea8628ec7b456da94a5db09fa5e8057e9",
+      "start": "1998-12-22"
+    },
+    "XLE": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "discarded_trailing_unsettled_rows": 0,
+      "end": "2026-07-15",
+      "path": ".cache/platform/monthly_sector_leader/XLE_1998-12-01_2026-07-16_auto_adjust.csv",
+      "rows": 6931,
+      "sha256": "ee0feaaa238c19cb53e58f9052dc65c648bdb2da547d2334474a0035f6298a96",
+      "start": "1998-12-22"
+    },
+    "XLF": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "discarded_trailing_unsettled_rows": 0,
+      "end": "2026-07-15",
+      "path": ".cache/platform/monthly_sector_leader/XLF_1998-12-01_2026-07-16_auto_adjust.csv",
+      "rows": 6931,
+      "sha256": "a6525bc364d25a2be3dd2e45afff21f696120f04d6bce79fd1176de832d61bca",
+      "start": "1998-12-22"
+    },
+    "XLI": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "discarded_trailing_unsettled_rows": 0,
+      "end": "2026-07-15",
+      "path": ".cache/platform/monthly_sector_leader/XLI_1998-12-01_2026-07-16_auto_adjust.csv",
+      "rows": 6931,
+      "sha256": "d79e371b0a3da89eb8ec829e884557d3696245adf23dd359d34a0bdb96806d3e",
+      "start": "1998-12-22"
+    },
+    "XLK": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "discarded_trailing_unsettled_rows": 0,
+      "end": "2026-07-15",
+      "path": ".cache/platform/monthly_sector_leader/XLK_1998-12-01_2026-07-16_auto_adjust.csv",
+      "rows": 6931,
+      "sha256": "9ea16fe4d09e171286cc06695972b1cf1c8351376adbaf12956d6f3aa1e4ccb4",
+      "start": "1998-12-22"
+    },
+    "XLP": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "discarded_trailing_unsettled_rows": 0,
+      "end": "2026-07-15",
+      "path": ".cache/platform/monthly_sector_leader/XLP_1998-12-01_2026-07-16_auto_adjust.csv",
+      "rows": 6931,
+      "sha256": "8533f08f01c44f4bddaa23eee40e1e1d7533ee872c4e60432cfabf8740ca1f79",
+      "start": "1998-12-22"
+    },
+    "XLU": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "discarded_trailing_unsettled_rows": 0,
+      "end": "2026-07-15",
+      "path": ".cache/platform/monthly_sector_leader/XLU_1998-12-01_2026-07-16_auto_adjust.csv",
+      "rows": 6931,
+      "sha256": "6b89661201dedd0f1c89b95e2fbb77607e9eb4d278bf1a96e359509258b1bf9d",
+      "start": "1998-12-22"
+    },
+    "XLV": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "discarded_trailing_unsettled_rows": 0,
+      "end": "2026-07-15",
+      "path": ".cache/platform/monthly_sector_leader/XLV_1998-12-01_2026-07-16_auto_adjust.csv",
+      "rows": 6931,
+      "sha256": "9c4126e25c07eef821a95c7f19e6122fdb350d1b50d2029a7d0a2eb9eed21ab8",
+      "start": "1998-12-22"
+    },
+    "XLY": {
+      "adjustment_semantics": "yfinance auto_adjust=True",
+      "discarded_trailing_unsettled_rows": 0,
+      "end": "2026-07-15",
+      "path": ".cache/platform/monthly_sector_leader/XLY_1998-12-01_2026-07-16_auto_adjust.csv",
+      "rows": 6931,
+      "sha256": "4c8a1eec71d11b4dd27be7d2ffcdc396dcf316da456f0c8720edc4565f94aa2a",
+      "start": "1998-12-22"
+    }
+  },
+  "quarantine": {
+    "enabled": true,
+    "nearby_same_panel_retunes": [
+      "formation horizons near 42-126 sessions on the same nine-sector panel",
+      "leader-minus-median separation thresholds near 3-8 percentage points",
+      "forward horizons from 10 through 30 sessions",
+      "SMA100-SMA150 trend lookback nudges",
+      "top-two or rank-weighted variants without a materially new control/evidence class"
+    ],
+    "reopen_condition": "independent panel construction, observed option-flow evidence, or another materially new economic mechanism/evidence class; train-inspected knob polish is forbidden",
+    "scope": [
+      "exact_family",
+      "same_panel_retunes"
+    ]
+  },
+  "schema_version": 1,
+  "search_information": "new train-only sector-allocation panel decision with same-date nonleader specificity control and sealed holdout",
+  "sleeve_usd": 3000.0,
+  "strategy_advancement": false,
+  "strategy_advancement_summary": "none; exact mechanism family closed at F0",
+  "strategy_outcome": "FAMILY_CLOSED",
+  "train": {
+    "bootstrap_block_length_signal_dates": 3,
+    "bootstrap_samples": 10000,
+    "gate_checks": {
+      "leader_mean_return_above_0_50pct": false,
+      "leader_positive_frequency_at_least_55pct": false,
+      "leader_worst_decile_at_least_negative_8pct": false,
+      "minimum_signal_years": true,
+      "minimum_train_signals": true,
+      "nonleader_equal_weight_control_is_weaker": false,
+      "paired_excess_bootstrap_lb90_positive": false,
+      "paired_excess_mean_at_least_0_30pct": false,
+      "zero_integrity_violations": true
+    },
+    "gate_pass": false,
+    "integrity_violations": [],
+    "leader_mean_return_after_cost": -0.0013081878619732922,
+    "leader_positive_frequency_after_cost": 0.4803921568627451,
+    "leader_worst_decile_return_after_cost": -0.09375157337701821,
+    "n_signals": 102,
+    "nonleader_equal_weight_mean_return_after_cost": 0.007327927455888088,
+    "paired_excess_bootstrap_lb90": -0.014554592309094045,
+    "paired_excess_mean": -0.008636115317861381,
+    "paired_excess_median": -0.011054733358708081,
+    "paired_excess_positive_frequency": 0.3627450980392157,
+    "pairs": [
+      {
+        "entry_date": "1999-07-01",
+        "exit_date": "1999-07-30",
+        "leader": "XLB",
+        "leader_return_after_cost": -0.021833125751460125,
+        "nonleader_equal_weight_return_after_cost": -0.034697090638891426,
+        "paired_excess_return": 0.0128639648874313,
+        "signal_date": "1999-06-30"
+      },
+      {
+        "entry_date": "1999-08-02",
+        "exit_date": "1999-08-30",
+        "leader": "XLK",
+        "leader_return_after_cost": 0.027169404156580756,
+        "nonleader_equal_weight_return_after_cost": -0.01639688206133981,
+        "paired_excess_return": 0.043566286217920566,
+        "signal_date": "1999-07-30"
+      },
+      {
+        "entry_date": "1999-09-01",
+        "exit_date": "1999-09-30",
+        "leader": "XLK",
+        "leader_return_after_cost": -0.010380335198533208,
+        "nonleader_equal_weight_return_after_cost": -0.03197186516328698,
+        "paired_excess_return": 0.021591529964753775,
+        "signal_date": "1999-08-31"
+      },
+      {
+        "entry_date": "1999-10-01",
+        "exit_date": "1999-10-29",
+        "leader": "XLK",
+        "leader_return_after_cost": 0.035584972741881216,
+        "nonleader_equal_weight_return_after_cost": 0.04870547417609475,
+        "paired_excess_return": -0.013120501434213533,
+        "signal_date": "1999-09-30"
+      },
+      {
+        "entry_date": "1999-11-01",
+        "exit_date": "1999-11-30",
+        "leader": "XLK",
+        "leader_return_after_cost": 0.09877951776919891,
+        "nonleader_equal_weight_return_after_cost": -0.008030798157902932,
+        "paired_excess_return": 0.10681031592710184,
+        "signal_date": "1999-10-29"
+      },
+      {
+        "entry_date": "1999-12-01",
+        "exit_date": "1999-12-30",
+        "leader": "XLK",
+        "leader_return_after_cost": 0.1462369786064951,
+        "nonleader_equal_weight_return_after_cost": 0.01932299033572943,
+        "paired_excess_return": 0.12691398827076567,
+        "signal_date": "1999-11-30"
+      },
+      {
+        "entry_date": "2000-01-03",
+        "exit_date": "2000-02-01",
+        "leader": "XLK",
+        "leader_return_after_cost": -0.06977087887767452,
+        "nonleader_equal_weight_return_after_cost": -0.020625831802552286,
+        "paired_excess_return": -0.04914504707512224,
+        "signal_date": "1999-12-31"
+      },
+      {
+        "entry_date": "2000-03-01",
+        "exit_date": "2000-03-29",
+        "leader": "XLK",
+        "leader_return_after_cost": 0.08150297263808859,
+        "nonleader_equal_weight_return_after_cost": 0.09856047285497638,
+        "paired_excess_return": -0.01705750021688779,
+        "signal_date": "2000-02-29"
+      },
+      {
+        "entry_date": "2000-04-03",
+        "exit_date": "2000-05-02",
+        "leader": "XLK",
+        "leader_return_after_cost": -0.057034391216010394,
+        "nonleader_equal_weight_return_after_cost": -0.012809078509355101,
+        "paired_excess_return": -0.04422531270665529,
+        "signal_date": "2000-03-31"
+      },
+      {
+        "entry_date": "2000-06-01",
+        "exit_date": "2000-06-29",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.03447113420918546,
+        "nonleader_equal_weight_return_after_cost": -0.02335929756243023,
+        "paired_excess_return": -0.011111836646755233,
+        "signal_date": "2000-05-31"
+      },
+      {
+        "entry_date": "2000-07-03",
+        "exit_date": "2000-08-01",
+        "leader": "XLP",
+        "leader_return_after_cost": -0.007179667056782301,
+        "nonleader_equal_weight_return_after_cost": -0.0020656347615754383,
+        "paired_excess_return": -0.0051140322952068626,
+        "signal_date": "2000-06-30"
+      },
+      {
+        "entry_date": "2000-10-02",
+        "exit_date": "2000-10-30",
+        "leader": "XLF",
+        "leader_return_after_cost": -0.031287167647387704,
+        "nonleader_equal_weight_return_after_cost": 0.0010256488732177382,
+        "paired_excess_return": -0.03231281652060544,
+        "signal_date": "2000-09-29"
+      },
+      {
+        "entry_date": "2000-11-01",
+        "exit_date": "2000-11-30",
+        "leader": "XLU",
+        "leader_return_after_cost": 0.004521691889468716,
+        "nonleader_equal_weight_return_after_cost": -0.05918498240990187,
+        "paired_excess_return": 0.06370667429937059,
+        "signal_date": "2000-10-31"
+      },
+      {
+        "entry_date": "2000-12-01",
+        "exit_date": "2001-01-02",
+        "leader": "XLU",
+        "leader_return_after_cost": -0.010465968171677331,
+        "nonleader_equal_weight_return_after_cost": 0.014010270613297196,
+        "paired_excess_return": -0.024476238784974527,
+        "signal_date": "2000-11-30"
+      },
+      {
+        "entry_date": "2001-02-01",
+        "exit_date": "2001-03-02",
+        "leader": "XLY",
+        "leader_return_after_cost": -0.0791630937085892,
+        "nonleader_equal_weight_return_after_cost": -0.04327367054914029,
+        "paired_excess_return": -0.035889423159448916,
+        "signal_date": "2001-01-31"
+      },
+      {
+        "entry_date": "2001-04-02",
+        "exit_date": "2001-05-01",
+        "leader": "XLY",
+        "leader_return_after_cost": 0.056471326220281726,
+        "nonleader_equal_weight_return_after_cost": 0.10215854503231869,
+        "paired_excess_return": -0.04568721881203697,
+        "signal_date": "2001-03-30"
+      },
+      {
+        "entry_date": "2001-08-01",
+        "exit_date": "2001-08-29",
+        "leader": "XLY",
+        "leader_return_after_cost": -0.08239959767189142,
+        "nonleader_equal_weight_return_after_cost": -0.03990404923118607,
+        "paired_excess_return": -0.042495548440705355,
+        "signal_date": "2001-07-31"
+      },
+      {
+        "entry_date": "2001-10-01",
+        "exit_date": "2001-10-29",
+        "leader": "XLP",
+        "leader_return_after_cost": 0.006518885041087442,
+        "nonleader_equal_weight_return_after_cost": 0.04376643735080904,
+        "paired_excess_return": -0.0372475523097216,
+        "signal_date": "2001-09-28"
+      },
+      {
+        "entry_date": "2002-01-02",
+        "exit_date": "2002-01-31",
+        "leader": "XLK",
+        "leader_return_after_cost": -0.03595894580286829,
+        "nonleader_equal_weight_return_after_cost": -0.016618920268601164,
+        "paired_excess_return": -0.019340025534267127,
+        "signal_date": "2001-12-31"
+      },
+      {
+        "entry_date": "2002-02-01",
+        "exit_date": "2002-03-04",
+        "leader": "XLY",
+        "leader_return_after_cost": 0.03969813336877215,
+        "nonleader_equal_weight_return_after_cost": 0.05121820011992852,
+        "paired_excess_return": -0.011520066751156369,
+        "signal_date": "2002-01-31"
+      },
+      {
+        "entry_date": "2002-04-01",
+        "exit_date": "2002-04-29",
+        "leader": "XLB",
+        "leader_return_after_cost": -0.058252100166173326,
+        "nonleader_equal_weight_return_after_cost": -0.05803246289700803,
+        "paired_excess_return": -0.0002196372691652959,
+        "signal_date": "2002-03-28"
+      },
+      {
+        "entry_date": "2002-05-01",
+        "exit_date": "2002-05-30",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.038473490001222355,
+        "nonleader_equal_weight_return_after_cost": -0.010532467149402674,
+        "paired_excess_return": -0.02794102285181968,
+        "signal_date": "2002-04-30"
+      },
+      {
+        "entry_date": "2002-06-03",
+        "exit_date": "2002-07-01",
+        "leader": "XLV",
+        "leader_return_after_cost": -0.09596180426086054,
+        "nonleader_equal_weight_return_after_cost": -0.05730710391469626,
+        "paired_excess_return": -0.03865470034616428,
+        "signal_date": "2002-05-31"
+      },
+      {
+        "entry_date": "2002-12-02",
+        "exit_date": "2002-12-31",
+        "leader": "XLK",
+        "leader_return_after_cost": -0.13569665527019525,
+        "nonleader_equal_weight_return_after_cost": -0.024971127680231214,
+        "paired_excess_return": -0.11072552758996404,
+        "signal_date": "2002-11-29"
+      },
+      {
+        "entry_date": "2003-01-02",
+        "exit_date": "2003-01-31",
+        "leader": "XLK",
+        "leader_return_after_cost": -0.07471776599079116,
+        "nonleader_equal_weight_return_after_cost": -0.05606724482409629,
+        "paired_excess_return": -0.01865052116669487,
+        "signal_date": "2002-12-31"
+      },
+      {
+        "entry_date": "2003-03-03",
+        "exit_date": "2003-03-31",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.003340217885198004,
+        "nonleader_equal_weight_return_after_cost": 0.019083431798203765,
+        "paired_excess_return": -0.02242364968340177,
+        "signal_date": "2003-02-28"
+      },
+      {
+        "entry_date": "2003-04-01",
+        "exit_date": "2003-04-30",
+        "leader": "XLV",
+        "leader_return_after_cost": 0.017826420233728713,
+        "nonleader_equal_weight_return_after_cost": 0.06597679756346378,
+        "paired_excess_return": -0.04815037732973507,
+        "signal_date": "2003-03-31"
+      },
+      {
+        "entry_date": "2003-05-01",
+        "exit_date": "2003-05-30",
+        "leader": "XLY",
+        "leader_return_after_cost": 0.06179854668486351,
+        "nonleader_equal_weight_return_after_cost": 0.06057155109196993,
+        "paired_excess_return": 0.001226995592893576,
+        "signal_date": "2003-04-30"
+      },
+      {
+        "entry_date": "2003-06-02",
+        "exit_date": "2003-06-30",
+        "leader": "XLU",
+        "leader_return_after_cost": 0.003895251754781338,
+        "nonleader_equal_weight_return_after_cost": 0.007609932976327588,
+        "paired_excess_return": -0.00371468122154625,
+        "signal_date": "2003-05-30"
+      },
+      {
+        "entry_date": "2003-07-01",
+        "exit_date": "2003-07-30",
+        "leader": "XLU",
+        "leader_return_after_cost": -0.0629024535966507,
+        "nonleader_equal_weight_return_after_cost": 0.009533813917685485,
+        "paired_excess_return": -0.07243626751433618,
+        "signal_date": "2003-06-30"
+      },
+      {
+        "entry_date": "2003-09-02",
+        "exit_date": "2003-09-30",
+        "leader": "XLB",
+        "leader_return_after_cost": -0.05713353917843844,
+        "nonleader_equal_weight_return_after_cost": -0.02150978265510327,
+        "paired_excess_return": -0.03562375652333517,
+        "signal_date": "2003-08-29"
+      },
+      {
+        "entry_date": "2004-01-02",
+        "exit_date": "2004-02-02",
+        "leader": "XLB",
+        "leader_return_after_cost": -0.045051518607244545,
+        "nonleader_equal_weight_return_after_cost": 0.022415508477921037,
+        "paired_excess_return": -0.06746702708516558,
+        "signal_date": "2003-12-31"
+      },
+      {
+        "entry_date": "2004-03-01",
+        "exit_date": "2004-03-29",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.0522477601106367,
+        "nonleader_equal_weight_return_after_cost": -0.026551205675375805,
+        "paired_excess_return": -0.025696554435260893,
+        "signal_date": "2004-02-27"
+      },
+      {
+        "entry_date": "2004-05-03",
+        "exit_date": "2004-06-01",
+        "leader": "XLP",
+        "leader_return_after_cost": -0.012577775396919622,
+        "nonleader_equal_weight_return_after_cost": 0.005147859187651413,
+        "paired_excess_return": -0.017725634584571034,
+        "signal_date": "2004-04-30"
+      },
+      {
+        "entry_date": "2004-07-01",
+        "exit_date": "2004-07-30",
+        "leader": "XLE",
+        "leader_return_after_cost": 0.028505407219072576,
+        "nonleader_equal_weight_return_after_cost": -0.021079635957964846,
+        "paired_excess_return": 0.04958504317703742,
+        "signal_date": "2004-06-30"
+      },
+      {
+        "entry_date": "2004-08-02",
+        "exit_date": "2004-08-30",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.031237540221915716,
+        "nonleader_equal_weight_return_after_cost": 0.0004101543386655221,
+        "paired_excess_return": -0.03164769456058124,
+        "signal_date": "2004-07-30"
+      },
+      {
+        "entry_date": "2004-09-01",
+        "exit_date": "2004-09-30",
+        "leader": "XLU",
+        "leader_return_after_cost": 0.008565430077672409,
+        "nonleader_equal_weight_return_after_cost": 0.015169332126152069,
+        "paired_excess_return": -0.0066039020484796596,
+        "signal_date": "2004-08-31"
+      },
+      {
+        "entry_date": "2004-10-01",
+        "exit_date": "2004-10-29",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.009184925408880718,
+        "nonleader_equal_weight_return_after_cost": 0.00166344849261911,
+        "paired_excess_return": -0.010848373901499828,
+        "signal_date": "2004-09-30"
+      },
+      {
+        "entry_date": "2004-11-01",
+        "exit_date": "2004-11-30",
+        "leader": "XLU",
+        "leader_return_after_cost": 0.035253505670874374,
+        "nonleader_equal_weight_return_after_cost": 0.046251135741535304,
+        "paired_excess_return": -0.01099763007066093,
+        "signal_date": "2004-10-29"
+      },
+      {
+        "entry_date": "2004-12-01",
+        "exit_date": "2004-12-30",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.007784424486198648,
+        "nonleader_equal_weight_return_after_cost": 0.022599665702164456,
+        "paired_excess_return": -0.030384090188363105,
+        "signal_date": "2004-11-30"
+      },
+      {
+        "entry_date": "2005-03-01",
+        "exit_date": "2005-03-30",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.02053672432405429,
+        "nonleader_equal_weight_return_after_cost": -0.019329841514756516,
+        "paired_excess_return": -0.001206882809297774,
+        "signal_date": "2005-02-28"
+      },
+      {
+        "entry_date": "2005-04-01",
+        "exit_date": "2005-04-29",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.07794112788838181,
+        "nonleader_equal_weight_return_after_cost": -0.012582033609544185,
+        "paired_excess_return": -0.06535909427883763,
+        "signal_date": "2005-03-31"
+      },
+      {
+        "entry_date": "2005-05-02",
+        "exit_date": "2005-05-31",
+        "leader": "XLE",
+        "leader_return_after_cost": 0.008690539468587555,
+        "nonleader_equal_weight_return_after_cost": 0.02228807584882002,
+        "paired_excess_return": -0.013597536380232464,
+        "signal_date": "2005-04-29"
+      },
+      {
+        "entry_date": "2005-07-01",
+        "exit_date": "2005-08-01",
+        "leader": "XLU",
+        "leader_return_after_cost": -0.001,
+        "nonleader_equal_weight_return_after_cost": 0.03890421244747444,
+        "paired_excess_return": -0.03990421244747444,
+        "signal_date": "2005-06-30"
+      },
+      {
+        "entry_date": "2005-09-01",
+        "exit_date": "2005-09-30",
+        "leader": "XLE",
+        "leader_return_after_cost": 0.034862524216538904,
+        "nonleader_equal_weight_return_after_cost": 0.005704743136018431,
+        "paired_excess_return": 0.029157781080520473,
+        "signal_date": "2005-08-31"
+      },
+      {
+        "entry_date": "2005-10-03",
+        "exit_date": "2005-10-31",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.08898839070801923,
+        "nonleader_equal_weight_return_after_cost": -0.015724399303622225,
+        "paired_excess_return": -0.073263991404397,
+        "signal_date": "2005-09-30"
+      },
+      {
+        "entry_date": "2005-12-01",
+        "exit_date": "2005-12-30",
+        "leader": "XLF",
+        "leader_return_after_cost": -0.006103555256585568,
+        "nonleader_equal_weight_return_after_cost": -0.007543757574126356,
+        "paired_excess_return": 0.0014402023175407877,
+        "signal_date": "2005-11-30"
+      },
+      {
+        "entry_date": "2006-01-03",
+        "exit_date": "2006-02-01",
+        "leader": "XLB",
+        "leader_return_after_cost": 0.028430967375986937,
+        "nonleader_equal_weight_return_after_cost": 0.012338865126713769,
+        "paired_excess_return": 0.01609210224927317,
+        "signal_date": "2005-12-30"
+      },
+      {
+        "entry_date": "2006-04-03",
+        "exit_date": "2006-05-02",
+        "leader": "XLE",
+        "leader_return_after_cost": 0.08437517329697697,
+        "nonleader_equal_weight_return_after_cost": 0.009508978564231524,
+        "paired_excess_return": 0.07486619473274544,
+        "signal_date": "2006-03-31"
+      },
+      {
+        "entry_date": "2006-07-03",
+        "exit_date": "2006-08-01",
+        "leader": "XLU",
+        "leader_return_after_cost": 0.048311627134789537,
+        "nonleader_equal_weight_return_after_cost": -0.016479023823173317,
+        "paired_excess_return": 0.06479065095796285,
+        "signal_date": "2006-06-30"
+      },
+      {
+        "entry_date": "2006-09-01",
+        "exit_date": "2006-10-02",
+        "leader": "XLU",
+        "leader_return_after_cost": -0.00915266278045157,
+        "nonleader_equal_weight_return_after_cost": 0.00859800570879124,
+        "paired_excess_return": -0.01775066848924281,
+        "signal_date": "2006-08-31"
+      },
+      {
+        "entry_date": "2006-11-01",
+        "exit_date": "2006-11-30",
+        "leader": "XLK",
+        "leader_return_after_cost": 0.0319376603854139,
+        "nonleader_equal_weight_return_after_cost": 0.028719762383215205,
+        "paired_excess_return": 0.0032178980021986964,
+        "signal_date": "2006-10-31"
+      },
+      {
+        "entry_date": "2006-12-01",
+        "exit_date": "2007-01-03",
+        "leader": "XLY",
+        "leader_return_after_cost": 0.026310221209015716,
+        "nonleader_equal_weight_return_after_cost": 0.00811528401604919,
+        "paired_excess_return": 0.018194937192966526,
+        "signal_date": "2006-11-30"
+      },
+      {
+        "entry_date": "2007-03-01",
+        "exit_date": "2007-03-29",
+        "leader": "XLU",
+        "leader_return_after_cost": 0.04237642712012868,
+        "nonleader_equal_weight_return_after_cost": 0.017198482838823498,
+        "paired_excess_return": 0.02517794428130518,
+        "signal_date": "2007-02-28"
+      },
+      {
+        "entry_date": "2007-04-02",
+        "exit_date": "2007-05-01",
+        "leader": "XLB",
+        "leader_return_after_cost": 0.010040884000756312,
+        "nonleader_equal_weight_return_after_cost": 0.04165648883212203,
+        "paired_excess_return": -0.03161560483136572,
+        "signal_date": "2007-03-30"
+      },
+      {
+        "entry_date": "2007-06-01",
+        "exit_date": "2007-06-29",
+        "leader": "XLE",
+        "leader_return_after_cost": 0.002923047592719886,
+        "nonleader_equal_weight_return_after_cost": -0.0249103326565618,
+        "paired_excess_return": 0.027833380249281683,
+        "signal_date": "2007-05-31"
+      },
+      {
+        "entry_date": "2007-07-02",
+        "exit_date": "2007-07-31",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.01823391547578146,
+        "nonleader_equal_weight_return_after_cost": -0.04545331223911271,
+        "paired_excess_return": 0.027219396763331252,
+        "signal_date": "2007-06-29"
+      },
+      {
+        "entry_date": "2007-08-01",
+        "exit_date": "2007-08-29",
+        "leader": "XLE",
+        "leader_return_after_cost": 0.0010346166607807525,
+        "nonleader_equal_weight_return_after_cost": -0.003292749991397073,
+        "paired_excess_return": 0.004327366652177826,
+        "signal_date": "2007-07-31"
+      },
+      {
+        "entry_date": "2007-09-04",
+        "exit_date": "2007-10-02",
+        "leader": "XLK",
+        "leader_return_after_cost": 0.03586407616856724,
+        "nonleader_equal_weight_return_after_cost": 0.04056256174803116,
+        "paired_excess_return": -0.0046984855794639235,
+        "signal_date": "2007-08-31"
+      },
+      {
+        "entry_date": "2007-11-01",
+        "exit_date": "2007-11-30",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.014163288308099542,
+        "nonleader_equal_weight_return_after_cost": -0.007422922810868121,
+        "paired_excess_return": -0.006740365497231421,
+        "signal_date": "2007-10-31"
+      },
+      {
+        "entry_date": "2007-12-03",
+        "exit_date": "2008-01-02",
+        "leader": "XLU",
+        "leader_return_after_cost": -0.018132640393956567,
+        "nonleader_equal_weight_return_after_cost": -0.012898669326179377,
+        "paired_excess_return": -0.005233971067777191,
+        "signal_date": "2007-11-30"
+      },
+      {
+        "entry_date": "2008-03-03",
+        "exit_date": "2008-04-01",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.018308311546267553,
+        "nonleader_equal_weight_return_after_cost": 0.02400039973893063,
+        "paired_excess_return": -0.04230871128519818,
+        "signal_date": "2008-02-29"
+      },
+      {
+        "entry_date": "2008-05-01",
+        "exit_date": "2008-05-30",
+        "leader": "XLE",
+        "leader_return_after_cost": 0.07453830553586671,
+        "nonleader_equal_weight_return_after_cost": -0.00196595583924844,
+        "paired_excess_return": 0.07650426137511515,
+        "signal_date": "2008-04-30"
+      },
+      {
+        "entry_date": "2008-06-02",
+        "exit_date": "2008-06-30",
+        "leader": "XLK",
+        "leader_return_after_cost": -0.08161717082410236,
+        "nonleader_equal_weight_return_after_cost": -0.061787523268268,
+        "paired_excess_return": -0.019829647555834357,
+        "signal_date": "2008-05-30"
+      },
+      {
+        "entry_date": "2008-07-01",
+        "exit_date": "2008-07-30",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.12784326469308271,
+        "nonleader_equal_weight_return_after_cost": 0.016932129786663558,
+        "paired_excess_return": -0.14477539447974627,
+        "signal_date": "2008-06-30"
+      },
+      {
+        "entry_date": "2008-08-01",
+        "exit_date": "2008-08-29",
+        "leader": "XLV",
+        "leader_return_after_cost": 0.027382114986452266,
+        "nonleader_equal_weight_return_after_cost": 0.021585555837074374,
+        "paired_excess_return": 0.005796559149377892,
+        "signal_date": "2008-07-31"
+      },
+      {
+        "entry_date": "2008-09-02",
+        "exit_date": "2008-09-30",
+        "leader": "XLV",
+        "leader_return_after_cost": -0.07360411411516965,
+        "nonleader_equal_weight_return_after_cost": -0.09731826013850221,
+        "paired_excess_return": 0.023714146023332563,
+        "signal_date": "2008-08-29"
+      },
+      {
+        "entry_date": "2009-04-01",
+        "exit_date": "2009-04-30",
+        "leader": "XLK",
+        "leader_return_after_cost": 0.07309704373057746,
+        "nonleader_equal_weight_return_after_cost": 0.08950172042840591,
+        "paired_excess_return": -0.016404676697828455,
+        "signal_date": "2009-03-31"
+      },
+      {
+        "entry_date": "2009-05-01",
+        "exit_date": "2009-06-01",
+        "leader": "XLY",
+        "leader_return_after_cost": 0.044297220577805274,
+        "nonleader_equal_weight_return_after_cost": 0.08354440436529126,
+        "paired_excess_return": -0.039247183787485984,
+        "signal_date": "2009-04-30"
+      },
+      {
+        "entry_date": "2009-07-01",
+        "exit_date": "2009-07-30",
+        "leader": "XLF",
+        "leader_return_after_cost": 0.08317537285468035,
+        "nonleader_equal_weight_return_after_cost": 0.06872149845865319,
+        "paired_excess_return": 0.014453874396027161,
+        "signal_date": "2009-06-30"
+      },
+      {
+        "entry_date": "2009-08-03",
+        "exit_date": "2009-08-31",
+        "leader": "XLF",
+        "leader_return_after_cost": 0.10094906729208686,
+        "nonleader_equal_weight_return_after_cost": 0.005027464239314994,
+        "paired_excess_return": 0.09592160305277186,
+        "signal_date": "2009-07-31"
+      },
+      {
+        "entry_date": "2009-09-01",
+        "exit_date": "2009-09-30",
+        "leader": "XLF",
+        "leader_return_after_cost": 0.07637688091684802,
+        "nonleader_equal_weight_return_after_cost": 0.05595350560150511,
+        "paired_excess_return": 0.020423375315342912,
+        "signal_date": "2009-08-31"
+      },
+      {
+        "entry_date": "2009-10-01",
+        "exit_date": "2009-10-29",
+        "leader": "XLF",
+        "leader_return_after_cost": 0.031213282897508132,
+        "nonleader_equal_weight_return_after_cost": 0.032002427428814095,
+        "paired_excess_return": -0.0007891445313059631,
+        "signal_date": "2009-09-30"
+      },
+      {
+        "entry_date": "2010-02-01",
+        "exit_date": "2010-03-02",
+        "leader": "XLV",
+        "leader_return_after_cost": 0.010125458855858027,
+        "nonleader_equal_weight_return_after_cost": 0.029248036725789156,
+        "paired_excess_return": -0.01912257786993113,
+        "signal_date": "2010-01-29"
+      },
+      {
+        "entry_date": "2010-04-01",
+        "exit_date": "2010-04-30",
+        "leader": "XLF",
+        "leader_return_after_cost": 0.0039745822909672554,
+        "nonleader_equal_weight_return_after_cost": 0.0068093426481477815,
+        "paired_excess_return": -0.002834760357180526,
+        "signal_date": "2010-03-31"
+      },
+      {
+        "entry_date": "2010-05-03",
+        "exit_date": "2010-06-01",
+        "leader": "XLY",
+        "leader_return_after_cost": -0.10347725380030459,
+        "nonleader_equal_weight_return_after_cost": -0.10915542422700883,
+        "paired_excess_return": 0.005678170426704238,
+        "signal_date": "2010-04-30"
+      },
+      {
+        "entry_date": "2010-08-02",
+        "exit_date": "2010-08-30",
+        "leader": "XLU",
+        "leader_return_after_cost": -0.011645461420159542,
+        "nonleader_equal_weight_return_after_cost": -0.0666992415232064,
+        "paired_excess_return": 0.05505378010304686,
+        "signal_date": "2010-07-30"
+      },
+      {
+        "entry_date": "2010-09-01",
+        "exit_date": "2010-09-30",
+        "leader": "XLU",
+        "leader_return_after_cost": 0.006048797816728181,
+        "nonleader_equal_weight_return_after_cost": 0.05782153796922526,
+        "paired_excess_return": -0.05177274015249708,
+        "signal_date": "2010-08-31"
+      },
+      {
+        "entry_date": "2010-12-01",
+        "exit_date": "2010-12-30",
+        "leader": "XLE",
+        "leader_return_after_cost": 0.05913907579630895,
+        "nonleader_equal_weight_return_after_cost": 0.0403926913912005,
+        "paired_excess_return": 0.01874638440510845,
+        "signal_date": "2010-11-30"
+      },
+      {
+        "entry_date": "2011-01-03",
+        "exit_date": "2011-02-01",
+        "leader": "XLE",
+        "leader_return_after_cost": 0.08015158097633102,
+        "nonleader_equal_weight_return_after_cost": 0.017433426923766468,
+        "paired_excess_return": 0.06271815405256455,
+        "signal_date": "2010-12-31"
+      },
+      {
+        "entry_date": "2011-03-01",
+        "exit_date": "2011-03-29",
+        "leader": "XLE",
+        "leader_return_after_cost": 0.03348169672230472,
+        "nonleader_equal_weight_return_after_cost": 0.0119320667612548,
+        "paired_excess_return": 0.02154962996104992,
+        "signal_date": "2011-02-28"
+      },
+      {
+        "entry_date": "2011-04-01",
+        "exit_date": "2011-05-02",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.008251066691605913,
+        "nonleader_equal_weight_return_after_cost": 0.02722709986060011,
+        "paired_excess_return": -0.03547816655220602,
+        "signal_date": "2011-03-31"
+      },
+      {
+        "entry_date": "2011-06-01",
+        "exit_date": "2011-06-29",
+        "leader": "XLV",
+        "leader_return_after_cost": -0.0014611405445823502,
+        "nonleader_equal_weight_return_after_cost": -0.001108491151337876,
+        "paired_excess_return": -0.00035264939324447433,
+        "signal_date": "2011-05-31"
+      },
+      {
+        "entry_date": "2011-07-01",
+        "exit_date": "2011-08-01",
+        "leader": "XLV",
+        "leader_return_after_cost": -0.06829705053663082,
+        "nonleader_equal_weight_return_after_cost": -0.03639734311103254,
+        "paired_excess_return": -0.03189970742559828,
+        "signal_date": "2011-06-30"
+      },
+      {
+        "entry_date": "2011-09-01",
+        "exit_date": "2011-09-30",
+        "leader": "XLU",
+        "leader_return_after_cost": 0.007708917205514588,
+        "nonleader_equal_weight_return_after_cost": -0.07699099987319864,
+        "paired_excess_return": 0.08469991707871323,
+        "signal_date": "2011-08-31"
+      },
+      {
+        "entry_date": "2011-10-03",
+        "exit_date": "2011-10-31",
+        "leader": "XLU",
+        "leader_return_after_cost": 0.060852570171388565,
+        "nonleader_equal_weight_return_after_cost": 0.15516509163297032,
+        "paired_excess_return": -0.09431252146158176,
+        "signal_date": "2011-09-30"
+      },
+      {
+        "entry_date": "2012-01-03",
+        "exit_date": "2012-02-01",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.0021263873877424002,
+        "nonleader_equal_weight_return_after_cost": 0.041650186833600764,
+        "paired_excess_return": -0.043776574221343165,
+        "signal_date": "2011-12-30"
+      },
+      {
+        "entry_date": "2012-03-01",
+        "exit_date": "2012-03-29",
+        "leader": "XLF",
+        "leader_return_after_cost": 0.05531048239204173,
+        "nonleader_equal_weight_return_after_cost": 0.008500011176936356,
+        "paired_excess_return": 0.04681047121510537,
+        "signal_date": "2012-02-29"
+      },
+      {
+        "entry_date": "2012-04-02",
+        "exit_date": "2012-05-01",
+        "leader": "XLF",
+        "leader_return_after_cost": -0.021728777890862694,
+        "nonleader_equal_weight_return_after_cost": -0.0038706634005773594,
+        "paired_excess_return": -0.017858114490285334,
+        "signal_date": "2012-03-30"
+      },
+      {
+        "entry_date": "2012-06-01",
+        "exit_date": "2012-06-29",
+        "leader": "XLU",
+        "leader_return_after_cost": 0.044484448135040044,
+        "nonleader_equal_weight_return_after_cost": 0.0671745861918516,
+        "paired_excess_return": -0.022690138056811554,
+        "signal_date": "2012-05-31"
+      },
+      {
+        "entry_date": "2012-07-02",
+        "exit_date": "2012-07-31",
+        "leader": "XLU",
+        "leader_return_after_cost": 0.01780679459929846,
+        "nonleader_equal_weight_return_after_cost": 0.00891294006000816,
+        "paired_excess_return": 0.0088938545392903,
+        "signal_date": "2012-06-29"
+      },
+      {
+        "entry_date": "2012-08-01",
+        "exit_date": "2012-08-29",
+        "leader": "XLU",
+        "leader_return_after_cost": -0.029168967527801848,
+        "nonleader_equal_weight_return_after_cost": 0.026898266303258228,
+        "paired_excess_return": -0.056067233831060076,
+        "signal_date": "2012-07-31"
+      },
+      {
+        "entry_date": "2012-09-04",
+        "exit_date": "2012-10-02",
+        "leader": "XLE",
+        "leader_return_after_cost": 0.04522425268893604,
+        "nonleader_equal_weight_return_after_cost": 0.028026792619328667,
+        "paired_excess_return": 0.017197460069607373,
+        "signal_date": "2012-08-31"
+      },
+      {
+        "entry_date": "2012-11-01",
+        "exit_date": "2012-11-30",
+        "leader": "XLF",
+        "leader_return_after_cost": -0.022118178692931534,
+        "nonleader_equal_weight_return_after_cost": -0.0038166642785298355,
+        "paired_excess_return": -0.0183015144144017,
+        "signal_date": "2012-10-31"
+      },
+      {
+        "entry_date": "2013-01-02",
+        "exit_date": "2013-01-31",
+        "leader": "XLF",
+        "leader_return_after_cost": 0.029230803000025785,
+        "nonleader_equal_weight_return_after_cost": 0.02916794353793091,
+        "paired_excess_return": 6.28594620948747e-05,
+        "signal_date": "2012-12-31"
+      },
+      {
+        "entry_date": "2013-05-01",
+        "exit_date": "2013-05-30",
+        "leader": "XLU",
+        "leader_return_after_cost": -0.07681632008816086,
+        "nonleader_equal_weight_return_after_cost": 0.05221988160225059,
+        "paired_excess_return": -0.12903620169041147,
+        "signal_date": "2013-04-30"
+      },
+      {
+        "entry_date": "2013-06-03",
+        "exit_date": "2013-07-01",
+        "leader": "XLF",
+        "leader_return_after_cost": -0.014663417709681381,
+        "nonleader_equal_weight_return_after_cost": -0.015351660797199032,
+        "paired_excess_return": 0.000688243087517651,
+        "signal_date": "2013-05-31"
+      },
+      {
+        "entry_date": "2014-04-01",
+        "exit_date": "2014-04-30",
+        "leader": "XLU",
+        "leader_return_after_cost": 0.04855070407357476,
+        "nonleader_equal_weight_return_after_cost": 0.0011198280656365134,
+        "paired_excess_return": 0.047430876007938244,
+        "signal_date": "2014-03-31"
+      },
+      {
+        "entry_date": "2014-05-01",
+        "exit_date": "2014-05-30",
+        "leader": "XLU",
+        "leader_return_after_cost": -0.015979503318933053,
+        "nonleader_equal_weight_return_after_cost": 0.023593816160395076,
+        "paired_excess_return": -0.03957331947932813,
+        "signal_date": "2014-04-30"
+      },
+      {
+        "entry_date": "2014-07-01",
+        "exit_date": "2014-07-30",
+        "leader": "XLE",
+        "leader_return_after_cost": -0.014977386153123606,
+        "nonleader_equal_weight_return_after_cost": -0.008681386417117284,
+        "paired_excess_return": -0.006295999736006322,
+        "signal_date": "2014-06-30"
+      },
+      {
+        "entry_date": "2015-02-02",
+        "exit_date": "2015-03-03",
+        "leader": "XLU",
+        "leader_return_after_cost": -0.08136262823361218,
+        "nonleader_equal_weight_return_after_cost": 0.047744518059337465,
+        "paired_excess_return": -0.12910714629294964,
+        "signal_date": "2015-01-30"
+      },
+      {
+        "entry_date": "2015-04-01",
+        "exit_date": "2015-04-30",
+        "leader": "XLV",
+        "leader_return_after_cost": -0.0018358419370581016,
+        "nonleader_equal_weight_return_after_cost": 0.014115087416031638,
+        "paired_excess_return": -0.01595092935308974,
+        "signal_date": "2015-03-31"
+      }
+    ],
+    "round_trip_underlying_cost_bps": 10.0,
+    "signal_year_counts": {
+      "1999": 7,
+      "2000": 7,
+      "2001": 5,
+      "2002": 6,
+      "2003": 7,
+      "2004": 8,
+      "2005": 8,
+      "2006": 5,
+      "2007": 8,
+      "2008": 6,
+      "2009": 6,
+      "2010": 7,
+      "2011": 7,
+      "2012": 8,
+      "2013": 2,
+      "2014": 3,
+      "2015": 2
+    },
+    "signal_years": [
+      1999,
+      2000,
+      2001,
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015
+    ],
+    "worst_decile_n": 11
+  }
+}
