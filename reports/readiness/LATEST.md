@@ -1,6 +1,6 @@
 # Trader platform readiness — latest
 
-Updated: 2026-07-15 18:16 local — MoA finalizer handoff ready for stamp 2026-07-15T1747; deterministic integration pending.
+Updated: 2026-07-15 18:28 local — MoA stamp 2026-07-15T1747 integrated, pushed, and postflight-complete on `main` / `origin/main`.
 
 Phase: BUILD
 Sleeve: $3,000 Agentic research sleeve
@@ -45,7 +45,7 @@ The prior exact one-lot 14-DTE listed-expiry proxy bull-call had `capital_fit_us
 - changed Python/test compile: exit `0`
 - current-code post-shock replay: exit `0`, same `FAMILY_CLOSED` metrics and four failed economic checks
 - canonical/replay equality excluding only `generated_at`: `True`; normalized SHA-256 both `f81e987152792a3b2bc270e35e946b97eb388a7f1c0c6e87365455378fb2d2`
-- final schema-v2 handoff and deterministic completion-prepare dry run: recorded in `reports/trader-wakes/moa/2026-07-15T1747/learning-promotion.md`
+- final schema-v2 handoff, deterministic completion prepare, and wrapper postflight passed; completion receipt: `.cache/platform/completion/2026-07-15T1747.json`
 
 ## Readiness blockers
 
@@ -54,7 +54,7 @@ The prior exact one-lot 14-DTE listed-expiry proxy bull-call had `capital_fit_us
 3. Broad observed historical option entry/exit joins remain unavailable for calibration. This blocks observed-option/L1 claims only, not labeled proxy discovery.
 4. The successor earnings study requires point-in-time announcement timing with honest known-at semantics; missing provenance must fail closed.
 5. Any future F3 candidate still requires live-clock paper quotes/fills before F4/shadow/live authority.
-6. Deterministic integration for stamp `2026-07-15T1747` is pending. Finalizer readiness is not `RUN COMPLETE`.
+6. Stamp `2026-07-15T1747` is integrated and postflight-complete; no execution authority changed.
 
 Coverage: `reports/readiness/income-coverage-LATEST.md`
 Finalizer wake: `reports/trader-wakes/2026-07-15T1747-moa-merge.md`
