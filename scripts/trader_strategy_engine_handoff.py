@@ -29,6 +29,9 @@ from scripts.trader_strategy_engine_gate import (
     _repo_path,
     load_config,
     run_gate,
+    validate_report,
+    validate_report_provenance,
+    verify_report_provenance_sources,
 )
 
 
@@ -168,12 +171,18 @@ def run_handoff(
         raise StrategyEngineGateError("config missing report_path")
     final_report_path = _repo_path(repo, str(out_value))
 
+    routes_hash_before = _sha256_file(routes_path)
+    panel_hash_before = _sha256_file(panel_path)
     with tempfile.TemporaryDirectory(prefix="strategy-engine-handoff-") as td:
         tmp_out = Path(td) / "engine-report.json"
         _run_engine(engine_repo, routes_path, panel_path, tmp_out)
         engine_report = json.loads(tmp_out.read_text(encoding="utf-8"))
         if not isinstance(engine_report, dict):
             raise StrategyEngineGateError("engine report root must be object")
+    if _sha256_file(routes_path) != routes_hash_before:
+        raise StrategyEngineGateError("routes manifest changed while strategy engine was running")
+    if _sha256_file(panel_path) != panel_hash_before:
+        raise StrategyEngineGateError("panel CSV changed while strategy engine was running")
 
     handoff_report = build_handoff_report(
         repo=repo,
@@ -182,11 +191,25 @@ def run_handoff(
         panel_path=panel_path,
         engine_report=engine_report,
     )
+    validate_report_provenance(handoff_report, cfg)
+    verify_report_provenance_sources(repo, handoff_report, cfg)
+    try:
+        validate_report(handoff_report, cfg)
+    except StrategyEngineNoQualified:
+        pass
+
     final_report_path.parent.mkdir(parents=True, exist_ok=True)
-    final_report_path.write_text(
-        json.dumps(handoff_report, indent=2, sort_keys=True, allow_nan=False) + "\n",
+    payload = json.dumps(handoff_report, indent=2, sort_keys=True, allow_nan=False) + "\n"
+    with tempfile.NamedTemporaryFile(
+        "w",
         encoding="utf-8",
-    )
+        dir=final_report_path.parent,
+        prefix=f".{final_report_path.name}.",
+        delete=False,
+    ) as handle:
+        handle.write(payload)
+        tmp_report = Path(handle.name)
+    os.replace(tmp_report, final_report_path)
 
     gate_status = "not_validated"
     if validate:

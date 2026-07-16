@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -93,6 +94,54 @@ def _require_git_sha(report: dict[str, Any], key: str) -> None:
         raise StrategyEngineGateError(f"strategy engine report {key} must be git sha")
 
 
+def _sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _git_sha(repo: Path) -> str:
+    proc = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=repo,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise StrategyEngineGateError(
+            f"could not read git sha for {repo}: {proc.stderr.strip() or proc.stdout.strip()}"
+        )
+    return proc.stdout.strip()
+
+
+def _git_dirty(repo: Path) -> bool:
+    proc = subprocess.run(
+        ["git", "status", "--porcelain"],
+        cwd=repo,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise StrategyEngineGateError(
+            f"could not read git status for {repo}: {proc.stderr.strip() or proc.stdout.strip()}"
+        )
+    return bool(proc.stdout.strip())
+
+
+def _provenance_path(report: dict[str, Any], key: str) -> Path | None:
+    provenance = report.get("provenance")
+    if not isinstance(provenance, dict):
+        return None
+    value = provenance.get(key)
+    if not isinstance(value, str) or not value.strip():
+        return None
+    return Path(value).expanduser()
+
+
 def validate_report_provenance(report: dict[str, Any], cfg: dict[str, Any], *, now: datetime | None = None) -> None:
     """Reject stale or untraceable handoff reports before status handling."""
     if not cfg.get("require_provenance", True):
@@ -125,6 +174,33 @@ def validate_report_provenance(report: dict[str, Any], cfg: dict[str, Any], *, n
         raise StrategyEngineGateError("strategy engine report route_count must be positive integer")
 
 
+def verify_report_provenance_sources(repo: Path, report: dict[str, Any], cfg: dict[str, Any]) -> None:
+    """Reject reports that no longer match configured source repos/input files."""
+    if not cfg.get("require_provenance", True):
+        return
+    engine_repo_value = cfg.get("engine_repo")
+    if engine_repo_value:
+        engine_repo = _repo_path(repo, str(engine_repo_value)).resolve()
+        if not engine_repo.exists():
+            raise StrategyEngineGateError(f"configured engine_repo does not exist: {engine_repo}")
+        if _git_sha(engine_repo) != report.get("engine_git_sha"):
+            raise StrategyEngineGateError(
+                "strategy engine report engine_git_sha does not match configured engine repo HEAD"
+            )
+        if cfg.get("require_clean_engine_repo", True) and _git_dirty(engine_repo):
+            raise StrategyEngineGateError("configured engine_repo has uncommitted changes")
+    if _git_sha(repo) != report.get("trader_git_sha"):
+        raise StrategyEngineGateError("strategy engine report trader_git_sha does not match Trader repo HEAD")
+    for path_key, hash_key in (("routes_path", "manifest_sha256"), ("panel_path", "panel_sha256")):
+        source_path = _provenance_path(report, path_key)
+        if source_path is None:
+            raise StrategyEngineGateError(f"strategy engine report provenance missing {path_key}")
+        if not source_path.is_file():
+            raise StrategyEngineGateError(f"strategy engine report provenance file missing: {source_path}")
+        if _sha256_file(source_path) != report.get(hash_key):
+            raise StrategyEngineGateError(f"strategy engine report {hash_key} does not match current {path_key}")
+
+
 def _walk_holdout_forbidden(value: Any, path: str = "holdout") -> list[str]:
     findings: list[str] = []
     if isinstance(value, dict):
@@ -142,19 +218,19 @@ def _walk_holdout_forbidden(value: Any, path: str = "holdout") -> list[str]:
 
 def validate_report(report: dict[str, Any], cfg: dict[str, Any]) -> dict[str, Any]:
     status = str(report.get("status", ""))
-    if status in set(cfg.get("block_statuses") or []):
-        raise StrategyEngineNoQualified(f"strategy engine reported {status}; do not launch BUILD")
-    if status not in set(cfg.get("allowed_statuses") or []):
-        raise StrategyEngineGateError(
-            f"strategy engine status {status!r} not allowed; expected {cfg.get('allowed_statuses')}"
-        )
-
     authority = report.get("authority")
     if not isinstance(authority, dict):
         raise StrategyEngineGateError("strategy engine report missing authority object")
     bad_auth = [key for key in EXPECTED_AUTHORITY_FALSE if authority.get(key) is not False]
     if bad_auth:
         raise StrategyEngineGateError(f"authority firewall not false for: {', '.join(bad_auth)}")
+
+    if status in set(cfg.get("block_statuses") or []):
+        raise StrategyEngineNoQualified(f"strategy engine reported {status}; do not launch BUILD")
+    if status not in set(cfg.get("allowed_statuses") or []):
+        raise StrategyEngineGateError(
+            f"strategy engine status {status!r} not allowed; expected {cfg.get('allowed_statuses')}"
+        )
 
     survivors = report.get("survivors")
     if not isinstance(survivors, list) or not survivors:
@@ -300,6 +376,7 @@ def run_gate(repo: Path, stamp: str, config_path: str | None, out_context: Path 
     if not isinstance(report, dict):
         raise StrategyEngineGateError("strategy engine report root must be object")
     validate_report_provenance(report, cfg)
+    verify_report_provenance_sources(repo, report, cfg)
     selected = validate_report(report, cfg)
     receipt = build_receipt(
         repo=repo,

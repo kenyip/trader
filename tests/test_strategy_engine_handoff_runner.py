@@ -33,6 +33,7 @@ class StrategyEngineHandoffRunnerTest(unittest.TestCase):
 
         pkg = engine / "src" / "strategy_engine"
         pkg.mkdir(parents=True)
+        (engine / ".gitignore").write_text("__pycache__/\n*.pyc\nsrc/**/__pycache__/\n", encoding="utf-8")
         (pkg / "__init__.py").write_text("", encoding="utf-8")
         survivors = "[]" if status == "NO_QUALIFIED_STRATEGY" else """[{
             "route_id": "r_edge",

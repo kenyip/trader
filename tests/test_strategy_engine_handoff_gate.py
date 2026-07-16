@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import subprocess
@@ -69,6 +70,11 @@ class StrategyEngineHandoffGateTest(unittest.TestCase):
         root = Path(td.name)
         (root / "configs").mkdir()
         (root / ".cache" / "strategy-engine").mkdir(parents=True)
+        routes = root / "routes.json"
+        panel = root / "panel.csv"
+        routes.write_text(json.dumps({"routes": [{"id": "r_edge"}]}), encoding="utf-8")
+        panel.write_text("date,split,route_id,is_event,is_control,event_return,control_return,symbol\n", encoding="utf-8")
+        (root / ".gitignore").write_text(".cache/\n", encoding="utf-8")
         cfg = {
             "schema_version": 1,
             "required_for_new_build": True,
@@ -81,7 +87,18 @@ class StrategyEngineHandoffGateTest(unittest.TestCase):
             "max_report_age_seconds": 21600,
         }
         (root / "configs" / "strategy_engine_handoff.json").write_text(json.dumps(cfg), encoding="utf-8")
+        subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True, capture_output=True)
+        subprocess.run(["git", "config", "user.name", "Test"], cwd=root, check=True)
+        subprocess.run(["git", "config", "user.email", "test@example.test"], cwd=root, check=True)
+        subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+        subprocess.run(["git", "commit", "-m", "base"], cwd=root, check=True, capture_output=True)
+        head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, check=True, text=True, capture_output=True).stdout.strip()
         if report is not None:
+            report["engine_git_sha"] = head
+            report["trader_git_sha"] = head
+            report["manifest_sha256"] = hashlib.sha256(routes.read_bytes()).hexdigest()
+            report["panel_sha256"] = hashlib.sha256(panel.read_bytes()).hexdigest()
+            report["provenance"] = {"routes_path": str(routes), "panel_path": str(panel)}
             (root / ".cache" / "strategy-engine" / "latest.json").write_text(json.dumps(report), encoding="utf-8")
         return td, root
 
@@ -131,6 +148,15 @@ class StrategyEngineHandoffGateTest(unittest.TestCase):
             with self.assertRaises(StrategyEngineGateError) as ctx:
                 run_gate(root, "stamp", None, None, None)
             self.assertIn("NO_QUALIFIED_STRATEGY", str(ctx.exception))
+
+    def test_no_qualified_strategy_blocks_launch_after_authority_check(self):
+        report = {**_report(), "status": "NO_QUALIFIED_STRATEGY", "survivors": []}
+        report["authority"]["paper"] = True
+        td, root = self._repo_with_config(report)
+        with td:
+            with self.assertRaises(StrategyEngineGateError) as ctx:
+                run_gate(root, "stamp", None, None, None)
+            self.assertIn("authority", str(ctx.exception))
 
     def test_authority_positive_fails_closed(self):
         r = _report()
@@ -188,6 +214,11 @@ class StrategyEngineHandoffGateTest(unittest.TestCase):
             shutil.copy2(REPO / "scripts" / "trader_build_lab_moa.sh", root / "scripts" / "trader_build_lab_moa.sh")
             shutil.copy2(REPO / "scripts" / "trader_strategy_engine_gate.py", root / "scripts" / "trader_strategy_engine_gate.py")
             shutil.copy2(REPO / "configs" / "build_lab_free_goal.txt", root / "configs" / "build_lab_free_goal.txt")
+            routes = root / "routes.json"
+            panel = root / "panel.csv"
+            routes.write_text(json.dumps({"routes": [{"id": "r_edge"}]}), encoding="utf-8")
+            panel.write_text("date,split,route_id,is_event,is_control,event_return,control_return,symbol\n", encoding="utf-8")
+            (root / ".gitignore").write_text(".cache/\n", encoding="utf-8")
             (root / "configs" / "strategy_engine_handoff.json").write_text(json.dumps({
                 "schema_version": 1,
                 "required_for_new_build": True,
@@ -196,14 +227,21 @@ class StrategyEngineHandoffGateTest(unittest.TestCase):
                 "allowed_statuses": ["NEXT_SURVIVOR"],
                 "block_statuses": ["NO_QUALIFIED_STRATEGY"],
             }), encoding="utf-8")
+            subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True, capture_output=True)
+            subprocess.run(["git", "config", "user.name", "Test"], cwd=root, check=True)
+            subprocess.run(["git", "config", "user.email", "test@example.test"], cwd=root, check=True)
+            subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+            subprocess.run(["git", "commit", "-m", "base"], cwd=root, check=True, capture_output=True)
+            head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, check=True, text=True, capture_output=True).stdout.strip()
             (root / ".cache" / "strategy-engine" / "latest.json").write_text(json.dumps({
                 "schema_version": 1,
                 "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
-                "engine_git_sha": "a" * 40,
-                "trader_git_sha": "b" * 40,
-                "manifest_sha256": "c" * 64,
-                "panel_sha256": "d" * 64,
+                "engine_git_sha": head,
+                "trader_git_sha": head,
+                "manifest_sha256": hashlib.sha256(routes.read_bytes()).hexdigest(),
+                "panel_sha256": hashlib.sha256(panel.read_bytes()).hexdigest(),
                 "route_count": 1,
+                "provenance": {"routes_path": str(routes), "panel_path": str(panel)},
                 "status": "NO_QUALIFIED_STRATEGY",
                 "engine_version": "0.1.0",
                 "authority": {
@@ -217,12 +255,6 @@ class StrategyEngineHandoffGateTest(unittest.TestCase):
                 },
                 "survivors": [],
             }), encoding="utf-8")
-            (root / ".gitignore").write_text(".cache/\n", encoding="utf-8")
-            subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True, capture_output=True)
-            subprocess.run(["git", "config", "user.name", "Test"], cwd=root, check=True)
-            subprocess.run(["git", "config", "user.email", "test@example.test"], cwd=root, check=True)
-            subprocess.run(["git", "add", "-A"], cwd=root, check=True)
-            subprocess.run(["git", "commit", "-m", "base"], cwd=root, check=True, capture_output=True)
             proc = subprocess.run(
                 ["bash", str(root / "scripts" / "trader_build_lab_moa.sh")],
                 cwd=root,
