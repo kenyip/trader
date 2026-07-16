@@ -1,10 +1,10 @@
 # Agentic go-live readiness — LATEST
 
-As-of: 2026-07-16T0408 MOA finalizer ready; deterministic integration pending
+As-of: 2026-07-16T0408 RUN COMPLETE (`df5a9e5`); integrated/pushed/postflight-complete on `main == origin/main`
 Phase: BUILD
 Status: NOT READY
 Authority: research-only; no broker session, funding, shadow promotion, arming, or live orders
-Integration: pending deterministic wrapper gate; finalizer has not committed, pushed, merged, switched branches, or claimed RUN COMPLETE
+Integration: complete; wrapper postflight receipt confirms clean pushed main
 
 ## Current strategy-convergence state
 
@@ -61,7 +61,7 @@ Positive point centers are diagnostic only. Do not open the holdout, retune thre
 | B2 Risk checks | PARTIAL | $3k sleeve, one-lot cap, and frictionless planning debit bounds are explicit; no candidate earned a capital seat and actual option debit/path loss is unmeasured. |
 | B3 Backtest density | NOT READY | Primary mechanism is closed at F0; secondary fails frozen n36. No living strategy has dense after-cost L1 evidence. |
 | B4 Stress/tails | NOT READY | Primary expectancy/specificity/uncertainty fail; secondary uncertainty fails. No surviving priced option path exists. |
-| B5 Logging/audit | BUILD-PASS | Charter, canonical claim, executor/challenger/finalizer judgments, schema-v2 compounding, learning promotion, epoch record, source hashes, sealed identities, and finalizer-owned replay/tests are durable; deterministic integration remains pending. |
+| B5 Logging/audit | BUILD-PASS | Charter, canonical claim, executor/challenger/finalizer judgments, schema-v2 compounding, learning promotion, epoch record, source hashes, sealed identities, and finalizer-owned replay/tests are durable; deterministic integration is complete. |
 | B6 Paper path | NOT READY | No capital-fit living candidate or paper intent exists. |
 | B7 Shadow path | NOT READY | No propose->risk_check->log window exists. |
 | B8 Arming/funding | HARD STOP | Ken mandate, funding, explicit arm, and accepted live packet are absent. |

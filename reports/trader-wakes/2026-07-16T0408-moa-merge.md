@@ -2,8 +2,8 @@
 
 Phase: BUILD / L0 underlying discovery
 Role: GPT 5.6 Sol finalizer / single writer
-Status: **MOA_FINALIZE_READY**
-Integration: pending deterministic wrapper gate; no commit, push, merge, branch switch, `.gitignore` edit, or RUN COMPLETE claim
+Status: **RUN COMPLETE**
+Integration: complete; deterministic wrapper integrated/pushed/postflight-verified as `df5a9e50341cb7e3da5f3c1cc7b34047a27a44af`
 
 ## Strategy charter and final outcome
 
@@ -75,7 +75,7 @@ Readiness remains BUILD / NOT READY with zero living candidates, quality leaders
 
 `SEC_FORM4_CLUSTERED_INSIDER_BUYING_DIRECTION_F0`: pivot to official point-in-time corporate-information evidence. Before outcomes freeze a fixed liquid panel, Form 4 open-market transaction-code/direct-indirect ownership/amendment/issuer/timestamp rules, cluster threshold, prior-only same-symbol no-reuse controls with distance diagnostics, signed five- or ten-session horizon, and a complete one-lot 18–24 DTE $2-wide call-debit Layered Edge Stack (`capital_fit_usd=200`, planning `max_loss_usd=200` before debit/closing friction, `max_lots=1`). Exercise exactly one named F0→F1 `STRATEGY_ADVANCED` or `FAMILY_CLOSED` decision in the same wake; capability-only EDGAR scaffolding fails closed. Do not inspect this wake's sealed holdouts or retune its credit/overnight screens.
 
-MOA_FINALIZE_READY
+RUN COMPLETE
 
 Verification path: `reports/trader-wakes/moa/2026-07-16T0408/learning-promotion.md`
 Learning path: `reports/trader-wakes/moa/2026-07-16T0408/compounding.json`
