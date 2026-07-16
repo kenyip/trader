@@ -91,6 +91,11 @@ def load_adjusted_history(
             raise ValueError(f"{normalized} adjusted download missing Close")
         raw = pd.DataFrame({"close": downloaded["Close"]})
         raw.to_csv(cache_path)
+        # Claim artifacts cite the persisted cache hash, so the first run must
+        # consume the exact persisted representation just like every replay.
+        # Reading the downloader frame directly can differ from the CSV by a
+        # few floating-point ulps and make a hash-identical replay non-exact.
+        raw = pd.read_csv(cache_path, index_col=0, parse_dates=True)
     raw.columns = [str(column).strip().lower() for column in raw.columns]
     if list(raw.columns) != ["close"]:
         raise ValueError(f"{normalized} cache must contain exactly one close column")

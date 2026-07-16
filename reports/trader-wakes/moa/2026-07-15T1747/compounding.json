@@ -1,0 +1,98 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-15T1747",
+  "loop_signature": "build|post-shock-range-compression|prior-only-high-hv-neutral-controls|train60|five-session-range-pin|family-close",
+  "economic_mechanism": "Temporary liquidity and attention pressure after a completed large one-session move may normalize; when short realized volatility is elevated but price remains near its prior SMA20, the following five-session close path may compress and finish nearer entry than a prior same-symbol high-volatility neutral no-shock control.",
+  "candidate_or_family_scope": "POST_SHOCK_RANGE_COMPRESSION_IRON_BUTTERFLY_21D_V1 / POST_SHOCK_RANGE_COMPRESSION_MATCHED_CONTROL on the frozen ordered AAPL, AMD, META, GOOGL, NVDA, and AVGO panel; completed absolute one-day shock >=2%, hv20/hv60 >=1.20, close within +/-5% of prior SMA20, next-session entry, five-session underlying range and terminal +/-3% pin outcomes, prior-only same-symbol high-HV controls with |1d return| <=0.5%, chronological 60/40 blueprint split, future one-lot 21-DTE $2-wing credit iron butterfly structural context only with capital_fit_usd=200, max_loss_usd=200 before credit/closing friction, and max_lots=1.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "Close the exact family at F0 if train has fewer than 60 pairs or 5 symbols; treated mean five-session path range is not below control; treated terminal +/-3% pin-rate edge is below 5 percentage points; paired control-minus-treated range-compression mean or one-sided 90% five-pair circular-block-bootstrap lower bound is non-positive; or any chronology, overlap, control-reuse, signal, or match-integrity check fails.",
+  "outcome": "FAMILY_CLOSED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "The gross underlying mechanism failed all four economic gates and remains at F0; no option pricing, L1 claim, capital seat, registry promotion, or paper authority was opened."
+  },
+  "search_information": {
+    "summary": "The wake decisively closed a genuinely new post-shock range-compression mechanism on 61 train pairs across all six frozen symbols while preserving 41 holdout blueprints outcome-unread. It also added a reusable prior-only matched-control lab and removed first-download versus cache-replay floating-point nondeterminism from the shared adjusted-history loader.",
+    "delta_kinds": [
+      "falsification",
+      "capability",
+      "repair"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "falsification",
+      "summary": "Closed POST_SHOCK_RANGE_COMPRESSION_MATCHED_CONTROL at F0: treated five-session path range was 5.018873756% versus 4.644141213% for controls, paired compression was -0.374732544%, LB90 was -1.012686052%, pin-rate edge was 0, every chronological train tertile was negative, integrity violations were empty, and option pricing calls were zero.",
+      "novelty_key": "post-shock-range-compression-high-hv-neutral-control-five-session-close-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-15T1747/post-shock-range-compression-train.json",
+        "reports/trader-wakes/moa/2026-07-15T1747/strategy-charter.md",
+        "reports/trader-wakes/moa/2026-07-15T1747/executor-closeout.md",
+        "reports/readiness/LATEST.md"
+      ]
+    },
+    {
+      "kind": "capability",
+      "summary": "Added a train-only post-shock matched-control lab with completed-bar/next-session chronology, prior-only same-symbol high-HV neutral controls, without-replacement matching, non-overlapping windows, untouched-holdout secrecy, breadth and uncertainty gates, strict JSON nulls, capital/authority labels, and behavioral/boundary/negative-control coverage.",
+      "novelty_key": "post-shock-range-compression-prior-only-matched-control-lab-v1",
+      "artifacts": [
+        "scripts/post_shock_range_compression_train_lab.py",
+        "tests/test_post_shock_range_compression_train_lab.py"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Made the shared adjusted-history loader consume the exact persisted CSV representation on first download, eliminating sub-ulp divergence from later hash-identical cache replays; an np.nextafter exact-series regression proves first-run and replay identity.",
+      "novelty_key": "persisted-adjusted-history-first-run-cache-exact-replay-v1",
+      "artifacts": [
+        "scripts/low_hv_cross_section_train_lab.py",
+        "tests/test_low_hv_cross_section_train_lab.py"
+      ]
+    }
+  ],
+  "retest_decision": null,
+  "evidence_wake_condition": null,
+  "critic_findings": [
+    {
+      "finding": "Five-session underlying range and terminal pin are only an approximate pre-screen for a planned 21-DTE iron butterfly and must not be described as measured theta or vega capture.",
+      "status": "repaired",
+      "rationale": "The claim payload and final living reports retain an explicit horizon_alignment boundary, and the complete-stack test now requires the text to state that the pre-screen does not establish theta/vega capture.",
+      "repair_artifacts": [
+        "scripts/post_shock_range_compression_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_post_shock_range_compression_train_lab.py"
+      ]
+    },
+    {
+      "finding": "Hash-cited adjusted-history evidence could differ between the downloader-backed first run and a hash-identical cache replay by floating-point ulps.",
+      "status": "repaired",
+      "rationale": "The first run now rereads the just-written CSV before evaluation; finalizer replay was substantively identical after excluding only generated_at, with matching normalized SHA-256 f81e987152792a3b2bc270e35e946b97eb388a7f1c0c6e87365455378fb2d2.",
+      "repair_artifacts": [
+        "scripts/low_hv_cross_section_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_low_hv_cross_section_train_lab.py"
+      ]
+    },
+    {
+      "finding": "Executor NEXT MONTH_END_FLOW_POSITIVE_DRIFT_PCS_F0 should remain the living next seed.",
+      "status": "rejected",
+      "rationale": "It is too near already-closed turn-of-month, monthly OPEX, and monthly ranking families. The final living surfaces use the challenger-merged POST_EARNINGS_INFO_RESOLUTION_DRIFT_F0 mechanism pivot instead."
+    },
+    {
+      "finding": "AAPL's post-hoc positive n=10 slice supports subset salvage or reopening the pooled family.",
+      "status": "rejected",
+      "rationale": "The subset was inspected only after the frozen pooled result; AMD and NVDA are sparse at n=4 each, every chronological train tertile is negative, and no predeclared symbol-level gate supports a candidate. The exact pooled panel/trigger/control/horizon family remains quarantined."
+    }
+  ],
+  "closed_families": [
+    "POST_SHOCK_RANGE_COMPRESSION_MATCHED_CONTROL: exact frozen AAPL/AMD/META/GOOGL/NVDA/AVGO panel, >=2% completed shock, hv20/hv60>=1.20, within 5% prior SMA20, prior-only same-symbol high-HV |1d|<=0.5% controls, next-session entry, five-session range and terminal +/-3% pin, chronological 60/40 specification"
+  ],
+  "data_dependencies": [
+    "Point-in-time earnings announcement timing with honest known-at semantics is required to execute the successor POST_EARNINGS_INFO_RESOLUTION_DRIFT_F0 event study; missing provenance must fail closed rather than be inferred from future-revised calendars.",
+    "Observed historical option quotes, contract grids, implied-volatility paths, and complete entry/exit joins would be required before any later option expression could claim L1 calibration rather than labeled proxy evidence."
+  ],
+  "next": "POST_EARNINGS_INFO_RESOLUTION_DRIFT_F0: predeclare a train-only, outcome-independent event study on a fixed liquid multi-name panel selected from the current full-universe rank before train outcomes. Use point-in-time announcement timing that was knowable without future leakage; enter only after the first completed post-announcement session under an exact lag rule; choose one primary underlying outcome and one secondary before running; match prior-only same-symbol non-event controls without replacement with non-overlapping windows; inspect only the chronological first 60% and keep the final 40% outcome-unread. Close at F0 unless non-vacuous pair/symbol floors, positive paired primary effect, one-sided 90% block-bootstrap lower bound, and all chronology/integrity gates pass. Do not reopen post-shock range compression, TOM, OPEX, monthly 12-1 momentum, or the breakout bull-call expression. Only after an underlying F0 pass may a one-lot defined-risk expression be frozen with capital_fit_usd, max_loss_usd <=300, max_lots=1, and dual multi-leg costs; discovery remains L0 with no registry, paper force, shadow, arm, broker, or live action."
+}

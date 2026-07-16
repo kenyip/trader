@@ -199,6 +199,7 @@ class LowHvCrossSectionTrainLabTest(unittest.TestCase):
             },
             index=index,
         )
+        downloaded.loc[index[7], "Close"] = np.nextafter(103.14159265358979, np.inf)
         calls = []
 
         def downloader(*args, **kwargs):
@@ -222,7 +223,7 @@ class LowHvCrossSectionTrainLabTest(unittest.TestCase):
             )
 
         self.assertEqual(len(calls), 1)
-        pd.testing.assert_series_equal(first, second)
+        pd.testing.assert_series_equal(first, second, check_exact=True)
         self.assertEqual(first_meta["sha256"], second_meta["sha256"])
         self.assertEqual(first_meta["adjustment_semantics"], "yfinance auto_adjust=True")
         self.assertEqual(first_meta["rows"], 80)
