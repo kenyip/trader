@@ -1,0 +1,127 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-15T1829",
+  "loop_signature": "build|post-earnings-information-resolution-drift|retrospective-explicit-timestamps|prior-same-symbol-same-sign-controls|train60|five-session-signed-continuation|family-close",
+  "economic_mechanism": "Quarterly earnings resolve concentrated information uncertainty; analyst and investor underreaction might cause the signed first completed post-announcement move to continue over the following five completed sessions relative to prior same-symbol non-event sessions with similar completed reaction, trend, and realized-volatility state.",
+  "candidate_or_family_scope": "POST_EARNINGS_INFORMATION_RESOLUTION_DRIFT_CALL_DEBIT_21D_V1 / POST_EARNINGS_INFORMATION_RESOLUTION_DRIFT on frozen present-day liquid operating-company panel AAPL, AMD, SMCI, TSLA, META, GOOGL, ARM, NVDA; explicit retrospective BMO/AMC timestamps; absolute first completed-session reaction >=2%; prior same-symbol same-sign non-event controls; chronological 60/40 blueprint split; future conditional one-lot 21-DTE $2-wide call/put debit spread is structural context only with capital_fit_usd=200, max_loss_usd=200 before closing friction, max_lots=1.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "Close at F0 if the event source cannot supply explicit timestamp/session mapping for a non-vacuous sample; train has fewer than 40 matched pairs or 6 symbols; event signed mean does not exceed control; paired five-session signed excess mean or one-sided 90% five-pair circular-block-bootstrap lower bound is non-positive; continuation hit-rate edge is below 5 percentage points; or chronology, overlap, source-hash, population, strict-JSON, outcome-unread, or numeric integrity fails.",
+  "outcome": "FAMILY_CLOSED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "The exact unconditional post-earnings signed-continuation family failed the absolute and matched-control train gates and remains at F0. The 51-blueprint holdout stayed outcome-unread; no option pricing, L1 claim, capital seat, registry, paper, shadow, arm, broker, or live authority opened."
+  },
+  "search_information": {
+    "summary": "The wake closed a materially different issuer-event mechanism on 75 train pairs across seven symbols, retained a reusable timestamp-aware matched-control lab, repaired serialized matching-geometry and zero-support diagnostics after critique, and activated the three-post-advance-no-advance burst stop without changing phase or capital authority.",
+    "delta_kinds": [
+      "falsification",
+      "capability",
+      "repair",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "falsification",
+      "summary": "Closed POST_EARNINGS_INFORMATION_RESOLUTION_DRIFT at F0: train n=75 across seven symbols; event signed mean -0.483123%, control -0.184007%, paired mean -0.299116%, LB90 -1.615360%, hit-rate edge -1.333 percentage points, integrity violations empty, holdout 51 unread, and pricing calls zero.",
+      "novelty_key": "post-earnings-information-resolution-drift-train-close-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-15T1829/post-earnings-information-drift-train.json",
+        "reports/trader-wakes/moa/2026-07-15T1829/executor-closeout.md",
+        "reports/trader-wakes/2026-07-15T1829-moa-merge.md",
+        "reports/readiness/LATEST.md"
+      ]
+    },
+    {
+      "kind": "capability",
+      "summary": "Added a timestamp-aware earnings-event train lab with explicit BMO/AMC mapping, ambiguous-time stand-aside, persisted source hashes, prior-only same-symbol same-sign non-event controls, without-replacement/non-overlap integrity, chronological unread holdout, block-bootstrap gate, strict JSON, and Layered Edge Stack/capital-authority labels.",
+      "novelty_key": "timestamp-aware-earnings-event-matched-control-lab-v1",
+      "artifacts": [
+        "scripts/post_earnings_information_drift_train_lab.py",
+        "tests/test_post_earnings_information_drift_train_lab.py",
+        "requirements.txt"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Reconciled challenger methodology nits by serializing per-pair calendar/covariate gaps plus max/median geometry and a diagnostic-only >=10% extreme-pair count, and by adding a zero-control-support negative control that fails before bootstrap with strict JSON nulls.",
+      "novelty_key": "earnings-match-geometry-zero-support-controls-v1",
+      "artifacts": [
+        "scripts/post_earnings_information_drift_train_lab.py",
+        "tests/test_post_earnings_information_drift_train_lab.py",
+        "reports/trader-wakes/moa/2026-07-15T1829/post-earnings-information-drift-train.json"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "Recorded the third consecutive completed post-advance strategy wake without STRATEGY_ADVANCED, set strategy_burst_stop_required=true, and replaced experiment volume with one search-design reassessment seed.",
+      "novelty_key": "post-advance-third-close-burst-stop-2026-07-15T1829-v1",
+      "artifacts": [
+        "reports/readiness/LATEST.md",
+        "reports/trader-wakes/LATEST.md",
+        "reports/trader-wakes/INDEX.md",
+        "reports/trader-wakes/moa/2026-07-15T1829/learning-promotion.md"
+      ]
+    }
+  ],
+  "retest_decision": null,
+  "evidence_wake_condition": null,
+  "critic_findings": [
+    {
+      "finding": "Train pair rows omitted serialized match distances/covariate gaps and the adverse-tail story lacked a formal extreme-pair diagnostic.",
+      "status": "repaired",
+      "rationale": "The current tracked claim carries per-pair geometry plus max/median calendar, reaction, ret20, and hv20 gaps and a diagnostic-only absolute 10% extreme-pair count. The real train has 15/75 such pairs; this is not a post-hoc gate and does not rescue the family because absolute event expectancy, paired mean, uncertainty bound, and hit edge all failed.",
+      "repair_artifacts": [
+        "scripts/post_earnings_information_drift_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_post_earnings_information_drift_train_lab.py"
+      ]
+    },
+    {
+      "finding": "The lab lacked an explicit zero-control-support negative control that fails before bootstrap with strict JSON missingness.",
+      "status": "repaired",
+      "rationale": "The empty-train path now has explicit null diagnostics and a regression forces zero matched support, verifies FAMILY_CLOSED before bootstrap metrics, and serializes with allow_nan=False.",
+      "repair_artifacts": [
+        "scripts/post_earnings_information_drift_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_post_earnings_information_drift_train_lab.py"
+      ]
+    },
+    {
+      "finding": "Current retrospective Yahoo earnings timestamps support pre-event scheduling or historical known-at calendar alpha.",
+      "status": "rejected",
+      "rationale": "They do not. The payload, regression, readiness, and final reports explicitly limit the source to post-announcement session alignment. Any future pre-event or fundamental-surprise mechanism needs honest point-in-time known-at provenance."
+    },
+    {
+      "finding": "A positive paired median, 53.3% positive-pair frequency, sparse SMCI slice, or symbol/threshold churn can salvage the exact family.",
+      "status": "rejected",
+      "rationale": "The frozen pooled event mean, paired mean, bootstrap lower bound, and hit-rate edge all failed; 15/75 diagnostic extreme pairs expose tail instability; no subset gate was predeclared; and the sealed holdout was not spent. Reopening requires a genuinely different economic mechanism and evidence class."
+    },
+    {
+      "finding": "The final readiness surface may retain the prior streak of two and the old post-earnings experiment NEXT.",
+      "status": "rejected",
+      "rationale": "The final readiness, LATEST, INDEX, learning, and compounding surfaces now record three consecutive completed post-advance no-advance wakes, burst_stop=true, and exactly one BURST_STOP_SEARCH_DESIGN_REASSESSMENT seed."
+    },
+    {
+      "finding": "This is the third consecutive completed epoch wake without STRATEGY_ADVANCED.",
+      "status": "rejected",
+      "rationale": "The active breakout epoch completed with F2 advancement at 1606. Living prose now uses the accurate phrase: third consecutive completed post-advance strategy wake without STRATEGY_ADVANCED (1648, 1747, 1829)."
+    },
+    {
+      "finding": "The new lab, dependency, and tests alone constitute strategy advancement.",
+      "status": "rejected",
+      "rationale": "Capability is reported separately as search information. The only strategy outcome is FAMILY_CLOSED at F0; strategy_advancement.advanced remains false."
+    }
+  ],
+  "closed_families": [
+    "POST_EARNINGS_INFORMATION_RESOLUTION_DRIFT: exact frozen AAPL/AMD/SMCI/TSLA/META/GOOGL/ARM/NVDA present-day panel, retrospective explicit BMO/AMC timestamps, >=2% first-completed-session reaction, prior same-symbol same-sign non-event controls, five-session signed continuation, chronological 60/40 specification"
+  ],
+  "data_dependencies": [
+    "A successor fundamental-surprise or estimate-revision interaction would require genuinely point-in-time announcement, estimate, and revision data with honest known-at provenance; current Yahoo retrospective timestamps cannot supply pre-event scheduling authority.",
+    "Observed historical option quotes, contract grids, implied-volatility paths, and complete entry/exit joins remain necessary before any later debit-spread expression could claim L1 calibration; they are not needed to preserve this F0 family close."
+  ],
+  "next": "BURST_STOP_SEARCH_DESIGN_REASSESSMENT: stop strategy-experiment volume. Diagnose the 1648 breakout-expression dual-cost/path close, 1747 post-shock compression close, and 1829 post-earnings continuation close; test whether current matched-control discovery is surfacing positive-median/adverse-tail families unsuitable for one-lot defined-risk income; inventory independent non-quarantined evidence classes; then open at most one successor epoch/charter with a complete Layered Edge Stack and predeclared falsifier before another strategy experiment. Do not rerun or threshold/panel-churn the closed post-earnings, post-shock, breakout-expression, TOM, OPEX, or monthly-ranking families. No registry, paper force, shadow, arm, broker, or live action."
+}
