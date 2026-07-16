@@ -1,0 +1,142 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-16T1123",
+  "loop_signature": "build|official-treasury-2s10s-bull-steepening|kre-vs-xlf|train60|10session|family-close",
+  "economic_mechanism": "A completed bull steepening in the official U.S. Treasury 2s10s daily par-yield curve may reduce short funding pressure relative to longer asset yields; if regional-bank equities underreact to that lending-margin tailwind, KRE should rise and outperform XLF over the next ten completed sessions.",
+  "candidate_or_family_scope": "Exact OFFICIAL_2S10S_BULL_STEEPENING_KRE_BULL_CALL_21D_V1 / OFFICIAL_YIELD_CURVE_BULL_STEEPENING_REGIONAL_BANK_RELATIVE_UPDRIFT on official Treasury 2 Yr and 10 Yr par yields joined without forward fill to adjusted KRE/XLF/SPY closes: 20-observation spread change >=+0.20 percentage points, 2-year change <=-0.10 percentage points, KRE and SPY above fully warmed SMA100, rising edge, non-overlapping next-close entry and tenth-subsequent-close exit, 10-bps round-trip underlying sensitivity, chronological 60/40 train/sealed identity holdout, and zero option pricing. Future-only one-lot KRE 18-28 DTE $2-wide bull-call planning expression: capital_fit_usd=200, frictionless planning max_loss_usd=200 before debit/closing friction/assignment/exercise/management validation, max_lots=1.",
+  "funnel_stage_before": "F0_MECHANISM",
+  "funnel_stage_after": "F0_MECHANISM",
+  "falsifier": "Close the exact family unless train contains at least 24 non-overlapping episodes across at least 10 signal years, positive KRE mean after the labeled 10-bps round-trip sensitivity, positive KRE-minus-XLF mean, a non-vacuous positive five-episode-block LB90, KRE hit rate at least 55%, relative hit rate at least 52%, KRE event-return worst-decile mean at least -7%, and zero chronology/population/integrity violations; do not inspect holdout outcomes or price options.",
+  "outcome": "FAMILY_CLOSED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "The exact candidate and family remain F0 and are closed. Seven total frozen events yielded only four train episodes across two years; the machine-readable year distribution is 2009:1 and 2024:3, so 75% of train episodes cluster in 2024. Favorable KRE after-cost and KRE-minus-XLF centers cannot rescue n<24, years<10, or a non-vacuous five-episode uncertainty gate. Three holdout identities remain outcome-unread and option pricing is zero."
+  },
+  "search_information": {
+    "summary": "The wake replaced a confounded Treasury-ETF proxy pre-outcome with direct official par-yield tenors, added and exercised a persisted/replayable exact-date lab, exposed the decisive sparse and calendar-concentrated population, and hardened duplicate-date and round-trip-cost evidence labels without changing the family close.",
+    "delta_kinds": [
+      "capability",
+      "repair",
+      "falsification",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "capability",
+      "summary": "Added a reusable official Treasury par-yield adapter and train-only regional-bank lab with persisted-byte hashing, no forward fill, exact-date market joins, completed-bar lag, non-overlap, sealed holdout identities, deterministic bootstrap sensitivity, strict JSON, and focused behavior/boundary/positive/negative tests.",
+      "novelty_key": "official-yield-curve-regional-bank-train-lab-2026-07-16T1123-v1",
+      "artifacts": [
+        "scripts/yield_curve_regional_bank_train_lab.py",
+        "tests/test_yield_curve_regional_bank_train_lab.py",
+        "reports/trader-wakes/moa/2026-07-16T1123/yield-curve-regional-bank-train.json"
+      ]
+    },
+    {
+      "kind": "repair",
+      "summary": "Finalizer made source and evidence semantics fail closed and machine-readable: duplicate Treasury dates are rejected before missing-tenor drops, the modeled cost is labeled as one 10-bps round-trip underlying sensitivity rather than per-leg cost, and train year counts plus 75% maximum calendar concentration are serialized and tested.",
+      "novelty_key": "official-yield-curve-source-cost-calendar-repair-2026-07-16T1123-v1",
+      "artifacts": [
+        "scripts/yield_curve_regional_bank_train_lab.py",
+        "tests/test_yield_curve_regional_bank_train_lab.py",
+        "reports/trader-wakes/moa/2026-07-16T1123/yield-curve-regional-bank-train.json"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "Closed both stable IDs for the exact official-2s10s regional-bank geometry. Only seven events existed in about twenty years; train n=4 across two years and three of four episodes in 2024 failed density, calendar breadth, and non-vacuous uncertainty despite favorable centers. Holdout outcomes remain unread and no option path was measured.",
+      "novelty_key": "official-yield-curve-regional-bank-family-close-2026-07-16T1123-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-16T1123/yield-curve-regional-bank-train.json",
+        "reports/trader-wakes/moa/2026-07-16T1123/executor-closeout.md",
+        "reports/trader-wakes/2026-07-16T1123-moa-merge.md",
+        "reports/readiness/LATEST.md"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "Counted this accepted close as successor-epoch no-advance decision two, set strategy_pivot_required=true while burst-stop remains false, and quarantined threshold, horizon, sign, trend, control, unclustered, holdout, and option-wrapper salvage. A third no-advance must stop the burst for reassessment.",
+      "novelty_key": "repeated-exposure-successor-epoch-second-close-pivot-2026-07-16T1123-v1",
+      "artifacts": [
+        "configs/search_epoch.json",
+        "docs/SEARCH_EPOCH_2026-07-16T0546.md",
+        "reports/trader-wakes/moa/2026-07-16T1123/merged-next-seed.md",
+        "reports/readiness/LATEST.md"
+      ]
+    }
+  ],
+  "retest_decision": null,
+  "evidence_wake_condition": null,
+  "evidence_wait_reaffirmation": false,
+  "critic_findings": [
+    {
+      "finding": "N1: acceptance makes successor-epoch counted no-advance decisions two, pivot required true, and burst-stop false.",
+      "status": "rejected",
+      "rationale": "Rejected as a claim or code defect because challenger correctly described normal finalizer state transition rather than a flaw in the executor evidence. Finalizer updated configs/search_epoch.json, the active epoch doc, readiness, wake surfaces, and this handoff to count two and require a material pivot."
+    },
+    {
+      "finding": "N2: durable evidence must expose that three of four train episodes occur in 2024 rather than state only two signal years.",
+      "status": "repaired",
+      "rationale": "The runner now serializes train_signal_year_counts={2009:1, 2024:3} and train_calendar_concentration_max_fraction=0.75. A focused positive-panel test locks year counts and concentration, and living reports treat the concentration as part of the density failure rather than a salvage path.",
+      "repair_artifacts": [
+        "scripts/yield_curve_regional_bank_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_yield_curve_regional_bank_train_lab.py"
+      ]
+    },
+    {
+      "finding": "N3: finalizer must independently rerun focused and full verification.",
+      "status": "rejected",
+      "rationale": "Rejected as a code defect because this is finalizer process ownership. learning-promotion.md records finalizer-owned focused, adjacent, full-suite, compile, replay, strict-JSON, hash, handoff, and completion-prepare results; executor counts are not inherited as final proof."
+    },
+    {
+      "finding": "N4: dividend NEXT must freeze a new multi-issuer increase mechanism and must not relabel assignment-guard or provenance tooling as strategy evidence.",
+      "status": "rejected",
+      "rationale": "Rejected as a missing-NEXT defect because merged-next-seed.md already contains this exact anti-thrash boundary. Finalizer preserves it as the sole NEXT in epoch, readiness, wake, learning, and compounding surfaces."
+    },
+    {
+      "finding": "N5: a third successor no-advance must trigger burst stop; do not answer repeated sparse-event failure with another nearby event-to-bull-call clone.",
+      "status": "rejected",
+      "rationale": "Rejected as a current defect because it is non-blocking forward context already encoded by the epoch contract. Finalizer records pivot=true and burst_stop=false now, with an explicit third-no-advance reassessment boundary."
+    },
+    {
+      "finding": "N6: regenerate readiness, INDEX, LATEST, and merge surfaces from the accepted 1123 close rather than leave the integrated 0546 strategy body or preflight NEXT living.",
+      "status": "rejected",
+      "rationale": "Rejected as a challenger-phase evidence defect because predecessor readiness remained intentionally authoritative until finalization. Finalizer rewrites every living surface to the accepted 1123 family close, zero living candidates/leaders/seats, successor count two, pivot=true, burst_stop=false, and deterministic integration pending."
+    },
+    {
+      "finding": "Finalizer independent audit: duplicate source dates could be hidden when one duplicate had missing tenors, and the artifact's cost key said per-leg while the model subtracts one 10-bps round-trip sensitivity.",
+      "status": "repaired",
+      "rationale": "Raw date uniqueness is now checked before missing-tenor rows are dropped. Frozen geometry now uses underlying_round_trip_cost_bps=10.0, and evaluate_train derives its deduction from the same constant. Focused negative and semantic boundary tests lock both repairs; the unchanged strategy metrics and FAMILY_CLOSED decision were regenerated from persisted inputs.",
+      "repair_artifacts": [
+        "scripts/yield_curve_regional_bank_train_lab.py"
+      ],
+      "test_artifacts": [
+        "tests/test_yield_curve_regional_bank_train_lab.py"
+      ]
+    }
+  ],
+  "closed_families": [
+    "OFFICIAL_2S10S_BULL_STEEPENING_KRE_BULL_CALL_21D_V1",
+    "OFFICIAL_YIELD_CURVE_BULL_STEEPENING_REGIONAL_BANK_RELATIVE_UPDRIFT"
+  ],
+  "data_dependencies": [
+    "No new data are required to preserve this exact family close. Reopening requires a genuinely new evidence class and pre-outcome charter, not threshold, horizon, sign, trend, control, clustering, holdout, or option-wrapper salvage.",
+    "Any future KRE option expression requires actual listed expiry/strike geometry, debit and closing friction, theta/vega path, management, assignment/exercise, and claim-appropriate calibration; this F0 run priced zero options.",
+    "The dividend-increase successor may reuse declaration-date provenance plumbing, but it requires a newly frozen multi-issuer regular-increase event population and controls before any forward-return read."
+  ],
+  "no_advance_context": {
+    "epoch_id": "REPEATED_EXPOSURE_SPECIFICITY_DISCOVERY_V1",
+    "epoch_status_after_integration": "active",
+    "started_stamp": "2026-07-16T0546",
+    "record_count_before": 1,
+    "consecutive_no_strategy_advance_before": 1,
+    "record_count_after_integration": 2,
+    "consecutive_no_strategy_advance_after_integration": 2,
+    "strategy_pivot_required": true,
+    "strategy_burst_stop_required": false,
+    "reason": "This accepted family close is the second counted no-advance decision in the successor epoch, so the next strategy wake must pivot mechanism or evidence class."
+  },
+  "next": "MULTI_ISSUER_DIVIDEND_INCREASE_FORWARD_UPDRIFT_F0: pivot to a materially different issuer cash-flow-confidence mechanism. Before outcomes, freeze a point-in-time regular cash-dividend increase definition from declaration-date and amount records; exclude specials, unchanged amounts, cuts, preferred/ambiguous securities, missing known_at, nonpositive amounts, and chronology conflicts; predeclare a fixed liquid multi-issuer panel with same-date sector controls, next-close ten-session forecast, labeled underlying cost, global chronological train/sealed identity holdout, and density/year/issuer-breadth, specificity, dependence-aware uncertainty, hit-rate, tail, and integrity gates. Existing dividend provenance and assignment-guard tooling is infrastructure, not edge evidence. Close exactly one STRATEGY_ADVANCED F0->F1 or FAMILY_CLOSED decision in-wake. Future one-lot defined-risk expression must have capital_fit_usd and max_loss_usd <=300 with max_lots=1. No yield-curve salvage, holdout reads, L1, seat, paper, shadow, arm, broker, funding, or live authority."
+}
