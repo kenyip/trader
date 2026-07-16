@@ -122,9 +122,9 @@ Finalizer status: `MOA_FINALIZE_READY`; integration remains pending the determin
 
 ## RTH opportunity reconfirm
 
-Updated: 2026-07-16T1130 mid-session RTH.
+Updated: 2026-07-16T1230 mid-session RTH.
 
 | Check | State | Evidence |
 |---|---|---|
-| C — live condition / paper opportunity | STAND_ASIDE (reconfirm) | Scout 14/0/14; autonomy 0 proposals; PCS b195f5fe+ bear_dte=0; real open_risk=0; same class as 0630 open + 1030 mid. No new densify (archive already 3/3 RTH). No B6 advance. |
+| C — live condition / paper opportunity | STAND_ASIDE (reconfirm) | Scout 14/0/14; autonomy 0 proposals; PCS b195f5fe+ bear_dte=0; real open_risk=0; same class as 0630 open + 1030/1130 mid. Session-day freshness pass (SMCI/AMD intraday mark drift only). No new densify (archive already 3/3 RTH). No B6 advance. |
 

@@ -1,5 +1,7 @@
 # Trader wake index (newest first)
 
+- 2026-07-16T1230-rth — Mid-session RTH STAND_ASIDE reconfirm (success). Freshness pass session-day 2026-07-16 (SMCI/AMD intraday mark drift only); scout 14/0/14; autonomy 0 proposals; real paper open_risk=0. Same bearish TSLL/TSLA/SMCI class as open 0630 + mid 1030/1130 + 2026-07-15. No densify (already 3/3 RTH dates); no paper place, no evolve. NEXT: wait non-bear capital-fit defined-risk; BUILD context YIELD_CURVE_STEEPENING preflight.
+
 - 2026-07-16T1130-rth — Mid-session RTH STAND_ASIDE reconfirm (success). Freshness pass session-day 2026-07-16; scout 14/0/14; autonomy 0 proposals; real paper open_risk=0. Same bearish TSLL/TSLA/SMCI class as open 0630 + mid 1030 + 2026-07-15. No densify (already 3/3 RTH dates); no paper place, no evolve. NEXT: wait non-bear capital-fit defined-risk; BUILD context YIELD_CURVE_STEEPENING preflight.
 
 - 2026-07-16T1030-rth — Mid-session RTH STAND_ASIDE reconfirm (success). Freshness pass session-day 2026-07-16; scout 14/0/14; autonomy 0 proposals; real paper open_risk=0. Same bearish TSLL/TSLA/SMCI class as open 0630 + 2026-07-15. Optional TSLL quote densify → n_market_dates=3 / provider_backtest_eligible=true (13 exps/date); no paper place, no evolve. NEXT: wait non-bear capital-fit defined-risk; BUILD context YIELD_CURVE_STEEPENING preflight.
