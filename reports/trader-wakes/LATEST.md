@@ -4,7 +4,7 @@ WAKE: 2026-07-15T2344
 PHASE: BUILD / L0 underlying discovery only
 ROLE: GPT 5.6 Sol finalizer / single writer
 SLEEVE: $3,000 Agentic research sleeve
-STATUS: `MOA_FINALIZE_READY`; deterministic commit/push/merge/postflight integration remains pending. No `RUN COMPLETE` claim.
+STATUS: `RUN COMPLETE`; integrated/pushed/postflight-complete as `809eebc`.
 CHOSE: reconcile Grok 4.5 `PASS WITH NITS`, harden machine quarantine/capital/authority boundaries, independently reproduce the exact family close, promote learning, and prepare a schema-v2 handoff without opening holdout or pricing options.
 
 ## Strategy decision
@@ -76,8 +76,8 @@ Readiness: `reports/readiness/LATEST.md`
 
 `SEARCH_DESIGN_REASSESS_AFTER_RESIDUAL_REVERSAL_TAIL_CLOSE`: stop strategy-volume search; reconcile the three active-epoch no-advance outcomes, assess whether favorable centers with failed tails indicate a genuinely new prior-known event-risk evidence route or a broader data/design limitation, carry forward the parked observed-diagonal data floor without same-date churn, and start a successor epoch only after a dated reassessment names a non-quarantined mechanism or evidence class. Do not open the sealed 96-blueprint holdout, delete high-beta symbols post hoc, loosen the `-5%` tail gate, force registry/paper, or enter shadow/arm/broker/live paths.
 
-Integration is pending the deterministic wrapper gate. This is a green finalizer handoff, not `RUN COMPLETE`.
+Deterministic wrapper gate passed. The run committed, pushed, merged to `main`, verified `main == origin/main`, deleted the run branch, and wrote the postflight receipt as `809eebcce2f727af00edd9969671d34f8f544e28`.
 
-MOA_FINALIZE_READY
+RUN COMPLETE
 Verification: `reports/trader-wakes/2026-07-15T2344-moa-merge.md`
 Learning: `reports/trader-wakes/moa/2026-07-15T2344/learning-promotion.md`

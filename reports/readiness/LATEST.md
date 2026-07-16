@@ -1,6 +1,6 @@
 # Trader platform readiness — latest
 
-Updated: 2026-07-16 — MoA stamp 2026-07-15T2344 finalizer green handoff; deterministic commit/push/merge/postflight integration remains pending. No `RUN COMPLETE` claim.
+Updated: 2026-07-16 — MoA stamp 2026-07-15T2344 `RUN COMPLETE`; integrated/pushed/postflight-complete as `809eebc` with `main == origin/main` and a clean checkout.
 
 Phase: BUILD
 Sleeve: $3,000 Agentic research sleeve
@@ -54,7 +54,7 @@ Authority: research/paper-safe only; no shadow/live auto-promotion, broker acces
 - Full pytest: 389 passed, 18 subtests passed in 23.16s.
 - Compile and substantive cache replay passed; canonical finalizer artifact SHA-256 `fad32750fd051a57a1676b330034e0ef947bdc5fcc76124446d91a70891379fe`.
 - Coverage: 21 structures / 246 hypotheses / 70 evolve artifacts / no living leader; dated report `reports/readiness/income-coverage-2026-07-16T0014.md` and LATEST agree.
-- Finalizer green handoff only: no commit, push, merge, postflight, or `RUN COMPLETE`; deterministic wrapper integration remains pending.
+- Deterministic wrapper postflight: `ok=true`; integrated/pushed/postflight-complete as `809eebc`; `main == origin/main`; checkout clean; run branch deleted.
 
 ## Readiness blockers
 
@@ -64,7 +64,7 @@ Authority: research/paper-safe only; no shadow/live auto-promotion, broker acces
 4. The observed TSLL diagonal has 0 complete paths/controls and unproven structural max loss.
 5. Broad observed historical option entry/exit joins remain unavailable; this blocks observed-option/L1 claims only, not unrelated L0 discovery after reassessment.
 6. Any future F3 candidate still requires live-clock paper quotes/fills before F4/shadow/live authority.
-7. Stamp `2026-07-15T2344` is finalizer-ready but not deterministically integrated; no execution authority changed.
+7. Stamp `2026-07-15T2344` is integrated/pushed/postflight-complete as `809eebc`; no execution authority changed.
 
 Coverage: `reports/readiness/income-coverage-LATEST.md`
 Finalizer wake: `reports/trader-wakes/2026-07-15T2344-moa-merge.md`
