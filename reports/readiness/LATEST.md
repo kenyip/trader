@@ -1,10 +1,10 @@
 # Agentic go-live readiness — LATEST
 
-As-of: 2026-07-16T0335 MOA_FINALIZE_READY; deterministic integration pending
+As-of: 2026-07-16T0335 RUN COMPLETE (`168cb50`); integrated/pushed/postflight-complete on `main == origin/main`
 Phase: BUILD
 Status: NOT READY
 Authority: research-only; no broker session, funding, shadow promotion, arming, or live orders
-Integration: pending the wrapper commit/push/fast-forward-main/postflight gate; no `RUN COMPLETE` claim
+Integration: complete; wrapper postflight receipt confirms clean pushed main
 
 ## Current strategy-convergence state
 
@@ -50,7 +50,7 @@ Conditional geometry was planning-only: future 30-45 DTE $2-wide bull call debit
 | B2 Risk checks | PARTIAL | $3k sleeve and one-lot planning bounds are explicit; no candidate earned a capital seat. |
 | B3 Backtest density | NOT READY | Latest mechanism closed at F0 before option simulation; no living strategy has dense after-cost L1 evidence. |
 | B4 Stress/tails | NOT READY | Underlying worst-decile and block-bootstrap diagnostics failed; no surviving priced option path exists. |
-| B5 Logging/audit | BUILD-PASS | Charter, canonical claim, executor/challenger/finalizer judgments, schema-v2 compounding, learning promotion, source hashes, and finalizer-owned test/replay evidence are durable; deterministic integration remains pending. |
+| B5 Logging/audit | BUILD-PASS | Charter, canonical claim, executor/challenger/finalizer judgments, schema-v2 compounding, learning promotion, source hashes, and finalizer-owned test/replay evidence are durable; deterministic integration is complete. |
 | B6 Paper path | NOT READY | No capital-fit intent fired and no strategy is eligible for paper promotion. |
 | B7 Shadow path | NOT READY | No propose->risk_check->log window exists. |
 | B8 Arming/funding | HARD STOP | Ken mandate, funding, explicit arm, and accepted live packet are absent. |

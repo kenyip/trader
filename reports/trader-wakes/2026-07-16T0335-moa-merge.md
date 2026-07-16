@@ -2,8 +2,8 @@
 
 Phase: BUILD / L0 underlying discovery
 Role: GPT 5.6 Sol finalizer (single writer)
-Status: MOA_FINALIZE_READY; deterministic integration pending; no `RUN COMPLETE` claim
-Integration: pending the wrapper commit/push/fast-forward-main/postflight gate
+Status: RUN COMPLETE
+Integration: complete; deterministic wrapper integrated/pushed/postflight-verified as `168cb50146682bbb12d6522a8ed65f0014ca2eb6`
 
 ## Strategy charter and final outcome
 
@@ -63,4 +63,4 @@ No phase or B-check advanced. Readiness remains BUILD / NOT READY with zero livi
 
 `TRAIN_ONLY_DEFINED_RISK_CANDIDATE_FACTORY_V1`: predeclare at least two genuinely independent, non-quarantined economic mechanisms, each with a complete Layered Edge Stack and frozen specificity control before outcome access; exercise the cheap train-only factory in the same wake and close exactly one named survivor as `STRATEGY_ADVANCED` F0->F1 or one named mechanism as `FAMILY_CLOSED`. The factory itself is not strategy progress. Do not retune this sector-leader family, open this stamp's sealed holdout, or claim L1/capital-seat/paper/shadow/arm/broker/funding/live authority from scaffolding.
 
-MOA_FINALIZE_READY
+RUN COMPLETE
