@@ -237,6 +237,29 @@ class TraderBuildProgressTest(unittest.TestCase):
         # Must not lead with avg progress framing as primary closeness.
         self.assertLess(text.index("Strategy-convergence"), text.index("Secondary context"))
 
+    def test_scoreboard_labels_completed_epoch_as_completed_context(self) -> None:
+        config = self.repo / "configs" / "search_epoch.json"
+        config.parent.mkdir(parents=True)
+        config.write_text(
+            json.dumps(
+                {
+                    "epoch_id": "completed-epoch",
+                    "status": "completed",
+                    "started_stamp": "2026-01-01T0000",
+                }
+            )
+            + "\n"
+        )
+
+        text = progress.render_scoreboard([], all_records=[])
+
+        self.assertIn(
+            "Search epoch: **completed-epoch** (status `completed`",
+            text,
+        )
+        self.assertIn("Consecutive no-advance streak (**configured epoch**)", text)
+        self.assertNotIn("(**active epoch**)", text)
+
     def test_living_candidates_and_streak(self) -> None:
         records = [
             {
@@ -294,6 +317,116 @@ class TraderBuildProgressTest(unittest.TestCase):
         self.assertEqual(progress.consecutive_no_strategy_advance(records, epoch_scope=False), 2)
         self.assertEqual(progress.pivot_stop_state(2)["pivot_stop_state"], "strategy_pivot_required")
         self.assertEqual(progress.pivot_stop_state(3)["pivot_stop_state"], "strategy_burst_stop_required")
+
+    def test_descriptive_scope_closure_removes_entire_candidate_lineage(self) -> None:
+        records = [
+            {
+                "schema_version": 2,
+                "stamp": "a",
+                "outcome": "STRATEGY_ADVANCED",
+                "candidate_or_family_scope": (
+                    "MULTINAME_BREAKOUT_BULL_CALL_14D_V1 / "
+                    "TIME_SERIES_20D_BREAKOUT_CONTINUATION on frozen panel; train geometry"
+                ),
+                "funnel_stage_after": "F1_TRAIN",
+                "strategy_advancement": {"advanced": True},
+                "closed_families": [],
+            },
+            {
+                "schema_version": 2,
+                "stamp": "b",
+                "outcome": "STRATEGY_ADVANCED",
+                "candidate_or_family_scope": (
+                    "MULTINAME_BREAKOUT_BULL_CALL_14D_V1 / "
+                    "TIME_SERIES_20D_BREAKOUT_CONTINUATION on frozen panel; holdout geometry"
+                ),
+                "funnel_stage_after": "F2_UNTOUCHED_HOLDOUT",
+                "strategy_advancement": {"advanced": True},
+                "closed_families": [],
+            },
+            {
+                "schema_version": 2,
+                "stamp": "c",
+                "outcome": "FAMILY_CLOSED",
+                "candidate_or_family_scope": (
+                    "MULTINAME_BREAKOUT_BULL_CALL_14D_V1 exact option expression"
+                ),
+                "funnel_stage_after": "F2_UNTOUCHED_HOLDOUT",
+                "strategy_advancement": {"advanced": False},
+                "closed_families": [
+                    "MULTINAME_BREAKOUT_BULL_CALL_14D_V1: exact frozen option expression"
+                ],
+            },
+        ]
+
+        living = progress.living_strategy_state(records)
+        self.assertEqual(living["living_candidate_count"], 0)
+        self.assertEqual(living["living_candidates"], [])
+        self.assertIsNone(living["furthest_living_funnel_stage"])
+        self.assertIn(
+            "MULTINAME_BREAKOUT_BULL_CALL_14D_V1",
+            living["closed_lineage_keys"],
+        )
+
+    def test_lineage_tokens_do_not_use_prefix_matching(self) -> None:
+        records = [
+            {
+                "schema_version": 2,
+                "stamp": "a",
+                "outcome": "STRATEGY_ADVANCED",
+                "candidate_or_family_scope": "ALPHA_BREAKOUT_V10_NEW / distinct candidate",
+                "funnel_stage_after": "F1_TRAIN",
+                "strategy_advancement": {"advanced": True},
+                "closed_families": [],
+            },
+            {
+                "schema_version": 2,
+                "stamp": "b",
+                "outcome": "FAMILY_CLOSED",
+                "strategy_advancement": {"advanced": False},
+                "closed_families": ["ALPHA_BREAKOUT_V10: older exact candidate"],
+            },
+        ]
+
+        living = progress.living_strategy_state(records)
+        self.assertEqual(living["living_candidate_count"], 1)
+        self.assertIn("ALPHA_BREAKOUT_V10_NEW / distinct candidate", living["living_candidates"])
+
+    def test_closed_family_aliases_preserve_both_candidate_identifiers(self) -> None:
+        records = [
+            {
+                "schema_version": 2,
+                "stamp": "a",
+                "outcome": "STRATEGY_ADVANCED",
+                "candidate_or_family_scope": (
+                    "MULTINAME_BREAKOUT_BULL_CALL_14D_V1 / historical F2 scope"
+                ),
+                "funnel_stage_after": "F2_UNTOUCHED_HOLDOUT",
+                "strategy_advancement": {"advanced": True},
+                "closed_families": [],
+            },
+            {
+                "schema_version": 2,
+                "stamp": "b",
+                "outcome": "FAMILY_CLOSED",
+                "strategy_advancement": {"advanced": False},
+                "closed_families": [
+                    "MULTINAME_BREAKOUT_BULL_CALL_14D_V1",
+                    "BREAKOUT_BULL_CALL_14D_055D_1W_10S_V1",
+                ],
+            },
+        ]
+
+        living = progress.living_strategy_state(records)
+        self.assertEqual(living["living_candidate_count"], 0)
+        self.assertIn(
+            "MULTINAME_BREAKOUT_BULL_CALL_14D_V1",
+            living["closed_lineage_keys"],
+        )
+        self.assertIn(
+            "BREAKOUT_BULL_CALL_14D_055D_1W_10S_V1",
+            living["closed_lineage_keys"],
+        )
 
     def test_pure_evidence_wait_reaffirmations_do_not_increment_streak(self) -> None:
         records = [

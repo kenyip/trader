@@ -426,17 +426,40 @@ def _iter_integrated_compounding(limit: int | None = None) -> list[dict[str, Any
     return rows
 
 
+def _candidate_lineage_keys(value: Any) -> set[str]:
+    """Stable closure keys for descriptive candidate/family prose.
+
+    Handoffs historically stored the full Layered Edge scope as prose while
+    ``closed_families`` often stored a compact candidate ID plus a qualifier.
+    Exact-string matching therefore resurrected the same candidate once its
+    train and holdout scopes used different descriptions. Keep exact matching
+    for legacy/lowercase IDs and additionally match whole uppercase underscore
+    identifiers. Whole-token matching deliberately avoids prefix closure.
+    """
+    text = " ".join(str(value or "").split())
+    if not text:
+        return set()
+    keys = {text}
+    keys.update(re.findall(r"\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+){2,}\b", text))
+    return keys
+
+
 def living_strategy_state(records: list[dict[str, Any]] | None = None) -> dict[str, Any]:
     """Derive living candidates + furthest funnel stage from integrated records."""
     rows = records if records is not None else _iter_integrated_compounding()
     living: dict[str, str] = {}
     closed: set[str] = set()
+    closed_lineage_keys: set[str] = set()
     for row in rows:
         for family in row.get("closed_families") or []:
             name = str(family).strip()
             if name:
                 closed.add(name)
-                living.pop(name, None)
+                family_keys = _candidate_lineage_keys(name)
+                closed_lineage_keys.update(family_keys)
+                for scope in list(living):
+                    if _candidate_lineage_keys(scope) & family_keys:
+                        living.pop(scope, None)
         if not strategy_advanced(row):
             continue
         scope = str(row.get("candidate_or_family_scope") or "").strip()
@@ -444,7 +467,7 @@ def living_strategy_state(records: list[dict[str, Any]] | None = None) -> dict[s
         if not scope:
             # Legacy CANDIDATE rows may lack charter fields; still count a living seat.
             scope = f"legacy-candidate:{row.get('stamp', 'unknown')}"
-        if scope in closed:
+        if _candidate_lineage_keys(scope) & closed_lineage_keys:
             continue
         if stage not in FUNNEL_RANK:
             stage = "F0_MECHANISM"
@@ -461,6 +484,7 @@ def living_strategy_state(records: list[dict[str, Any]] | None = None) -> dict[s
         "living_candidate_stages": dict(sorted(living.items())),
         "furthest_living_funnel_stage": furthest,
         "closed_families": sorted(closed),
+        "closed_lineage_keys": sorted(closed_lineage_keys),
         "funnel_stages": list(FUNNEL_STAGES),
     }
 
@@ -539,6 +563,7 @@ def render_scoreboard(rows: list[dict[str, Any]], *, all_records: list[dict[str,
     pivot = pivot_stop_state(streak)
     epoch = load_search_epoch(REPO) or {}
     epoch_id = epoch.get("epoch_id") or "none"
+    epoch_status = epoch.get("status") or "none"
     epoch_started = epoch.get("started_stamp") or "—"
 
     # Secondary research-process stats (clearly labeled; never strategy closeness).
@@ -557,7 +582,7 @@ def render_scoreboard(rows: list[dict[str, Any]], *, all_records: list[dict[str,
         "",
         "## Strategy-convergence scorecard",
         "",
-        f"- Search epoch: **{epoch_id}** (started_stamp `{epoch_started}`)",
+        f"- Search epoch: **{epoch_id}** (status `{epoch_status}`, started_stamp `{epoch_started}`)",
         f"- Stamps scored: **{len(rows)}** (complete **{len(complete)}**)",
         f"- Strategy advances (BETTER): **{advance_count}** · rate **{advance_rate:.0%}** of complete",
         f"- INFORMATIVE_BUT_NOT_CLOSER: **{len(informative)}** · INVALID_THRASH: **{len(thrash)}**",
@@ -568,7 +593,7 @@ def render_scoreboard(rows: list[dict[str, Any]], *, all_records: list[dict[str,
             else " (none)"
         ),
         f"- Furthest living funnel stage: **{living['furthest_living_funnel_stage'] or '—'}**",
-        f"- Consecutive no-advance streak (**active epoch**): **{pivot['consecutive_no_strategy_advance']}**",
+        f"- Consecutive no-advance streak (**configured epoch**): **{pivot['consecutive_no_strategy_advance']}**",
         f"- Historical no-advance streak (all integrated, context only): **{historical_streak}**",
         f"- Pivot/stop state: **{pivot['pivot_stop_state']}**"
         + (

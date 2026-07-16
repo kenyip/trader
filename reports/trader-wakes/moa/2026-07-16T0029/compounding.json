@@ -1,0 +1,116 @@
+{
+  "schema_version": 2,
+  "stamp": "2026-07-16T0029",
+  "loop_signature": "build|burst-stop-reassessment|candidate-lineage-reconciliation|breakout-option-current-code-retest|family-close",
+  "economic_mechanism": "Gradual information diffusion and trend-following demand may sustain ten-session upside after a lag-safe 20-session breakout, but the exact fixed 14-DTE one-dollar bull-call expression must retain that edge after dual adverse multi-leg costs and one-global-unit portfolio management.",
+  "candidate_or_family_scope": "Exact MULTINAME_BREAKOUT_BULL_CALL_14D_V1 option expression, alias BREAKOUT_BULL_CALL_14D_055D_1W_10S_V1, on frozen AAPL/MSFT/NVDA/AMZN/META/GOOGL/AMD/TSLA development blueprints; historical underlying F2 is L0 context only, the option expression is closed, and there is no living F2 seat. One lot; capital_fit_usd=92.56501618263479; observed stressed one-lot max_loss_usd=246.90032488027197; max_lots=1.",
+  "funnel_stage_before": "F2_UNTOUCHED_HOLDOUT",
+  "funnel_stage_after": "F2_UNTOUCHED_HOLDOUT",
+  "falsifier": "Retain the exact option family close unless unchanged primary development and labeled secondary stress pass every population/breadth, dual-cost positive event and portfolio PnL, one-lot max-loss <=$300, portfolio max-DD <=$75, dense-negative-window <=5, chronology, and ledger gate without subset salvage.",
+  "outcome": "BLOCKER_REMOVED_AND_RETESTED",
+  "strategy_advancement": {
+    "advanced": false,
+    "summary": "The lifecycle blocker was removed and the unchanged dependent option experiment was rerun to FAMILY_CLOSED. Historical underlying F2 remains L0 context only; the option expression has no living F2 seat and earned no F3, L1, capital-seat, registry, paper, shadow, arm, broker, or live authority."
+  },
+  "search_information": {
+    "summary": "Stable whole-token candidate-lineage reconciliation removed two false living descriptive scopes; the exact option close reproduced under current code with 16 failed checks; both option-family identifiers are quarantined; the burst-stopped TSLL observed-term-carry epoch was transitioned to completed context and one distinct prior-known FOMC successor seed was frozen before outcomes.",
+    "delta_kinds": [
+      "falsification",
+      "repair",
+      "stop_rule"
+    ]
+  },
+  "useful_deltas": [
+    {
+      "kind": "repair",
+      "summary": "Replaced exact descriptive-string lifecycle matching with exact legacy strings plus whole uppercase-underscore candidate lineage tokens, exposed closed_lineage_keys, labeled completed search epochs honestly in the convergence scoreboard, and added descriptive-scope, alias, prefix, and completed-epoch boundary controls.",
+      "novelty_key": "candidate-lineage-lifecycle-reconciliation-2026-07-16T0029-v1",
+      "artifacts": [
+        "scripts/trader_build_progress.py",
+        "tests/test_trader_build_progress.py",
+        "reports/trader-wakes/moa/2026-07-16T0029/lineage-retest-summary.json"
+      ]
+    },
+    {
+      "kind": "falsification",
+      "summary": "Replayed unchanged MULTINAME_BREAKOUT_BULL_CALL_14D_V1 option DNA under current code to FAMILY_CLOSED with 16 failed gates: the 5% axis remained deeply negative and the fixed-dollar axis failed portfolio drawdown/density despite positive aggregate development PnL; secondary support remained sparse and non-rescuing.",
+      "novelty_key": "breakout-option-current-code-family-reclose-2026-07-16T0029-v1",
+      "artifacts": [
+        "reports/trader-wakes/moa/2026-07-16T0029/lineage-retest-summary.json",
+        "reports/trader-wakes/moa/2026-07-16T0029/executor-closeout.md",
+        "reports/trader-wakes/2026-07-16T0029-moa-merge.md",
+        "reports/readiness/LATEST.md"
+      ]
+    },
+    {
+      "kind": "stop_rule",
+      "summary": "Completed the three-no-advance TSLL observed-term-carry epoch after dated reassessment without resetting its streak, preserved the parked observed candidate and sealed evidence, and froze exactly one materially distinct FOMC policy-information-resolution F0 seed with official prior-known scheduling, signed positive-direction outcome, prior-only controls, sealed holdout, and zero option pricing.",
+      "novelty_key": "fomc-successor-freeze-and-completed-epoch-transition-2026-07-16T0029-v1",
+      "artifacts": [
+        "configs/search_epoch.json",
+        "docs/SEARCH_DESIGN_REASSESSMENT_2026-07-16T0029.md",
+        "reports/trader-wakes/moa/2026-07-16T0029/merged-next-seed.md",
+        "reports/trader-wakes/2026-07-16T0029-moa-merge.md",
+        "reports/readiness/LATEST.md"
+      ]
+    }
+  ],
+  "retest_decision": "FAMILY_CLOSED",
+  "evidence_wake_condition": null,
+  "evidence_wait_reaffirmation": false,
+  "critic_findings": [
+    {
+      "finding": "Transition the burst-stopped TSLL observed-term-carry epoch coherently and freeze the FOMC successor before any outcomes, using the 0029 reassessment rather than stale 2152-only routing.",
+      "status": "repaired",
+      "rationale": "configs/search_epoch.json now marks the prior epoch completed at 0029, points reassessment_doc to the 0029 reassessment, and retains the accepted successor seed path. The progress scoreboard machinery now exposes completed rather than active epoch status, and its focused test pins that label. The FOMC NEXT freezes official prior-known scheduling, published-time session mapping, ambiguous-time stand-aside, signed five-session return with positive direction fixed, prior-only no-reuse controls, sealed holdout, dependence-aware gates, and zero F0 option pricing. The actual successor epoch remains a next-wake action so this old-family retest is not misattributed to a new epoch.",
+      "repair_artifacts": [
+        "scripts/trader_build_progress.py"
+      ],
+      "test_artifacts": [
+        "tests/test_trader_build_progress.py"
+      ]
+    },
+    {
+      "finding": "Persist both MULTINAME_BREAKOUT_BULL_CALL_14D_V1 and BREAKOUT_BULL_CALL_14D_055D_1W_10S_V1 so the same closed option family cannot resurrect under its alias.",
+      "status": "repaired",
+      "rationale": "This handoff lists both stable identifiers in closed_families. The lifecycle machinery exposes both closed lineage keys, and a focused alias boundary test verifies the historical MULTINAME F2 scope remains non-living when both identifiers are recorded.",
+      "repair_artifacts": [
+        "scripts/trader_build_progress.py"
+      ],
+      "test_artifacts": [
+        "tests/test_trader_build_progress.py"
+      ]
+    },
+    {
+      "finding": "Avoid wording that implies a living breakout F2 candidate; underlying F2 is historical L0 context and the option expression is closed.",
+      "status": "repaired",
+      "rationale": "Lifecycle machinery now returns zero living candidates and no furthest stage after exact-lineage closure, while finalizer, readiness, learning, and compounding surfaces consistently say historical underlying F2/L0 context, option expression closed, and no living F2 seat. Focused tests pin the zero-living result across descriptive F1/F2 scopes.",
+      "repair_artifacts": [
+        "scripts/trader_build_progress.py"
+      ],
+      "test_artifacts": [
+        "tests/test_trader_build_progress.py"
+      ]
+    },
+    {
+      "finding": "Finalizer must independently rerun the full unittest/pytest and adjacent option-lab, compounding, and completion-gate verification rather than relying on executor prose.",
+      "status": "rejected",
+      "rationale": "Rejected only as a code-repair finding because no defect was alleged. The verification obligation is accepted and independently executed by the finalizer; exact commands/results are recorded in learning-promotion.md, including the required full unittest discovery suite."
+    },
+    {
+      "finding": "Readiness NEXT already matches the accepted FOMC seed and needs no challenger-driven substance change unless another finding forces narrowing.",
+      "status": "rejected",
+      "rationale": "No readiness defect existed to repair. Finalizer regeneration preserves the one FOMC seed while narrowing it to the challenger-preferred signed five-session return with positive direction predeclared, strict prior-known schedule/control/holdout rules, and zero option pricing at F0."
+    }
+  ],
+  "closed_families": [
+    "MULTINAME_BREAKOUT_BULL_CALL_14D_V1",
+    "BREAKOUT_BULL_CALL_14D_055D_1W_10S_V1"
+  ],
+  "data_dependencies": [
+    "No new data are required to preserve this exact current-code option-family close; reopening requires a materially new evidence class rather than unchanged DNA or alias relabeling.",
+    "The next FOMC F0 wake requires an official prior-known FOMC schedule with published announcement times and lag-safe historical SPY/regime data; any later option stage requires a separately predeclared charter and claim-appropriate observed option evidence before L1 or paper authority.",
+    "The parked TSLL observed term-carry diagonal still requires 12 distinct weekday-RTH dates, 3 short-expiry cycles, 20 complete non-overlapping paths, 8 frozen controls, and structural assignment/gap/exercise/liquidation max-loss evidence before its frozen development test can run."
+  ],
+  "next": "FOMC_INFORMATION_RESOLUTION_SPY_DIRECTION_F0: open one successor epoch around official prior-known FOMC decision dates; before outcomes freeze the official schedule/published-time session map, ambiguous-time stand-aside, next-completed-session entry, signed five-session SPY return with positive direction predeclared and no post-hoc short/two-sided flip, prior-only same-regime matched controls with no reuse/substitution, chronological train/sealed unread holdout, dependence-aware uncertainty/tail/density and control-support gates, and zero option pricing at F0. Keep it distinct from closed issuer post-earnings drift. Conditional future structure is one-lot 18-24 DTE $2 bull-call debit spread with capital_fit_usd=$200, frictionless max_loss_usd=$200 before closing friction, max_lots=1; no OPEX/TOM/breadth/residual/breakout retune, registry, paper force, shadow, arm, broker, or live action."
+}
