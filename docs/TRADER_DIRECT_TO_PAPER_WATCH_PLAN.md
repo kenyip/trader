@@ -74,3 +74,8 @@ Target the next 15-35 BUILD wakes toward durable readiness primitives, not just 
 - No broker login/session, live orders, funding, shadow/live promotion, or autonomous limit orders from this plan.
 - Suggested paper limit-order packets are allowed only after the candidate reaches the appropriate paper-ready stage.
 - Live limit orders require paper evidence, risk/governor proof, a Ken-facing live packet, and explicit Ken approval.
+
+
+## Strategy Discovery Engine handoff
+
+New autonomous BUILD launches must first consume `.cache/strategy-engine/latest.json` through `scripts/trader_strategy_engine_gate.py`. The gate accepts only `NEXT_SURVIVOR` reports with sealed holdout identities and all authority fields false; it blocks `NO_QUALIFIED_STRATEGY` before a run branch is created.

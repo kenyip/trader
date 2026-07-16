@@ -147,3 +147,6 @@ Completed: RH MCP read-only smoke (after-hours), risk review vs real accounts, p
 **Blockers for live:** Agentic account ~$0 and no options level. Keep `agentic.enabled=false`.
 
 Details: `docs/STAGE2_RH_READONLY_AND_CAPITAL.md`.
+
+
+The Strategy Discovery Engine handoff is now the pre-BUILD filter for autonomous search: missing/no-qualified/unsafe reports produce `NO_QUALIFIED_STRATEGY` or fail-closed launch blocking rather than another one-off strategy wake.

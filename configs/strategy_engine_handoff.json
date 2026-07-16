@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "required_for_new_build": true,
+  "engine_repo": "../trader-strategy-engine",
+  "report_path": ".cache/strategy-engine/latest.json",
+  "allowed_statuses": ["NEXT_SURVIVOR"],
+  "block_statuses": ["NO_QUALIFIED_STRATEGY"]
+}

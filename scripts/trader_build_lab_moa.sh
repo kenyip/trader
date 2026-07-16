@@ -35,7 +35,11 @@ MAX_CHALL="${MOA_MAX_TURNS_CHALL:-40}"
 MAX_FINAL="${MOA_MAX_TURNS_FINAL:-50}"
 GATE="$REPO/scripts/trader_run_completion_gate.py"
 COMPOUNDING="$REPO/scripts/trader_build_compounding.py"
+STRATEGY_ENGINE_GATE="$REPO/scripts/trader_strategy_engine_gate.py"
 GOAL_FILE="$REPO/configs/build_lab_free_goal.txt"
+STRATEGY_ENGINE_CONTEXT_FILE=""
+STRATEGY_ENGINE_RECEIPT_FILE=""
+STRATEGY_ENGINE_GATE_STATUS="not_checked"
 
 GOAL=""
 MODE="both"
@@ -121,9 +125,31 @@ fi
 # Debug/test hook: assembles the exact no-input launch context without starting
 # a branch, lock, model session, or market action.
 if [[ "${TRADER_BUILD_CONTEXT_ONLY:-0}" == "1" ]]; then
-  printf 'goal_source=%s\ncontext=%s\ncontext_source=%s\nmode=%s\nstamp=%s\ngoal_file=%s\n--- CANONICAL GOAL ---\n%s\n--- END GOAL ---\n' \
+  printf 'goal_source=%s\ncontext=%s\ncontext_source=%s\nmode=%s\nstamp=%s\ngoal_file=%s\nstrategy_engine_gate=skipped_context_only\n--- CANONICAL GOAL ---\n%s\n--- END GOAL ---\n' \
     "$GOAL_SOURCE" "$SLOT" "$SLOT_SOURCE" "$MODE" "$STAMP" "$GOAL_FILE" "$GOAL"
   exit 0
+fi
+
+# New strategy BUILDs must consume a validated Strategy Discovery Engine
+# NEXT_SURVIVOR handoff before we create a run branch. Recovery/finalizer modes
+# finish existing residue and bypass this launch gate.
+if [[ "${TRADER_STRATEGY_ENGINE_GATE_BYPASS:-0}" == "1" ]]; then
+  STRATEGY_ENGINE_GATE_STATUS="bypassed_by_env"
+elif [[ "$MODE" == "both" || "$MODE" == "executor-only" ]]; then
+  if [[ ! -x "$STRATEGY_ENGINE_GATE" ]]; then
+    echo "ERROR: strategy engine gate is missing or not executable: $STRATEGY_ENGINE_GATE" >&2
+    exit 1
+  fi
+  mkdir -p "$REPO/.cache/platform/strategy-engine-handoff"
+  STRATEGY_ENGINE_CONTEXT_FILE="$REPO/.cache/platform/strategy-engine-handoff/${STAMP}.md"
+  STRATEGY_ENGINE_RECEIPT_FILE="$REPO/.cache/platform/strategy-engine-handoff/${STAMP}.json"
+  PHASE="strategy-engine-gate"
+  python3 "$STRATEGY_ENGINE_GATE" --repo "$REPO" --stamp "$STAMP" \
+    --out-context "$STRATEGY_ENGINE_CONTEXT_FILE" \
+    --out-json "$STRATEGY_ENGINE_RECEIPT_FILE"
+  STRATEGY_ENGINE_GATE_STATUS="validated"
+else
+  STRATEGY_ENGINE_GATE_STATUS="recovery_or_nonlaunch_mode"
 fi
 
 BASE_HEAD=""
@@ -192,6 +218,12 @@ fi
 
 MOA_DIR="reports/trader-wakes/moa/${STAMP}"
 mkdir -p "$MOA_DIR/prompts" reports/trader-wakes reports/readiness
+if [[ -n "$STRATEGY_ENGINE_CONTEXT_FILE" && -f "$STRATEGY_ENGINE_CONTEXT_FILE" ]]; then
+  cp "$STRATEGY_ENGINE_CONTEXT_FILE" "$MOA_DIR/strategy-engine-handoff.md"
+fi
+if [[ -n "$STRATEGY_ENGINE_RECEIPT_FILE" && -f "$STRATEGY_ENGINE_RECEIPT_FILE" ]]; then
+  cp "$STRATEGY_ENGINE_RECEIPT_FILE" "$MOA_DIR/strategy-engine-handoff.json"
+fi
 
 if [[ "$MODE" == "challenger-only" || "$MODE" == "finalizer-only" || "$MODE" == "resume" || "$MODE" == "integrate-only" ]]; then
   if [[ ! -f "$MOA_DIR/meta.json" ]]; then
@@ -248,6 +280,8 @@ meta = {
   "context_source": "$SLOT_SOURCE",
   "goal_source": "$GOAL_SOURCE",
   "goal_file": "$GOAL_FILE",
+  "strategy_engine_gate_status": "$STRATEGY_ENGINE_GATE_STATUS",
+  "strategy_engine_handoff": json.loads(Path("$STRATEGY_ENGINE_RECEIPT_FILE").read_text()) if Path("$STRATEGY_ENGINE_RECEIPT_FILE").is_file() else {"gate": "$STRATEGY_ENGINE_GATE_STATUS"},
   "goal": """$GOAL""",
   "mode": "$MODE",
   "executor": {"provider": "$EXEC_PROVIDER", "model": "$EXEC_MODEL"},
@@ -283,9 +317,13 @@ Before choosing, orient from the canonical goal above plus:
 - reports/readiness/income-coverage-LATEST.md (if present)
 - reports/trader-wakes/LATEST.md, reports/readiness/LATEST.md
 - reports/trader-wakes/moa/${STAMP}/orientation.json (closed families, epoch streak, redirect signal)
+- reports/trader-wakes/moa/${STAMP}/strategy-engine-handoff.md (required for new BUILD launches when present)
 - hypothesis registry, learn/evolve audits, coverage, current local time,
   market/session state, and relevant current data.
 The caller supplied no loop judgment unless meta explicitly says override.
+
+STRATEGY ENGINE HANDOFF:
+For new BUILD launches, scripts/trader_strategy_engine_gate.py must have validated a Strategy Discovery Engine NEXT_SURVIVOR report before this prompt was created. Read reports/trader-wakes/moa/${STAMP}/strategy-engine-handoff.md. Start from that train-only F0 survivor unless you find a claim-invalidating defect; if rejecting it, close that reason explicitly before choosing another independent route. A NO_QUALIFIED_STRATEGY or missing/unsafe/leaking report blocks launch before executor. This handoff grants no L1, paper, shadow, broker, funding, arm, or live authority.
 
 PHASE: BUILD. Sleeve USD $SLEEVE. Paper/research only.
 Models: YOU = GPT 5.6 Sol executor. Grok 4.5 will challenge after you. Do not wait for Grok mid-loop.
@@ -299,7 +337,7 @@ STRUCTURE FOCUS: $STRUCT_LINE
 DEFAULT EVOLVE KNOBS: --top-symbols $TOP_SYMBOLS --mutants $MUTANTS --sleeve-usd $SLEEVE
 
 OPERATING CONTRACT (goal-driven, not a checklist):
-1) Orient from the latest evidence, then choose ONE highest-information strategy loop. You may take or supersede NEXT and may propose an axis absent from prior reports.
+1) Orient from the latest evidence and the Strategy Engine handoff, then choose ONE highest-information strategy loop. The selected survivor is the default starting point; supersede it only with a cited claim-invalidating defect or clearly higher-information independent route.
 2) Open with a strategy decision charter before acting: economic edge mechanism, candidate/family scope, current evidence-funnel stage (F0_MECHANISM→F1_TRAIN→F2_UNTOUCHED_HOLDOUT→F3_ROBUST_PAPER_PLAN→F4_OBSERVED_PAPER), predeclared falsifier, and the exact decision this wake will close (STRATEGY_ADVANCED | FAMILY_CLOSED | BLOCKER_REMOVED_AND_RETESTED | EVIDENCE_WAIT). Operational completion is not strategy progress.
 3) Check only the validity prerequisites needed for that claim. If one path is data-blocked, either repair it and retest the dependent experiment in this same wake, or pursue a valid independent path; do not let one missing dataset freeze the whole research program.
 4) Use any relevant combination of research, simulation, tests, negative controls, new strategy DNA, new tools, or cross-symbol/time/regime comparisons. Commands below are available examples, never mandatory ritual:
@@ -345,6 +383,7 @@ $GOAL
 
 READ FIRST:
 - reports/trader-wakes/moa/${STAMP}/meta.json
+- reports/trader-wakes/moa/${STAMP}/strategy-engine-handoff.md (if present)
 - reports/trader-wakes/moa/${STAMP}/executor-closeout.md
 - reports/trader-wakes/${STAMP}-moa-exec.md or LATEST
 - reports/readiness/income-coverage-LATEST.md
@@ -353,6 +392,7 @@ READ FIRST:
 
 RUBRIC (PASS/FAIL + one line):
 1. Strategy charter: economic mechanism, candidate/family scope, funnel before/after, predeclared falsifier, and exactly one closed strategy outcome are explicit
+1b. Strategy Engine handoff: executor consumed or explicitly rejected the validated NEXT_SURVIVOR with a claim-invalidating reason; no L1/paper/live authority was inferred from train-only F0 evidence
 2. Strategy vs operations: tooling/capability-only work is not treated as strategy progress unless BLOCKER_REMOVED_AND_RETESTED with an in-wake advance-or-close retest
 3. Goal progress: did the wake improve the chance of a robust paper-testable edge or honestly close/wait with discriminating evidence?
 4. Creativity and independence: original hypothesis/axis or a justified reason to continue prior NEXT; no familiar-recipe tunnel; honor strategy_pivot_required when set
@@ -385,6 +425,7 @@ This phase exists to turn executor work + challenger judgment into a complete, d
 
 READ FIRST:
 - reports/trader-wakes/moa/${STAMP}/meta.json
+- reports/trader-wakes/moa/${STAMP}/strategy-engine-handoff.md (if present)
 - reports/trader-wakes/moa/${STAMP}/executor-closeout.md
 - reports/trader-wakes/moa/${STAMP}/challenger-critique.md
 - reports/trader-wakes/moa/${STAMP}/merged-next-seed.md
@@ -397,6 +438,7 @@ READ FIRST:
 
 FINALIZATION CONTRACT:
 1) Reconcile every material challenger finding. Repair code, tests, evidence labels, readiness, reports, or NEXT when needed. If a finding is rejected, explain why with evidence in learning-promotion.md.
+1b) Verify the Strategy Engine handoff was preserved when present: no holdout outcome leakage, no authority promotion, and any rejection of the survivor has a claim-invalidating reason.
 2) Close the scoped work. Do not leave a claim-invalidating defect, unstated TODO, stale generated surface, or misleading readiness label behind a completion claim.
 3) Run focused behavioral/boundary/negative-control tests plus the full suite: .venv/bin/python -m unittest discover -s tests. Fix failures; never weaken a useful test or normalize red to finish.
 4) Inspect the complete diff for unintended files, generated debris, private positions, credentials, tokens, raw secrets, or stale contradictory docs. Remove only run-created debris; preserve evidence.

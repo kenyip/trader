@@ -27,6 +27,8 @@ class TraderCompletionContractSurfaceTest(unittest.TestCase):
             "cheap batch candidate screening",
             "reusable option payoff validators",
             "patient opportunity watcher",
+            "Strategy Discovery Engine handoff",
+            "NO_QUALIFIED_STRATEGY",
         ):
             self.assertIn(token, goal)
         for token in (
@@ -56,6 +58,10 @@ class TraderCompletionContractSurfaceTest(unittest.TestCase):
         self.assertIn("append_executor_recovery_guidance", build)
         self.assertIn("has_executor_closeout", build)
         self.assertIn('MAX_EXEC="${MOA_MAX_TURNS_EXEC:-90}"', build)
+        self.assertIn("trader_strategy_engine_gate.py", build)
+        self.assertIn("STRATEGY_ENGINE_CONTEXT_FILE", build)
+        self.assertIn("strategy-engine-handoff.md", build)
+        self.assertIn("TRADER_STRATEGY_ENGINE_GATE_BYPASS", build)
 
     def test_bootstrap_does_not_overwrite_evolved_profile_contract(self) -> None:
         bootstrap = (REPO / "scripts" / "bootstrap_trader_profile.sh").read_text()
@@ -170,6 +176,7 @@ class TraderCompletionContractSurfaceTest(unittest.TestCase):
         self.assertEqual(expected, assembled)
         self.assertIn("goal_source=canonical", proc.stdout)
         self.assertIn("context_source=auto", proc.stdout)
+        self.assertIn("strategy_engine_gate=skipped_context_only", proc.stdout)
         self.assertNotIn("BUILD LAB (", assembled)
         wrapper = (REPO / "scripts" / "trader_build_lab_moa.sh").read_text()
         for surface in (
