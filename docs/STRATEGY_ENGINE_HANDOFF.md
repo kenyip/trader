@@ -18,7 +18,9 @@ Strategy Discovery Engine route manifest + panel
   -> scripts/trader_build_lab_moa.sh launches MoA BUILD with strategy-engine-handoff.md
 ```
 
-If the report is missing, malformed, `NO_QUALIFIED_STRATEGY`, unsafe, authority-positive, or leaks holdout outcomes, the gate blocks the new BUILD before a run branch is created.
+If the report is missing, malformed, unsafe, authority-positive, or leaks holdout outcomes, the gate blocks the new BUILD before a run branch is created and exits nonzero.
+
+If the report is `NO_QUALIFIED_STRATEGY`, Trader writes `NO_STRATEGY_STATUS`, exits cleanly before branch/model launch, and leaves strategy search paused. That is an expected no-strategy no-op, not `RUN INCOMPLETE`.
 
 ## What the report may authorize
 

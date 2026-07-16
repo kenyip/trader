@@ -23,6 +23,10 @@ class StrategyEngineGateError(RuntimeError):
     """Raised for fail-closed handoff rejection."""
 
 
+class StrategyEngineNoQualified(StrategyEngineGateError):
+    """Raised when the engine explicitly reports no qualified strategy."""
+
+
 def _load_json(path: Path) -> dict[str, Any]:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -71,7 +75,7 @@ def _walk_holdout_forbidden(value: Any, path: str = "holdout") -> list[str]:
 def validate_report(report: dict[str, Any], cfg: dict[str, Any]) -> dict[str, Any]:
     status = str(report.get("status", ""))
     if status in set(cfg.get("block_statuses") or []):
-        raise StrategyEngineGateError(f"strategy engine reported {status}; do not launch BUILD")
+        raise StrategyEngineNoQualified(f"strategy engine reported {status}; do not launch BUILD")
     if status not in set(cfg.get("allowed_statuses") or []):
         raise StrategyEngineGateError(
             f"strategy engine status {status!r} not allowed; expected {cfg.get('allowed_statuses')}"
@@ -246,6 +250,30 @@ def run_gate(repo: Path, stamp: str, config_path: str | None, out_context: Path 
     return receipt
 
 
+def write_no_strategy_receipt(stamp: str, message: str, out_context: Path | None, out_json: Path | None) -> None:
+    receipt = {
+        "schema_version": 1,
+        "stamp": stamp,
+        "gate": "NO_STRATEGY_STATUS",
+        "status": "NO_QUALIFIED_STRATEGY",
+        "message": message,
+        "launch_allowed": False,
+        "authority_statement": "research no-op; no L1/paper/shadow/broker/funding/arm/live authority",
+    }
+    if out_json:
+        out_json.parent.mkdir(parents=True, exist_ok=True)
+        out_json.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if out_context:
+        out_context.parent.mkdir(parents=True, exist_ok=True)
+        out_context.write_text(
+            "# Strategy Engine Handoff: NO_QUALIFIED_STRATEGY\n\n"
+            + "The Strategy Discovery Engine found no qualified survivor. Trader BUILD launch is intentionally skipped; this is a safe no-strategy no-op, not a RUN INCOMPLETE.\n\n"
+            + "- Authority: no L1, paper, shadow, broker, funding, arm, or live authority.\n"
+            + f"- Detail: {message}\n",
+            encoding="utf-8",
+        )
+
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--repo", default=".", help="Trader repo root")
@@ -267,6 +295,12 @@ def main(argv: list[str] | None = None) -> int:
             out_context=Path(args.out_context).expanduser() if args.out_context else None,
             out_json=Path(args.out_json).expanduser() if args.out_json else None,
         )
+    except StrategyEngineNoQualified as exc:
+        out_context = Path(args.out_context).expanduser() if args.out_context else None
+        out_json = Path(args.out_json).expanduser() if args.out_json else None
+        write_no_strategy_receipt(args.stamp, str(exc), out_context, out_json)
+        print(f"NO_STRATEGY_STATUS: NO_QUALIFIED_STRATEGY — {exc}", file=sys.stderr)
+        return 2
     except (OSError, ValueError, StrategyEngineGateError) as exc:
         print(f"STRATEGY_ENGINE_GATE_FAILED: {exc}", file=sys.stderr)
         return 3

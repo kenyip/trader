@@ -149,5 +149,62 @@ class StrategyEngineHandoffGateTest(unittest.TestCase):
             self.assertEqual(subprocess.run(["git", "status", "--porcelain"], cwd=root, check=True, text=True, capture_output=True).stdout, "")
 
 
+    def test_build_wrapper_no_qualified_strategy_exits_noop_before_branch(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            (root / "scripts").mkdir()
+            (root / "configs").mkdir()
+            (root / ".cache" / "strategy-engine").mkdir(parents=True)
+            shutil.copy2(REPO / "scripts" / "trader_build_lab_moa.sh", root / "scripts" / "trader_build_lab_moa.sh")
+            shutil.copy2(REPO / "scripts" / "trader_strategy_engine_gate.py", root / "scripts" / "trader_strategy_engine_gate.py")
+            shutil.copy2(REPO / "configs" / "build_lab_free_goal.txt", root / "configs" / "build_lab_free_goal.txt")
+            (root / "configs" / "strategy_engine_handoff.json").write_text(json.dumps({
+                "schema_version": 1,
+                "required_for_new_build": True,
+                "engine_repo": ".",
+                "report_path": ".cache/strategy-engine/latest.json",
+                "allowed_statuses": ["NEXT_SURVIVOR"],
+                "block_statuses": ["NO_QUALIFIED_STRATEGY"],
+            }), encoding="utf-8")
+            (root / ".cache" / "strategy-engine" / "latest.json").write_text(json.dumps({
+                "status": "NO_QUALIFIED_STRATEGY",
+                "engine_version": "0.1.0",
+                "authority": {
+                    "paper": False,
+                    "shadow": False,
+                    "broker": False,
+                    "funding": False,
+                    "arm": False,
+                    "live": False,
+                    "l1": False,
+                },
+                "survivors": [],
+            }), encoding="utf-8")
+            (root / ".gitignore").write_text(".cache/\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True, capture_output=True)
+            subprocess.run(["git", "config", "user.name", "Test"], cwd=root, check=True)
+            subprocess.run(["git", "config", "user.email", "test@example.test"], cwd=root, check=True)
+            subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+            subprocess.run(["git", "commit", "-m", "base"], cwd=root, check=True, capture_output=True)
+            proc = subprocess.run(
+                ["bash", str(root / "scripts" / "trader_build_lab_moa.sh")],
+                cwd=root,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+            self.assertIn("NO_STRATEGY_STATUS", proc.stderr)
+            branch = subprocess.run(["git", "branch", "--show-current"], cwd=root, check=True, text=True, capture_output=True).stdout.strip()
+            self.assertEqual(branch, "main")
+            self.assertEqual(subprocess.run(["git", "status", "--porcelain"], cwd=root, check=True, text=True, capture_output=True).stdout, "")
+            receipts = list((root / ".cache" / "platform" / "strategy-engine-handoff").glob("*.json"))
+            self.assertEqual(len(receipts), 1)
+            receipt = json.loads(receipts[0].read_text(encoding="utf-8"))
+            self.assertEqual(receipt["gate"], "NO_STRATEGY_STATUS")
+            self.assertFalse(receipt["launch_allowed"])
+
+
+
 if __name__ == "__main__":
     unittest.main()

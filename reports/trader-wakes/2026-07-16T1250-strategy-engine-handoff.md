@@ -7,18 +7,19 @@
   - `python3 -m py_compile scripts/trader_strategy_engine_gate.py` → passed.
   - `bash -n scripts/trader_build_lab_moa.sh` → passed.
 - Targeted regression suite:
-  - `/Users/jarvis/dev/tsla-tsll-options-tracker/.venv/bin/python -m unittest tests.test_strategy_engine_handoff_gate tests.test_trader_completion_contract` → `Ran 18 tests in 0.795s`, `OK`.
+  - `/Users/jarvis/dev/tsla-tsll-options-tracker/.venv/bin/python -m unittest tests.test_strategy_engine_handoff_gate tests.test_trader_completion_contract` → `Ran 19 tests in 0.910s`, `OK`.
 - Full suite:
-  - `/Users/jarvis/dev/tsla-tsll-options-tracker/.venv/bin/python -m unittest discover -s tests` → `Ran 439 tests in 29.301s`, `OK (skipped=1)`.
+  - `/Users/jarvis/dev/tsla-tsll-options-tracker/.venv/bin/python -m unittest discover -s tests` → `Ran 440 tests in 29.490s`, `OK (skipped=1)`.
 - Drift/format checks:
   - `git diff --check` → passed.
   - `TRADER_BUILD_CONTEXT_ONLY=1 just trader-build-lab` → canonical goal still assembles; context-only output includes `strategy_engine_gate=skipped_context_only` and does not mutate.
-  - `python3 scripts/trader_strategy_engine_gate.py --repo . --stamp verify-missing` → exits `3` with `STRATEGY_ENGINE_GATE_FAILED`, proving missing report blocks before BUILD launch.
+  - `python3 scripts/trader_strategy_engine_gate.py --repo . --stamp verify-missing` → exits `3` with `STRATEGY_ENGINE_GATE_FAILED`, proving missing/malformed reports block before BUILD launch.
+  - Temp-wrapper `NO_QUALIFIED_STRATEGY` regression → exits `0`, writes `NO_STRATEGY_STATUS`, leaves branch on `main`, and does not create a run branch or model session.
 
 ## DURABLE
 
 - Added `configs/strategy_engine_handoff.json` pointing Trader at the local Strategy Discovery Engine handoff report path `.cache/strategy-engine/latest.json` and adjacent engine repo `../trader-strategy-engine`.
-- Added `scripts/trader_strategy_engine_gate.py`, a fail-closed validator for Strategy Engine reports.
+- Added `scripts/trader_strategy_engine_gate.py`, a fail-closed validator for Strategy Engine reports. `NO_QUALIFIED_STRATEGY` is treated as an expected safe no-op: Trader writes `NO_STRATEGY_STATUS` and exits before branch/model launch instead of reporting `RUN INCOMPLETE`.
 - Patched `scripts/trader_build_lab_moa.sh` so new `both`/`executor-only` BUILD launches require a validated `NEXT_SURVIVOR` handoff before branch creation. Recovery/finalizer/integrate modes remain allowed to finish existing residue.
 - Added `docs/STRATEGY_ENGINE_HANDOFF.md` and updated the canonical BUILD goal/platform/direct-watch docs to make the engine handoff part of Trader doctrine.
 - Added coverage in `tests/test_strategy_engine_handoff_gate.py` and `tests/test_trader_completion_contract.py` for missing reports, `NO_QUALIFIED_STRATEGY`, authority-positive reports, holdout leakage, wrapper pre-branch blocking, and prompt-surface drift.

@@ -144,9 +144,19 @@ elif [[ "$MODE" == "both" || "$MODE" == "executor-only" ]]; then
   STRATEGY_ENGINE_CONTEXT_FILE="$REPO/.cache/platform/strategy-engine-handoff/${STAMP}.md"
   STRATEGY_ENGINE_RECEIPT_FILE="$REPO/.cache/platform/strategy-engine-handoff/${STAMP}.json"
   PHASE="strategy-engine-gate"
+  set +e
   python3 "$STRATEGY_ENGINE_GATE" --repo "$REPO" --stamp "$STAMP" \
     --out-context "$STRATEGY_ENGINE_CONTEXT_FILE" \
     --out-json "$STRATEGY_ENGINE_RECEIPT_FILE"
+  strategy_gate_ec=$?
+  set -e
+  if [[ "$strategy_gate_ec" -eq 2 ]]; then
+    STRATEGY_ENGINE_GATE_STATUS="no_qualified_strategy"
+    echo "NO_STRATEGY_STATUS: Strategy Engine returned NO_QUALIFIED_STRATEGY; skipping BUILD launch before branch/model session." >&2
+    exit 0
+  elif [[ "$strategy_gate_ec" -ne 0 ]]; then
+    exit "$strategy_gate_ec"
+  fi
   STRATEGY_ENGINE_GATE_STATUS="validated"
 else
   STRATEGY_ENGINE_GATE_STATUS="recovery_or_nonlaunch_mode"
