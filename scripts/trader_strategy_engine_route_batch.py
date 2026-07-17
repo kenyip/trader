@@ -14,7 +14,7 @@ import json
 import math
 import os
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
@@ -57,9 +57,11 @@ class RouteSpec:
     min_tail: float
     cost_per_event: float
     predicate: Callable[[pd.DataFrame], pd.Series]
+    stop_loss_pct: float | None = None
+    time_exit_sessions: int | None = None
 
 
-def _load_cached_close(repo: Path, symbol: str) -> pd.DataFrame:
+def _load_cached_ohlc(repo: Path, symbol: str) -> pd.DataFrame:
     candidates = [repo / ".cache" / f"{symbol}_{period}.csv" for period in OHLCV_PERIODS]
     path = next((candidate for candidate in candidates if candidate.is_file()), None)
     if path is None:
@@ -69,13 +71,14 @@ def _load_cached_close(repo: Path, symbol: str) -> pd.DataFrame:
     df = pd.read_csv(path, parse_dates=[0])
     date_col = df.columns[0]
     df = df.rename(columns={date_col: "date"})
-    required = {"date", "close"}
+    required = {"date", "open", "high", "low", "close"}
     missing = required - set(df.columns)
     if missing:
         raise ValueError(f"{path} missing columns: {sorted(missing)}")
-    out = df.loc[:, ["date", "close"]].copy()
+    out = df.loc[:, ["date", "open", "high", "low", "close"]].copy()
     out["date"] = pd.to_datetime(out["date"]).dt.normalize()
-    out["close"] = pd.to_numeric(out["close"], errors="coerce")
+    for column in ("open", "high", "low", "close"):
+        out[column] = pd.to_numeric(out[column], errors="coerce")
     out = out.dropna().drop_duplicates("date").sort_values("date").set_index("date")
     if len(out) < 300:
         raise ValueError(f"{symbol} cached history too short: {len(out)} rows")
@@ -95,7 +98,7 @@ def _features(close: pd.Series, horizon: int) -> pd.DataFrame:
 
 
 def _route_specs() -> list[RouteSpec]:
-    return [
+    specs = [
         RouteSpec(
             route_id="cached_broad_index_trend_call_debit_5d_v1",
             family="CACHED_BROAD_INDEX_TREND_CONTINUATION",
@@ -193,6 +196,33 @@ def _route_specs() -> list[RouteSpec]:
             predicate=lambda f: (f["close"] > f["sma100"]) & (f["hv20"] < f["hv20"].rolling(252, min_periods=60).quantile(0.35)),
         ),
     ]
+    high_beta = next(spec for spec in specs if spec.route_id == "cached_high_beta_momentum_call_debit_10d_v1")
+    specs.extend(
+        [
+            replace(
+                high_beta,
+                route_id="cached_high_beta_momentum_call_debit_stop6_10d_v1",
+                mechanism="high_beta_positive_20d_momentum_with_6pct_path_stop",
+                stop_loss_pct=0.06,
+            ),
+            replace(
+                high_beta,
+                route_id="cached_high_beta_momentum_call_debit_time5_v1",
+                mechanism="high_beta_positive_20d_momentum_with_5_session_time_exit",
+                hard_stop_sessions=5,
+                time_exit_sessions=5,
+            ),
+            replace(
+                high_beta,
+                route_id="cached_high_beta_momentum_call_debit_stop6_time5_v1",
+                mechanism="high_beta_positive_20d_momentum_with_6pct_stop_and_5_session_exit",
+                hard_stop_sessions=5,
+                stop_loss_pct=0.06,
+                time_exit_sessions=5,
+            ),
+        ]
+    )
+    return specs
 
 
 def _closed_family_quarantine(repo: Path) -> list[dict[str, str]]:
@@ -210,6 +240,7 @@ def _closed_family_quarantine(repo: Path) -> list[dict[str, str]]:
 
 
 def _route_dict(spec: RouteSpec) -> dict[str, Any]:
+    path_aware = spec.stop_loss_pct is not None or spec.time_exit_sessions is not None
     return {
         "id": spec.route_id,
         "family": spec.family,
@@ -224,6 +255,16 @@ def _route_dict(spec: RouteSpec) -> dict[str, Any]:
         "controls": {
             "population": spec.controls_population,
             "pairing": "same_date_benchmark_return_explicit_on_event_row",
+        },
+        "risk_management": {
+            "type": "path_aware" if path_aware else "terminal_close",
+            "entry": "signal_close",
+            "path_source": "cached_daily_ohlc_after_signal_close",
+            "stop_loss_pct": spec.stop_loss_pct,
+            "time_exit_sessions": spec.time_exit_sessions or spec.horizon_sessions,
+            "gap_fill": "next_session_open_when_open_breaches_stop",
+            "intraday_stop_fill": "stop_threshold_when_low_breaches_after_open",
+            "same_bar_reentry": False,
         },
         "planned_structure": {"expression": spec.planned_expression, "risk_type": "defined"},
         "capital_bounds": {
@@ -256,6 +297,37 @@ def _control_symbol(symbol: str, available: set[str]) -> str:
     return "SPY" if "SPY" in available else sorted(available)[0]
 
 
+def _managed_forward_return(frame: pd.DataFrame, entry_date: pd.Timestamp, spec: RouteSpec) -> float | None:
+    """Return a predeclared OHLC-path-managed long return from the signal close."""
+    if spec.direction != "long":
+        raise ValueError("path-managed route batch currently supports long routes only")
+    if spec.stop_loss_pct is not None and not 0.0 < spec.stop_loss_pct < 1.0:
+        raise ValueError(f"invalid stop_loss_pct for {spec.route_id}: {spec.stop_loss_pct}")
+    exit_sessions = spec.time_exit_sessions or spec.horizon_sessions
+    if not 1 <= exit_sessions <= spec.horizon_sessions:
+        raise ValueError(f"invalid time exit for {spec.route_id}: {exit_sessions}")
+    try:
+        entry_position = int(frame.index.get_loc(entry_date))
+    except KeyError:
+        return None
+    if entry_position + spec.horizon_sessions >= len(frame):
+        return None
+
+    entry_close = float(frame.iloc[entry_position]["close"])
+    stop_price = entry_close * (1.0 - spec.stop_loss_pct) if spec.stop_loss_pct is not None else None
+    for offset in range(1, exit_sessions + 1):
+        row = frame.iloc[entry_position + offset]
+        if stop_price is not None:
+            session_open = float(row["open"])
+            session_low = float(row["low"])
+            if session_open <= stop_price:
+                return session_open / entry_close - 1.0
+            if session_low <= stop_price:
+                return stop_price / entry_close - 1.0
+    exit_close = float(frame.iloc[entry_position + exit_sessions]["close"])
+    return exit_close / entry_close - 1.0
+
+
 def _candidate_events(spec: RouteSpec, frames: dict[str, pd.DataFrame]) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
     for symbol in spec.symbols:
@@ -263,8 +335,10 @@ def _candidate_events(spec: RouteSpec, frames: dict[str, pd.DataFrame]) -> list[
             continue
         f = _features(frames[symbol]["close"], spec.horizon_sessions)
         mask = spec.predicate(f).fillna(False) & f["future_return"].notna()
-        for date, row in f.loc[mask].iterrows():
-            events.append({"date": pd.Timestamp(date), "symbol": symbol, "event_return": float(row["future_return"])})
+        for date in f.index[mask]:
+            managed_return = _managed_forward_return(frames[symbol], pd.Timestamp(date), spec)
+            if managed_return is not None:
+                events.append({"date": pd.Timestamp(date), "symbol": symbol, "event_return": managed_return})
     events.sort(key=lambda item: (item["date"], item["symbol"]))
     return events
 
@@ -280,10 +354,9 @@ def _panel_rows(spec: RouteSpec, events: list[dict[str, Any]], frames: dict[str,
         symbol = str(event["symbol"])
         date = pd.Timestamp(event["date"])
         control_symbol = _control_symbol(symbol, available)
-        cf = _features(frames[control_symbol]["close"], spec.horizon_sessions)
-        if date not in cf.index or pd.isna(cf.loc[date, "future_return"]):
+        control_return = _managed_forward_return(frames[control_symbol], date, spec)
+        if control_return is None:
             continue
-        control_return = float(cf.loc[date, "future_return"])
         date_text = date.date().isoformat()
         rows.append(
             {
@@ -315,7 +388,7 @@ def _panel_rows(spec: RouteSpec, events: list[dict[str, Any]], frames: dict[str,
 def build_batch(repo: Path, routes_out: Path, panel_out: Path) -> dict[str, Any]:
     specs = _route_specs()
     symbols = sorted({symbol for spec in specs for symbol in spec.symbols} | {"SPY", "QQQ"})
-    frames = {symbol: _load_cached_close(repo, symbol) for symbol in symbols}
+    frames = {symbol: _load_cached_ohlc(repo, symbol) for symbol in symbols}
     routes = [_route_dict(spec) for spec in specs]
     quarantine = _closed_family_quarantine(repo)
 
