@@ -85,8 +85,13 @@ def _load_cached_ohlc(repo: Path, symbol: str) -> pd.DataFrame:
     return out
 
 
-def _features(close: pd.Series, horizon: int) -> pd.DataFrame:
-    df = pd.DataFrame({"close": close.astype(float)})
+def _features(frame: pd.DataFrame, horizon: int) -> pd.DataFrame:
+    df = frame.loc[:, ["open", "high", "low", "close"]].astype(float).copy()
+    df["previous_close"] = df["close"].shift(1)
+    df["open_gap"] = df["open"] / df["previous_close"] - 1.0
+    df["intraday_return"] = df["close"] / df["open"] - 1.0
+    daily_range = (df["high"] - df["low"]).where(df["high"] > df["low"])
+    df["close_location"] = (df["close"] - df["low"]) / daily_range
     df["ret1"] = df["close"].pct_change(1)
     df["ret5"] = df["close"].pct_change(5)
     df["ret20"] = df["close"].pct_change(20)
@@ -194,6 +199,35 @@ def _route_specs() -> list[RouteSpec]:
             min_tail=-0.06,
             cost_per_event=0.0015,
             predicate=lambda f: (f["close"] > f["sma100"]) & (f["hv20"] < f["hv20"].rolling(252, min_periods=60).quantile(0.35)),
+        ),
+        RouteSpec(
+            route_id="cached_high_beta_downside_gap_reversal_call_debit_5d_v1",
+            family="CACHED_HIGH_BETA_DOWNSIDE_GAP_REVERSAL",
+            mechanism="downside_gap_partial_intraday_reclaim_mean_reversion",
+            symbols=("TSLA", "NVDA", "AMD", "PLTR", "SMCI"),
+            direction="long",
+            horizon_sessions=5,
+            trigger_name="down_4pct_open_gap_2pct_intraday_reclaim_upper_30pct_close_below_prior_close",
+            controls_population="same_date_spy_return",
+            planned_expression="debit_call_spread",
+            max_loss_usd=200,
+            drawdown_budget_usd=75,
+            hard_stop_sessions=5,
+            min_train_events=20,
+            min_train_years=2,
+            min_controls=20,
+            min_event_mean_after_cost=0.0,
+            min_paired_excess_mean=0.0,
+            min_lower_bound=0.0,
+            min_hit_rate=0.52,
+            min_tail=-0.08,
+            cost_per_event=0.0020,
+            predicate=lambda f: (
+                (f["open_gap"] <= -0.04)
+                & (f["intraday_return"] >= 0.02)
+                & (f["close_location"] >= 0.70)
+                & (f["close"] < f["previous_close"])
+            ),
         ),
     ]
     high_beta = next(spec for spec in specs if spec.route_id == "cached_high_beta_momentum_call_debit_10d_v1")
@@ -333,7 +367,7 @@ def _candidate_events(spec: RouteSpec, frames: dict[str, pd.DataFrame]) -> list[
     for symbol in spec.symbols:
         if symbol not in frames:
             continue
-        f = _features(frames[symbol]["close"], spec.horizon_sessions)
+        f = _features(frames[symbol], spec.horizon_sessions)
         mask = spec.predicate(f).fillna(False) & f["future_return"].notna()
         for date in f.index[mask]:
             managed_return = _managed_forward_return(frames[symbol], pd.Timestamp(date), spec)
@@ -346,17 +380,23 @@ def _candidate_events(spec: RouteSpec, frames: dict[str, pd.DataFrame]) -> list[
 def _panel_rows(spec: RouteSpec, events: list[dict[str, Any]], frames: dict[str, pd.DataFrame]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     available = set(frames)
-    if not events:
-        return rows
-    cutoff_index = max(1, int(len(events) * 0.7))
-    for idx, event in enumerate(events):
-        split = "train" if idx < cutoff_index else "holdout"
+    eligible: list[tuple[dict[str, Any], str, float]] = []
+    for event in events:
         symbol = str(event["symbol"])
         date = pd.Timestamp(event["date"])
         control_symbol = _control_symbol(symbol, available)
         control_return = _managed_forward_return(frames[control_symbol], date, spec)
-        if control_return is None:
-            continue
+        if control_return is not None:
+            eligible.append((event, control_symbol, control_return))
+    if not eligible:
+        return rows
+
+    cutoff_index = max(1, int(len(eligible) * 0.7))
+    cutoff_date = pd.Timestamp(eligible[min(cutoff_index - 1, len(eligible) - 1)][0]["date"])
+    for event, control_symbol, control_return in eligible:
+        date = pd.Timestamp(event["date"])
+        split = "train" if date <= cutoff_date else "holdout"
+        symbol = str(event["symbol"])
         date_text = date.date().isoformat()
         rows.append(
             {

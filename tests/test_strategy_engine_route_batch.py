@@ -8,7 +8,9 @@ from pathlib import Path
 import pandas as pd
 
 from scripts.trader_strategy_engine_route_batch import (
+    _candidate_events,
     _managed_forward_return,
+    _panel_rows,
     _route_specs,
     build_batch,
 )
@@ -62,9 +64,17 @@ class StrategyEngineRouteBatchTests(unittest.TestCase):
                 repo / ".cache" / "strategy-engine" / "panel.csv",
             )
             self.assertTrue(result["ok"])
-            self.assertEqual(result["route_count"], 7)
+            self.assertEqual(result["route_count"], 8)
             manifest = json.loads((repo / ".cache" / "strategy-engine" / "routes.json").read_text())
             self.assertIn({"family": "CLOSED_FAMILY_V1", "fingerprint": ""}, manifest["quarantine"])
+            gap_reversal = next(
+                route
+                for route in manifest["routes"]
+                if route["id"] == "cached_high_beta_downside_gap_reversal_call_debit_5d_v1"
+            )
+            self.assertEqual(gap_reversal["family"], "CACHED_HIGH_BETA_DOWNSIDE_GAP_REVERSAL")
+            self.assertEqual(gap_reversal["search_budget"]["max_variants"], 1)
+            self.assertEqual(gap_reversal["trigger"]["source_semantics"], "cached_daily_ohlcv_close_known_at_signal_close")
             managed = [route for route in manifest["routes"] if route["risk_management"]["type"] == "path_aware"]
             self.assertEqual(len(managed), 3)
             self.assertEqual(
@@ -117,6 +127,87 @@ class StrategyEngineRouteBatchTests(unittest.TestCase):
         no_same_bar_return = _managed_forward_return(no_same_bar_reentry, dates[0], stop)
         assert no_same_bar_return is not None
         self.assertAlmostEqual(float(no_same_bar_return), 0.10)
+
+    def test_downside_gap_reversal_trigger_uses_current_day_ohlc_only(self) -> None:
+        dates = pd.bdate_range("2024-01-02", periods=130)
+        frame = pd.DataFrame(
+            {
+                "open": [100.0] * len(dates),
+                "high": [101.0] * len(dates),
+                "low": [99.0] * len(dates),
+                "close": [100.0] * len(dates),
+            },
+            index=dates,
+        )
+        signal = dates[100]
+        frame.loc[signal, ["open", "high", "low", "close"]] = [94.0, 99.0, 92.0, 98.5]
+        specs = {spec.route_id: spec for spec in _route_specs()}
+        spec = specs["cached_high_beta_downside_gap_reversal_call_debit_5d_v1"]
+
+        events = _candidate_events(spec, {"TSLA": frame})
+
+        self.assertEqual([(event["date"], event["symbol"]) for event in events], [(signal, "TSLA")])
+
+    def test_chronological_split_never_bisects_same_date_events(self) -> None:
+        dates = pd.bdate_range("2024-01-02", periods=20)
+        frame = pd.DataFrame(
+            {
+                "open": [100.0] * len(dates),
+                "high": [101.0] * len(dates),
+                "low": [99.0] * len(dates),
+                "close": [100.0 + idx for idx in range(len(dates))],
+            },
+            index=dates,
+        )
+        specs = {spec.route_id: spec for spec in _route_specs()}
+        spec = specs["cached_high_beta_downside_gap_reversal_call_debit_5d_v1"]
+        events = [
+            {"date": dates[idx], "symbol": "TSLA", "event_return": 0.01}
+            for idx in range(6)
+        ]
+        boundary_date = dates[6]
+        events.extend(
+            [
+                {"date": boundary_date, "symbol": "TSLA", "event_return": 0.01},
+                {"date": boundary_date, "symbol": "NVDA", "event_return": 0.01},
+                {"date": dates[7], "symbol": "TSLA", "event_return": 0.01},
+                {"date": dates[8], "symbol": "TSLA", "event_return": 0.01},
+            ]
+        )
+
+        rows = _panel_rows(spec, events, {"TSLA": frame, "NVDA": frame, "SPY": frame})
+        boundary_splits = {
+            row["split"]
+            for row in rows
+            if row["is_event"] == 1 and row["date"] == boundary_date.date().isoformat()
+        }
+
+        self.assertEqual(boundary_splits, {"train"})
+
+    def test_chronological_split_uses_only_events_with_same_date_controls(self) -> None:
+        dates = pd.bdate_range("2024-01-02", periods=20)
+        frame = pd.DataFrame(
+            {
+                "open": [100.0] * len(dates),
+                "high": [101.0] * len(dates),
+                "low": [99.0] * len(dates),
+                "close": [100.0 + idx for idx in range(len(dates))],
+            },
+            index=dates,
+        )
+        specs = {spec.route_id: spec for spec in _route_specs()}
+        spec = specs["cached_high_beta_downside_gap_reversal_call_debit_5d_v1"]
+        events = [
+            {"date": dates[idx], "symbol": "TSLA", "event_return": 0.01}
+            for idx in range(10)
+        ]
+
+        rows = _panel_rows(spec, events, {"TSLA": frame, "SPY": frame.loc[dates[5] :]})
+        event_rows = [row for row in rows if row["is_event"] == 1]
+
+        self.assertEqual(len(event_rows), 5)
+        self.assertEqual(sum(row["split"] == "train" for row in event_rows), 3)
+        self.assertEqual(sum(row["split"] == "holdout" for row in event_rows), 2)
 
 
 if __name__ == "__main__":
