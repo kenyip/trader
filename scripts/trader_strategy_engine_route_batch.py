@@ -229,6 +229,35 @@ def _route_specs() -> list[RouteSpec]:
                 & (f["close"] < f["previous_close"])
             ),
         ),
+        RouteSpec(
+            route_id="cached_broad_index_volatility_breakdown_put_debit_5d_v1",
+            family="CACHED_BROAD_INDEX_VOLATILITY_EXPANSION_BREAKDOWN",
+            mechanism="high_volatility_downtrend_breakdown_continuation",
+            symbols=("SPY", "QQQ", "IWM"),
+            direction="short",
+            horizon_sessions=5,
+            trigger_name="below_sma100_negative_20d_and_5d_momentum_hv20_above_trailing_65pct",
+            controls_population="same_date_spy_qqq_peer_return",
+            planned_expression="debit_put_spread",
+            max_loss_usd=200,
+            drawdown_budget_usd=75,
+            hard_stop_sessions=5,
+            min_train_events=20,
+            min_train_years=2,
+            min_controls=20,
+            min_event_mean_after_cost=0.0,
+            min_paired_excess_mean=0.0,
+            min_lower_bound=0.0,
+            min_hit_rate=0.52,
+            min_tail=-0.06,
+            cost_per_event=0.0015,
+            predicate=lambda f: (
+                (f["close"] < f["sma100"])
+                & (f["ret20"] < -0.05)
+                & (f["ret5"] < -0.02)
+                & (f["hv20"] > f["hv20"].rolling(252, min_periods=60).quantile(0.65))
+            ),
+        ),
     ]
     high_beta = next(spec for spec in specs if spec.route_id == "cached_high_beta_momentum_call_debit_10d_v1")
     specs.extend(
@@ -332,8 +361,11 @@ def _control_symbol(symbol: str, available: set[str]) -> str:
 
 
 def _managed_forward_return(frame: pd.DataFrame, entry_date: pd.Timestamp, spec: RouteSpec) -> float | None:
-    """Return a predeclared OHLC-path-managed long return from the signal close."""
-    if spec.direction != "long":
+    """Return an unsigned underlying return; short signing belongs to the engine."""
+    path_aware = spec.stop_loss_pct is not None or spec.time_exit_sessions is not None
+    if spec.direction not in {"long", "short"}:
+        raise ValueError(f"unsupported direction for {spec.route_id}: {spec.direction}")
+    if spec.direction == "short" and path_aware:
         raise ValueError("path-managed route batch currently supports long routes only")
     if spec.stop_loss_pct is not None and not 0.0 < spec.stop_loss_pct < 1.0:
         raise ValueError(f"invalid stop_loss_pct for {spec.route_id}: {spec.stop_loss_pct}")

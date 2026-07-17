@@ -64,7 +64,7 @@ class StrategyEngineRouteBatchTests(unittest.TestCase):
                 repo / ".cache" / "strategy-engine" / "panel.csv",
             )
             self.assertTrue(result["ok"])
-            self.assertEqual(result["route_count"], 8)
+            self.assertEqual(result["route_count"], 9)
             manifest = json.loads((repo / ".cache" / "strategy-engine" / "routes.json").read_text())
             self.assertIn({"family": "CLOSED_FAMILY_V1", "fingerprint": ""}, manifest["quarantine"])
             gap_reversal = next(
@@ -86,6 +86,15 @@ class StrategyEngineRouteBatchTests(unittest.TestCase):
                 },
             )
             self.assertTrue(all(route["search_budget"]["max_variants"] == 1 for route in managed))
+            bearish = next(
+                route
+                for route in manifest["routes"]
+                if route["id"] == "cached_broad_index_volatility_breakdown_put_debit_5d_v1"
+            )
+            self.assertEqual(bearish["direction"], "short")
+            self.assertEqual(bearish["planned_structure"]["expression"], "debit_put_spread")
+            self.assertEqual(bearish["risk_management"]["type"], "terminal_close")
+            self.assertEqual(bearish["search_budget"]["max_variants"], 1)
             self.assertGreater(result["panel_rows"], 0)
             panel_text = (repo / ".cache" / "strategy-engine" / "panel.csv").read_text()
             self.assertIn("event_return", panel_text)
@@ -127,6 +136,25 @@ class StrategyEngineRouteBatchTests(unittest.TestCase):
         no_same_bar_return = _managed_forward_return(no_same_bar_reentry, dates[0], stop)
         assert no_same_bar_return is not None
         self.assertAlmostEqual(float(no_same_bar_return), 0.10)
+
+    def test_short_terminal_route_keeps_raw_return_for_engine_signing(self) -> None:
+        dates = pd.bdate_range("2024-01-02", periods=8)
+        frame = pd.DataFrame(
+            {
+                "open": [100.0] * len(dates),
+                "high": [101.0] * len(dates),
+                "low": [99.0] * len(dates),
+                "close": [100.0, 98.0, 96.0, 94.0, 92.0, 90.0, 89.0, 88.0],
+            },
+            index=dates,
+        )
+        specs = {spec.route_id: spec for spec in _route_specs()}
+        bearish = specs["cached_broad_index_volatility_breakdown_put_debit_5d_v1"]
+
+        terminal_return = _managed_forward_return(frame, dates[0], bearish)
+
+        assert terminal_return is not None
+        self.assertAlmostEqual(float(terminal_return), -0.10)
 
     def test_downside_gap_reversal_trigger_uses_current_day_ohlc_only(self) -> None:
         dates = pd.bdate_range("2024-01-02", periods=130)
