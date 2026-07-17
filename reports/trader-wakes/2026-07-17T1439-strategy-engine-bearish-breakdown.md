@@ -32,11 +32,17 @@ Pre-mutation base: `39d6addc478ab83c4d858a701995ecc1e7e2a0db` on clean synchroni
 - Frozen train-only metrics: event mean after cost `-0.01344929211909091`; paired excess mean `-0.0026893040590909097`; lower bound `-0.005338936759605661`; hit rate `0.42727272727272725`; worst-decile tail `-0.0763108811`. All five gates failed.
 - Holdout remained identity/hash/count only (`3c504452a2ee3d889433865c4e8aa010e544b1b3cf743f65dac803de9ee7e206`). Authority remained false for L1, paper, shadow, broker, funding, arm, and live.
 
-## OUTCOME / LESSON / RISKS
+## DURABLE
+
+- Trader now supports unsigned terminal underlying returns for `direction=short` while preserving Strategy Engine as the sole signing layer.
+- The exact volatility-expansion broad-index short continuation route and its one-variant budget are source-coded and regression-covered.
+- `NO_QUALIFIED_STRATEGY` remains fail-closed: densify stays disabled and no BUILD or execution authority is granted.
+
+## LESSON
 
 Outcome: `NO_QUALIFIED_STRATEGY`. The exact volatility-expansion broad-index short continuation route is closed; do not retune its momentum, volatility, horizon, cost, or tail thresholds and do not invert it into a rebound claim from these observed outcomes.
 
-Durable lesson: minimum terminal short support is useful infrastructure, but market-direction breakdown alone did not isolate a bearish edge. The route lost absolutely and versus same-date peers, with weak hit rate and tail; more adjacent volume or threshold nudging is low-information.
+Minimum terminal short support is useful infrastructure, but market-direction breakdown alone did not isolate a bearish edge. The route lost absolutely and versus same-date peers, with weak hit rate and tail; more adjacent volume or threshold nudging is low-information.
 
 Unresolved risk: evidence remains cached-underlying F0 only. Fixed-universe survivorship, benchmark-control dependence, clustered event dates, option pricing/liquidity/IV, listed payoff paths, execution friction, and paper behavior are not validated. No promotion claim is supported.
 
