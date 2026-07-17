@@ -1,5 +1,7 @@
 # Trader wake index (newest first)
 
+- 2026-07-17T1530-rth — Late mid-session RTH STAND_ASIDE reconfirm (success). Freshness pass session-day 2026-07-17; scout 14/5/8/1; autonomy 5 proposals → 4 capital_reject naked TSLL + 1 PLTR research_only; PCS bear_dte=0 stand-aside; real paper open_risk=0. Same capital-fit empty class as 0930 open + 1030/1130/1230/1330/1430 mid. No densify (already 3/3 RTH); no paper place, no evolve. NEXT: wait non-bear capital-fit defined-risk; BUILD context YIELD_CURVE_STEEPENING preflight.
+
 - 2026-07-17T1430-rth — Mid-session RTH STAND_ASIDE reconfirm (success). Freshness pass session-day 2026-07-17; scout 14/5/8/1; autonomy 5 proposals → 4 capital_reject naked TSLL + 1 PLTR research_only; PCS bear_dte=0 stand-aside; real paper open_risk=0. Same capital-fit empty class as 0930 open + 1030/1130/1230/1330 mid. No densify (already 3/3 RTH); no paper place, no evolve. NEXT: wait non-bear capital-fit defined-risk; BUILD context YIELD_CURVE_STEEPENING preflight.
 
 - 2026-07-17T1330-rth — Mid-session RTH STAND_ASIDE reconfirm (success). Freshness pass session-day 2026-07-17; scout 14/5/8/1; autonomy 5 proposals → 4 capital_reject naked TSLL + 1 PLTR research_only; PCS bear_dte=0 stand-aside; real paper open_risk=0. Same capital-fit empty class as 0930 open + 1030/1130/1230 mid. No densify (already 3/3 RTH); no paper place, no evolve. NEXT: wait non-bear capital-fit defined-risk; BUILD context YIELD_CURVE_STEEPENING preflight.
