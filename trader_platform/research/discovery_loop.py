@@ -15,7 +15,9 @@ No live trading. No waiting on RTH for discovery.
 from __future__ import annotations
 
 import json
+import os
 import time
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -195,6 +197,47 @@ def generation_mutants(gen_index: int, max_mutants: int) -> list[MutantPlan]:
     return out
 
 
+def default_workers(requested: int | None = None) -> int:
+    """CPU-bound eval pool size (leave one core free by default)."""
+    cpu = os.cpu_count() or 2
+    if requested is not None and int(requested) > 0:
+        return max(1, int(requested))
+    return max(1, min(cpu - 1, 8))
+
+
+def _evaluate_one_job(payload: dict[str, Any]) -> dict[str, Any]:
+    """Worker entrypoint: evaluate one mutant (process-safe; no registry writes)."""
+    # Local imports keep spawn-on-macOS workers light and picklable.
+    from trader_platform.research.evaluate_proxy import evaluate_proxy as _eval
+    from trader_platform.research.strategy_spec import (
+        save_strategy_spec as _save,
+        strategy_spec_from_mapping as _from_map,
+    )
+
+    mutant = _from_map(payload["mutant"])
+    gen_out = Path(payload["gen_out"])
+    gen_out.mkdir(parents=True, exist_ok=True)
+    spec_out = gen_out / f"{mutant.candidate_id}.json"
+    _save(mutant, spec_out)
+    report = _eval(mutant, run_holdout_on_train_pass=bool(payload["run_holdout"]))
+    report_path = gen_out / f"{mutant.candidate_id}_eval.json"
+    report_path.write_text(
+        json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n",
+        encoding="utf-8",
+    )
+    return {
+        "candidate_id": mutant.candidate_id,
+        "family_id": mutant.family_id,
+        "suffix": payload.get("suffix", ""),
+        "decision": report.get("decision"),
+        "n_train_pass": report.get("n_train_pass"),
+        "n_holdout_pass": report.get("n_holdout_pass"),
+        "spec_path": str(spec_out),
+        "report_path": str(report_path),
+        "report": report,
+    }
+
+
 def run_generation(
     *,
     seed_path: Path,
@@ -205,8 +248,9 @@ def run_generation(
     registry_path: Path,
     run_holdout: bool,
     known: set[str],
+    workers: int = 1,
 ) -> dict[str, Any]:
-    """One discovery generation: evaluate novel mutants only."""
+    """One discovery generation: evaluate novel mutants (optionally in parallel)."""
     seed = load_strategy_spec(seed_path)
     plans = generation_mutants(gen_index, max_mutants)
     stamp = _now_stamp()
@@ -219,6 +263,8 @@ def run_generation(
 
     before = known_ids(registry_path)
 
+    # Phase 1: build novel mutant payloads
+    jobs: list[dict[str, Any]] = []
     for plan in plans:
         mutant = apply_mutant(seed, plan)
         if symbols:
@@ -234,44 +280,60 @@ def run_generation(
                 }
             )
             continue
+        # Reserve ids so parallel siblings in this gen don't duplicate work
+        known.add(mutant.candidate_id)
+        known.add(mutant.family_id)
+        jobs.append(
+            {
+                "mutant": mutant.to_dict(),
+                "gen_out": str(gen_out),
+                "run_holdout": run_holdout,
+                "suffix": plan.suffix,
+            }
+        )
 
-        spec_out = gen_out / f"{mutant.candidate_id}.json"
-        save_strategy_spec(mutant, spec_out)
-        report = evaluate_proxy(
-            mutant,
-            run_holdout_on_train_pass=run_holdout,
-        )
-        report_path = gen_out / f"{mutant.candidate_id}_eval.json"
-        report_path.write_text(
-            json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n",
-            encoding="utf-8",
-        )
+    # Phase 2: evaluate (parallel CPU pool or sequential)
+    worker_n = default_workers(workers)
+    completed: list[dict[str, Any]] = []
+    if not jobs:
+        pass
+    elif worker_n <= 1 or len(jobs) == 1:
+        for job in jobs:
+            completed.append(_evaluate_one_job(job))
+    else:
+        # Process pool: sims are CPU-bound (pandas/numpy). Registry writes stay serial.
+        with ProcessPoolExecutor(max_workers=min(worker_n, len(jobs))) as pool:
+            futures = [pool.submit(_evaluate_one_job, job) for job in jobs]
+            for fut in as_completed(futures):
+                completed.append(fut.result())
+
+    # Phase 3: stable order + serial registry ingest (file-safe)
+    completed.sort(key=lambda r: str(r.get("candidate_id") or ""))
+    for item in completed:
+        report = item.pop("report")
         ingest_evaluate_report(
             report,
             registry_path=registry_path,
-            spec_path=str(spec_out),
-            report_path=str(report_path),
+            spec_path=str(item.get("spec_path") or ""),
+            report_path=str(item.get("report_path") or ""),
         )
-        known.add(mutant.candidate_id)
-        known.add(mutant.family_id)
-
         row = {
-            "candidate_id": mutant.candidate_id,
-            "family_id": mutant.family_id,
-            "suffix": plan.suffix,
-            "decision": report.get("decision"),
-            "n_train_pass": report.get("n_train_pass"),
-            "n_holdout_pass": report.get("n_holdout_pass"),
-            "spec_path": str(spec_out),
-            "report_path": str(report_path),
+            "candidate_id": item.get("candidate_id"),
+            "family_id": item.get("family_id"),
+            "suffix": item.get("suffix"),
+            "decision": item.get("decision"),
+            "n_train_pass": item.get("n_train_pass"),
+            "n_holdout_pass": item.get("n_holdout_pass"),
+            "spec_path": item.get("spec_path"),
+            "report_path": item.get("report_path"),
         }
         results.append(row)
-        if int(report.get("n_holdout_pass") or 0) > 0:
-            progress_bits.append(f"F2:{mutant.candidate_id}")
-        elif int(report.get("n_train_pass") or 0) > 0:
-            progress_bits.append(f"F1:{mutant.candidate_id}")
+        if int(row.get("n_holdout_pass") or 0) > 0:
+            progress_bits.append(f"F2:{row['candidate_id']}")
+        elif int(row.get("n_train_pass") or 0) > 0:
+            progress_bits.append(f"F1:{row['candidate_id']}")
         else:
-            progress_bits.append(f"CLOSED:{mutant.family_id}")
+            progress_bits.append(f"CLOSED:{row['family_id']}")
 
     after = known_ids(registry_path)
     new_ids = after - before
@@ -286,6 +348,7 @@ def run_generation(
         "seed_candidate_id": seed.candidate_id,
         "n_evaluated": len(results),
         "n_skipped": len(skipped),
+        "workers": worker_n if jobs else 0,
         "results": results,
         "skipped": skipped,
         "progressed": progressed,
@@ -317,6 +380,7 @@ def run_discovery_loop(
     registry_path: str | Path | None = None,
     out_dir: str | Path | None = None,
     state_path: str | Path | None = None,
+    workers: int | None = None,
 ) -> dict[str, Any]:
     """Run a tight multi-generation simulation discovery campaign.
 
@@ -325,12 +389,15 @@ def run_discovery_loop(
       - max_seconds elapsed (if > 0)
       - max_no_progress_generations with no novel evaluations
       - F2 living seat found (if stop_on_f2)
+
+    ``workers`` > 1 evaluates mutants in a process pool (CPU parallel).
     """
     started = time.monotonic()
     out = Path(out_dir) if out_dir else DEFAULT_OUT
     out.mkdir(parents=True, exist_ok=True)
     registry_path = Path(registry_path) if registry_path else DEFAULT_REGISTRY_PATH
     state_path = Path(state_path) if state_path else DEFAULT_STATE
+    worker_n = default_workers(workers)
 
     if seeds:
         seed_paths = [Path(s) for s in seeds]
@@ -366,6 +433,7 @@ def run_discovery_loop(
             registry_path=registry_path,
             run_holdout=run_holdout,
             known=known,
+            workers=worker_n,
         )
         generations.append(gen_summary)
         total_eval += int(gen_summary.get("n_evaluated") or 0)
@@ -422,6 +490,7 @@ def run_discovery_loop(
         "n_generations": len(generations),
         "n_seeds": len(seed_paths),
         "seeds": [str(s) for s in seed_paths],
+        "workers": worker_n,
         "total_evaluated": total_eval,
         "generations_with_f1": total_f1,
         "generations_with_f2": total_f2,
@@ -431,7 +500,8 @@ def run_discovery_loop(
         "trading_authority": False,
         "live_authority": False,
         "note": (
-            "Discovery is simulation-only and may run tightly. "
+            "Discovery is pure Python simulation (not LLM). "
+            "Mutants within a generation evaluate in a process pool when workers>1. "
             "Opportunity watching remains a separate patient loop."
         ),
     }

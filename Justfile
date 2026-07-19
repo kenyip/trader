@@ -443,9 +443,8 @@ trader-desk-b-loop *ARGS:
 
 # Tight simulation discovery (PURE PYTHON SIMS — not LLM)
 # Mutate StrategySpec → dual-cost train/holdout → living registry
-#   just trader-discover
-#   just trader-discover --until-f2              # marathon until F2 or grid stall
-#   just trader-discover --until-f2 --keep-going  # keep searching after first F2
+# Parallel process pool: --workers 0 (auto) or e.g. --workers 8
+#   just trader-discover --until-f2 --keep-going --workers 8
 trader-discover *ARGS:
     {{py}} scripts/trader_discover.py --summary-only {{ARGS}}
 

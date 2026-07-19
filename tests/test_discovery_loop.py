@@ -44,14 +44,25 @@ class DiscoveryLoopTest(unittest.TestCase):
                 "evaluation_mode": "regime_router",
                 "living_candidates": [],
             }
+            def _fake_job(payload):
+                mid = payload["mutant"]["candidate_id"]
+                fid = payload["mutant"]["family_id"]
+                return {
+                    **fake_report,
+                    "candidate_id": mid,
+                    "family_id": fid,
+                    "suffix": payload.get("suffix", ""),
+                    "spec_path": str(out / f"{mid}.json"),
+                    "report_path": str(out / f"{mid}_eval.json"),
+                    "report": {**fake_report, "candidate_id": mid, "family_id": fid},
+                }
+
             with patch(
-                "trader_platform.research.discovery_loop.evaluate_proxy",
-                return_value=fake_report,
+                "trader_platform.research.discovery_loop._evaluate_one_job",
+                side_effect=_fake_job,
             ), patch(
                 "trader_platform.research.discovery_loop.ingest_evaluate_report",
                 return_value=LivingRegistry(),
-            ), patch(
-                "trader_platform.research.discovery_loop.save_strategy_spec",
             ):
                 summary = run_generation(
                     seed_path=seed,
@@ -62,6 +73,7 @@ class DiscoveryLoopTest(unittest.TestCase):
                     registry_path=reg,
                     run_holdout=False,
                     known=set(),
+                    workers=1,
                 )
             self.assertEqual(summary["n_evaluated"], 2)
             self.assertTrue(summary["progressed"])
@@ -101,6 +113,7 @@ class DiscoveryLoopTest(unittest.TestCase):
                     registry_path=reg,
                     out_dir=out,
                     state_path=Path(tmp) / "state.json",
+                    workers=1,
                 )
             self.assertEqual(report["stop_reason"], "no_progress_stall")
             self.assertEqual(report["total_evaluated"], 0)

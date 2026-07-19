@@ -55,6 +55,12 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="With --until-f2, do not stop on first F2 (keep filling living seats)",
     )
+    p.add_argument(
+        "--workers",
+        type=int,
+        default=0,
+        help="Parallel process workers for mutant evals (0 = auto: cpu-1, capped at 8)",
+    )
     p.add_argument("--symbols", default="", help="Optional comma symbol subset (faster)")
     p.add_argument(
         "--train-only",
@@ -97,7 +103,11 @@ def main(argv: list[str] | None = None) -> int:
         max_minutes = max_minutes if max_minutes > 0 else 12 * 60  # 12h default marathon
         max_no_progress = max(max_no_progress, 25)  # allow dense grid to drain
         stop_on_f2 = not args.keep_going
+        # Parallel: evaluate more mutants per generation to feed the pool
+        if args.max_mutants_per_gen <= 3:
+            args.max_mutants_per_gen = 8
     max_seconds = float(max_minutes) * 60.0 if max_minutes > 0 else 0.0
+    workers = args.workers if args.workers > 0 else None
 
     report = run_discovery_loop(
         seeds=seeds,
@@ -110,6 +120,7 @@ def main(argv: list[str] | None = None) -> int:
         stop_on_f2=stop_on_f2,
         registry_path=args.registry,
         out_dir=args.out_dir,
+        workers=workers,
     )
     if args.summary_only:
         print(
@@ -120,6 +131,7 @@ def main(argv: list[str] | None = None) -> int:
                     "elapsed_seconds": report.get("elapsed_seconds"),
                     "n_generations": report.get("n_generations"),
                     "total_evaluated": report.get("total_evaluated"),
+                    "workers": report.get("workers"),
                     "generations_with_f1": report.get("generations_with_f1"),
                     "generations_with_f2": report.get("generations_with_f2"),
                     "living_watchable": report.get("living_watchable"),
