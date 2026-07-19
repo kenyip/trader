@@ -85,15 +85,75 @@ Restart discovery after large universe edits so new names get evaluated.
 |---|---|
 | `--workers 0` | Auto: **CPU−1** (on a 10-core Mac → 9) |
 | `--workers 9` | Explicit |
-| `--max-mutants-per-gen 9` | Feed the pool (jobs per generation) |
+| `--max-mutants-per-gen 12` | Feed the pool (jobs per generation) |
 
-Mutants in one generation run in a **process pool**. Registry writes stay serial.
+Mutants in one generation run in a **process pool** (one mutant eval per worker process). Registry writes stay serial. Parent process is `scripts/trader_discover.py`; children are multiprocessing `spawn_main` workers.
 
 ```bash
-just trader-discover --until-f2 --keep-going --workers 9 --max-mutants-per-gen 9
+just trader-discover --until-f2 --keep-going --workers 9 --max-mutants-per-gen 12
 ```
 
 More than `cpu_count` workers usually hurts.
+
+---
+
+## How workers run · reboot / restart
+
+### What is running now
+
+| Piece | Role |
+|---|---|
+| **Parent** | `scripts/trader_discover.py --until-f2 --keep-going --workers N` |
+| **Workers** | N child processes (process pool); each evaluates one mutant at a time across the active universe |
+| **PID file** | `.cache/platform/spine/discovery/marathon.pid` (progress UI reads this) |
+| **State** | `.cache/platform/spine/discovery_state.json` (`grid_cursor`, gen, workers, symbols) |
+| **Log** | `.cache/platform/spine/discovery/marathon.log` |
+
+The current marathon was started with **`nohup`** (survives terminal close, **dies on machine reboot**).
+
+### Auto-restart (Hermes cron)
+
+Hermes job **`trader-desk-b-loop`** runs every **~30 minutes**:
+
+- Script: `~/.hermes/scripts/trader_discovery_cron.sh`
+- If a live `trader_discover.py` is already running → skip
+- If not → start a new marathon (background) and write `marathon.pid`
+- After reboot: first cron tick (or manual start below) brings it back
+- Resume is safe: **`grid_cursor`** + living registry skip already-evaluated DNA
+
+Also: **`trader-opportunity-loop`** every ~60m (market watch / paper handoff — not the sim workers).
+
+Requires the **Hermes gateway / cron scheduler** to be up after login.
+
+### Manual start (any time)
+
+```bash
+cd ~/dev/trader
+
+# one-shot foreground (blocks until campaign stops)
+just trader-discover --until-f2 --keep-going --workers 9 --max-mutants-per-gen 12
+
+# background marathon (recommended after reboot)
+mkdir -p .cache/platform/spine/discovery
+nohup .venv/bin/python -u scripts/trader_discover.py \
+  --until-f2 --keep-going --workers 9 --max-mutants-per-gen 12 --summary-only \
+  >> .cache/platform/spine/discovery/marathon.log 2>&1 &
+echo $! > .cache/platform/spine/discovery/marathon.pid
+
+# or let the cron script do it
+bash ~/.hermes/scripts/trader_discovery_cron.sh
+
+just trader-progress          # confirm ● RUNNING · parallel N workers
+```
+
+### After reboot checklist
+
+1. Machine up, `~/dev/trader` + `.venv` available  
+2. Hermes cron running **or** run the manual block above  
+3. `just trader-progress` → `● RUNNING · parallel 9 workers`  
+4. No need to re-promote paper seats; living registry is on disk  
+
+**Not auto-started by launchd** today — reboot recovery is Hermes cron (30m) or the manual `nohup` / cron script.
 
 ---
 
