@@ -4,12 +4,15 @@ from pathlib import Path
 from unittest.mock import patch
 
 from trader_platform.research.discovery_loop import (
+    all_grid_mutants,
     generation_mutants,
     list_seed_specs,
     run_discovery_loop,
     run_generation,
 )
+from trader_platform.research.evolve_strategy_spec import apply_mutant
 from trader_platform.research.living_registry import LivingRegistry, save_living_registry
+from trader_platform.research.strategy_spec import load_strategy_spec
 
 
 class DiscoveryLoopTest(unittest.TestCase):
@@ -44,6 +47,7 @@ class DiscoveryLoopTest(unittest.TestCase):
                 "evaluation_mode": "regime_router",
                 "living_candidates": [],
             }
+
             def _fake_job(payload):
                 mid = payload["mutant"]["candidate_id"]
                 fid = payload["mutant"]["family_id"]
@@ -68,7 +72,8 @@ class DiscoveryLoopTest(unittest.TestCase):
                     seed_path=seed,
                     gen_index=0,
                     max_mutants=2,
-                    symbols=["BAC"],
+                    screen_symbol_list=["BAC"],
+                    prove_symbol_list=["BAC"],
                     out_dir=out,
                     registry_path=reg,
                     run_holdout=False,
@@ -79,23 +84,18 @@ class DiscoveryLoopTest(unittest.TestCase):
             self.assertTrue(summary["progressed"])
 
     def test_loop_stops_on_no_progress_when_all_skipped(self):
+        """Stall when the full Wave A bag is already known (no novel evals)."""
         with tempfile.TemporaryDirectory() as tmp:
             reg = Path(tmp) / "reg.json"
             out = Path(tmp) / "out"
             save_living_registry(LivingRegistry(), reg)
             seed = list_seed_specs()[0]
-            # Pre-mark all mutant families as known so generations evaluate nothing
-            from trader_platform.research.discovery_loop import generation_mutants
-            from trader_platform.research.evolve_strategy_spec import apply_mutant
-            from trader_platform.research.strategy_spec import load_strategy_spec
-
-            known = set()
             seed_spec = load_strategy_spec(seed)
-            for i in range(6):
-                for plan in generation_mutants(i, 5):
-                    m = apply_mutant(seed_spec, plan)
-                    known.add(m.candidate_id)
-                    known.add(m.family_id)
+            known: set[str] = set()
+            for plan in all_grid_mutants():
+                m = apply_mutant(seed_spec, plan)
+                known.add(m.candidate_id)
+                known.add(m.family_id)
 
             with patch(
                 "trader_platform.research.discovery_loop.known_ids", return_value=known

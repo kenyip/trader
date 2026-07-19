@@ -1,0 +1,171 @@
+{
+  "counts": {
+    "by_funnel": {
+      "F0_MECHANISM": 4281,
+      "F1_TRAIN": 2255,
+      "F2_UNTOUCHED_HOLDOUT": 814,
+      "F3_ROBUST_PAPER_PLAN": 5
+    },
+    "by_status": {
+      "f1_train": 2255,
+      "f2_holdout": 814,
+      "paper_eligible": 5,
+      "quarantined": 4281
+    },
+    "f2_symbol_skew": {
+      "AMZN": 11,
+      "BAC": 86,
+      "GOOGL": 3,
+      "INTC": 609,
+      "IWM": 28,
+      "KO": 77
+    },
+    "seats": 7355
+  },
+  "diversified_f2_sample": [
+    {
+      "candidate_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__bull_only_21",
+      "evidence_report_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0001_20260719T080729Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__bull_only_21_eval.json",
+      "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__bull_only_21",
+      "funnel_stage": "F2_UNTOUCHED_HOLDOUT",
+      "router_policy": "pcs_bull_only",
+      "seat_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__bull_only_21_INTC",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0001_20260719T080729Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__bull_only_21.json",
+      "status": "f2_holdout",
+      "symbols": [
+        "INTC"
+      ]
+    },
+    {
+      "candidate_id": "REGIME_ROUTER_INCOME_21D_PT50_V1__g_d14_pt40_dl14_iv0_c8_pcs_bu",
+      "evidence_report_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0003_20260719T081415Z/REGIME_ROUTER_INCOME_21D_PT50_V1__g_d14_pt40_dl14_iv0_c8_pcs_bu_eval.json",
+      "family_id": "REGIME_FIRST_DEFINED_RISK_INCOME__g_d14_pt40_dl14_iv0_c8_pcs_bu",
+      "funnel_stage": "F2_UNTOUCHED_HOLDOUT",
+      "router_policy": "pcs_bull_only",
+      "seat_id": "REGIME_ROUTER_INCOME_21D_PT50_V1__g_d14_pt40_dl14_iv0_c8_pcs_bu_KO",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0003_20260719T081415Z/REGIME_ROUTER_INCOME_21D_PT50_V1__g_d14_pt40_dl14_iv0_c8_pcs_bu.json",
+      "status": "f2_holdout",
+      "symbols": [
+        "KO"
+      ]
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__g_d45_pt50_dl14_iv20_c8_pcs_bu",
+      "evidence_report_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0092_20260719T084654Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__g_d45_pt50_dl14_iv20_c8_pcs_bu_eval.json",
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__g_d45_pt50_dl14_iv20_c8_pcs_bu",
+      "funnel_stage": "F2_UNTOUCHED_HOLDOUT",
+      "router_policy": "pcs_bull_only",
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__g_d45_pt50_dl14_iv20_c8_pcs_bu_BAC",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0092_20260719T084654Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__g_d45_pt50_dl14_iv20_c8_pcs_bu.json",
+      "status": "f2_holdout",
+      "symbols": [
+        "BAC"
+      ]
+    },
+    {
+      "candidate_id": "REGIME_ROUTER_INCOME_21D_PT50_V1__g_d45_pt50_dl18_iv0_c12_pcs_bu",
+      "evidence_report_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0095_20260719T084731Z/REGIME_ROUTER_INCOME_21D_PT50_V1__g_d45_pt50_dl18_iv0_c12_pcs_bu_eval.json",
+      "family_id": "REGIME_FIRST_DEFINED_RISK_INCOME__g_d45_pt50_dl18_iv0_c12_pcs_bu",
+      "funnel_stage": "F2_UNTOUCHED_HOLDOUT",
+      "router_policy": "pcs_bull_only",
+      "seat_id": "REGIME_ROUTER_INCOME_21D_PT50_V1__g_d45_pt50_dl18_iv0_c12_pcs_bu_IWM",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0095_20260719T084731Z/REGIME_ROUTER_INCOME_21D_PT50_V1__g_d45_pt50_dl18_iv0_c12_pcs_bu.json",
+      "status": "f2_holdout",
+      "symbols": [
+        "IWM"
+      ]
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt40_dl18_iv35_c8_w2_pcs_bu_7",
+      "evidence_report_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0052_20260719T095704Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt40_dl18_iv35_c8_w2_pcs_bu_7__prove_eval.json",
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt40_dl18_iv35_c8_w2_pcs_bu_7",
+      "funnel_stage": "F2_UNTOUCHED_HOLDOUT",
+      "router_policy": "pcs_bull_only",
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt40_dl18_iv35_c8_w2_pcs_bu_7_AMZN",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0052_20260719T095704Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt40_dl18_iv35_c8_w2_pcs_bu_7__prove.json",
+      "status": "f2_holdout",
+      "symbols": [
+        "AMZN"
+      ]
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt30_dl14_iv25_c8_w1_pcs_bu_0",
+      "evidence_report_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0062_20260719T100121Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt30_dl14_iv25_c8_w1_pcs_bu_0__prove_eval.json",
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d7_pt30_dl14_iv25_c8_w1_pcs_bu_0",
+      "funnel_stage": "F2_UNTOUCHED_HOLDOUT",
+      "router_policy": "pcs_bull_only",
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt30_dl14_iv25_c8_w1_pcs_bu_0_GOOGL",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0062_20260719T100121Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt30_dl14_iv25_c8_w1_pcs_bu_0__prove.json",
+      "status": "f2_holdout",
+      "symbols": [
+        "GOOGL"
+      ]
+    }
+  ],
+  "generated_at": "2026-07-19T21:05:26+00:00",
+  "notes": [
+    "Clone flood is real: F2 heavily skewed to INTC.",
+    "Bootstrap pack (Phase 4) will re-prove and diversify; this is only a baseline snapshot.",
+    "Desk B primary path is StrategySpec spine; StrategyDNA/scout is secondary."
+  ],
+  "option_mark_provenance": "black_scholes_proxy (L0)",
+  "paper_eligible": [
+    {
+      "candidate_id": "REGIME_ROUTER_INCOME_21D_PT50_V1__g_d14_pt60_dl14_iv0_c8_pcs_bu",
+      "family_id": "REGIME_FIRST_DEFINED_RISK_INCOME__g_d14_pt60_dl14_iv0_c8_pcs_bu",
+      "funnel_stage": "F3_ROBUST_PAPER_PLAN",
+      "router_policy": "pcs_bull_only",
+      "seat_id": "REGIME_ROUTER_INCOME_21D_PT50_V1__g_d14_pt60_dl14_iv0_c8_pcs_bu_KO",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0019_20260719T083315Z/REGIME_ROUTER_INCOME_21D_PT50_V1__g_d14_pt60_dl14_iv0_c8_pcs_bu.json",
+      "symbols": [
+        "KO"
+      ]
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__g_d14_pt60_dl14_iv20_c8_pcs_bu",
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__g_d14_pt60_dl14_iv20_c8_pcs_bu",
+      "funnel_stage": "F3_ROBUST_PAPER_PLAN",
+      "router_policy": "pcs_bull_only",
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__g_d14_pt60_dl14_iv20_c8_pcs_bu_INTC",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0020_20260719T083326Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__g_d14_pt60_dl14_iv20_c8_pcs_bu.json",
+      "symbols": [
+        "INTC"
+      ]
+    },
+    {
+      "candidate_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__g_d14_pt60_dl14_iv30_c8_pcs_bu",
+      "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__g_d14_pt60_dl14_iv30_c8_pcs_bu",
+      "funnel_stage": "F3_ROBUST_PAPER_PLAN",
+      "router_policy": "pcs_bull_only",
+      "seat_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__g_d14_pt60_dl14_iv30_c8_pcs_bu_INTC",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0021_20260719T083339Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__g_d14_pt60_dl14_iv30_c8_pcs_bu.json",
+      "symbols": [
+        "INTC"
+      ]
+    },
+    {
+      "candidate_id": "REGIME_ROUTER_INCOME_45D_PT50_V1__g_d45_pt40_dl18_iv0_c12_pcs_bu",
+      "family_id": "REGIME_FIRST_DEFINED_RISK_INCOME_LONGER_DTE__g_d45_pt40_dl18_iv0_c12_pcs_bu",
+      "funnel_stage": "F3_ROBUST_PAPER_PLAN",
+      "router_policy": "pcs_bull_only",
+      "seat_id": "REGIME_ROUTER_INCOME_45D_PT50_V1__g_d45_pt40_dl18_iv0_c12_pcs_bu_IWM",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0086_20260719T084549Z/REGIME_ROUTER_INCOME_45D_PT50_V1__g_d45_pt40_dl18_iv0_c12_pcs_bu.json",
+      "symbols": [
+        "IWM"
+      ]
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__g_d45_pt60_dl18_iv20_c12_pcs_bu",
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__g_d45_pt60_dl18_iv20_c12_pcs_bu",
+      "funnel_stage": "F3_ROBUST_PAPER_PLAN",
+      "router_policy": "pcs_bull_only",
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__g_d45_pt60_dl18_iv20_c12_pcs_bu_BAC",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0104_20260719T084912Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__g_d45_pt60_dl18_iv20_c12_pcs_bu.json",
+      "symbols": [
+        "BAC"
+      ]
+    }
+  ],
+  "provenance": "Phase 0 snapshot \u2014 read-only evidence, not doctrine",
+  "registry_updated_at": "2026-07-19T13:03:40+00:00"
+}

@@ -18,10 +18,17 @@ from trader_platform.research.living_registry import (
     LivingSeat,
     load_living_registry,
 )
+from trader_platform.research.opportunity import (
+    Opportunity,
+    StandAside,
+    evaluate_from_row,
+    thesis_from_strategy_spec,
+)
 from trader_platform.research.regime_router_sim import select_structure
 from trader_platform.research.strategy_spec import (
     StrategySpec,
     load_strategy_spec,
+    strategy_spec_from_mapping,
 )
 
 try:
@@ -85,6 +92,7 @@ def _load_spec_for_seat(seat: LivingSeat) -> StrategySpec | None:
 
 
 def _structure_for_seat(seat: LivingSeat, row: pd.Series, spec: StrategySpec | None) -> str | None:
+    """Legacy structure-only path (no entry filters). Prefer `_decision_for_seat`."""
     if spec is not None and spec.evaluation_mode == "regime_router":
         configs = spec.router_configs()
         policy = str(seat.router_policy or spec.router_policy or "router")
@@ -104,6 +112,36 @@ def _structure_for_seat(seat: LivingSeat, row: pd.Series, spec: StrategySpec | N
     return None
 
 
+def _decision_for_seat(
+    seat: LivingSeat,
+    row: pd.Series,
+    bar_time: pd.Timestamp,
+    symbol: str,
+    spec: StrategySpec | None,
+) -> Opportunity | StandAside | None:
+    """Shared opportunity rules (router + entry filters + signal bounds).
+
+    When a StrategySpec is available, bridge it to a Thesis and run the
+    opportunity emitter so watch matches prove-time entry filters.
+    Returns None only when no spec exists (legacy fallback).
+    """
+    if spec is None:
+        return None
+    # Prefer seat router_policy when present (mutant may differ from seed file)
+    policy = str(seat.router_policy or spec.router_policy or "router")
+    if policy and policy != spec.router_policy:
+        raw = spec.to_dict()
+        raw["router_policy"] = policy
+        spec = strategy_spec_from_mapping(raw)
+    thesis = thesis_from_strategy_spec(spec, thesis_id=seat.candidate_id or seat.seat_id)
+    return evaluate_from_row(
+        thesis,
+        row,
+        symbol=symbol,
+        asof=str(bar_time),
+    )
+
+
 def _paper_packet(
     *,
     seat: LivingSeat,
@@ -113,8 +151,15 @@ def _paper_packet(
     row: pd.Series,
     bar_time: pd.Timestamp,
     spec: StrategySpec | None,
+    decision_reason: str = "",
 ) -> dict[str, Any]:
     mgmt = dict(spec.management) if spec is not None else {}
+    why = (
+        f"Living seat {seat.seat_id} is watchable; regime={regime} maps to {structure}; "
+        "entry filters / signal bounds passed on this bar."
+    )
+    if decision_reason:
+        why = f"{why} ({decision_reason})"
     return {
         "packet_type": "paper_suggested_limit",
         "trading_authority": False,
@@ -145,10 +190,7 @@ def _paper_packet(
             "defined_risk": True,
         },
         "legs": [],  # filled later by scout/OPEN path; watcher only signals readiness
-        "why_now": (
-            f"Living seat {seat.seat_id} is watchable; regime={regime} maps to {structure}; "
-            "stand-aside not required on this bar."
-        ),
+        "why_now": why,
         "invalidation": "regime flip, credit/max-loss filters fail, or risk governor deny",
         "next_action": "paper_only_open_or_update_limit_via_autonomy_loop — not live",
     }
@@ -214,14 +256,25 @@ def watch_once(
                 )
                 continue
             regime = str(row.get("regime") or "unknown")
-            structure = _structure_for_seat(seat, row, spec)
+            decision = _decision_for_seat(seat, row, bar_time, symbol, spec)
+            if decision is None:
+                structure = _structure_for_seat(seat, row, spec)
+                decision_reason = "legacy_structure_only"
+            elif isinstance(decision, StandAside):
+                structure = None
+                decision_reason = decision.reason
+            else:
+                structure = decision.structure
+                decision_reason = decision.reason
+                regime = decision.regime or regime
+
             if structure is None:
                 last_no_setup = WatchResult(
                     status="NO_SETUP",
                     generated_at=generated,
                     reason=(
                         f"Living seat {seat.seat_id} on {symbol}: regime={regime} "
-                        "→ stand aside (no structure selected)."
+                        f"→ stand aside ({decision_reason or 'no structure selected'})."
                     ),
                     living_watchable_count=len(watchable),
                     seat_id=seat.seat_id,
@@ -241,6 +294,7 @@ def watch_once(
                 row=row,
                 bar_time=bar_time,
                 spec=spec,
+                decision_reason=decision_reason,
             )
             if allow_live_packet:
                 # Still not authority — Ken-facing draft only.

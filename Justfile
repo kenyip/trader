@@ -452,6 +452,12 @@ trader-universe *ARGS:
 trader-promote-paper *ARGS:
     {{py}} scripts/trader_promote_paper.py {{ARGS}}
 
+# Bootstrap shortlist: collect theses/F2 → dual-cost re-prove → reports/bootstrap/LATEST.json
+#   just trader-bootstrap --candidates-only
+#   just trader-bootstrap --max-f2 10
+trader-bootstrap *ARGS:
+    {{py}} scripts/trader_bootstrap.py {{ARGS}}
+
 # Paper handoff (dry-run default; plumbing-smoke forces one ledger order)
 #   just trader-paper-handoff
 #   just trader-paper-handoff --plumbing-smoke

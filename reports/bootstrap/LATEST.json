@@ -1,0 +1,188 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "bull_neutral_pcs_45d",
+      "coarse_dna_key": "bull_neutral_pcs_45d|regime_router|pcs_non_bear|router|dte_xl|pt_mid|iv0|dlt_mid",
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE",
+      "seat_id": "",
+      "source": "thesis_file",
+      "spec_path": "/Users/jarvis/dev/trader/configs/strategy_specs/pcs_bull_neutral_income_45d_v1.json",
+      "symbols": [],
+      "thesis_id": "bull_neutral_pcs_45d"
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0",
+      "coarse_dna_key": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE|regime_router|pcs_bull_only|router|dte_s|pt_hi|iv_hi|dlt_hi",
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0",
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0_AMZN",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0294_20260719T114455Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0__prove.json",
+      "symbols": [
+        "AMZN"
+      ],
+      "thesis_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0"
+    },
+    {
+      "candidate_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4",
+      "coarse_dna_key": "IV_RICH_NONCOLLAPSE_PCS_INCOME|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_mid|dlt_lo",
+      "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4",
+      "seat_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0343_20260719T120559Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4"
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt70_dl14_iv30_c10_w1_pcs_bu_3",
+      "coarse_dna_key": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_mid|dlt_lo",
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt70_dl14_iv30_c10_w1_pcs_bu_3",
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt70_dl14_iv30_c10_w1_pcs_bu_3_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0392_20260719T122338Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt70_dl14_iv30_c10_w1_pcs_bu_3__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt70_dl14_iv30_c10_w1_pcs_bu_3"
+    },
+    {
+      "candidate_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv20_c10_w1_pcs_bu_6",
+      "coarse_dna_key": "IV_RICH_NONCOLLAPSE_PCS_INCOME|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_mid|dlt_lo",
+      "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt60_dl14_iv20_c10_w1_pcs_bu_6",
+      "seat_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv20_c10_w1_pcs_bu_6_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0393_20260719T122401Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv20_c10_w1_pcs_bu_6__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt60_dl14_iv20_c10_w1_pcs_bu_6"
+    },
+    {
+      "candidate_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv40_c10_w1_pcs_bu_7",
+      "coarse_dna_key": "IV_RICH_NONCOLLAPSE_PCS_INCOME|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_hi|dlt_lo",
+      "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt60_dl14_iv40_c10_w1_pcs_bu_7",
+      "seat_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv40_c10_w1_pcs_bu_7_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0393_20260719T122401Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv40_c10_w1_pcs_bu_7__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt60_dl14_iv40_c10_w1_pcs_bu_7"
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_2",
+      "coarse_dna_key": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_mid|dlt_lo",
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_2",
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_2_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0440_20260719T124205Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_2__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_2"
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt75_dl14_iv30_c10_w1_pcs_bu_3",
+      "coarse_dna_key": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_mid|dlt_lo",
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt75_dl14_iv30_c10_w1_pcs_bu_3",
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt75_dl14_iv30_c10_w1_pcs_bu_3_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0440_20260719T124205Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt75_dl14_iv30_c10_w1_pcs_bu_3__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt75_dl14_iv30_c10_w1_pcs_bu_3"
+    },
+    {
+      "candidate_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt70_dl14_iv20_c10_w1_pcs_bu_6",
+      "coarse_dna_key": "IV_RICH_NONCOLLAPSE_PCS_INCOME|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_mid|dlt_lo",
+      "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt70_dl14_iv20_c10_w1_pcs_bu_6",
+      "seat_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt70_dl14_iv20_c10_w1_pcs_bu_6_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0441_20260719T124225Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt70_dl14_iv20_c10_w1_pcs_bu_6__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt70_dl14_iv20_c10_w1_pcs_bu_6"
+    },
+    {
+      "candidate_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt70_dl14_iv40_c10_w1_pcs_bu_7",
+      "coarse_dna_key": "IV_RICH_NONCOLLAPSE_PCS_INCOME|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_hi|dlt_lo",
+      "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt70_dl14_iv40_c10_w1_pcs_bu_7",
+      "seat_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt70_dl14_iv40_c10_w1_pcs_bu_7_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0441_20260719T124225Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt70_dl14_iv40_c10_w1_pcs_bu_7__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt70_dl14_iv40_c10_w1_pcs_bu_7"
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt70_dl14_iv30_c10_w1_pcs_bu_10",
+      "coarse_dna_key": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_mid|dlt_lo",
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt70_dl14_iv30_c10_w1_pcs_bu_10",
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt70_dl14_iv30_c10_w1_pcs_bu_10_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0442_20260719T124246Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt70_dl14_iv30_c10_w1_pcs_bu_10__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt70_dl14_iv30_c10_w1_pcs_bu_10"
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt70_dl14_iv30_c10_w2_pcs_bu_11",
+      "coarse_dna_key": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_mid|dlt_lo",
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt70_dl14_iv30_c10_w2_pcs_bu_11",
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt70_dl14_iv30_c10_w2_pcs_bu_11_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0442_20260719T124246Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt70_dl14_iv30_c10_w2_pcs_bu_11__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt70_dl14_iv30_c10_w2_pcs_bu_11"
+    },
+    {
+      "candidate_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt70_dl14_iv20_c10_w1_pcs_bu_3",
+      "coarse_dna_key": "IV_RICH_NONCOLLAPSE_PCS_INCOME|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_mid|dlt_lo",
+      "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt70_dl14_iv20_c10_w1_pcs_bu_3",
+      "seat_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt70_dl14_iv20_c10_w1_pcs_bu_3_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0443_20260719T124308Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt70_dl14_iv20_c10_w1_pcs_bu_3__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt70_dl14_iv20_c10_w1_pcs_bu_3"
+    },
+    {
+      "candidate_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv20_c10_w1_pcs_bu_2",
+      "coarse_dna_key": "IV_RICH_NONCOLLAPSE_PCS_INCOME|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_mid|dlt_lo",
+      "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt60_dl14_iv20_c10_w1_pcs_bu_2",
+      "seat_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv20_c10_w1_pcs_bu_2_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0489_20260719T130010Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv20_c10_w1_pcs_bu_2__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt60_dl14_iv20_c10_w1_pcs_bu_2"
+    },
+    {
+      "candidate_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt75_dl14_iv20_c10_w1_pcs_bu_3",
+      "coarse_dna_key": "IV_RICH_NONCOLLAPSE_PCS_INCOME|regime_router|pcs_bull_only|router|dte_m|pt_hi|iv_mid|dlt_lo",
+      "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt75_dl14_iv20_c10_w1_pcs_bu_3",
+      "seat_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt75_dl14_iv20_c10_w1_pcs_bu_3_IWM",
+      "source": "living_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0489_20260719T130010Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt75_dl14_iv20_c10_w1_pcs_bu_3__prove.json",
+      "symbols": [
+        "IWM"
+      ],
+      "thesis_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt75_dl14_iv20_c10_w1_pcs_bu_3"
+    }
+  ],
+  "generated_at": "2026-07-19T21:11:09+00:00",
+  "honesty": "No prove run \u2014 candidate selection only.",
+  "live_authority": false,
+  "mode": "bootstrap_candidates_only",
+  "n_candidates": 15,
+  "trading_authority": false
+}

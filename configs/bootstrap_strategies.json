@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "description": "Bootstrap shortlist candidates for re-prove. Empty candidates = auto-collect theses + diversified F2. Pack is selected by dual-cost results, not by this file alone.",
+  "selection": {
+    "top_n": 5,
+    "diversify_symbols": true,
+    "diversify_dna": true
+  },
+  "candidates": [],
+  "notes": [
+    "Prefer thesis files under configs/theses/ as DNA sources.",
+    "Living F2 seats are optional inputs to re-prove.",
+    "Do not treat this list as eternal edge — drop names that fail holdout."
+  ]
+}

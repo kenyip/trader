@@ -277,7 +277,9 @@ just trader-progress              # bag + F2 + parallel workers
 just trader-progress --watch
 just trader-discover              # tight sim discovery (proof)
 just trader-universe              # managed underlyings add/remove
-just trader-promote-paper         # F2 → paper_eligible
+just trader-promote-paper         # F2 → paper_eligible (symbol+DNA diversify)
+just trader-bootstrap             # re-prove shortlist → reports/bootstrap/
+just trader-bootstrap --candidates-only
 just trader-paper-handoff         # dry handoff
 just trader-paper-handoff --plumbing-smoke
 just trader-opportunity           # watch + handoff (no evolve)
@@ -300,13 +302,21 @@ Desk A (personal): `just positions`, `just pmcc-manage`, `just desk-brief`, Stre
 | Path | Role |
 |---|---|
 | `configs/strategy_specs/*.json` | Frozen StrategySpec seeds |
+| `configs/theses/*.yaml` | Executable thesis DNA (opportunity rules + structure defaults) |
+| `configs/signal_catalog.yaml` | Named observables → `data.add_features` columns |
+| `configs/bootstrap_strategies.json` | Bootstrap candidate config |
 | `configs/discovery_grid.json` | Wave A coarse proof grid |
 | `configs/discovery_grid_dense.json` | Archived dense axes (not default) |
 | `configs/discovery_universe.json` | Symbol tiers: core / growth / experimental |
 | `trader_platform/research/evaluate_proxy.py` | Dual-cost prove spine |
+| `trader_platform/research/opportunity.py` | Opportunity emitter + structure plans |
+| `trader_platform/research/signals.py` | Signal catalog + snapshots |
+| `trader_platform/research/identity.py` | Coarse DNA keys / diversify |
+| `trader_platform/research/bootstrap.py` | Bootstrap re-prove tooling |
 | `trader_platform/research/discovery_loop.py` | Screen / prove / densify campaign |
 | `trader_platform/data/living_registry.json` | Living seats |
 | `trader_platform/risk_governor.py` | Order gates |
+| `reports/bootstrap/` | Bootstrap snapshots + re-prove reports |
 | `.cache/platform/spine/` | Discovery state, marathon pid, reports |
 
 ---
@@ -328,13 +338,23 @@ If you cannot answer (1)–(4), it is not aligned yet.
 ## 12. Near-term build backlog (ordered)
 
 1. ~~Pin north star / consolidate build doc~~ (this file)  
-2. `configs/signal_catalog.yaml` from §4-style inventory  
-3. Rephrase 1–2 seeds as **thesis** files with opportunity rules  
-4. Opportunity emitter (rule-based) → structure builder → existing prove  
-5. Pluggable scoreboard column: **premium/day** (experimental)  
-6. Dedupe living seats; paper shortlist from diversified thesis winners  
+2. ~~`configs/signal_catalog.yaml` from §4-style inventory~~  
+3. ~~Rephrase 1–2 seeds as **thesis** files with opportunity rules~~ (`configs/theses/`)  
+4. ~~Opportunity emitter (rule-based) → structure builder → existing prove~~ (`opportunity.py`; watcher shares path)  
+5. ~~Pluggable scoreboard column: **premium/day** (experimental)~~ (score on `AxisSummary`; not a gate)  
+6. ~~Dedupe living seats; paper shortlist from diversified thesis winners~~ (`identity.py` coarse DNA + promote diversify)  
 7. Real paper places on setup (not only plumbing smoke)  
 8. Live arm packet only when Ken is ready  
+
+**Bootstrap:** `just trader-bootstrap` re-proves candidates and writes `reports/bootstrap/LATEST.json`. Pack = dual-cost survivors, not hardcoded favorites.
+
+### Desk B primary path (do not fork)
+
+| Primary (build + Hermes default) | Secondary (legacy / Desk A / scout) |
+|---|---|
+| `StrategySpec` → `evaluate_proxy` → living seats → opportunity watch → RiskGovernor → paper | `StrategyDNA` + `hypothesis_registry` + `premium_scout` / `evolve_tick` / `learn_tick` |
+
+Agents invent and measure on the **primary** path first. Secondary DNA is optional only when the spine has no watchable seats — never a parallel “true” edge path.
 
 ---
 
@@ -343,6 +363,8 @@ If you cannot answer (1)–(4), it is not aligned yet.
 | Date | Change |
 |---|---|
 | 2026-07-19 | **Canonical build bible** created: consolidate north star, spine, dual desk, funnel, authority, commands, extensible scores (premium/day candidate). Other docs demoted to detail/research via [README.md](README.md). |
+| 2026-07-19 | Phase 0: mark Desk B **StrategySpec spine as primary** vs StrategyDNA/scout secondary; discovery unit tests aligned to Wave A API. |
+| 2026-07-19 | Engine phases 1–4: `signal_catalog`, thesis files, shared opportunity emitter (watcher wired), premium/day score, coarse DNA diversify, `just trader-bootstrap`. |
 
 ---
 

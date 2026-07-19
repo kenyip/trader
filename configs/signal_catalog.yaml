@@ -1,0 +1,310 @@
+# Named market observables for Desk B (TRADER_BUILD §3–§4).
+# Source of truth for which data.py columns may appear in thesis rules / entry filters.
+# Adding a new feature: implement in data.add_features, then add a row here.
+
+version: 1
+source_module: data
+feature_builder: add_features
+asof_convention: bar_close_no_lookahead
+
+signals:
+  # --- price / returns ---
+  close:
+    column: close
+    group: price
+    units: currency_per_share
+    lag_safe: true
+    description: Session close price
+    source: ohlcv
+    known_lie: null
+
+  ret_1d:
+    column: ret_1d
+    group: returns
+    units: fraction
+    lag_safe: true
+    description: 1-day close-to-close return
+    source: derived_ohlcv
+    known_lie: null
+
+  ret_5d:
+    column: ret_5d
+    group: returns
+    units: fraction
+    lag_safe: true
+    description: 5-day close-to-close return
+    source: derived_ohlcv
+    known_lie: null
+
+  ret_14d:
+    column: ret_14d
+    group: returns
+    units: fraction
+    lag_safe: true
+    description: 14-day close-to-close return
+    source: derived_ohlcv
+    known_lie: null
+
+  ret_30d:
+    column: ret_30d
+    group: returns
+    units: fraction
+    lag_safe: true
+    description: 30-day close-to-close return
+    source: derived_ohlcv
+    known_lie: null
+
+  intraday_return:
+    column: intraday_return
+    group: intraday
+    units: percent
+    lag_safe: true
+    description: (close - open) / open * 100 on the same bar
+    source: derived_ohlcv
+    known_lie: null
+
+  # --- trend ---
+  ema_9:
+    column: ema_9
+    group: trend
+    units: currency_per_share
+    lag_safe: true
+    description: EMA span 9 of close
+    source: derived_ohlcv
+    known_lie: null
+
+  ema_21:
+    column: ema_21
+    group: trend
+    units: currency_per_share
+    lag_safe: true
+    description: EMA span 21 of close
+    source: derived_ohlcv
+    known_lie: null
+
+  ema_55:
+    column: ema_55
+    group: trend
+    units: currency_per_share
+    lag_safe: true
+    description: EMA span 55 of close
+    source: derived_ohlcv
+    known_lie: null
+
+  ema_200:
+    column: ema_200
+    group: trend
+    units: currency_per_share
+    lag_safe: true
+    description: EMA span 200 of close
+    source: derived_ohlcv
+    known_lie: null
+
+  ema_stack:
+    column: ema_stack
+    group: trend
+    units: score_minus1_to_plus1
+    lag_safe: true
+    description: EMA fan alignment score (-1 bear … +1 bull)
+    source: derived_ohlcv
+    known_lie: null
+
+  # --- momentum ---
+  rsi_14:
+    column: rsi_14
+    group: momentum
+    units: index_0_100
+    lag_safe: true
+    description: 14-period RSI
+    source: derived_ohlcv
+    known_lie: null
+
+  macd:
+    column: macd
+    group: momentum
+    units: currency_per_share
+    lag_safe: true
+    description: MACD line (12/26 EMA)
+    source: derived_ohlcv
+    known_lie: null
+
+  macd_signal:
+    column: macd_signal
+    group: momentum
+    units: currency_per_share
+    lag_safe: true
+    description: MACD signal line
+    source: derived_ohlcv
+    known_lie: null
+
+  macd_hist:
+    column: macd_hist
+    group: momentum
+    units: currency_per_share
+    lag_safe: true
+    description: MACD histogram
+    source: derived_ohlcv
+    known_lie: null
+
+  # --- range / volume ---
+  atr_14:
+    column: atr_14
+    group: range
+    units: currency_per_share
+    lag_safe: true
+    description: 14-day average true range
+    source: derived_ohlcv
+    known_lie: null
+
+  bb_pctb:
+    column: bb_pctb
+    group: range
+    units: fraction
+    lag_safe: true
+    description: Bollinger %B (20, 2σ)
+    source: derived_ohlcv
+    known_lie: null
+
+  volume_surge:
+    column: volume_surge
+    group: volume
+    units: ratio
+    lag_safe: true
+    description: Today volume / 20d average volume
+    source: derived_ohlcv
+    known_lie: null
+
+  # --- volatility (honest proxies) ---
+  hv_20:
+    column: hv_20
+    group: volatility
+    units: annualized_fraction
+    lag_safe: true
+    description: 20-day historical volatility
+    source: derived_ohlcv
+    known_lie: null
+
+  hv_30:
+    column: hv_30
+    group: volatility
+    units: annualized_fraction
+    lag_safe: true
+    description: 30-day historical volatility
+    source: derived_ohlcv
+    known_lie: null
+
+  hv_60:
+    column: hv_60
+    group: volatility
+    units: annualized_fraction
+    lag_safe: true
+    description: 60-day historical volatility
+    source: derived_ohlcv
+    known_lie: null
+
+  iv_proxy:
+    column: iv_proxy
+    group: volatility
+    units: annualized_fraction
+    lag_safe: true
+    description: Stand-in for option IV used in BS proxy marks
+    source: realized_vol_proxy
+    known_lie: "Equals hv_30 — not observed option-implied vol"
+
+  iv_rank:
+    column: iv_rank
+    group: volatility
+    units: percentile_0_100
+    lag_safe: true
+    description: Rank of iv_proxy over ~1y window
+    source: realized_vol_proxy
+    known_lie: "HV-based rank, not chain IV rank; L0 only"
+
+  iv_rank_3y:
+    column: iv_rank_3y
+    group: volatility
+    units: percentile_0_100
+    lag_safe: true
+    description: Rank of iv_proxy over ~3y window
+    source: realized_vol_proxy
+    known_lie: "HV-based rank, not chain IV rank; L0 only"
+
+  high_iv:
+    column: high_iv
+    group: volatility
+    units: bool
+    lag_safe: true
+    description: iv_rank > 50 flag
+    source: realized_vol_proxy
+    known_lie: "Derived from HV-based iv_rank"
+
+  # --- macro / calendar ---
+  vix:
+    column: vix
+    group: macro
+    units: index
+    lag_safe: true
+    description: VIX level (ffilled to equity session)
+    source: vix_series
+    known_lie: null
+
+  vix_rank:
+    column: vix_rank
+    group: macro
+    units: percentile_0_100
+    lag_safe: true
+    description: VIX rank over ~1y
+    source: vix_series
+    known_lie: null
+
+  day_of_week:
+    column: day_of_week
+    group: calendar
+    units: weekday_0_mon
+    lag_safe: true
+    description: Bar weekday (0=Mon … 4=Fri)
+    source: calendar
+    known_lie: null
+
+  days_to_monthly_opex:
+    column: days_to_monthly_opex
+    group: calendar
+    units: days
+    lag_safe: true
+    description: Days until next monthly options expiration
+    source: calendar
+    known_lie: null
+
+  # --- regime (composite labels) ---
+  regime:
+    column: regime
+    group: regime
+    units: enum_bullish_bearish_neutral
+    lag_safe: true
+    description: Daily regime label from price/EMA/RSI/MACD/volume rules
+    source: derived_classifier
+    known_lie: "Heuristic label, not a regime model; used heavily by router"
+
+  reversal:
+    column: reversal
+    group: regime
+    units: bool
+    lag_safe: true
+    description: Intraday dump + volume surge flag
+    source: derived_classifier
+    known_lie: null
+
+# Signals commonly used by entry filters / opportunity rules (subset for docs)
+entry_relevant:
+  - regime
+  - iv_rank
+  - high_iv
+  - ema_stack
+  - rsi_14
+  - ret_1d
+  - ret_5d
+  - ret_14d
+  - volume_surge
+  - intraday_return
+  - hv_20
+  - hv_60

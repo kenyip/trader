@@ -1,0 +1,37 @@
+# Bootstrap thesis DNA (data for prove/bootstrap — not unit-test law).
+# Bridged from configs/strategy_specs/pcs_bull_neutral_income_45d_v1.json
+
+thesis_id: bull_neutral_pcs_45d
+family_id: LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE
+forecast_type: non_collapse_long_bias
+economic_mechanism: >
+  When regime is bullish or neutral, sell longer-dated put credit spreads
+  to monetize non-collapse with defined risk; stand aside pure bear.
+router_policy: pcs_non_bear
+regime_allow: []
+regime_deny: []
+signal_bounds: {}
+entry: {}
+management:
+  long_dte: 45
+  long_target_delta: 0.18
+  spread_width: 1.0
+  min_credit_pct: 0.1
+  profit_target: 0.5
+  defined_loss_exit_frac: 0.7
+  delta_breach: 0.4
+  dte_stop: 14
+  regime_flip_exit_enabled: true
+  max_loss_budget_usd: 300.0
+structure_defaults: {}
+max_structures: 1
+discovery_gates:
+  min_trades: 8
+  max_loss_usd: 300.0
+  max_dd_discovery_usd: 150.0
+  require_integrity: true
+  require_positive_pnl: true
+  require_control_beat: true
+notes: >
+  Proxy L0 seed. Longer DTE income DNA. Prove decides survival.
+source_spec_path: configs/strategy_specs/pcs_bull_neutral_income_45d_v1.json

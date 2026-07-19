@@ -46,9 +46,39 @@ class AxisSummary:
     gate_pnl: float = 0.0
     gate_dd: float = 0.0
     gate_max_loss_usd: float = 0.0
+    # Experimental score only (TRADER_BUILD §6) — never a silent hard gate
+    premium_per_day_mean: float | None = None
+    premium_per_day_median: float | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+def premium_per_day_stats(trades: list[Any]) -> dict[str, float | None]:
+    """Per-trade credit capture efficiency: (entry_credit - exit_debit) / days_held.
+
+    Score dimension only — not used by discovery_pass_axes.
+    """
+    rates: list[float] = []
+    for trade in trades:
+        credit = getattr(trade, "net_credit", None)
+        debit = getattr(trade, "exit_debit", None)
+        entry = getattr(trade, "entry_date", None)
+        exit_ = getattr(trade, "exit_date", None)
+        if credit is None or debit is None or entry is None or exit_ is None:
+            continue
+        try:
+            days = max(int((pd.Timestamp(exit_) - pd.Timestamp(entry)).days), 1)
+            rates.append((float(credit) - float(debit)) / float(days))
+        except Exception:
+            continue
+    if not rates:
+        return {"premium_per_day_mean": None, "premium_per_day_median": None}
+    arr = np.asarray(rates, dtype=float)
+    return {
+        "premium_per_day_mean": round(float(np.mean(arr)), 6),
+        "premium_per_day_median": round(float(np.median(arr)), 6),
+    }
 
 
 def stand_aside_purity(route_counts: Mapping[str, Any]) -> dict[str, float | int]:
@@ -115,6 +145,7 @@ def summarize_sim_result(result: Any, frame: pd.DataFrame) -> AxisSummary:
     route_counts = dict(getattr(result, "route_counts", None) or {})
     purity = stand_aside_purity(route_counts)
     population_pure_raw = metrics.get("population_pure")
+    ppd = premium_per_day_stats(trades)
     return AxisSummary(
         ok=ok,
         n_trades=n,
@@ -135,6 +166,8 @@ def summarize_sim_result(result: Any, frame: pd.DataFrame) -> AxisSummary:
         gate_pnl=pnl,
         gate_dd=dd,
         gate_max_loss_usd=max_loss,
+        premium_per_day_mean=ppd["premium_per_day_mean"],
+        premium_per_day_median=ppd["premium_per_day_median"],
     )
 
 
