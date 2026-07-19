@@ -90,7 +90,17 @@ def intent_from_watch(
     if build_market_frame is None:
         return None, "data.build unavailable", {}
 
-    frame = build_market_frame(symbol, period="3mo", use_cache=True)
+    # Match opportunity_watcher: short periods can drop to empty after feature
+    # warmup (e.g. IWM 3mo/1y); fall back to longer history.
+    frame = None
+    for period in ("3mo", "1y", "2y", "5y"):
+        try:
+            candidate = build_market_frame(symbol, period=period, use_cache=True)
+        except Exception:
+            candidate = None
+        if candidate is not None and len(candidate) >= 5:
+            frame = candidate
+            break
     if frame is None or len(frame) < 5:
         return None, f"insufficient market data for {symbol}", {}
     row = frame.iloc[-1]

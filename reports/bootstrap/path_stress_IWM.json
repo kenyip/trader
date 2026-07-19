@@ -7,12 +7,13 @@
       "allow_zero_trades": true,
       "max_dd_usd": 400.0,
       "max_loss_usd": 300.0,
+      "min_available_regimes": 2,
       "min_bars": 12,
-      "notes": "Path stress is management/tail prep \u2014 zero trades (stand-aside) and losing windows can still pass if risk bounds hold.",
+      "notes": "Path stress is management/tail prep \u2014 zero trades (stand-aside) and losing windows can still pass if risk bounds hold. Pack fails if too few windows available.",
       "require_integrity": true,
       "require_positive_pnl": false
     },
-    "generated_at": "2026-07-19T21:22:34+00:00",
+    "generated_at": "2026-07-19T22:18:56+00:00",
     "live_authority": false,
     "n_available": 8,
     "n_fail": 0,
@@ -21,9 +22,11 @@
     "n_unavailable": 4,
     "notes": [
       "pack=full",
+      "window_days=21 (DTE-aware from management.long_dte + pad).",
       "Path stress uses real historical windows + BS proxy marks (L0).",
       "Zero trades (stand-aside) counts as pass when allow_zero_trades=true.",
-      "Positive PnL is not required by default \u2014 management/risk bounds are."
+      "Positive PnL is not required by default \u2014 management/risk bounds are.",
+      "min_available_regimes=2 (coverage gate)."
     ],
     "option_mark_provenance": "black_scholes_proxy",
     "pack": "full",
@@ -38,11 +41,13 @@
         "regime": "huge_down",
         "sim": {},
         "symbol": "IWM",
+        "used_regime": "huge_down",
         "window": {
-          "reason": "no huge_down window found in history",
+          "reason": "no huge_down window found in history (window_days=21)",
           "regime": "huge_down",
           "source": "unavailable",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       },
       {
@@ -73,6 +78,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "IWM",
+        "used_regime": "normal_down",
         "window": {
           "end": "2022-09-27",
           "n_bars": 21,
@@ -80,7 +86,8 @@
           "source": "discovered",
           "spot_return": -0.12022008708201419,
           "start": "2022-08-29",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       },
       {
@@ -111,6 +118,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "IWM",
+        "used_regime": "flat",
         "window": {
           "end": "2026-02-25",
           "n_bars": 21,
@@ -118,7 +126,8 @@
           "source": "discovered",
           "spot_return": -0.0005667072407225033,
           "start": "2026-01-27",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       },
       {
@@ -149,6 +158,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "IWM",
+        "used_regime": "normal_up",
         "window": {
           "end": "2023-12-28",
           "n_bars": 21,
@@ -156,7 +166,8 @@
           "source": "discovered",
           "spot_return": 0.14001563390772756,
           "start": "2023-11-29",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       },
       {
@@ -168,11 +179,13 @@
         "regime": "huge_up",
         "sim": {},
         "symbol": "IWM",
+        "used_regime": "huge_up",
         "window": {
-          "reason": "no huge_up window found in history",
+          "reason": "no huge_up window found in history (window_days=21)",
           "regime": "huge_up",
           "source": "unavailable",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       },
       {
@@ -203,6 +216,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "IWM",
+        "used_regime": "v_recovery",
         "window": {
           "end": "2022-11-01",
           "n_bars": 21,
@@ -210,7 +224,8 @@
           "source": "discovered",
           "spot_return": 0.043068192221901634,
           "start": "2022-10-04",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       },
       {
@@ -241,6 +256,7 @@
           "stand_aside_frac": 0.95
         },
         "symbol": "IWM",
+        "used_regime": "inverse_v",
         "window": {
           "end": "2024-12-18",
           "n_bars": 21,
@@ -248,7 +264,8 @@
           "source": "discovered",
           "spot_return": -0.04244898034796628,
           "start": "2024-11-19",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       },
       {
@@ -260,11 +277,13 @@
         "regime": "gap_shock",
         "sim": {},
         "symbol": "IWM",
+        "used_regime": "gap_shock",
         "window": {
-          "reason": "no gap_shock window found in history",
+          "reason": "no gap_shock window found in history (window_days=21)",
           "regime": "gap_shock",
           "source": "unavailable",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       },
       {
@@ -295,6 +314,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "IWM",
+        "used_regime": "vol_crush",
         "window": {
           "end": "2026-05-14",
           "n_bars": 21,
@@ -302,7 +322,8 @@
           "source": "discovered",
           "spot_return": 0.053713648247141386,
           "start": "2026-04-16",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       },
       {
@@ -334,6 +355,7 @@
           "stand_aside_frac": 0.8824
         },
         "symbol": "IWM",
+        "used_regime": "vol_expansion",
         "window": {
           "end": "2024-08-05",
           "n_bars": 21,
@@ -341,7 +363,8 @@
           "source": "discovered",
           "spot_return": -0.0003955004525285552,
           "start": "2024-07-08",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       },
       {
@@ -353,11 +376,13 @@
         "regime": "chop_whipsaw",
         "sim": {},
         "symbol": "IWM",
+        "used_regime": "chop_whipsaw",
         "window": {
-          "reason": "no chop_whipsaw window found in history",
+          "reason": "no chop_whipsaw window found in history (window_days=21)",
           "regime": "chop_whipsaw",
           "source": "unavailable",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       },
       {
@@ -388,6 +413,7 @@
           "stand_aside_frac": 0.9231
         },
         "symbol": "IWM",
+        "used_regime": "earnings_window",
         "window": {
           "end": "2025-11-19",
           "n_bars": 21,
@@ -395,7 +421,8 @@
           "source": "discovered",
           "spot_return": -0.04072492730849229,
           "start": "2025-10-22",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       }
     ],
@@ -405,7 +432,7 @@
     "trading_authority": false
   },
   "full_ran": true,
-  "generated_at": "2026-07-19T21:22:34+00:00",
+  "generated_at": "2026-07-19T22:18:56+00:00",
   "honesty": "L0 path stress on real historical regime windows. Not synthetic shocks. Not live edge. Management-prep gate after dual-cost F2.",
   "live_authority": false,
   "mode": "staged_path_stress",
@@ -417,74 +444,159 @@
       "allow_zero_trades": true,
       "max_dd_usd": 400.0,
       "max_loss_usd": 300.0,
+      "min_available_regimes": 2,
       "min_bars": 12,
-      "notes": "Path stress is management/tail prep \u2014 zero trades (stand-aside) and losing windows can still pass if risk bounds hold.",
+      "notes": "Path stress is management/tail prep \u2014 zero trades (stand-aside) and losing windows can still pass if risk bounds hold. Pack fails if too few windows available.",
       "require_integrity": true,
       "require_positive_pnl": false
     },
-    "generated_at": "2026-07-19T21:22:32+00:00",
+    "generated_at": "2026-07-19T22:18:54+00:00",
     "live_authority": false,
-    "n_available": 1,
+    "n_available": 4,
     "n_fail": 0,
-    "n_pass": 1,
+    "n_pass": 4,
     "n_regimes": 4,
-    "n_unavailable": 3,
+    "n_unavailable": 0,
     "notes": [
       "pack=quick",
+      "window_days=21 (DTE-aware from management.long_dte + pad).",
       "Path stress uses real historical windows + BS proxy marks (L0).",
       "Zero trades (stand-aside) counts as pass when allow_zero_trades=true.",
-      "Positive PnL is not required by default \u2014 management/risk bounds are."
+      "Positive PnL is not required by default \u2014 management/risk bounds are.",
+      "min_available_regimes=2 (coverage gate)."
     ],
     "option_mark_provenance": "black_scholes_proxy",
     "pack": "quick",
     "pack_pass": true,
     "rows": [
       {
-        "available": false,
+        "available": true,
         "issues": [
-          "unavailable_skipped"
+          "zero_trades_stand_aside"
         ],
         "pass": true,
         "regime": "huge_down",
-        "sim": {},
+        "sim": {
+          "cost_axis": "slip_5pct",
+          "dd": 0.0,
+          "dominant_exit": "",
+          "exit_reasons": {},
+          "integrity": true,
+          "max_loss_usd": 0.0,
+          "n_trades": 0,
+          "ok": true,
+          "pnl": 0.0,
+          "reason": "ok",
+          "route_counts": {
+            "call_credit_spread": 0,
+            "iron_condor": 0,
+            "put_credit_spread": 0,
+            "stand_aside": 21
+          },
+          "skipped": false,
+          "stand_aside_frac": 1.0
+        },
         "symbol": "IWM",
+        "used_regime": "normal_down",
         "window": {
-          "reason": "no huge_down window found in history",
-          "regime": "huge_down",
-          "source": "unavailable",
-          "symbol": "IWM"
+          "end": "2022-09-27",
+          "fallback_from": "huge_down",
+          "n_bars": 21,
+          "regime": "normal_down",
+          "source": "discovered",
+          "spot_return": -0.12022008708201419,
+          "start": "2022-08-29",
+          "symbol": "IWM",
+          "used_fallback": true,
+          "wanted_regime": "huge_down",
+          "window_days": 21
         }
       },
       {
-        "available": false,
+        "available": true,
         "issues": [
-          "unavailable_skipped"
+          "zero_trades_stand_aside"
         ],
         "pass": true,
         "regime": "huge_up",
-        "sim": {},
+        "sim": {
+          "cost_axis": "slip_5pct",
+          "dd": 0.0,
+          "dominant_exit": "",
+          "exit_reasons": {},
+          "integrity": true,
+          "max_loss_usd": 0.0,
+          "n_trades": 0,
+          "ok": true,
+          "pnl": 0.0,
+          "reason": "ok",
+          "route_counts": {
+            "call_credit_spread": 0,
+            "iron_condor": 0,
+            "put_credit_spread": 0,
+            "stand_aside": 21
+          },
+          "skipped": false,
+          "stand_aside_frac": 1.0
+        },
         "symbol": "IWM",
+        "used_regime": "normal_up",
         "window": {
-          "reason": "no huge_up window found in history",
-          "regime": "huge_up",
-          "source": "unavailable",
-          "symbol": "IWM"
+          "end": "2023-12-28",
+          "fallback_from": "huge_up",
+          "n_bars": 21,
+          "regime": "normal_up",
+          "source": "discovered",
+          "spot_return": 0.14001563390772756,
+          "start": "2023-11-29",
+          "symbol": "IWM",
+          "used_fallback": true,
+          "wanted_regime": "huge_up",
+          "window_days": 21
         }
       },
       {
-        "available": false,
-        "issues": [
-          "unavailable_skipped"
-        ],
+        "available": true,
+        "issues": [],
         "pass": true,
         "regime": "gap_shock",
-        "sim": {},
+        "sim": {
+          "cost_axis": "slip_5pct",
+          "dd": 73.08,
+          "dominant_exit": "profit_target",
+          "exit_reasons": {
+            "delta_breach": 1,
+            "profit_target": 1
+          },
+          "integrity": true,
+          "max_loss_usd": 222.1,
+          "n_trades": 2,
+          "ok": true,
+          "pnl": -50.16,
+          "reason": "ok",
+          "route_counts": {
+            "call_credit_spread": 0,
+            "iron_condor": 0,
+            "put_credit_spread": 2,
+            "stand_aside": 15
+          },
+          "skipped": false,
+          "stand_aside_frac": 0.8824
+        },
         "symbol": "IWM",
+        "used_regime": "vol_expansion",
         "window": {
-          "reason": "no gap_shock window found in history",
-          "regime": "gap_shock",
-          "source": "unavailable",
-          "symbol": "IWM"
+          "end": "2024-08-05",
+          "fallback_from": "gap_shock",
+          "n_bars": 21,
+          "regime": "vol_expansion",
+          "source": "discovered",
+          "spot_return": -0.0003955004525285552,
+          "start": "2024-07-08",
+          "symbol": "IWM",
+          "used_fallback": true,
+          "wanted_regime": "gap_shock",
+          "window_days": 21
         }
       },
       {
@@ -515,6 +627,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "IWM",
+        "used_regime": "flat",
         "window": {
           "end": "2026-02-25",
           "n_bars": 21,
@@ -522,7 +635,8 @@
           "source": "discovered",
           "spot_return": -0.0005667072407225033,
           "start": "2026-01-27",
-          "symbol": "IWM"
+          "symbol": "IWM",
+          "window_days": 21
         }
       }
     ],

@@ -7,12 +7,13 @@
       "allow_zero_trades": true,
       "max_dd_usd": 400.0,
       "max_loss_usd": 300.0,
+      "min_available_regimes": 2,
       "min_bars": 12,
-      "notes": "Path stress is management/tail prep \u2014 zero trades (stand-aside) and losing windows can still pass if risk bounds hold.",
+      "notes": "Path stress is management/tail prep \u2014 zero trades (stand-aside) and losing windows can still pass if risk bounds hold. Pack fails if too few windows available.",
       "require_integrity": true,
       "require_positive_pnl": false
     },
-    "generated_at": "2026-07-19T21:22:25+00:00",
+    "generated_at": "2026-07-19T22:18:53+00:00",
     "live_authority": false,
     "n_available": 12,
     "n_fail": 0,
@@ -21,9 +22,11 @@
     "n_unavailable": 0,
     "notes": [
       "pack=full",
+      "window_days=21 (DTE-aware from management.long_dte + pad).",
       "Path stress uses real historical windows + BS proxy marks (L0).",
       "Zero trades (stand-aside) counts as pass when allow_zero_trades=true.",
-      "Positive PnL is not required by default \u2014 management/risk bounds are."
+      "Positive PnL is not required by default \u2014 management/risk bounds are.",
+      "min_available_regimes=2 (coverage gate)."
     ],
     "option_mark_provenance": "black_scholes_proxy",
     "pack": "full",
@@ -57,6 +60,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "AMZN",
+        "used_regime": "huge_down",
         "window": {
           "end": "2022-11-22",
           "n_bars": 21,
@@ -64,7 +68,8 @@
           "source": "discovered",
           "spot_return": -0.22719736212731814,
           "start": "2022-10-25",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -95,6 +100,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "AMZN",
+        "used_regime": "normal_down",
         "window": {
           "end": "2022-11-15",
           "n_bars": 21,
@@ -102,7 +108,8 @@
           "source": "discovered",
           "spot_return": -0.14970778684746416,
           "start": "2022-10-18",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -133,6 +140,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "AMZN",
+        "used_regime": "flat",
         "window": {
           "end": "2023-07-24",
           "n_bars": 21,
@@ -140,7 +148,8 @@
           "source": "discovered",
           "spot_return": -0.004098034267325061,
           "start": "2023-06-23",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -171,6 +180,7 @@
           "stand_aside_frac": 0.95
         },
         "symbol": "AMZN",
+        "used_regime": "normal_up",
         "window": {
           "end": "2025-11-12",
           "n_bars": 21,
@@ -178,7 +188,8 @@
           "source": "discovered",
           "spot_return": 0.13281063529846127,
           "start": "2025-10-15",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -209,6 +220,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "AMZN",
+        "used_regime": "huge_up",
         "window": {
           "end": "2026-04-30",
           "n_bars": 21,
@@ -216,7 +228,8 @@
           "source": "discovered",
           "spot_return": 0.258773749057603,
           "start": "2026-04-01",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -247,6 +260,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "AMZN",
+        "used_regime": "v_recovery",
         "window": {
           "end": "2024-08-26",
           "n_bars": 21,
@@ -254,7 +268,8 @@
           "source": "discovered",
           "spot_return": -0.04203055172767059,
           "start": "2024-07-29",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -285,6 +300,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "AMZN",
+        "used_regime": "inverse_v",
         "window": {
           "end": "2022-10-04",
           "n_bars": 21,
@@ -292,7 +308,8 @@
           "source": "discovered",
           "spot_return": -0.03980655180528861,
           "start": "2022-09-06",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -323,6 +340,7 @@
           "stand_aside_frac": 0.95
         },
         "symbol": "AMZN",
+        "used_regime": "gap_shock",
         "window": {
           "end": "2025-11-05",
           "n_bars": 21,
@@ -330,7 +348,8 @@
           "source": "discovered",
           "spot_return": 0.11091375362821373,
           "start": "2025-10-08",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -361,6 +380,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "AMZN",
+        "used_regime": "vol_crush",
         "window": {
           "end": "2026-01-12",
           "n_bars": 21,
@@ -368,7 +388,8 @@
           "source": "discovered",
           "spot_return": 0.07030572575659488,
           "start": "2025-12-11",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -399,6 +420,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "AMZN",
+        "used_regime": "vol_expansion",
         "window": {
           "end": "2026-06-29",
           "n_bars": 21,
@@ -406,7 +428,8 @@
           "source": "discovered",
           "spot_return": -0.11269588238239164,
           "start": "2026-05-29",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -437,6 +460,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "AMZN",
+        "used_regime": "chop_whipsaw",
         "window": {
           "end": "2022-11-30",
           "n_bars": 21,
@@ -444,7 +468,8 @@
           "source": "discovered",
           "spot_return": -0.002582911433363715,
           "start": "2022-11-01",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -475,6 +500,7 @@
           "stand_aside_frac": 0.95
         },
         "symbol": "AMZN",
+        "used_regime": "earnings_window",
         "window": {
           "end": "2025-11-19",
           "n_bars": 21,
@@ -482,7 +508,8 @@
           "source": "discovered",
           "spot_return": 0.021748132872374842,
           "start": "2025-10-22",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       }
     ],
@@ -492,7 +519,7 @@
     "trading_authority": false
   },
   "full_ran": true,
-  "generated_at": "2026-07-19T21:22:25+00:00",
+  "generated_at": "2026-07-19T22:18:53+00:00",
   "honesty": "L0 path stress on real historical regime windows. Not synthetic shocks. Not live edge. Management-prep gate after dual-cost F2.",
   "live_authority": false,
   "mode": "staged_path_stress",
@@ -504,12 +531,13 @@
       "allow_zero_trades": true,
       "max_dd_usd": 400.0,
       "max_loss_usd": 300.0,
+      "min_available_regimes": 2,
       "min_bars": 12,
-      "notes": "Path stress is management/tail prep \u2014 zero trades (stand-aside) and losing windows can still pass if risk bounds hold.",
+      "notes": "Path stress is management/tail prep \u2014 zero trades (stand-aside) and losing windows can still pass if risk bounds hold. Pack fails if too few windows available.",
       "require_integrity": true,
       "require_positive_pnl": false
     },
-    "generated_at": "2026-07-19T21:22:24+00:00",
+    "generated_at": "2026-07-19T22:18:51+00:00",
     "live_authority": false,
     "n_available": 4,
     "n_fail": 0,
@@ -518,9 +546,11 @@
     "n_unavailable": 0,
     "notes": [
       "pack=quick",
+      "window_days=21 (DTE-aware from management.long_dte + pad).",
       "Path stress uses real historical windows + BS proxy marks (L0).",
       "Zero trades (stand-aside) counts as pass when allow_zero_trades=true.",
-      "Positive PnL is not required by default \u2014 management/risk bounds are."
+      "Positive PnL is not required by default \u2014 management/risk bounds are.",
+      "min_available_regimes=2 (coverage gate)."
     ],
     "option_mark_provenance": "black_scholes_proxy",
     "pack": "quick",
@@ -554,6 +584,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "AMZN",
+        "used_regime": "huge_down",
         "window": {
           "end": "2022-11-22",
           "n_bars": 21,
@@ -561,7 +592,8 @@
           "source": "discovered",
           "spot_return": -0.22719736212731814,
           "start": "2022-10-25",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -592,6 +624,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "AMZN",
+        "used_regime": "huge_up",
         "window": {
           "end": "2026-04-30",
           "n_bars": 21,
@@ -599,7 +632,8 @@
           "source": "discovered",
           "spot_return": 0.258773749057603,
           "start": "2026-04-01",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -630,6 +664,7 @@
           "stand_aside_frac": 0.95
         },
         "symbol": "AMZN",
+        "used_regime": "gap_shock",
         "window": {
           "end": "2025-11-05",
           "n_bars": 21,
@@ -637,7 +672,8 @@
           "source": "discovered",
           "spot_return": 0.11091375362821373,
           "start": "2025-10-08",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       },
       {
@@ -668,6 +704,7 @@
           "stand_aside_frac": 1.0
         },
         "symbol": "AMZN",
+        "used_regime": "flat",
         "window": {
           "end": "2023-07-24",
           "n_bars": 21,
@@ -675,7 +712,8 @@
           "source": "discovered",
           "spot_return": -0.004098034267325061,
           "start": "2023-06-23",
-          "symbol": "AMZN"
+          "symbol": "AMZN",
+          "window_days": 21
         }
       }
     ],

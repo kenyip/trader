@@ -1,0 +1,34 @@
+{
+  "generated_from": "engine_prove",
+  "path_stress_shortlist": [
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0",
+      "symbols": [
+        "AMZN"
+      ],
+      "window_days": 21,
+      "long_dte": 7,
+      "staged_pass": true,
+      "stage_note": "quick_and_full",
+      "quick_pass": true,
+      "full_pass": true,
+      "quick_available": 4,
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0294_20260719T114455Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0__prove.json"
+    },
+    {
+      "candidate_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4",
+      "symbols": [
+        "IWM"
+      ],
+      "window_days": 21,
+      "long_dte": 14,
+      "staged_pass": true,
+      "stage_note": "quick_and_full",
+      "quick_pass": true,
+      "full_pass": true,
+      "quick_available": 4,
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0343_20260719T120559Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4__prove.json"
+    }
+  ],
+  "n_pass": 2
+}

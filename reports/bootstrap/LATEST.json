@@ -1,6 +1,7 @@
 {
-  "elapsed_seconds": 10.7,
-  "generated_at": "2026-07-19T21:14:17+00:00",
+  "elapsed_seconds": 9.7,
+  "engine_prove": true,
+  "generated_at": "2026-07-19T22:18:39+00:00",
   "honesty": "L0 Black-Scholes proxy only. Dual-cost F2 is research plumbing, not L1 observed edge or live authority.",
   "live_authority": false,
   "mode": "bootstrap_reprove",
