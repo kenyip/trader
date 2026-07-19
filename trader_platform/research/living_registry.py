@@ -150,7 +150,16 @@ class LivingRegistry:
 def load_living_registry(path: str | Path | None = None) -> LivingRegistry:
     path = Path(path) if path else DEFAULT_REGISTRY_PATH
     if not path.exists():
-        return LivingRegistry(updated_at=_now_iso())
+        # Bootstrap from committed example when present (local runtime file is gitignored).
+        example = path.parent / "living_registry.example.json"
+        if example.exists() and path == DEFAULT_REGISTRY_PATH:
+            try:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(example.read_text(encoding="utf-8"), encoding="utf-8")
+            except OSError:
+                return LivingRegistry(updated_at=_now_iso())
+        else:
+            return LivingRegistry(updated_at=_now_iso())
     raw = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(raw, Mapping):
         raise ValueError("living registry root must be an object")

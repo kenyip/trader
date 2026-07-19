@@ -1,4 +1,5 @@
-# Justfile - Easy commands for TSLA/TSLL Options Tracker
+# Justfile — Trader (Desk A personal tracker + Desk B Agentic engine)
+# Repo: ~/dev/trader  ·  package: trader_platform
 
 venv_dir := ".venv"
 py       := venv_dir / "bin" / "python"
@@ -392,3 +393,38 @@ trader-run-gate mode="preflight" *ARGS:
 #   just trader-income-coverage
 trader-income-coverage *ARGS:
     {{py}} scripts/trader_income_coverage.py {{ARGS}}
+
+# ── Desk B spine (self-sufficient loop; research/paper only) ──────────────
+# Evaluate a frozen StrategySpec (dual-cost train → holdout → living registry)
+#   just trader-eval
+#   just trader-eval -- --spec configs/strategy_specs/regime_router_income_45d_v1.json
+trader-eval *ARGS:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -z "{{ARGS}}" ]; then
+      {{py}} scripts/evaluate_strategy_spec.py \
+        --spec configs/strategy_specs/regime_router_income_v1.json \
+        --out .cache/platform/spine/eval_LATEST.json
+    else
+      {{py}} scripts/evaluate_strategy_spec.py {{ARGS}}
+    fi
+
+# Bounded StrategySpec evolve → evaluate → registry
+#   just trader-evolve
+#   just trader-evolve -- --max-mutants 2 --symbols BAC,KO
+trader-evolve *ARGS:
+    {{py}} scripts/trader_evolve_specs.py \
+      --seed configs/strategy_specs/regime_router_income_v1.json {{ARGS}}
+
+# Living registry status (F2 watchable seats)
+trader-living:
+    {{py}} scripts/trader_living_status.py
+
+# Patient opportunity watcher (NO_QUALIFIED / NO_SETUP / PAPER_PACKET_READY)
+trader-watch *ARGS:
+    {{py}} scripts/trader_watcher.py {{ARGS}}
+
+# Desk B loop smoke: living status + watcher
+trader-loop-status:
+    {{py}} scripts/trader_living_status.py
+    {{py}} scripts/trader_watcher.py
