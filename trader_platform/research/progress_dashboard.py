@@ -24,8 +24,10 @@ from trader_platform.research.living_registry import (
 from trader_platform.research.strategy_spec import load_strategy_spec
 
 _REPO = Path(__file__).resolve().parents[2]
-DEFAULT_STATE = _REPO / ".cache" / "platform" / "spine" / "discovery" / "discovery_state.json"
+# Must match discovery_loop.DEFAULT_STATE
+DEFAULT_STATE = _REPO / ".cache" / "platform" / "spine" / "discovery_state.json"
 DEFAULT_LATEST = _REPO / ".cache" / "platform" / "spine" / "discovery" / "discovery_LATEST.json"
+DEFAULT_MARATHON_PID = _REPO / ".cache" / "platform" / "spine" / "discovery" / "marathon.pid"
 
 
 def _now() -> str:
@@ -104,6 +106,67 @@ def _marathon_pid(pid_path: Path) -> tuple[bool, int | None]:
         return True, pid
     except OSError:
         return False, pid
+
+
+def _pool_parallel_status(parent_pid: int | None) -> dict[str, Any]:
+    """Count live process-pool workers under the discovery parent.
+
+    ProcessPoolExecutor on macOS spawn uses children with ``spawn_main`` in
+    the command line. ``resource_tracker`` is excluded from the worker count.
+    """
+    out: dict[str, Any] = {
+        "workers_live": 0,
+        "children_total": 0,
+        "resource_trackers": 0,
+        "parent_alive": False,
+    }
+    if parent_pid is None:
+        return out
+    try:
+        os.kill(int(parent_pid), 0)
+        out["parent_alive"] = True
+    except OSError:
+        return out
+
+    try:
+        import subprocess
+
+        raw = subprocess.check_output(
+            ["ps", "-ax", "-o", "pid=,ppid=,command="],
+            text=True,
+        )
+    except Exception:
+        return out
+
+    parent = int(parent_pid)
+    workers = 0
+    children = 0
+    trackers = 0
+    for line in raw.splitlines():
+        parts = line.strip().split(None, 2)
+        if len(parts) < 3:
+            continue
+        try:
+            _pid, ppid, cmd = int(parts[0]), int(parts[1]), parts[2]
+        except ValueError:
+            continue
+        if ppid != parent:
+            continue
+        children += 1
+        cmd_l = cmd.lower()
+        if "resource_tracker" in cmd_l:
+            trackers += 1
+            continue
+        # Process pool worker (spawn) or any non-tracker child doing eval work
+        if "spawn_main" in cmd_l or "multiprocessing" in cmd_l:
+            workers += 1
+        elif "python" in cmd_l:
+            # fallback: count other python children as workers
+            workers += 1
+    out["workers_live"] = workers
+    out["children_total"] = children
+    out["resource_trackers"] = trackers
+    return out
 
 
 def _policy_label(policy: str) -> str:
@@ -277,6 +340,9 @@ class ProgressSnapshot:
     campaign: dict[str, Any] = field(default_factory=dict)
     marathon_running: bool = False
     marathon_pid: int | None = None
+    workers_live: int = 0
+    workers_configured: int | None = None
+    workers_meta: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -290,6 +356,9 @@ class ProgressSnapshot:
             "campaign": self.campaign,
             "marathon_running": self.marathon_running,
             "marathon_pid": self.marathon_pid,
+            "workers_live": self.workers_live,
+            "workers_configured": self.workers_configured,
+            "workers_meta": self.workers_meta,
         }
 
 
@@ -314,20 +383,29 @@ def collect_progress(
 
     space = _count_space(registry_path=registry_path)
     campaign: dict[str, Any] = {}
+    workers_configured: int | None = None
     if state_path.exists():
         st = _load_json(state_path)
         campaign = {
             "source": "discovery_state",
             "running": st.get("running"),
             "gen_index": st.get("gen_index"),
+            "grid_cursor": st.get("grid_cursor"),
             "total_eval": st.get("total_eval"),
             "no_progress_streak": st.get("no_progress_streak"),
+            "n_symbols": st.get("n_symbols"),
             "last_seed": st.get("last_seed"),
             "last_progress_bits": st.get("last_progress_bits"),
             "stop_reason": st.get("stop_reason"),
             "elapsed_seconds": st.get("elapsed_seconds"),
             "updated_at": st.get("updated_at"),
+            "workers": st.get("workers"),
         }
+        if st.get("workers") is not None:
+            try:
+                workers_configured = int(st["workers"])
+            except (TypeError, ValueError):
+                workers_configured = None
     elif latest_path.exists():
         lt = _load_json(latest_path)
         campaign = {
@@ -340,10 +418,15 @@ def collect_progress(
             "generations_with_f1": lt.get("generations_with_f1"),
             "generations_with_f2": lt.get("generations_with_f2"),
         }
+        if lt.get("workers") is not None:
+            try:
+                workers_configured = int(lt["workers"])
+            except (TypeError, ValueError):
+                workers_configured = None
 
-    running, pid = _marathon_pid(
-        _REPO / ".cache" / "platform" / "spine" / "discovery" / "marathon.pid"
-    )
+    running, pid = _marathon_pid(DEFAULT_MARATHON_PID)
+    pool = _pool_parallel_status(pid if running else None)
+    workers_live = int(pool.get("workers_live") or 0)
     return ProgressSnapshot(
         generated_at=_now(),
         space=space,
@@ -353,6 +436,9 @@ def collect_progress(
         campaign=campaign,
         marathon_running=running,
         marathon_pid=pid,
+        workers_live=workers_live,
+        workers_configured=workers_configured,
+        workers_meta=pool,
     )
 
 
@@ -386,6 +472,14 @@ def format_progress_text(
     run = "● RUNNING" if snap.marathon_running else "○ idle"
     if snap.marathon_pid:
         run += f"  (pid {snap.marathon_pid})"
+    # Parallel workers: live process-pool count (+ configured target when known)
+    if snap.marathon_running or snap.workers_live or snap.workers_configured:
+        live = int(snap.workers_live or 0)
+        cfg = snap.workers_configured
+        if cfg is not None:
+            run += f"  ·  parallel {live}/{cfg} workers"
+        else:
+            run += f"  ·  parallel {live} workers"
     lines.append(run)
     lines.append("")
 
@@ -405,11 +499,29 @@ def format_progress_text(
     if camp.get("running") is not None or camp.get("stop_reason"):
         lines.append("")
         if camp.get("running"):
-            lines.append(
-                f"  Now: gen {camp.get('gen_index')} · "
-                f"{camp.get('total_eval') or 0} evals this campaign · "
-                f"stall streak {camp.get('no_progress_streak')}"
-            )
+            parts = [
+                f"gen {camp.get('gen_index')}",
+                f"{camp.get('total_eval') or 0} evals this campaign",
+            ]
+            if camp.get("n_symbols") is not None:
+                parts.append(f"{camp.get('n_symbols')} symbols")
+            if camp.get("grid_cursor") is not None:
+                parts.append(f"cursor {camp.get('grid_cursor')}")
+            parts.append(f"stall streak {camp.get('no_progress_streak')}")
+            lines.append(f"  Now: {' · '.join(str(p) for p in parts)}")
+            # Parallel line (always visible while campaign running)
+            live = int(snap.workers_live or 0)
+            cfg = snap.workers_configured if snap.workers_configured is not None else camp.get("workers")
+            if cfg is not None:
+                lines.append(
+                    f"  Parallel: {live} workers live / {cfg} configured "
+                    f"(process pool; 1 mutant per worker)"
+                )
+            else:
+                lines.append(
+                    f"  Parallel: {live} workers live "
+                    f"(process pool; 1 mutant per worker)"
+                )
             bits = camp.get("last_progress_bits")
             if isinstance(bits, list) and bits:
                 # shorten CLOSED:/F1:/F2: tags
@@ -430,6 +542,8 @@ def format_progress_text(
                 f"  Last campaign stop: {camp.get('stop_reason')} "
                 f"({camp.get('elapsed_seconds')}s)"
             )
+            if camp.get("workers") is not None:
+                lines.append(f"  Last campaign workers: {camp.get('workers')}")
 
     # --- TOP STRATEGIES ---
     lines.append("")

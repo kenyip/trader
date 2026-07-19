@@ -583,6 +583,8 @@ def run_discovery_loop(
             "total_f1_gens": total_f1,
             "total_f2_gens": total_f2,
             "no_progress_streak": no_progress,
+            "workers": worker_n,
+            "max_mutants_per_gen": int(max_mutants_per_gen),
             "n_symbols": len(symbols or []),
             "symbols": list(symbols or [])[:40],
             "last_seed": str(seed),
