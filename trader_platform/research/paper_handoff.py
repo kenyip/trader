@@ -240,7 +240,7 @@ def run_paper_handoff(
     except Exception:
         broker = PaperBroker()
 
-    decision = governor.check(intent, portfolio)
+    decision = governor.check(intent, portfolio=portfolio, mode="paper")
     risk_info = {
         "allowed": bool(decision.allowed),
         "reasons": list(decision.reasons or []),
@@ -368,3 +368,166 @@ def write_handoff_result(result: PaperHandoffResult, path: str | Path) -> Path:
         encoding="utf-8",
     )
     return path
+
+
+def run_paper_plumbing_smoke(
+    *,
+    registry_path: str | Path | None = None,
+    seat_id: str | None = None,
+) -> PaperHandoffResult:
+    """Force one paper ledger place for a paper_eligible seat (plumbing check).
+
+    Ignores regime stand-aside so we can verify OPEN path without waiting for a
+    bullish bar. Still never live. Tag includes plumbing_smoke.
+    """
+    generated = _now()
+    reg = load_living_registry(registry_path)
+    seats = [s for s in reg.seats if s.status == "paper_eligible"]
+    if seat_id:
+        seats = [s for s in seats if s.seat_id == seat_id]
+    if not seats:
+        return PaperHandoffResult(
+            status="NO_SETUP",
+            reason="no paper_eligible seats — run trader_promote_paper first",
+            generated_at=generated,
+        )
+    seat = seats[0]
+    symbol = (seat.symbols or ["SPY"])[0].upper()
+    structure = "put_credit_spread"
+    if build_market_frame is None:
+        return PaperHandoffResult(
+            status="NO_SETUP",
+            reason="data.build unavailable",
+            generated_at=generated,
+        )
+    frame = None
+    for period in ("1y", "2y", "5y"):
+        frame = build_market_frame(symbol, period=period, use_cache=True)
+        if frame is not None and len(frame) >= 5:
+            break
+    if frame is None or len(frame) < 5:
+        return PaperHandoffResult(
+            status="NO_SETUP",
+            reason=f"insufficient bars for {symbol}",
+            generated_at=generated,
+        )
+    row = frame.iloc[-1].copy()
+    # Force a regime that allows PCS so plumbing can run regardless of true regime.
+    row["regime"] = "bullish"
+    today = pd.Timestamp(str(frame.index[-1]))
+    spot = float(row.get("close") or 0.0)
+    spec = _load_spec(seat.spec_path)
+    cfg = (
+        spec.sim_config_for_structure(structure)
+        if spec is not None
+        else {
+            "structure": structure,
+            "long_dte": 21,
+            "long_target_delta": 0.18,
+            "spread_width": 1.0,
+            "min_credit_pct": 0.08,
+            "max_loss_budget_usd": 300.0,
+            "bear_dte": 0,
+            "iv_rank_min": 0.0,
+        }
+    )
+    cfg = {**cfg, "iv_rank_min": 0.0, "bear_dte": 0}
+    trade = pick_structure_entry(row, spot, today, cfg, structure=structure)
+    if trade is None:
+        return PaperHandoffResult(
+            status="NO_SETUP",
+            reason="plumbing smoke: pick_structure_entry failed even with forced bullish",
+            generated_at=generated,
+        )
+    max_loss_usd = float(trade.max_loss_per_share) * 100.0
+    legs = [
+        {"right": "put", "action": "sell", "strike": trade.short_strike, "qty": 1},
+        {"right": "put", "action": "buy", "strike": trade.long_strike, "qty": 1},
+    ]
+    intent = OrderIntent(
+        symbol=symbol,
+        side="sell",
+        qty=1.0,
+        order_type="limit",
+        limit_price=float(trade.net_credit),
+        strategy_id=seat.candidate_id,
+        multiplier=100.0,
+        tag=f"plumbing_smoke:{seat.seat_id}|pcs|ml={max_loss_usd:.2f}",
+        max_loss_usd=max_loss_usd,
+        structure=structure,
+        defined_risk=True,
+        option_right="put",
+        legs=legs,
+        short_strike=float(trade.short_strike),
+        long_strike=float(trade.long_strike),
+        expiration=str(trade.expiration.date()),
+        dte=int(trade.dte_at_entry),
+        width=float(trade.width),
+        net_credit=float(trade.net_credit),
+    )
+    governor = RiskGovernor()
+    broker = PaperBroker()
+    portfolio = (
+        broker.portfolio_snapshot()
+        if hasattr(broker, "portfolio_snapshot")
+        else PortfolioSnapshot()
+    )
+    decision = governor.check(intent, portfolio=portfolio, mode="paper")
+    risk_info = {
+        "allowed": bool(decision.allowed),
+        "reasons": list(decision.reasons or []),
+        "risk_amount": intent.risk_amount(),
+    }
+    if not decision.allowed:
+        return PaperHandoffResult(
+            status="RISK_DENIED",
+            reason="plumbing smoke risk denied: " + "; ".join(decision.reasons or []),
+            intent={
+                "symbol": intent.symbol,
+                "structure": intent.structure,
+                "limit_price": intent.limit_price,
+                "max_loss_usd": intent.max_loss_usd,
+                "tag": intent.tag,
+            },
+            risk=risk_info,
+            paper_action="blocked",
+            generated_at=generated,
+        )
+    place_result = broker.place_limit(intent)
+    if hasattr(place_result, "ok") and not place_result.ok:
+        return PaperHandoffResult(
+            status="PAPER_PLACE_FAILED",
+            reason=getattr(place_result, "message", "place failed"),
+            risk=risk_info,
+            paper_action="paper_place_failed",
+            generated_at=generated,
+        )
+    order_obj = getattr(place_result, "order", None)
+    order_id = str(getattr(order_obj, "order_id", None) or "")
+    result = PaperHandoffResult(
+        status="PAPER_PLACED",
+        reason=f"plumbing smoke paper order placed (forced bullish); order_id={order_id}",
+        intent={
+            "symbol": intent.symbol,
+            "structure": intent.structure,
+            "limit_price": intent.limit_price,
+            "max_loss_usd": intent.max_loss_usd,
+            "net_credit": intent.net_credit,
+            "expiration": intent.expiration,
+            "legs": intent.legs,
+            "tag": intent.tag,
+            "strategy_id": intent.strategy_id,
+        },
+        risk=risk_info,
+        paper_action="plumbing_smoke_place",
+        paper_order_id=order_id,
+        packet={
+            "plumbing_smoke": True,
+            "forced_regime": "bullish",
+            "seat_id": seat.seat_id,
+            "note": "Not a real setup — ledger path verification only",
+        },
+        generated_at=generated,
+    )
+    _audit("plumbing_smoke_ok", result.to_dict())
+    return result

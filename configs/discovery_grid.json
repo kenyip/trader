@@ -1,0 +1,11 @@
+{
+  "description": "Expandable finite mutant grid for Desk B discovery. Edit axes and re-run discover; no code change required. Restart discovery after edits (grid is cached per process).",
+  "dtes": [7, 10, 14, 21, 30, 45, 60],
+  "profit_targets": [0.35, 0.40, 0.45, 0.50, 0.60, 0.70],
+  "deltas": [0.10, 0.12, 0.14, 0.16, 0.18, 0.22, 0.25],
+  "iv_rank_mins": [0.0, 15.0, 25.0, 30.0, 40.0, 50.0],
+  "policies": ["pcs_non_bear", "pcs_bull_only", "router"],
+  "min_credit_pcts": [0.06, 0.08, 0.10, 0.12, 0.15],
+  "spread_widths": [1.0, 2.0, 3.0],
+  "notes": "Cartesian product over axes. spread_widths is optional (omit = seed default width only). discovery_loop samples systematically by generation. Adding values expands the finite bag."
+}

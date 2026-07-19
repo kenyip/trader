@@ -132,57 +132,100 @@ def _is_novel(candidate_id: str, family_id: str, known: set[str]) -> bool:
     return candidate_id not in known and family_id not in known
 
 
-def _combinatorial_mutants() -> list[MutantPlan]:
-    """Dense deterministic grid for continuous discovery (still finite, not free optimizer)."""
+DEFAULT_GRID_PATH = _REPO / "configs" / "discovery_grid.json"
+
+
+def load_grid_config(path: str | Path | None = None) -> dict[str, Any]:
+    """Load expandable grid axes from JSON (fallback to built-in defaults)."""
+    p = Path(path) if path else DEFAULT_GRID_PATH
+    defaults = {
+        "dtes": [14, 21, 30, 45],
+        "profit_targets": [0.40, 0.50, 0.60],
+        "deltas": [0.14, 0.18, 0.22],
+        "iv_rank_mins": [0.0, 20.0, 30.0, 40.0],
+        "policies": ["pcs_non_bear", "pcs_bull_only", "router"],
+        "min_credit_pcts": [0.08, 0.12],
+        # Optional axes: empty list means "don't override seed default"
+        "spread_widths": [],
+    }
+    if not p.exists():
+        return defaults
+    try:
+        raw = json.loads(p.read_text(encoding="utf-8"))
+        if not isinstance(raw, dict):
+            return defaults
+        out = dict(defaults)
+        for key in defaults:
+            if key not in raw:
+                continue
+            if isinstance(raw[key], list):
+                # Allow empty list for optional axes (e.g. no width sweep)
+                out[key] = list(raw[key])
+        return out
+    except Exception:
+        return defaults
+
+
+def _combinatorial_mutants(grid_path: str | Path | None = None) -> list[MutantPlan]:
+    """Dense deterministic grid for continuous discovery (finite; expand via discovery_grid.json)."""
+    cfg = load_grid_config(grid_path)
     plans: list[MutantPlan] = []
-    dtes = (14, 21, 30, 45)
-    pts = (0.40, 0.50, 0.60)
-    deltas = (0.14, 0.18, 0.22)
-    ivs = (0.0, 20.0, 30.0, 40.0)
-    policies = ("pcs_non_bear", "pcs_bull_only", "router")
-    credits = (0.08, 0.12)
+    dtes = [int(x) for x in cfg["dtes"]]
+    pts = [float(x) for x in cfg["profit_targets"]]
+    deltas = [float(x) for x in cfg["deltas"]]
+    ivs = [float(x) for x in cfg["iv_rank_mins"]]
+    policies = [str(x) for x in cfg["policies"]]
+    credits = [float(x) for x in cfg["min_credit_pcts"]]
+    widths_raw = cfg.get("spread_widths") or []
+    widths: list[float | None] = [float(x) for x in widths_raw] if widths_raw else [None]
     for dte in dtes:
         for pt in pts:
             for delta in deltas:
                 for iv in ivs:
                     for pol in policies:
                         for cred in credits:
-                            # Skip absurd combos: full router with high IV floor only on IC side is ok
-                            stop = max(3, dte // 3)
-                            suffix = (
-                                f"g_d{dte}_pt{int(pt*100)}_dl{int(delta*100)}"
-                                f"_iv{int(iv)}_c{int(cred*100)}_{pol[:6]}"
-                            )
-                            plans.append(
-                                MutantPlan(
-                                    suffix=suffix[:80],
-                                    management_patch={
-                                        "long_dte": dte,
-                                        "dte_stop": stop,
-                                        "profit_target": pt,
-                                        "long_target_delta": delta,
-                                        "iv_rank_min": iv,
-                                        "min_credit_pct": cred,
-                                    },
-                                    router_policy=pol,
-                                    notes="grid",
+                            for width in widths:
+                                stop = max(3, int(dte) // 3)
+                                w_tag = f"_w{int(width)}" if width is not None else ""
+                                suffix = (
+                                    f"g_d{int(dte)}_pt{int(pt * 100)}_dl{int(delta * 100)}"
+                                    f"_iv{int(iv)}_c{int(cred * 100)}{w_tag}_{pol[:6]}"
                                 )
-                            )
+                                patch: dict[str, Any] = {
+                                    "long_dte": int(dte),
+                                    "dte_stop": stop,
+                                    "profit_target": float(pt),
+                                    "long_target_delta": float(delta),
+                                    "iv_rank_min": float(iv),
+                                    "min_credit_pct": float(cred),
+                                }
+                                if width is not None:
+                                    patch["spread_width"] = float(width)
+                                plans.append(
+                                    MutantPlan(
+                                        suffix=suffix[:80],
+                                        management_patch=patch,
+                                        router_policy=str(pol),
+                                        notes="grid",
+                                    )
+                                )
     return plans
 
 
-# Full finite grid cached once
+# Full finite grid cached once (invalidate by process restart after editing JSON)
 _GRID_MUTANTS: list[MutantPlan] | None = None
+_GRID_SOURCE: str | None = None
 
 
-def all_grid_mutants() -> list[MutantPlan]:
-    global _GRID_MUTANTS
-    if _GRID_MUTANTS is None:
-        # waves first (human-curated), then dense grid
+def all_grid_mutants(grid_path: str | Path | None = None) -> list[MutantPlan]:
+    global _GRID_MUTANTS, _GRID_SOURCE
+    source = str(Path(grid_path) if grid_path else DEFAULT_GRID_PATH)
+    if _GRID_MUTANTS is None or _GRID_SOURCE != source:
         curated: list[MutantPlan] = []
         for wave in WAVE_MUTANTS:
             curated.extend(wave)
-        _GRID_MUTANTS = curated + _combinatorial_mutants()
+        _GRID_MUTANTS = curated + _combinatorial_mutants(grid_path)
+        _GRID_SOURCE = source
     return _GRID_MUTANTS
 
 
@@ -198,11 +241,12 @@ def generation_mutants(gen_index: int, max_mutants: int) -> list[MutantPlan]:
 
 
 def default_workers(requested: int | None = None) -> int:
-    """CPU-bound eval pool size (leave one core free by default)."""
+    """CPU-bound eval pool size (use almost all cores by default)."""
     cpu = os.cpu_count() or 2
     if requested is not None and int(requested) > 0:
-        return max(1, int(requested))
-    return max(1, min(cpu - 1, 8))
+        return max(1, min(int(requested), cpu))
+    # Leave one core free for UI/OS when possible
+    return max(1, cpu - 1 if cpu > 2 else cpu)
 
 
 def _evaluate_one_job(payload: dict[str, Any]) -> dict[str, Any]:

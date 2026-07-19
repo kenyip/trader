@@ -27,15 +27,25 @@ def main(argv: list[str] | None = None) -> int:
         help="Mutate paper ledger only if living seat is paper_eligible",
     )
     parser.add_argument(
+        "--plumbing-smoke",
+        action="store_true",
+        help="Force one paper place for a paper_eligible seat (ignore regime; plumbing only)",
+    )
+    parser.add_argument(
         "--out",
         default=str(_REPO / ".cache/platform/spine/paper_handoff_LATEST.json"),
     )
     args = parser.parse_args(argv)
-    result = run_paper_handoff(
-        registry_path=args.registry,
-        execute_paper=bool(args.execute_paper),
-        dry_run=not bool(args.execute_paper),
-    )
+    if args.plumbing_smoke:
+        from trader_platform.research.paper_handoff import run_paper_plumbing_smoke
+
+        result = run_paper_plumbing_smoke(registry_path=args.registry)
+    else:
+        result = run_paper_handoff(
+            registry_path=args.registry,
+            execute_paper=bool(args.execute_paper),
+            dry_run=not bool(args.execute_paper),
+        )
     path = write_handoff_result(result, args.out)
     print(
         json.dumps(

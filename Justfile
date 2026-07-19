@@ -437,9 +437,16 @@ trader-loop-status:
     {{py}} scripts/trader_living_status.py
     {{py}} scripts/trader_watcher.py
 
-# Paper handoff from watcher (dry-run default; --execute-paper only if paper_eligible)
+# Promote top F2 living seats → paper_eligible (plumbing path)
+#   just trader-promote-paper
+#   just trader-promote-paper --top 5
+trader-promote-paper *ARGS:
+    {{py}} scripts/trader_promote_paper.py {{ARGS}}
+
+# Paper handoff (dry-run default; plumbing-smoke forces one ledger order)
 #   just trader-paper-handoff
-#   just trader-paper-handoff -- --execute-paper
+#   just trader-paper-handoff --plumbing-smoke
+#   just trader-paper-handoff --execute-paper
 trader-paper-handoff *ARGS:
     {{py}} scripts/trader_paper_handoff.py {{ARGS}}
 

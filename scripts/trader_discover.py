@@ -59,7 +59,7 @@ def main(argv: list[str] | None = None) -> int:
         "--workers",
         type=int,
         default=0,
-        help="Parallel process workers for mutant evals (0 = auto: cpu-1, capped at 8)",
+        help="Parallel process workers for mutant evals (0 = auto: cpu-1)",
     )
     p.add_argument("--symbols", default="", help="Optional comma symbol subset (faster)")
     p.add_argument(
