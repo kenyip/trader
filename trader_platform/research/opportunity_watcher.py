@@ -63,14 +63,16 @@ class WatchResult:
         return asdict(self)
 
 
-def _latest_bar(symbol: str, period: str = "3mo") -> tuple[pd.Series, pd.Timestamp]:
+def _latest_bar(symbol: str, period: str = "1y") -> tuple[pd.Series, pd.Timestamp]:
     if build_market_frame is None:
         raise RuntimeError("data.build unavailable")
-    frame = build_market_frame(symbol, period=period, use_cache=True)
-    if frame is None or len(frame) < 5:
-        raise ValueError(f"insufficient bars for {symbol}")
-    ts = pd.Timestamp(str(frame.index[-1]))
-    return frame.iloc[-1], ts
+    # Prefer requested period; fall back to longer history if cache is thin.
+    for candidate in (period, "1y", "2y", "5y"):
+        frame = build_market_frame(symbol, period=candidate, use_cache=True)
+        if frame is not None and len(frame) >= 5:
+            ts = pd.Timestamp(str(frame.index[-1]))
+            return frame.iloc[-1], ts
+    raise ValueError(f"insufficient bars for {symbol}")
 
 
 def _load_spec_for_seat(seat: LivingSeat) -> StrategySpec | None:
