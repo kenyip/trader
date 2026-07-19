@@ -231,7 +231,11 @@ def all_grid_mutants(grid_path: str | Path | None = None) -> list[MutantPlan]:
 
 
 def generation_mutants(gen_index: int, max_mutants: int) -> list[MutantPlan]:
-    """Slice the finite search space by generation for tight continuous runs."""
+    """Slice the finite search space by generation for tight continuous runs.
+
+    Prefer ``novel_mutant_plans`` when a registry is available so restarts
+    do not re-slice the already-evaluated head of the grid.
+    """
     grid = all_grid_mutants()
     n = max(1, int(max_mutants))
     start = (gen_index * n) % len(grid)
@@ -239,6 +243,45 @@ def generation_mutants(gen_index: int, max_mutants: int) -> list[MutantPlan]:
     for i in range(n):
         out.append(grid[(start + i) % len(grid)])
     return out
+
+
+def novel_mutant_plans(
+    seed: Any,
+    *,
+    max_mutants: int,
+    known: set[str],
+    start_cursor: int = 0,
+    symbols: Optional[list[str]] = None,
+) -> tuple[list[MutantPlan], int, int]:
+    """Walk the finite grid from ``start_cursor`` and return novel plans.
+
+    Returns ``(plans, next_cursor, n_skipped)``. Cursor advances past every
+    plan considered so restarts keep draining untried DNA instead of
+    looping the already-evaluated head of the bag.
+    """
+    grid = all_grid_mutants()
+    if not grid:
+        return [], 0, 0
+    n = max(1, int(max_mutants))
+    cursor = int(start_cursor) % len(grid)
+    plans: list[MutantPlan] = []
+    skipped = 0
+    scanned = 0
+    # Hard cap: one full pass over the grid per generation call
+    while len(plans) < n and scanned < len(grid):
+        plan = grid[cursor]
+        cursor = (cursor + 1) % len(grid)
+        scanned += 1
+        mutant = apply_mutant(seed, plan)
+        if symbols:
+            raw = mutant.to_dict()
+            raw["symbols"] = [s.upper() for s in symbols]
+            mutant = strategy_spec_from_mapping(raw)
+        if not _is_novel(mutant.candidate_id, mutant.family_id, known):
+            skipped += 1
+            continue
+        plans.append(plan)
+    return plans, cursor, skipped
 
 
 def default_workers(requested: int | None = None) -> int:
@@ -294,10 +337,19 @@ def run_generation(
     run_holdout: bool,
     known: set[str],
     workers: int = 1,
+    grid_cursor: int = 0,
 ) -> dict[str, Any]:
     """One discovery generation: evaluate novel mutants (optionally in parallel)."""
     seed = load_strategy_spec(seed_path)
-    plans = generation_mutants(gen_index, max_mutants)
+    before = known_ids(registry_path)
+    known_all = known | before
+    plans, next_cursor, n_scan_skipped = novel_mutant_plans(
+        seed,
+        max_mutants=max_mutants,
+        known=known_all,
+        start_cursor=grid_cursor,
+        symbols=symbols,
+    )
     stamp = _now_stamp()
     gen_out = out_dir / f"gen_{gen_index:04d}_{stamp}"
     gen_out.mkdir(parents=True, exist_ok=True)
@@ -305,8 +357,13 @@ def run_generation(
     results: list[dict[str, Any]] = []
     skipped: list[dict[str, str]] = []
     progress_bits: list[str] = []
-
-    before = known_ids(registry_path)
+    if n_scan_skipped:
+        skipped.append(
+            {
+                "candidate_id": "*",
+                "reason": f"grid_scan_skipped_already_known={n_scan_skipped}",
+            }
+        )
 
     # Phase 1: build novel mutant payloads
     jobs: list[dict[str, Any]] = []
@@ -401,6 +458,9 @@ def run_generation(
         "any_f1": any_f1,
         "any_f2": any_f2,
         "new_registry_ids": sorted(new_ids)[:50],
+        "grid_cursor_start": int(grid_cursor),
+        "grid_cursor_next": int(next_cursor),
+        "n_grid_scan_skipped": int(n_scan_skipped),
         "generated_at": _now_iso(),
         "out_dir": str(gen_out),
     }
@@ -473,6 +533,14 @@ def run_discovery_loop(
     total_f2 = 0
     total_f1 = 0
     total_eval = 0
+    # Resume grid cursor so marathons don't re-scan the already-evaluated head
+    grid_cursor = 0
+    if state_path.exists():
+        try:
+            prev = json.loads(state_path.read_text(encoding="utf-8"))
+            grid_cursor = int(prev.get("grid_cursor") or 0)
+        except Exception:
+            grid_cursor = 0
 
     for gen in range(int(max_generations)):
         if max_seconds > 0 and (time.monotonic() - started) >= max_seconds:
@@ -490,7 +558,9 @@ def run_discovery_loop(
             run_holdout=run_holdout,
             known=known,
             workers=worker_n,
+            grid_cursor=grid_cursor,
         )
+        grid_cursor = int(gen_summary.get("grid_cursor_next") or grid_cursor)
         generations.append(gen_summary)
         total_eval += int(gen_summary.get("n_evaluated") or 0)
         if gen_summary.get("any_f2"):
@@ -508,10 +578,13 @@ def run_discovery_loop(
             "updated_at": _now_iso(),
             "running": True,
             "gen_index": gen,
+            "grid_cursor": grid_cursor,
             "total_eval": total_eval,
             "total_f1_gens": total_f1,
             "total_f2_gens": total_f2,
             "no_progress_streak": no_progress,
+            "n_symbols": len(symbols or []),
+            "symbols": list(symbols or [])[:40],
             "last_seed": str(seed),
             "last_progress_bits": gen_summary.get("progress_bits"),
             "living_watchable": [
