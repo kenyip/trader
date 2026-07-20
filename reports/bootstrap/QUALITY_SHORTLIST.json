@@ -1,0 +1,101 @@
+{
+  "generated_at": "2026-07-20T09:15:00Z",
+  "phase": "BUILD_PAPER_SEARCH",
+  "authority": "research_paper_only",
+  "honesty": "Proxy BS sims + B3/B4 only. Not TOP_HYP. Multi-leg not MCP-live. CSP is MCP-native candidate class.",
+  "agentic": {
+    "account_mask": "••••8507",
+    "cash_usd": 500,
+    "option_level": 2,
+    "type": "cash",
+    "mcp_place": "single_leg_only"
+  },
+  "shortlist": [
+    {
+      "hyp_id": "hyp_dna_bac_put_credit_spread_88f03c89",
+      "structure": "put_credit_spread",
+      "symbol": "BAC",
+      "lane": "paper_research",
+      "stress_priority": true,
+      "b3_hold": true,
+      "dense_neg_ge3": 2,
+      "full_pnl": 520.34,
+      "max_dd": 103.28,
+      "max_loss_usd_approx": 162,
+      "b4_cost_hold": true,
+      "b4_note": "SHIP@5pct slip pnl~206",
+      "why": "Best risk profile among tonight's PCS SHIPs: tight DD, few dense-neg, cost survives 5%.",
+      "caveat": "2024 year NULL/weak; multi-leg not MCP placeable; not pack multi-symbol yet."
+    },
+    {
+      "hyp_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
+      "structure": "put_credit_spread",
+      "symbol": "PLTR",
+      "lane": "paper_research",
+      "stress_priority": true,
+      "b3_hold": true,
+      "dense_neg_ge3": 1,
+      "full_pnl": 1288.73,
+      "max_dd": 229.94,
+      "b4_cost_hold": true,
+      "b4_note": "SHIP@5pct slip pnl~244",
+      "why": "Dense SHIP + cost hold; higher path DD than BAC leader.",
+      "caveat": "Worse max_dd; early years sparse; multi-leg."
+    },
+    {
+      "hyp_id": "hyp_dna_nflx_cash_secured_put_0d3e1748",
+      "structure": "cash_secured_put",
+      "symbol": "NFLX",
+      "lane": "mcp_native_live_candidate_path",
+      "stress_priority": false,
+      "ship_score_tonight": 198.95,
+      "n_trades_tonight": 22,
+      "why": "MCP single-leg + cash L2 compatible class; SHIP on evolve.",
+      "caveat": "CSP BP on NFLX often >$500 test sleeve — needs strike sizing / $3k or cheaper underlyings for live. B3/B4 single-leg path not same as PCS stress."
+    },
+    {
+      "hyp_id": "hyp_dna_tsll_cash_secured_put_7f02a6ce",
+      "structure": "cash_secured_put",
+      "symbol": "TSLL",
+      "lane": "mcp_native_live_candidate_path",
+      "stress_priority": false,
+      "ship_score_tonight": 109.93,
+      "why": "Fits small cash sleeve (~1k CSP BP class); levered product — treat cautiously.",
+      "caveat": "Levered ETF gap/assignment risk; quality bar incomplete."
+    },
+    {
+      "hyp_id": "hyp_dna_tsll_wheel_assignment_518cf98b",
+      "structure": "wheel_assignment",
+      "symbol": "TSLL",
+      "lane": "mcp_native_live_candidate_path",
+      "stress_priority": false,
+      "ship_score_tonight": 161.86,
+      "why": "Wheel is single-leg operable via MCP in principle.",
+      "caveat": "Assignment inventory + levered underlying; not first arm without deeper stress."
+    }
+  ],
+  "rejected_tonight": [
+    {
+      "hyp_id": "hyp_dna_coin_call_credit_spread_bf151b02",
+      "reason": "B3 hold=false REJECT; large losses"
+    },
+    {
+      "hyp_id": "hyp_dna_ccl_put_credit_spread_35763864",
+      "reason": "B4 fragile large_loss_at_5pct"
+    },
+    {
+      "hyp_id": "hyp_dna_pltr_put_credit_spread_79e1ed9e",
+      "reason": "B4 fragile large_loss_at_5pct"
+    }
+  ],
+  "densify_pack": {
+    "quality_pass": false,
+    "note": "10-symbol multi re-prove still n_quality_pass=0; IWM thin F2 only"
+  },
+  "next": [
+    "Promote BAC 88f03c89 to testing + multi-session dry paper when OPEN_PCS fires (not execute-live)",
+    "Deepen CSP stress for TSLL/NFLX/SMCI sized to $500 then $3k",
+    "Dual-cost / path-stress on BAC DNA before TOP_HYP",
+    "Keep quality residual cron; no 5m densify"
+  ]
+}

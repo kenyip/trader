@@ -385,10 +385,14 @@ trader-wake-moa *ARGS:
 trader-build-lab *ARGS:
     bash scripts/trader_build_lab_moa.sh {{ARGS}}
 
-# Autonomous continuum (no Ken prompt): refresh strategy-engine handoff → MoA if NEXT_SURVIVOR else multi-symbol + dry paper residual.
+# Autonomous continuum (no Ken prompt): refresh strategy-engine handoff → MoA if NEXT_SURVIVOR else quality residual.
 # Never live/shadow/arm/execute-paper. Single-flight via build_lab.lock.
 trader-autonomous-tick:
     bash scripts/trader_autonomous_tick.sh
+
+# Quality residual only (research + DR evolve + CSP evolve + shortlist stress + multi + dry paper).
+trader-quality-residual:
+    bash scripts/trader_quality_residual.sh
 
 # Fail-closed clean/main/origin completion check (BUILD wrapper runs this automatically).
 trader-run-gate mode="preflight" *ARGS:

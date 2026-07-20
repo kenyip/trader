@@ -11,8 +11,10 @@ Wake volume is **not** progress. Cron exists so Trader **keeps working the go-li
 
 1. **RTH condition / paper plumbing** — stand-aside or dry paper path on living/paper_eligible seats  
 2. **Off-hours BUILD quality** — Strategy Engine handoff → MoA only when `NEXT_SURVIVOR`  
-3. **Cheap residual when no survivor** — multi-symbol quality re-prove + dry paper loop (still useful delta)  
+3. **Quality residual when no survivor** — research rank + defined-risk evolve + CSP/wheel evolve + B3/B4 on shortlist + multi-symbol re-prove + dry paper (`scripts/trader_quality_residual.sh`)  
 4. **Never** continuous dense bag drain, live orders, self-arm, or `--execute-paper` from cron
+
+**Acceleration pin (2026-07-20 Ken):** tighter quality loops toward proven strategies — hourly continuum + full residual, **not** 5m densify thrash.
 
 Ken’s ongoing job is **not** to prompt every wake. Ken’s job is: keep gateway alive; fund/options when Phase 4 nears; arm only when a LIVE_PACKET is drafted.
 
@@ -38,7 +40,7 @@ Receipt: `.cache/platform/autonomous/tick_LATEST.json`
 |---|---|---|---|
 | `trader-rth-eval` | `30 6-12 * * 1-5` | agent + skill | Hourly RTH condition; dry paper default |
 | `trader-paper-ops` | `5 6-12 * * 1-5` | script | Dry `trader-paper-loop` only |
-| `trader-autonomous-tick` | `15 */2 * * *` | script | Continuum every 2h: handoff → MoA or cheap residual |
+| `trader-autonomous-tick` | `15 * * * *` (hourly) | script | Continuum: handoff → MoA or **quality residual** (research+evolve+stress+multi+paper) |
 | `trader-build-lab-premarket` | `15 5 * * 1-5` | script → autonomous tick | Premarket continuum |
 | `trader-build-lab-postclose` | `15 14 * * 1-5` | script → autonomous tick | Postclose continuum |
 | `trader-build-lab-daily` | `45 16 * * 1-5` | script → autonomous tick | Primary weekday lab window |

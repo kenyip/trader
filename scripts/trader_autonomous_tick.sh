@@ -145,25 +145,39 @@ if [[ "$STATUS" == "NEXT_SURVIVOR" ]]; then
   exec bash "$MOA"
 fi
 
-# --- 3b) no qualified / other → cheap quality residual (still autonomous progress) ---
-# Multi-symbol quality bar work does not need MoA tokens; keeps pack-grade search moving.
+# --- 3b) no qualified / other → quality residual (still autonomous progress) ---
+# Prefer full quality residual (research + evolve + optional B3/B4 + multi + paper).
+# Falls back to multi+paper if residual script missing. Never MoA thrash / densify bag.
+QUALITY_RES="$REPO/scripts/trader_quality_residual.sh"
 if [[ "$STATUS" == "NO_QUALIFIED_STRATEGY" || "$STATUS" == "MISSING" ]]; then
   multi_rc=0
   paper_rc=0
-  if [[ -f "$MULTI" ]]; then
+  quality_rc=0
+  residual_mode="multi_paper"
+  if [[ -x "$QUALITY_RES" || -f "$QUALITY_RES" ]]; then
+    residual_mode="quality_residual"
     set +e
-    "$PY" "$MULTI" >"$RECEIPT_DIR/multi_symbol_LATEST.json" 2>"$RECEIPT_DIR/multi_symbol_LATEST.err"
-    multi_rc=$?
+    bash "$QUALITY_RES"
+    quality_rc=$?
     set -e
+  else
+    if [[ -f "$MULTI" ]]; then
+      set +e
+      "$PY" "$MULTI" >"$RECEIPT_DIR/multi_symbol_LATEST.json" 2>"$RECEIPT_DIR/multi_symbol_LATEST.err"
+      multi_rc=$?
+      set -e
+    fi
+    if [[ -f "$PAPER" ]]; then
+      set +e
+      "$PY" "$PAPER" >"$RECEIPT_DIR/paper_loop_stdout.txt" 2>"$RECEIPT_DIR/paper_loop_stderr.txt"
+      paper_rc=$?
+      set -e
+    fi
   fi
-  if [[ -f "$PAPER" ]]; then
-    set +e
-    "$PY" "$PAPER" >"$RECEIPT_DIR/paper_loop_stdout.txt" 2>"$RECEIPT_DIR/paper_loop_stderr.txt"
-    paper_rc=$?
-    set -e
-  fi
-  write_receipt "no_survivor_cheap_residual" "status=$STATUS" "multi_symbol_rc=$multi_rc" "paper_loop_rc=$paper_rc" "note=expected_no_survivor_cheap_residual" >/dev/null
-  echo "trader_autonomous_tick: no survivor — multi_rc=$multi_rc paper_rc=$paper_rc (MoA not launched)"
+  write_receipt "no_survivor_quality_residual" "status=$STATUS" "residual_mode=$residual_mode" \
+    "quality_rc=$quality_rc" "multi_symbol_rc=$multi_rc" "paper_loop_rc=$paper_rc" \
+    "note=expected_no_survivor_quality_residual" >/dev/null
+  echo "trader_autonomous_tick: no survivor — mode=$residual_mode quality_rc=$quality_rc multi_rc=$multi_rc paper_rc=$paper_rc (MoA not launched)"
   # Exit 0 so cron is green on honest no-edge engine results.
   exit 0
 fi
