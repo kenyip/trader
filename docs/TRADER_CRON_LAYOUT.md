@@ -1,80 +1,88 @@
 # Trader cron layout (post engine-prove)
 
-**Pinned:** 2026-07-19  
+**Pinned:** 2026-07-19 (autonomous continuum)  
 **Profile:** Hermes `trader` only (`~/.hermes/profiles/trader/cron/`)  
-**Doctrine:** `docs/TRADER_BUILD.md` · handoff `reports/bootstrap/ENGINE_PROVE_HANDOFF.md`
+**Doctrine:** `docs/TRADER_BUILD.md` · handoff `reports/bootstrap/ENGINE_PROVE_HANDOFF.md`  
+**Autonomous tick:** `scripts/trader_autonomous_tick.sh` / `just trader-autonomous-tick`
 
 ## Intent
 
-Wake volume is **not** progress. Cron exists to:
+Wake volume is **not** progress. Cron exists so Trader **keeps working the go-live funnel without Ken** — as long as the trader gateway is up:
 
 1. **RTH condition / paper plumbing** — stand-aside or dry paper path on living/paper_eligible seats  
-2. **Off-hours BUILD quality** — sparse dual-model labs aimed at pack-grade multi-symbol edge  
-3. **Never** continuous dense bag drain, live orders, or self-arm
+2. **Off-hours BUILD quality** — Strategy Engine handoff → MoA only when `NEXT_SURVIVOR`  
+3. **Cheap residual when no survivor** — multi-symbol quality re-prove + dry paper loop (still useful delta)  
+4. **Never** continuous dense bag drain, live orders, self-arm, or `--execute-paper` from cron
 
-## Active set (target)
+Ken’s ongoing job is **not** to prompt every wake. Ken’s job is: keep gateway alive; fund/options when Phase 4 nears; arm only when a LIVE_PACKET is drafted.
+
+## How autonomy works (single flight)
+
+```text
+cron / just trader-autonomous-tick
+  → if build_lab.lock live: skip
+  → route_batch (cached OHLCV → routes + panel)
+  → strategy engine handoff → .cache/strategy-engine/latest.json
+  → if NEXT_SURVIVOR: zero-input BUILD MoA (Sol → Grok → finalizer → integrate)
+  → if NO_QUALIFIED_STRATEGY: multi-symbol re-prove + dry paper-loop; exit 0
+  → never live / shadow / arm
+```
+
+BUILD lab cron scripts (`trader-build-lab-*.sh`) all call this tick via `trader-build-lab-canonical.sh`, so they no longer fail solely because a 6h-old handoff went stale.
+
+Receipt: `.cache/platform/autonomous/tick_LATEST.json`
+
+## Active set
 
 | Job | Schedule (America/Los_Angeles) | Mode | Purpose |
 |---|---|---|---|
-| `trader-rth-eval` | `30 6-12 * * 1-5` | agent + `trader-self-evolution` | Hourly RTH condition eval; paper OPEN_* only if capital-fit; no evolve |
-| `trader-paper-ops` | `5 6-12 * * 1-5` | script `trader-paper-ops.sh` | Dry `just trader-paper-loop` residue (watch + handoff, no execute-paper) |
-| `trader-build-lab-premarket` | `15 5 * * 1-5` | script → zero-input MoA | One BUILD before open |
-| `trader-build-lab-postclose` | `15 14 * * 1-5` | script → MoA | One BUILD after close |
-| `trader-build-lab-daily` | `45 16 * * 1-5` | script → MoA | Primary weekday BUILD densify (quality, not bag %) |
-| `trader-build-lab-evening` | `0 20 * * 1-5` | script → MoA | Second weekday BUILD if first finished |
-| `trader-build-lab-weekend` | `0 10 * * 6` | script → MoA | One Saturday lab |
-| `trader-build-lab-weekly` | `0 17 * * 0` | script → MoA | Sunday critic / deeper lab |
+| `trader-rth-eval` | `30 6-12 * * 1-5` | agent + skill | Hourly RTH condition; dry paper default |
+| `trader-paper-ops` | `5 6-12 * * 1-5` | script | Dry `trader-paper-loop` only |
+| `trader-autonomous-tick` | `15 */2 * * *` | script | Continuum every 2h: handoff → MoA or cheap residual |
+| `trader-build-lab-premarket` | `15 5 * * 1-5` | script → autonomous tick | Premarket continuum |
+| `trader-build-lab-postclose` | `15 14 * * 1-5` | script → autonomous tick | Postclose continuum |
+| `trader-build-lab-daily` | `45 16 * * 1-5` | script → autonomous tick | Primary weekday lab window |
+| `trader-build-lab-evening` | `0 20 * * 1-5` | script → autonomous tick | Evening lab window |
+| `trader-build-lab-weekend` | `0 10 * * 6` | script → autonomous tick | Saturday lab |
+| `trader-build-lab-weekly` | `0 17 * * 0` | script → autonomous tick | Sunday critic window |
 
-All BUILD scripts call `just trader-build-lab` / canonical MoA with **zero caller goal** (self-sufficient wake).
+Single-flight lock means overlapping ticks **skip**, they do not stack MoA processes.
 
 ## Explicitly removed / paused
 
 | Job | Action | Why |
 |---|---|---|
-| `trader-continuous-densify` (`every 5m`) | **Removed 2026-07-19** | Contradicts densify-winners-only; bag drain as progress; CPU thrash; state already `enabled=false` after engine pause |
-| Overnight BUILD 23/02/04 | **Paused** | Overlapping MoA thrash; many `STRATEGY_ENGINE_GATE_FAILED` / incomplete resume storms |
-| Weekend pm/eve + Sunday am BUILD | **Paused** | Duplicate weekend volume; keep one Sat + one Sun |
-| `trader-build-lab-midday` | Paused (earlier) | RTH should not free-evolve |
-| `trader-build-monitor` every 3h | Paused (earlier) | Optional; re-enable only if monitor script is desired |
-| Legacy `trader-self-evolution-daily/weekly` agent | Paused | Superseded by BUILD MoA + RTH eval |
+| `trader-continuous-densify` (`every 5m`) | **Removed** | Thrash; bag drain as progress |
+| Overnight BUILD 23/02/04 | **Paused** | Covered by 2h autonomous tick |
+| Weekend pm/eve + Sunday am | **Paused** | Keep one Sat + one Sun named slot |
+| Midday BUILD | **Paused** | RTH = paper/condition only |
+| Legacy daily/weekly agent | **Paused** | Superseded |
 
-Continuous densify **state** file may remain `enabled=false` for forensics; **do not re-create the 5m cron** without Ken mandate and a living quality leader path.
+Do **not** recreate the 5m densify cron. Autonomy is the 2h tick + sparse named slots, not nonstop launch spam.
 
-## Not on cron (on purpose)
+## What still needs Ken
 
-| Loop | How it runs |
+| Need | Why |
 |---|---|
-| `just trader-discover` / dense bag | Manual or rare off-hours campaign — **not** every 5–30m default |
-| `trader-desk-b-loop` 30m discovery | Optional future; only when deliberately searching Wave A / densify winners |
-| `--execute-paper` | Intentional human/agent decision when TOP_HYP quality leader exists |
-| `agentic_live` | Ken arm only |
-
-## BUILD gate note (2026-07-19)
-
-Several MoA slots recently failed with:
-
-- `STRATEGY_ENGINE_GATE_FAILED: strategy engine report stale`
-- `trader_git_sha does not match Trader repo HEAD`
-
-That is a **control-plane / freshness gate**, not a reason to spray more 5m launches. Fix path: one clean BUILD or engine progress refresh, then sparse schedule above. Do not bypass the gate by continuous densify.
+| Trader Hermes gateway running | Cron only fires with gateway up |
+| Optional: read wake/readiness | Progress without chat |
+| Fund Agentic + options level | Before real money |
+| Explicit arm | LIVE_PACKET only |
 
 ## Operator checks
 
 ```bash
-# From a trader Hermes session:
-# list jobs — expect no every-5m densify; overnight paused
-
-just trader-paper-loop          # manual residual
-just trader-progress            # discovery idle is OK
-just trader-multi-symbol-reprove
+just trader-autonomous-tick     # one continuum cycle now
+cat .cache/platform/autonomous/tick_LATEST.json
+just trader-paper-loop
+just trader-progress
+# Hermes trader session: list crons — expect autonomous-tick every 2h; no every-5m densify
 ```
 
 ## Relationship to go-live plan
 
-See readiness scoreboard `reports/readiness/LATEST.md` and `docs/GO_LIVE_READINESS.md`.
-
 ```text
-RTH crons     → Phase 2 paper plumbing / stand-aside
-BUILD crons   → Phase 1 pack-grade edge search (sparse quality)
-No cron       → Phase 4 arm / live
+autonomous tick + BUILD slots  → Phase 1 pack-grade edge (when engine yields survivors)
+RTH paper-ops / rth-eval       → Phase 2 paper plumbing
+(no cron)                      → Phase 4 Ken arm / live
 ```

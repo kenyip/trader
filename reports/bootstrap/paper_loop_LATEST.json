@@ -1,7 +1,7 @@
 {
   "doctrine": "docs/TRADER_BUILD.md",
   "execute_paper": false,
-  "generated_at": "2026-07-20T05:32:24+00:00",
+  "generated_at": "2026-07-20T05:53:24+00:00",
   "handoff": {
     "intent_max_loss_usd": 222.97498792355626,
     "intent_structure": "put_credit_spread",
@@ -100,7 +100,7 @@
   "watch": {
     "candidate_id": "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4",
     "desk": "B_agentic",
-    "generated_at": "2026-07-20T05:32:08+00:00",
+    "generated_at": "2026-07-20T05:53:10+00:00",
     "live_authority": false,
     "living_watchable_count": 819,
     "packet": {

@@ -321,12 +321,13 @@ just test
 
 Hermes (when gateway up) — see **`docs/TRADER_CRON_LAYOUT.md`** (pinned 2026-07-19):
 
-- **RTH:** `trader-rth-eval` (agent hourly) + `trader-paper-ops` (dry `trader-paper-loop`, no execute-paper)  
-- **BUILD:** sparse MoA slots (premarket / postclose / daily / evening / weekend / weekly) — zero-input `just trader-build-lab`  
+- **Autonomous continuum:** `just trader-autonomous-tick` / cron every 2h — refresh Strategy Engine handoff → MoA if `NEXT_SURVIVOR`, else multi-symbol + dry paper residual  
+- **RTH:** `trader-rth-eval` (agent hourly) + `trader-paper-ops` (dry `trader-paper-loop`)  
+- **BUILD slots:** premarket / postclose / daily / evening / weekend / weekly all call the same autonomous tick (single-flight)  
 - **Removed:** `trader-continuous-densify` every 5m (not progress; densify winners only)  
 - **Not default:** 30m discovery marathon / dense bag drain  
 
-**Discovery** burns CPU offline when deliberately run. **Opportunity/paper** waits on RTH/setup. Do not conflate them.
+**Discovery** burns CPU offline when deliberately run. **Opportunity/paper** waits on RTH/setup. Do not conflate them. Ken does not need to prompt each wake if the trader gateway is up.
 
 Desk A (personal): `just positions`, `just pmcc-manage`, `just desk-brief`, Streamlit `just run`.
 

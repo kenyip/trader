@@ -99,8 +99,8 @@ Continuous densify **state** remains `enabled=false` (`paused_by_ken_to_build_st
 
 ## ONE NEXT
 
-1. **Edge:** multi-symbol dual-cost search / re-prove aiming `quality_pass` (≥2 symbols F2, holdout n≥12 worst axis, path stress) — not dense cartesian.  
-2. **Ops:** keep dry paper residual via RTH cron; no `--execute-paper` until TOP_HYP named.  
+1. **Autonomous (no Ken prompt):** gateway keeps running `trader-autonomous-tick` every 2h + named BUILD slots. On `NEXT_SURVIVOR` MoA runs; on `NO_QUALIFIED` multi-symbol + dry paper residual.  
+2. **Edge:** pack-grade multi-symbol / new survivor from Strategy Engine (quality_pass ≥2 symbols F2, holdout n≥12).  
 3. **Later:** shadow + kill drill + fund/options + Ken arm packet.
 
 No shadow/live/arm/broker claims in this refresh.

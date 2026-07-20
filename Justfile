@@ -385,6 +385,11 @@ trader-wake-moa *ARGS:
 trader-build-lab *ARGS:
     bash scripts/trader_build_lab_moa.sh {{ARGS}}
 
+# Autonomous continuum (no Ken prompt): refresh strategy-engine handoff → MoA if NEXT_SURVIVOR else multi-symbol + dry paper residual.
+# Never live/shadow/arm/execute-paper. Single-flight via build_lab.lock.
+trader-autonomous-tick:
+    bash scripts/trader_autonomous_tick.sh
+
 # Fail-closed clean/main/origin completion check (BUILD wrapper runs this automatically).
 trader-run-gate mode="preflight" *ARGS:
     {{py}} scripts/trader_run_completion_gate.py {{mode}} --repo . {{ARGS}}
