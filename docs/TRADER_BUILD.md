@@ -327,7 +327,7 @@ Hermes (when gateway up) — see **`docs/TRADER_CRON_LAYOUT.md`** (pinned 2026-0
 - **Removed:** `trader-continuous-densify` every 5m (not progress; densify winners only)  
 - **Not default:** 30m discovery marathon / dense bag drain  
 
-**Discovery** burns CPU offline when deliberately run. **Opportunity/paper** waits on RTH/setup. Do not conflate them. Ken does not need to prompt each wake if the trader gateway is up.
+**Discovery** burns CPU offline when deliberately run. **Opportunity/paper** waits on RTH/setup. Do not conflate them. Ken does not need to prompt each wake if the trader gateway is up. Live sleeve setup: `docs/AGENTIC_SLEEVE_AUTONOMY_SETUP.md`.
 
 Desk A (personal): `just positions`, `just pmcc-manage`, `just desk-brief`, Streamlit `just run`.
 

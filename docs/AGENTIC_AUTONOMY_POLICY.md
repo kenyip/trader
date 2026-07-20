@@ -6,12 +6,15 @@
 
 ---
 
-## Stage2 status (2026-07-09)
+## Stage2 status (2026-07-20)
 
-- RH **read-only** smoke + local snapshot readiness live under `trader_platform/rh_snapshot.py`.
+- RH **read-only** smoke + local snapshot readiness under `trader_platform/rh_snapshot.py`.
+- Live MCP probe 2026-07-20: Agentic ••••8507 `agentic_allowed=true`, **$0**, **no options level**; main correctly non-agentic.
+- MCP option **place shape = single-leg only** (no native multi-leg spreads).
+- Platform `place_*` still fail-closed until dedicated wire + Ken arm.
 - Default paper path uses `PaperRhBridge` (paper mutations + optional RH snapshot).
-- **Agentic sleeve is currently unfunded and has no options level** — keep `agentic_live` off.
-- Details: `docs/STAGE2_RH_READONLY_AND_CAPITAL.md`.
+- **Keep `agentic_live` off.** Full setup: `docs/AGENTIC_SLEEVE_AUTONOMY_SETUP.md`.
+- Details: `docs/STAGE2_RH_READONLY_AND_CAPITAL.md` (historical) + sleeve setup doc (current).
 
 ## Standing intent
 

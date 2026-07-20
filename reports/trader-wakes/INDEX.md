@@ -1,5 +1,7 @@
 # Trader wake index (newest first)
 
+- 2026-07-20T0145-rh-mcp-autonomy-setup — Live RH MCP probe: Agentic agentic_allowed + $0 + no options; main non-agentic; MCP single-leg only; place_* blocked. Autonomy setup doc + funding T0.5→T1. No live.
+
 - 2026-07-19T2253-autonomous-continuum — Wired trader_autonomous_tick (2h cron + BUILD slots): refresh Strategy Engine → MoA on NEXT_SURVIVOR else multi-symbol+dry paper. Smoke NO_QUALIFIED exit 0. Ken need = gateway up, not per-wake prompts. No 5m densify/live/arm.
 
 - 2026-07-19T2233-cron-readiness — Removed trader-continuous-densify every-5m; paused overnight/weekend thrash BUILD slots; added RTH trader-paper-ops dry loop; refreshed readiness TOP_HYP=none quality_pass=false; docs/TRADER_CRON_LAYOUT.md. No live/arm. NEXT: multi-symbol quality_pass search + optional STRATEGY_ENGINE_GATE fix.
