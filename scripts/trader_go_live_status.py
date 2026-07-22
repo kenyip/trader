@@ -85,6 +85,8 @@ class Funnel:
     agentic_enabled: bool
     overall_pct: float
     overall_label: str
+    activity_pct: float
+    activity_label: str
     next_action: str
     ken_required: bool
     ken_only_for: list[str] = field(default_factory=list)
@@ -93,9 +95,11 @@ class Funnel:
     opportunity: list[Check] = field(default_factory=list)
     continuum: dict[str, Any] = field(default_factory=dict)
     paper: dict[str, Any] = field(default_factory=dict)
+    activity: dict[str, Any] = field(default_factory=dict)
     shortlist_top: list[dict[str, Any]] = field(default_factory=list)
     blockers: list[str] = field(default_factory=list)
     path_to_live: list[str] = field(default_factory=list)
+    why_overall_stuck: str = ""
 
 
 def _risk_limits() -> dict[str, Any]:
@@ -129,9 +133,10 @@ def _paper_stats() -> dict[str, Any]:
         for o in real
         if str(o.get("status") or "").lower() in ("filled", "canceled", "cancelled", "expired", "closed")
     ]
-    # Campaign-quality open risk
     open_ml = 0.0
     open_rows = []
+    oldest_hold_h = 0.0
+    now = datetime.now(timezone.utc)
     for o in working:
         st = str(o.get("status") or "").lower()
         if st not in ("working", "open"):
@@ -141,6 +146,17 @@ def _paper_stats() -> dict[str, Any]:
             open_ml += float(ml or 0.0)
         except Exception:
             pass
+        created = str(o.get("created") or "")
+        hold_h = None
+        if created:
+            try:
+                dt = datetime.fromisoformat(created.replace("Z", "+00:00"))
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                hold_h = (now - dt).total_seconds() / 3600.0
+                oldest_hold_h = max(oldest_hold_h, hold_h)
+            except Exception:
+                hold_h = None
         open_rows.append(
             {
                 "order_id": o.get("order_id"),
@@ -149,9 +165,10 @@ def _paper_stats() -> dict[str, Any]:
                 "max_loss_usd": o.get("max_loss_usd"),
                 "structure": o.get("structure"),
                 "status": o.get("status"),
+                "created": created,
+                "hold_hours": round(hold_h, 2) if hold_h is not None else None,
             }
         )
-    # Distinct campaign sessions heuristic: unique days with real non-smoke orders
     days = set()
     for o in real:
         c = str(o.get("created") or "")[:10]
@@ -165,6 +182,7 @@ def _paper_stats() -> dict[str, Any]:
         "open_risk_usd": round(open_ml, 2),
         "open": open_rows,
         "session_days": len(days),
+        "oldest_open_hold_hours": round(oldest_hold_h, 2),
         "ledger_path": str(_LEDGER),
     }
 
@@ -325,12 +343,21 @@ def collect() -> Funnel:
         )
     )
     multi_session = paper["session_days"] >= 3 and paper["real_orders"] >= 5
+    # Graduated B6: show partial credit as paper ages (not binary forever)
+    b6_status = "FAIL"
+    b6_detail = f"session_days={paper['session_days']} real_orders={paper['real_orders']} working={paper['working']}"
+    if multi_session:
+        b6_status = "PASS"
+    elif paper["working"] or paper["real_orders"]:
+        # open paper earns PARTIAL; more days → still PARTIAL until 3 sessions
+        b6_status = "PARTIAL"
+        b6_detail += f" need_session_days≥3 (have {paper['session_days']})"
     strategy.append(
         Check(
             "B6",
             "multi-session paper sample",
-            "PASS" if multi_session else "PARTIAL" if paper["working"] or paper["real_orders"] else "FAIL",
-            f"session_days={paper['session_days']} real_orders={paper['real_orders']} working={paper['working']}",
+            b6_status,
+            b6_detail,
         )
     )
     strategy.append(Check("B7", "shadow window clean", "FAIL", "not started"))
@@ -386,7 +413,70 @@ def collect() -> Funnel:
     s_pct, _, _ = score(strategy)
     o_pct, _, _ = score(opportunity)
     # Weight strategy highest for "ready for real trades"
+    # This bar is GATE-based: stays flat until hard evidence flips PASS/FAIL.
     overall = 0.25 * p_pct + 0.55 * s_pct + 0.20 * o_pct
+
+    # Continuum freshness (needed for activity bar)
+    tick_at = tick.get("generated_at")
+    camp_at = campaign.get("generated_at")
+    handoff_status = handoff.get("status") or "MISSING"
+    worker_hb = _load_json(_REPO / ".cache" / "platform" / "quality_worker" / "HEARTBEAT.json") or {}
+    worker_status = _load_json(_REPO / ".cache" / "platform" / "quality_worker" / "STATUS.json") or {}
+    worker_pid_path = _REPO / ".cache" / "platform" / "quality_worker" / "worker.pid"
+    worker_running = False
+    if worker_pid_path.is_file():
+        try:
+            wpid = int(worker_pid_path.read_text().strip())
+            os.kill(wpid, 0)
+            worker_running = True
+        except Exception:
+            worker_running = False
+
+    # --- Activity / momentum (moves every cycle; NOT go-live %) ---
+    cycle_dir = _REPO / ".cache" / "platform" / "quality_residual"
+    cycle_n = len(list(cycle_dir.glob("cycle_*.json"))) if cycle_dir.is_dir() else 0
+    # paper hold hours from oldest working open
+    hold_h = 0.0
+    for o in paper.get("open") or []:
+        # ledger has created on orders — recompute from full ledger
+        pass
+    hold_h = float(paper.get("oldest_open_hold_hours") or 0.0)
+    session_days = int(paper.get("session_days") or 0)
+    real_orders = int(paper.get("real_orders") or 0)
+    working = int(paper.get("working") or 0)
+    hb_age = _age_hours(worker_hb.get("generated_at"))
+    hb_fresh = worker_running and hb_age is not None and hb_age < 0.25  # <15 min
+
+    # Activity score 0-100: search churn + paper aging + stress loop health
+    act = 0.0
+    act += min(35.0, cycle_n * 0.7)  # ~50 cycles → 35 pts
+    act += 15.0 if worker_running else 0.0
+    act += 10.0 if hb_fresh else (5.0 if worker_running else 0.0)
+    act += min(20.0, session_days * 6.0 + hold_h * 0.5)  # paper aging
+    act += min(10.0, real_orders * 2.0)
+    act += 5.0 if working >= 1 else 0.0
+    act += 5.0 if (leader and leader.get("stress_priority")) else 0.0
+    activity_pct = round(min(100.0, act), 1)
+    if activity_pct >= 70:
+        activity_label = "HOT_SEARCH"
+    elif activity_pct >= 40:
+        activity_label = "ACTIVE"
+    elif activity_pct >= 15:
+        activity_label = "WARMING"
+    else:
+        activity_label = "IDLE"
+
+    activity = {
+        "quality_cycles_completed": cycle_n,
+        "worker_running": worker_running,
+        "worker_hb_fresh": hb_fresh,
+        "worker_hb_age_h": round(hb_age or -1, 3),
+        "paper_session_days": session_days,
+        "paper_hold_hours_oldest": round(hold_h, 2),
+        "paper_real_orders": real_orders,
+        "paper_working": working,
+        "note": "Activity moves with cycles/paper age. Go-live bar only moves on hard gates.",
+    }
 
     blockers: list[str] = []
     if agentic:
@@ -402,29 +492,26 @@ def collect() -> Funnel:
     blockers.append("MCP place = single-leg only (multi-leg BAC/PLTR = paper/research until RH multi-leg)")
     blockers.append("place_* blocked until Ken LIVE_PACKET arm")
 
+    stuck_bits = []
+    if any(c.status != "PASS" for c in strategy if c.id == "B6"):
+        stuck_bits.append(f"B6 paper sessions {session_days}/3")
+    if any(c.status != "PASS" for c in strategy if c.id == "B7"):
+        stuck_bits.append("B7 shadow not started")
+    if any(c.status != "PASS" for c in strategy if c.id == "B2"):
+        stuck_bits.append("B2 no pack-grade TOP_HYP")
+    stuck_bits.append("live arm is Ken-only (never auto)")
+    why_stuck = (
+        "Go-live % is gate-based (not cycle count). Stuck on: " + "; ".join(stuck_bits)
+        + f". Activity is separate ({activity_pct}% — cycles={cycle_n})."
+    )
+
     path = [
-        "1. Paper campaign multi-session (manage BAC/PLTR; learn_tick) — IN PROGRESS",
+        f"1. Paper multi-session — IN PROGRESS ({session_days}/3 days, hold≈{hold_h:.1f}h, cycles={cycle_n})",
         "2. Promote one hyp to pack-grade TOP_HYP (B3+B4 + thicker n + quality_pass)",
         "3. Shadow window + kill drill (no broker mutate)",
         "4. First-live DNA must be MCP single-leg capital-fit (or multi-leg when RH supports)",
         "5. Draft LIVE_PACKET → Ken arms → place_* on Agentic only",
     ]
-
-    # Continuum freshness
-    tick_at = tick.get("generated_at")
-    camp_at = campaign.get("generated_at")
-    handoff_status = handoff.get("status") or "MISSING"
-    worker_hb = _load_json(_REPO / ".cache" / "platform" / "quality_worker" / "HEARTBEAT.json") or {}
-    worker_status = _load_json(_REPO / ".cache" / "platform" / "quality_worker" / "STATUS.json") or {}
-    worker_pid_path = _REPO / ".cache" / "platform" / "quality_worker" / "worker.pid"
-    worker_running = False
-    if worker_pid_path.is_file():
-        try:
-            wpid = int(worker_pid_path.read_text().strip())
-            os.kill(wpid, 0)
-            worker_running = True
-        except Exception:
-            worker_running = False
 
     phase = "BUILD"
     if paper["working"] or paper["real_orders"] >= 2:
@@ -450,6 +537,8 @@ def collect() -> Funnel:
         agentic_enabled=agentic,
         overall_pct=round(overall, 1),
         overall_label=label,
+        activity_pct=activity_pct,
+        activity_label=activity_label,
         next_action=str(next_seed.get("next_action") or "unknown"),
         ken_required=bool(next_seed.get("ken_required", False)),
         ken_only_for=list(next_seed.get("ken_only_for") or ["gateway_up", "LIVE_PACKET_arm", "fund_3k_at_packet"]),
@@ -470,11 +559,14 @@ def collect() -> Funnel:
             "quality_worker_hb_at": worker_hb.get("generated_at"),
             "quality_worker_hb_age_h": round(_age_hours(worker_hb.get("generated_at")) or -1, 2),
             "quality_worker_stamp": worker_hb.get("stamp"),
+            "quality_cycles_completed": cycle_n,
         },
         paper=paper,
+        activity=activity,
         shortlist_top=top,
         blockers=blockers,
         path_to_live=path,
+        why_overall_stuck=why_stuck,
     )
 
 
@@ -488,8 +580,11 @@ def format_text(f: Funnel) -> str:
     lines: list[str] = []
     lines.append("Trader → real-trade readiness")
     lines.append("─" * 48)
-    lines.append(f"Phase: {f.phase}   label: {f.overall_label}")
-    lines.append(f"Overall {_bar(f.overall_pct)}")
+    lines.append(f"Phase: {f.phase}   go-live label: {f.overall_label}   activity: {f.activity_label}")
+    lines.append(f"Go-live  {_bar(f.overall_pct)}  ← hard gates only (can stay flat)")
+    lines.append(f"Activity {_bar(f.activity_pct)}  ← cycles / paper age / worker (moves)")
+    if f.why_overall_stuck:
+        lines.append(f"Note: {f.why_overall_stuck}")
     lines.append(
         f"Sleeve plan ${f.sleeve_plan_usd} · cash≈{f.sleeve_cash_usd} · options={f.option_level} · agentic={f.agentic_enabled}"
     )
@@ -500,7 +595,8 @@ def format_text(f: Funnel) -> str:
     c = f.continuum
     wr = "ON" if c.get("quality_worker_running") else "off"
     lines.append(
-        f"  quality_worker={wr}  hb_age_h={c.get('quality_worker_hb_age_h')}  stamp={c.get('quality_worker_stamp')}"
+        f"  quality_worker={wr}  cycles={c.get('quality_cycles_completed')}  "
+        f"hb_age_h={c.get('quality_worker_hb_age_h')}  stamp={c.get('quality_worker_stamp')}"
     )
     lines.append(
         f"  handoff={c.get('handoff_status')}  tick={c.get('autonomous_action')}  "
@@ -512,15 +608,27 @@ def format_text(f: Funnel) -> str:
         lines.append(f"  last_campaign: {c.get('paper_campaign_at')} → {c.get('paper_campaign_next')}")
     lines.append("")
 
+    lines.append("ACTIVITY DETAIL")
+    a = f.activity or {}
+    lines.append(
+        f"  cycles={a.get('quality_cycles_completed')} worker={a.get('worker_running')} "
+        f"hb_fresh={a.get('worker_hb_fresh')} paper_days={a.get('paper_session_days')} "
+        f"hold_h={a.get('paper_hold_hours_oldest')} working={a.get('paper_working')}"
+    )
+    lines.append("")
+
     lines.append("PAPER BOOK")
     p = f.paper
     lines.append(
         f"  real_orders={p.get('real_orders')} working={p.get('working')} "
-        f"session_days={p.get('session_days')} open_risk=${p.get('open_risk_usd')}"
+        f"session_days={p.get('session_days')} open_risk=${p.get('open_risk_usd')} "
+        f"oldest_hold_h={p.get('oldest_open_hold_hours')}"
     )
     for o in p.get("open") or []:
+        hh = o.get("hold_hours")
         lines.append(
-            f"  · {o.get('symbol')} {o.get('strategy_id')} ml=${o.get('max_loss_usd')} [{o.get('status')}]"
+            f"  · {o.get('symbol')} {o.get('strategy_id')} ml=${o.get('max_loss_usd')} "
+            f"hold={hh}h [{o.get('status')}]"
         )
     if not (p.get("open") or []):
         lines.append("  · (no open campaign orders)")
