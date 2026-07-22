@@ -398,6 +398,10 @@ trader-quality-residual:
 trader-rth-ops:
     bash scripts/trader_rth_ops.sh
 
+# Self-driving paper campaign (learn + shortlist paper place/manage). Never live/arm.
+trader-paper-campaign:
+    bash scripts/trader_paper_campaign.sh
+
 # Fail-closed clean/main/origin completion check (BUILD wrapper runs this automatically).
 trader-run-gate mode="preflight" *ARGS:
     {{py}} scripts/trader_run_completion_gate.py {{mode}} --repo . {{ARGS}}

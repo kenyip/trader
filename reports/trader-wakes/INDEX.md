@@ -1,4 +1,5 @@
 # Trader wake index (newest first)
+- 2026-07-21T2315 anti-bottleneck — paper_campaign + NEXT_SEED ken_required=false; RTH campaign cron + evening judgment; BAC+PLTR paper working; Ken only gateway/arm/$3k
 - 2026-07-21T2241 quality-push — BAC B3+B4 reconfirm; testing+paper_place OPEN_PCS; $500 CSP collateral wall; RTH ImportError=stale gateway restart + trader-rth-ops backup; RH snapshot refreshed L2+$500
 - 2026-07-20T0215 quality-acceleration — tight loops; BAC PCS B3+B4 leader; hourly quality residual
 

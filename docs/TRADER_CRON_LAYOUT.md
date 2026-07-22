@@ -16,7 +16,9 @@ Wake volume is **not** progress. Cron exists so Trader **keeps working the go-li
 
 **Acceleration pin (2026-07-20 Ken):** tighter quality loops toward proven strategies — hourly continuum + full residual, **not** 5m densify thrash.
 
-Ken’s ongoing job is **not** to prompt every wake. Ken’s job is: keep gateway alive; fund/options when Phase 4 nears; arm only when a LIVE_PACKET is drafted.
+Ken’s ongoing job is **not** to prompt every wake. Ken’s job is: keep gateway alive; fund $3k only at LIVE_PACKET; arm only when a LIVE_PACKET is drafted.
+
+**Anti-bottleneck pin (2026-07-21):** residual NEXT actions (paper campaign, quality residual, rth-ops, shortlist stress, learn_tick) must run from cron/scripts without waiting for Ken chat. Durable seed: `reports/bootstrap/NEXT_SEED.json`. Paper place on shortlist leaders is allowed via `trader_paper_campaign.sh` guards (never live/arm).
 
 ## How autonomy works (single flight)
 
@@ -26,21 +28,25 @@ cron / just trader-autonomous-tick
   → route_batch (cached OHLCV → routes + panel)
   → strategy engine handoff → .cache/strategy-engine/latest.json
   → if NEXT_SURVIVOR: zero-input BUILD MoA (Sol → Grok → finalizer → integrate)
-  → if NO_QUALIFIED_STRATEGY: multi-symbol re-prove + dry paper-loop; exit 0
+  → if NO_QUALIFIED_STRATEGY: quality residual (research+evolve+B3/B4+multi+paper+**paper campaign**)
   → never live / shadow / arm
 ```
 
 BUILD lab cron scripts (`trader-build-lab-*.sh`) all call this tick via `trader-build-lab-canonical.sh`, so they no longer fail solely because a 6h-old handoff went stale.
 
-Receipt: `.cache/platform/autonomous/tick_LATEST.json`
+Receipt: `.cache/platform/autonomous/tick_LATEST.json`  
+Paper campaign: `.cache/platform/paper_campaign/LATEST.json` + `reports/bootstrap/NEXT_SEED.json`
 
 ## Active set
 
 | Job | Schedule (America/Los_Angeles) | Mode | Purpose |
 |---|---|---|---|
-| `trader-rth-eval` | `30 6-12 * * 1-5` | agent + skill | Hourly RTH condition; dry paper default |
-| `trader-paper-ops` | `5 6-12 * * 1-5` | script | Dry `trader-paper-loop` only |
-| `trader-autonomous-tick` | `15 * * * *` (hourly) | script | Continuum: handoff → MoA or **quality residual** (research+evolve+stress+multi+paper) |
+| `trader-rth-eval` | `30 6-12 * * 1-5` | agent + skill | Hourly RTH condition judgment |
+| `trader-rth-ops` | `35 6-12 * * 1-5` | script | Scout + dry autonomy (no agent import) |
+| `trader-paper-ops` | `5 6-12 * * 1-5` | script | Dry paper-loop + **paper campaign** |
+| `trader-paper-campaign` | `20 6-13 * * 1-5` | script | learn + shortlist paper place/manage |
+| `trader-autonomous-tick` | `15 * * * *` (hourly) | script | Continuum: handoff → MoA or **quality residual + campaign** |
+| `trader-continuum-judgment` | `0 21 * * 1-5` | agent + skill | Evening judgment on NEXT_SEED without Ken nudge |
 | `trader-build-lab-premarket` | `15 5 * * 1-5` | script → autonomous tick | Premarket continuum |
 | `trader-build-lab-postclose` | `15 14 * * 1-5` | script → autonomous tick | Postclose continuum |
 | `trader-build-lab-daily` | `45 16 * * 1-5` | script → autonomous tick | Primary weekday lab window |
@@ -67,9 +73,10 @@ Do **not** recreate the 5m densify cron. Autonomy is the 2h tick + sparse named 
 | Need | Why |
 |---|---|
 | Trader Hermes gateway running | Cron only fires with gateway up |
-| Optional: read wake/readiness | Progress without chat |
-| Fund Agentic + options level | Before real money |
-| Explicit arm | LIVE_PACKET only |
+| Explicit LIVE_PACKET arm | Real money only |
+| $3k transfer at packet | Not earlier |
+
+**Does not need Ken:** residual NEXT, paper campaign, quality residual, shortlist stress, learn_tick, rth-ops, continuum judgment, commits on green lane.
 
 ## Operator checks
 

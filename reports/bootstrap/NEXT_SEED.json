@@ -1,0 +1,36 @@
+{
+  "detail": {
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
+    "open_orders": [
+      {
+        "max_loss_usd": 162.64,
+        "order_id": "paper_2f78815a0614",
+        "status": "working",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89",
+        "structure": "put_credit_spread",
+        "symbol": "BAC"
+      },
+      {
+        "max_loss_usd": 196.54,
+        "order_id": "paper_c80aaa1cab46",
+        "status": "working",
+        "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
+        "structure": "put_credit_spread",
+        "symbol": "PLTR"
+      }
+    ]
+  },
+  "generated_at": "2026-07-22T06:11:45+00:00",
+  "ken_only_for": [
+    "gateway_up",
+    "LIVE_PACKET_arm",
+    "fund_3k_at_packet"
+  ],
+  "ken_required": false,
+  "live_authority": false,
+  "next_action": "manage_open_paper_campaign",
+  "paper_campaign_execute": true,
+  "source": "trader_paper_campaign",
+  "stamp": "20260722T061141",
+  "trading_authority": false
+}

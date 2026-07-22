@@ -287,16 +287,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_5b905070a402
   exit_logic_ref: strategies.check_exits+dna:dna_5b905070a402
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_5b905070a402:verdict=SHIP:score=inf:trades=7
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 7.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 280.8867618486335,
     "avg_pnl_per_contract": 40.1266802640905, "avg_win_per_contract": 40.1266802640905,
     "avg_loss_per_contract": 0.0, '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-09T08:59:21+00:00'
-  updated: '2026-07-12T04:26:05+00:00'
+  updated: '2026-07-22T06:07:58+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true
   dna:
     structure: short_put_credit
@@ -386,16 +388,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_a6cf3783763c
   exit_logic_ref: strategies.check_exits+dna:dna_a6cf3783763c
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_a6cf3783763c:verdict=SHIP:score=inf:trades=10
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 10.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 623.1422190089736,
     "avg_pnl_per_contract": 62.31422190089736, "avg_win_per_contract": 62.31422190089736,
     "avg_loss_per_contract": 0.'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-09T08:59:21+00:00'
-  updated: '2026-07-09T08:59:21+00:00'
+  updated: '2026-07-22T06:07:59+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -485,16 +489,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_91f823f07585
   exit_logic_ref: strategies.check_exits+dna:dna_91f823f07585
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_91f823f07585:verdict=SHIP:score=inf:trades=8
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 8.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 635.1904891095811,
     "avg_pnl_per_contract": 79.39881113869764, "avg_win_per_contract": 79.39881113869764,
     "avg_loss_per_contract": 0.0'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-09T08:59:21+00:00'
-  updated: '2026-07-09T08:59:21+00:00'
+  updated: '2026-07-22T06:08:00+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -1671,16 +1677,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_b8031ce424f7
   exit_logic_ref: strategies.check_exits+dna:dna_b8031ce424f7
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_b8031ce424f7:verdict=SHIP:score=197.45:trades=28
   - 'metrics:{"n_trades": 28.0, "win_rate_pct": 82.14285714285714, "total_pnl_per_contract":
     17.99705293595592, "avg_pnl_per_contract": 0.6427518905698543, "avg_win_per_contract":
     20.096149960899695, "avg_loss_per'
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-09T08:59:19+00:00'
-  updated: '2026-07-10T15:16:16+00:00'
+  updated: '2026-07-22T06:08:01+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true; recovered_2026-07-10_from_evolve_sim
   dna:
     structure: wheel_assignment
@@ -1952,16 +1960,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_b13ebf13bb95
   exit_logic_ref: strategies.check_exits+dna:dna_b13ebf13bb95
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_b13ebf13bb95:verdict=SHIP:score=325.76:trades=32
   - 'metrics:{"n_trades": 32.0, "win_rate_pct": 68.75, "total_pnl_per_contract": 164.80868863629388,
     "avg_pnl_per_contract": 5.150271519884184, "avg_win_per_contract": 38.73973412895176,
     "avg_loss_per_contract": -'
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-09T08:59:26+00:00'
-  updated: '2026-07-10T15:16:16+00:00'
+  updated: '2026-07-22T06:08:02+00:00'
   notes: source=evolve_tick; structure=short_dte_aggressive; never_auto_live=true;
     recovered_2026-07-10_from_evolve_sim
   dna:
@@ -2044,16 +2054,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_8592730066f7
   exit_logic_ref: strategies.check_exits+dna:dna_8592730066f7
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_8592730066f7:verdict=SHIP:score=372.87:trades=28
   - 'metrics:{"n_trades": 28.0, "win_rate_pct": 78.57142857142857, "total_pnl_per_contract":
     152.32897195776906, "avg_pnl_per_contract": 5.44032042706318, "avg_win_per_contract":
     19.500534041509958, "avg_loss_per_'
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-09T08:59:26+00:00'
-  updated: '2026-07-22T05:33:46+00:00'
+  updated: '2026-07-22T06:08:03+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true; recovered_2026-07-10_from_evolve_sim
   dna:
     structure: short_put_credit
@@ -2145,15 +2157,17 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_bcb1d97f5c54
   exit_logic_ref: strategies.check_exits+dna:dna_bcb1d97f5c54
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_bcb1d97f5c54:verdict=SHIP:score=340.00:trades=12
   - 'metrics:{"n_trades": 12.0, "win_rate_pct": 66.0, "total_pnl_per_contract": 150.0,
     "profit_factor": 1.4, "max_dd_per_contract": 80.0}'
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_pcs_trades.json
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-09T09:02:13+00:00'
-  updated: '2026-07-10T15:16:16+00:00'
+  updated: '2026-07-22T06:08:04+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true; recovered_2026-07-10_from_evolve_sim
   dna:
     structure: short_put_credit
@@ -2216,15 +2230,17 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_afd8593aea7b
   exit_logic_ref: strategies.check_exits+dna:dna_afd8593aea7b
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_afd8593aea7b:verdict=SHIP:score=340.00:trades=12
   - 'metrics:{"n_trades": 12.0, "win_rate_pct": 66.0, "total_pnl_per_contract": 150.0,
     "profit_factor": 1.4, "max_dd_per_contract": 80.0}'
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-09T09:02:13+00:00'
-  updated: '2026-07-11T23:19:32+00:00'
+  updated: '2026-07-22T06:08:05+00:00'
   notes: source=evolve_tick; structure=regime_short_premium; never_auto_live=true;
     recovered_2026-07-10_from_evolve_sim
   dna:
@@ -2325,16 +2341,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_d24131334768
   exit_logic_ref: strategies.check_exits+dna:dna_d24131334768
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_d24131334768:verdict=SHIP:score=489.00:trades=20
   - 'metrics:{"n_trades": 20.0, "win_rate_pct": 85.0, "total_pnl_per_contract": 590.6952771433206,
     "avg_pnl_per_contract": 29.53476385716603, "avg_win_per_contract": 48.30762316301034,
     "avg_loss_per_contract": -76'
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-10T06:03:05+00:00'
-  updated: '2026-07-10T15:16:16+00:00'
+  updated: '2026-07-22T06:08:06+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true; recovered_2026-07-10_from_evolve_sim
   dna:
     structure: wheel_assignment
@@ -2631,16 +2649,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_e8547a8d4a86
   exit_logic_ref: strategies.check_exits+dna:dna_e8547a8d4a86
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_e8547a8d4a86:verdict=SHIP:score=-175.35:trades=60
   - 'metrics:{"n_trades": 60.0, "win_rate_pct": 60.0, "total_pnl_per_contract": 132.41822092837396,
     "avg_pnl_per_contract": 2.2069703488062324, "avg_win_per_contract": 19.48809485366628,
     "avg_loss_per_contract": -'
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-10T06:03:05+00:00'
-  updated: '2026-07-10T15:16:16+00:00'
+  updated: '2026-07-22T06:08:07+00:00'
   notes: source=evolve_tick; structure=roll_defend; never_auto_live=true; recovered_2026-07-10_from_evolve_sim
   dna:
     structure: roll_defend
@@ -2814,16 +2834,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_8d3261c58907
   exit_logic_ref: strategies.check_exits+dna:dna_8d3261c58907
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_8d3261c58907:verdict=SHIP:score=-213.37:trades=40
   - 'metrics:{"n_trades": 40.0, "win_rate_pct": 70.0, "total_pnl_per_contract": 47.81151012576095,
     "avg_pnl_per_contract": 1.1952877531440236, "avg_win_per_contract": 19.358710422956545,
     "avg_loss_per_contract": -'
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-10T06:27:22+00:00'
-  updated: '2026-07-10T15:16:16+00:00'
+  updated: '2026-07-22T06:08:08+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true; recovered_2026-07-10_from_evolve_sim
   dna:
     structure: cash_secured_put
@@ -3199,16 +3221,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_edc9fa70d83b
   exit_logic_ref: strategies.check_exits+dna:dna_edc9fa70d83b
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_edc9fa70d83b:verdict=SHIP:score=147.55:trades=20
   - 'metrics:{"n_trades": 20.0, "win_rate_pct": 60.0, "total_pnl_per_contract": 180.4677139109919,
     "avg_pnl_per_contract": 9.023385695549596, "avg_win_per_contract": 25.724656232699566,
     "avg_loss_per_contract": -1'
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-10T06:32:52+00:00'
-  updated: '2026-07-10T15:16:16+00:00'
+  updated: '2026-07-22T06:08:09+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true; recovered_2026-07-10_from_evolve_sim
   dna:
     structure: short_put_credit
@@ -3288,16 +3312,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_7faed58ee118
   exit_logic_ref: strategies.check_exits+dna:dna_7faed58ee118
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_7faed58ee118:verdict=SHIP:score=99.55:trades=29
   - 'metrics:{"n_trades": 29.0, "win_rate_pct": 72.41379310344827, "total_pnl_per_contract":
     173.41797125354316, "avg_pnl_per_contract": 5.979930043225626, "avg_win_per_contract":
     25.78816192358331, "avg_loss_per_'
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-10T06:32:52+00:00'
-  updated: '2026-07-10T15:16:16+00:00'
+  updated: '2026-07-22T06:08:09+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true; recovered_2026-07-10_from_evolve_sim
   dna:
     structure: short_put_credit
@@ -3982,16 +4008,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_88fb42510379
   exit_logic_ref: strategies.check_exits+dna:dna_88fb42510379
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_88fb42510379:verdict=SHIP:score=152.67:trades=40
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 40.0, "win_rate_pct": 77.5, "total_pnl_per_contract": 254.1564217273936,
     "avg_pnl_per_contract": 6.35391054318484, "avg_win_per_contract": 20.21209972679282,
     "avg_loss_per_contract": -41.'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-10T23:47:10+00:00'
-  updated: '2026-07-10T23:47:10+00:00'
+  updated: '2026-07-22T06:08:10+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true
   dna:
     structure: short_put_credit
@@ -4628,16 +4656,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_112cfbdbd3ec
   exit_logic_ref: strategies.check_exits+dna:dna_112cfbdbd3ec
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_112cfbdbd3ec:verdict=SHIP:score=121.71:trades=50
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 50.0, "win_rate_pct": 64.0, "total_pnl_per_contract": 217.3359255395181,
     "avg_pnl_per_contract": 4.346718510790362, "avg_win_per_contract": 18.35403998660868,
     "avg_loss_per_contract": -20'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T02:34:20+00:00'
-  updated: '2026-07-11T02:34:20+00:00'
+  updated: '2026-07-22T06:08:11+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true
   dna:
     structure: short_put_credit
@@ -4730,16 +4760,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_cdc5993d3793
   exit_logic_ref: strategies.check_exits+dna:dna_cdc5993d3793
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_cdc5993d3793:verdict=NEEDS_MORE_DATA:score=25.00:trades=7
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 7.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 280.8867618486335,
     "avg_pnl_per_contract": 40.1266802640905, "avg_win_per_contract": 40.1266802640905,
     "avg_loss_per_contract": 0.0, '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T02:34:20+00:00'
-  updated: '2026-07-11T02:34:20+00:00'
+  updated: '2026-07-22T06:08:12+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true
   dna:
     structure: short_put_credit
@@ -4929,16 +4961,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_43cdf1b48c10
   exit_logic_ref: strategies.check_exits+dna:dna_43cdf1b48c10
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_43cdf1b48c10:verdict=SHIP:score=382.58:trades=21
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 21.0, "win_rate_pct": 85.71428571428571, "total_pnl_per_contract":
     492.4458498238208, "avg_pnl_per_contract": 23.449802372562896, "avg_win_per_contract":
     40.165564802870875, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:02:15+00:00'
-  updated: '2026-07-22T05:33:46+00:00'
+  updated: '2026-07-22T06:08:13+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -5040,16 +5074,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_80d1041b8ed6
   exit_logic_ref: strategies.check_exits+dna:dna_80d1041b8ed6
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_80d1041b8ed6:verdict=SHIP:score=62.80:trades=39
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 39.0, "win_rate_pct": 69.23076923076923, "total_pnl_per_contract":
     283.6142696503154, "avg_pnl_per_contract": 7.272160760264498, "avg_win_per_contract":
     35.62659509533534, "avg_loss_per_c'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:02:15+00:00'
-  updated: '2026-07-11T03:02:15+00:00'
+  updated: '2026-07-22T06:08:14+00:00'
   notes: source=evolve_tick; structure=short_dte_aggressive; never_auto_live=true
   dna:
     structure: short_dte_aggressive
@@ -5144,16 +5180,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_588a8b2bba8f
   exit_logic_ref: strategies.check_exits+dna:dna_588a8b2bba8f
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_588a8b2bba8f:verdict=SHIP:score=-35.92:trades=45
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 45.0, "win_rate_pct": 64.44444444444444, "total_pnl_per_contract":
     173.45345336427448, "avg_pnl_per_contract": 3.854521185872766, "avg_win_per_contract":
     28.486219306640308, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:02:15+00:00'
-  updated: '2026-07-11T03:02:15+00:00'
+  updated: '2026-07-22T06:08:15+00:00'
   notes: source=evolve_tick; structure=regime_short_premium; never_auto_live=true
   dna:
     structure: regime_short_premium
@@ -5251,16 +5289,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_8f5e91cfbab7
   exit_logic_ref: strategies.check_exits+dna:dna_8f5e91cfbab7
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_8f5e91cfbab7:verdict=SHIP:score=-55.23:trades=33
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 33.0, "win_rate_pct": 81.81818181818183, "total_pnl_per_contract":
     46.537686832308005, "avg_pnl_per_contract": 1.4102329343123639, "avg_win_per_contract":
     11.174910958432173, "avg_loss_pe'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:02:15+00:00'
-  updated: '2026-07-11T03:02:15+00:00'
+  updated: '2026-07-22T06:08:16+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -5465,16 +5505,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_abadb2e49478
   exit_logic_ref: strategies.check_exits+dna:dna_abadb2e49478
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_abadb2e49478:verdict=NEEDS_MORE_DATA:score=40.00:trades=9
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 9.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 638.3521173011709,
     "avg_pnl_per_contract": 70.92801303346343, "avg_win_per_contract": 70.92801303346342,
     "avg_loss_per_contract": 0.0'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:02:15+00:00'
-  updated: '2026-07-12T01:34:02+00:00'
+  updated: '2026-07-22T06:08:17+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -5675,16 +5717,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_54e0fec470d4
   exit_logic_ref: strategies.check_exits+dna:dna_54e0fec470d4
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_54e0fec470d4:verdict=NEEDS_MORE_DATA:score=25.00:trades=7
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 7.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 280.8867618486335,
     "avg_pnl_per_contract": 40.1266802640905, "avg_win_per_contract": 40.1266802640905,
     "avg_loss_per_contract": 0.0, '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:02:16+00:00'
-  updated: '2026-07-11T21:01:31+00:00'
+  updated: '2026-07-22T06:08:18+00:00'
   notes: source=evolve_tick; structure=short_call_credit; never_auto_live=true
   dna:
     structure: short_call_credit
@@ -5776,16 +5820,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_69e412cf9362
   exit_logic_ref: strategies.check_exits+dna:dna_69e412cf9362
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_69e412cf9362:verdict=SHIP:score=-15.25:trades=34
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 34.0, "win_rate_pct": 64.70588235294117, "total_pnl_per_contract":
     123.10338632216822, "avg_pnl_per_contract": 3.6206878330049475, "avg_win_per_contract":
     27.23781067917914, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:03:43+00:00'
-  updated: '2026-07-11T03:03:43+00:00'
+  updated: '2026-07-22T06:08:19+00:00'
   notes: source=evolve_tick; structure=roll_defend; never_auto_live=true
   dna:
     structure: roll_defend
@@ -5986,16 +6032,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_38adb77e18d9
   exit_logic_ref: strategies.check_exits+dna:dna_38adb77e18d9
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_38adb77e18d9:verdict=NEEDS_MORE_DATA:score=-0.30:trades=3
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 3.0, "win_rate_pct": 33.33333333333333, "total_pnl_per_contract":
     4.2239600759957945, "avg_pnl_per_contract": 1.4079866919985982, "avg_win_per_contract":
     33.98943811613571, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:03:43+00:00'
-  updated: '2026-07-11T03:03:43+00:00'
+  updated: '2026-07-22T06:08:20+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -6294,16 +6342,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_3eb87e5d453a
   exit_logic_ref: strategies.check_exits+dna:dna_3eb87e5d453a
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_3eb87e5d453a:verdict=SHIP:score=190.98:trades=41
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 41.0, "win_rate_pct": 65.85365853658537, "total_pnl_per_contract":
     420.21060739069065, "avg_pnl_per_contract": 10.249039204650991, "avg_win_per_contract":
     35.72510792762842, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:04:31+00:00'
-  updated: '2026-07-11T03:04:31+00:00'
+  updated: '2026-07-22T06:08:21+00:00'
   notes: source=evolve_tick; structure=short_dte_aggressive; never_auto_live=true
   dna:
     structure: short_dte_aggressive
@@ -6500,16 +6550,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_f1f98190a5e3
   exit_logic_ref: strategies.check_exits+dna:dna_f1f98190a5e3
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_f1f98190a5e3:verdict=NEEDS_MORE_DATA:score=16.92:trades=2
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 2.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 108.43004555329365,
     "avg_pnl_per_contract": 54.215022776646826, "avg_win_per_contract": 54.215022776646826,
     "avg_loss_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:04:31+00:00'
-  updated: '2026-07-11T03:04:31+00:00'
+  updated: '2026-07-22T06:08:22+00:00'
   notes: source=evolve_tick; structure=roll_defend; never_auto_live=true
   dna:
     structure: roll_defend
@@ -6732,16 +6784,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_4e4cccdfbc35
   exit_logic_ref: strategies.check_exits+dna:dna_4e4cccdfbc35
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_4e4cccdfbc35:verdict=SHIP:score=0.55:trades=32
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 32.0, "win_rate_pct": 65.625, "total_pnl_per_contract":
     119.54930033984635, "avg_pnl_per_contract": 3.7359156356201986, "avg_win_per_contract":
     33.59568117325176, "avg_loss_per_contract":'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:05:34+00:00'
-  updated: '2026-07-11T03:05:34+00:00'
+  updated: '2026-07-22T06:08:23+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -6842,16 +6896,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_4cdc7e508156
   exit_logic_ref: strategies.check_exits+dna:dna_4cdc7e508156
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_4cdc7e508156:verdict=SHIP:score=-111.01:trades=45
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 45.0, "win_rate_pct": 64.44444444444444, "total_pnl_per_contract":
     128.4770844429854, "avg_pnl_per_contract": 2.855046320955231, "avg_win_per_contract":
     28.486219306640308, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:05:34+00:00'
-  updated: '2026-07-11T03:05:34+00:00'
+  updated: '2026-07-22T06:08:24+00:00'
   notes: source=evolve_tick; structure=regime_short_premium; never_auto_live=true
   dna:
     structure: regime_short_premium
@@ -6948,16 +7004,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_303dbe28d077
   exit_logic_ref: strategies.check_exits+dna:dna_303dbe28d077
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_303dbe28d077:verdict=NEEDS_MORE_DATA:score=25.00:trades=7
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 7.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 280.8867618486335,
     "avg_pnl_per_contract": 40.1266802640905, "avg_win_per_contract": 40.1266802640905,
     "avg_loss_per_contract": 0.0, '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:05:34+00:00'
-  updated: '2026-07-11T03:05:34+00:00'
+  updated: '2026-07-22T06:08:25+00:00'
   notes: source=evolve_tick; structure=short_call_credit; never_auto_live=true
   dna:
     structure: short_call_credit
@@ -7049,16 +7107,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_3e0719857e85
   exit_logic_ref: strategies.check_exits+dna:dna_3e0719857e85
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_3e0719857e85:verdict=NEEDS_MORE_DATA:score=16.92:trades=2
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 2.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 108.43004555329365,
     "avg_pnl_per_contract": 54.215022776646826, "avg_win_per_contract": 54.215022776646826,
     "avg_loss_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:05:34+00:00'
-  updated: '2026-07-11T03:05:34+00:00'
+  updated: '2026-07-22T06:08:25+00:00'
   notes: source=evolve_tick; structure=roll_defend; never_auto_live=true
   dna:
     structure: roll_defend
@@ -7151,16 +7211,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_03396d78019a
   exit_logic_ref: strategies.check_exits+dna:dna_03396d78019a
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_03396d78019a:verdict=SHIP:score=442.26:trades=22
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 22.0, "win_rate_pct": 81.81818181818183, "total_pnl_per_contract":
     463.358670858216, "avg_pnl_per_contract": 21.061757766282543, "avg_win_per_contract":
     37.35980966997226, "avg_loss_per_c'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:06:45+00:00'
-  updated: '2026-07-11T03:06:45+00:00'
+  updated: '2026-07-22T06:08:26+00:00'
   notes: source=evolve_tick; structure=long_dte_conservative; never_auto_live=true
   dna:
     structure: long_dte_conservative
@@ -7253,16 +7315,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_38988467eb5d
   exit_logic_ref: strategies.check_exits+dna:dna_38988467eb5d
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_38988467eb5d:verdict=SHIP:score=429.84:trades=20
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 20.0, "win_rate_pct": 80.0, "total_pnl_per_contract": 420.8809949717472,
     "avg_pnl_per_contract": 21.044049748587362, "avg_win_per_contract": 35.55187915516872,
     "avg_loss_per_contract": -3'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:06:45+00:00'
-  updated: '2026-07-11T03:08:05+00:00'
+  updated: '2026-07-22T06:08:27+00:00'
   notes: source=evolve_tick; structure=long_dte_conservative; never_auto_live=true
   dna:
     structure: long_dte_conservative
@@ -7468,16 +7532,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_4b95dca73c3c
   exit_logic_ref: strategies.check_exits+dna:dna_4b95dca73c3c
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_4b95dca73c3c:verdict=SHIP:score=58.68:trades=49
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 49.0, "win_rate_pct": 67.3469387755102, "total_pnl_per_contract":
     82.57650706848855, "avg_pnl_per_contract": 1.6852348381324194, "avg_win_per_contract":
     8.65147461595302, "avg_loss_per_co'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:06:45+00:00'
-  updated: '2026-07-11T03:06:45+00:00'
+  updated: '2026-07-22T06:08:28+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -7703,16 +7769,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_28db6436af73
   exit_logic_ref: strategies.check_exits+dna:dna_28db6436af73
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_28db6436af73:verdict=SHIP:score=695.78:trades=15
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 15.0, "win_rate_pct": 86.66666666666667, "total_pnl_per_contract":
     699.2706031806707, "avg_pnl_per_contract": 46.61804021204471, "avg_win_per_contract":
     64.86446051171686, "avg_loss_per_c'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:08:03+00:00'
-  updated: '2026-07-11T03:08:03+00:00'
+  updated: '2026-07-22T06:08:29+00:00'
   notes: source=evolve_tick; structure=regime_short_premium; never_auto_live=true
   dna:
     structure: regime_short_premium
@@ -7950,16 +8018,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_1c6c2d534cb6
   exit_logic_ref: strategies.check_exits+dna:dna_1c6c2d534cb6
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_1c6c2d534cb6:verdict=SHIP:score=-5.76:trades=34
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_pcs_trades.json
   - 'metrics:{"n_trades": 34, "win_rate_pct": 85.29411764705883, "total_pnl_per_contract":
     123.24534293652415, "avg_pnl_per_contract": 3.624863027544828, "avg_win_per_contract":
     18.20555263440169, "avg_loss_per_co'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:08:04+00:00'
-  updated: '2026-07-11T03:08:04+00:00'
+  updated: '2026-07-22T06:08:30+00:00'
   notes: source=evolve_tick; structure=call_credit_spread; never_auto_live=true
   dna:
     structure: call_credit_spread
@@ -8190,16 +8260,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_20bc4f11e7fa
   exit_logic_ref: strategies.check_exits+dna:dna_20bc4f11e7fa
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_20bc4f11e7fa:verdict=SHIP:score=-209.41:trades=48
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 48.0, "win_rate_pct": 62.5, "total_pnl_per_contract": 157.3685065918025,
     "avg_pnl_per_contract": 3.278510553995885, "avg_win_per_contract": 39.31124275055276,
     "avg_loss_per_contract": -56'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:08:04+00:00'
-  updated: '2026-07-11T03:08:04+00:00'
+  updated: '2026-07-22T06:08:31+00:00'
   notes: source=evolve_tick; structure=short_dte_aggressive; never_auto_live=true
   dna:
     structure: short_dte_aggressive
@@ -8294,16 +8366,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_db9aea620512
   exit_logic_ref: strategies.check_exits+dna:dna_db9aea620512
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_db9aea620512:verdict=NULL:score=390.64:trades=12
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 12.0, "win_rate_pct": 91.66666666666666, "total_pnl_per_contract":
     335.63049244888566, "avg_pnl_per_contract": 27.969207704073806, "avg_win_per_contract":
     37.55453641533313, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:08:04+00:00'
-  updated: '2026-07-11T03:08:04+00:00'
+  updated: '2026-07-22T06:08:32+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -9258,16 +9332,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_090bc1374211
   exit_logic_ref: strategies.check_exits+dna:dna_090bc1374211
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_090bc1374211:verdict=NEEDS_MORE_DATA:score=23.10:trades=2
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 2.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 232.03794133823763,
     "avg_pnl_per_contract": 116.01897066911881, "avg_win_per_contract": 116.01897066911881,
     "avg_loss_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:11:13+00:00'
-  updated: '2026-07-11T03:11:13+00:00'
+  updated: '2026-07-22T06:08:33+00:00'
   notes: source=evolve_tick; structure=short_dte_aggressive; never_auto_live=true
   dna:
     structure: short_dte_aggressive
@@ -9358,16 +9434,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_fa1315638f70
   exit_logic_ref: strategies.check_exits+dna:dna_fa1315638f70
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_fa1315638f70:verdict=NEEDS_MORE_DATA:score=20.93:trades=6
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 6.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 188.6596399191884,
     "avg_pnl_per_contract": 31.443273319864733, "avg_win_per_contract": 31.443273319864733,
     "avg_loss_per_contract": 0'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:11:14+00:00'
-  updated: '2026-07-11T03:11:14+00:00'
+  updated: '2026-07-22T06:08:34+00:00'
   notes: source=evolve_tick; structure=regime_short_premium; never_auto_live=true
   dna:
     structure: regime_short_premium
@@ -9669,16 +9747,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_c68132b374f8
   exit_logic_ref: strategies.check_exits+dna:dna_c68132b374f8
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_c68132b374f8:verdict=NEEDS_MORE_DATA:score=-5.26:trades=4
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_pcs_trades.json
   - 'metrics:{"n_trades": 4, "win_rate_pct": 25.0, "total_pnl_per_contract": -41.07458725134073,
     "avg_pnl_per_contract": -10.268646812835183, "avg_win_per_contract": 35.64035053557907,
     "avg_loss_per_contract": -25'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:11:15+00:00'
-  updated: '2026-07-11T03:11:15+00:00'
+  updated: '2026-07-22T06:08:35+00:00'
   notes: source=evolve_tick; structure=iron_condor; never_auto_live=true
   dna:
     structure: iron_condor
@@ -9934,16 +10014,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_53070d3e1748
   exit_logic_ref: strategies.check_exits+dna:dna_53070d3e1748
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_53070d3e1748:verdict=SHIP:score=198.95:trades=22
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 22.0, "win_rate_pct": 68.18181818181817, "total_pnl_per_contract":
     222.0919568048164, "avg_pnl_per_contract": 10.095088945673472, "avg_win_per_contract":
     25.450801066365468, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:13:57+00:00'
-  updated: '2026-07-22T05:37:22+00:00'
+  updated: '2026-07-22T06:08:36+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -10145,16 +10227,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_64760b62a72a
   exit_logic_ref: strategies.check_exits+dna:dna_64760b62a72a
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_64760b62a72a:verdict=NEEDS_MORE_DATA:score=40.00:trades=9
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 9.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 638.3521173011709,
     "avg_pnl_per_contract": 70.92801303346343, "avg_win_per_contract": 70.92801303346342,
     "avg_loss_per_contract": 0.0'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:13:57+00:00'
-  updated: '2026-07-11T03:13:57+00:00'
+  updated: '2026-07-22T06:08:37+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -10252,16 +10336,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_50afc4783f75
   exit_logic_ref: strategies.check_exits+dna:dna_50afc4783f75
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_50afc4783f75:verdict=NEEDS_MORE_DATA:score=25.00:trades=7
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 7.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 280.8867618486335,
     "avg_pnl_per_contract": 40.1266802640905, "avg_win_per_contract": 40.1266802640905,
     "avg_loss_per_contract": 0.0, '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:13:58+00:00'
-  updated: '2026-07-11T03:13:58+00:00'
+  updated: '2026-07-22T06:08:38+00:00'
   notes: source=evolve_tick; structure=short_call_credit; never_auto_live=true
   dna:
     structure: short_call_credit
@@ -10354,16 +10440,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_97cb8fc85243
   exit_logic_ref: strategies.check_exits+dna:dna_97cb8fc85243
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_97cb8fc85243:verdict=SHIP:score=382.58:trades=21
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 21.0, "win_rate_pct": 85.71428571428571, "total_pnl_per_contract":
     492.4458498238208, "avg_pnl_per_contract": 23.449802372562896, "avg_win_per_contract":
     40.165564802870875, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:15:03+00:00'
-  updated: '2026-07-11T03:15:03+00:00'
+  updated: '2026-07-22T06:08:39+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -10465,16 +10553,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_40ee238f13d3
   exit_logic_ref: strategies.check_exits+dna:dna_40ee238f13d3
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_40ee238f13d3:verdict=SHIP:score=347.46:trades=26
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 26.0, "win_rate_pct": 69.23076923076923, "total_pnl_per_contract":
     363.5573827982479, "avg_pnl_per_contract": 13.982976261471073, "avg_win_per_contract":
     31.961660769828228, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:15:04+00:00'
-  updated: '2026-07-11T03:15:04+00:00'
+  updated: '2026-07-22T06:08:40+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -10567,16 +10657,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_c84e1a29ad7a
   exit_logic_ref: strategies.check_exits+dna:dna_c84e1a29ad7a
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_c84e1a29ad7a:verdict=SHIP:score=-58.81:trades=50
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
   - 'metrics:{"n_trades": 50, "win_rate_pct": 72.0, "total_pnl_per_contract": 38.53267451215031,
     "avg_pnl_per_contract": 0.7706534902430061, "avg_win_per_contract": 15.312176228780253,
     "avg_loss_per_contract": -36'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:15:04+00:00'
-  updated: '2026-07-11T03:15:04+00:00'
+  updated: '2026-07-22T06:08:41+00:00'
   notes: source=evolve_tick; structure=put_credit_spread; never_auto_live=true
   dna:
     structure: put_credit_spread
@@ -10940,16 +11032,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_87871c2e35e7
   exit_logic_ref: strategies.check_exits+dna:dna_87871c2e35e7
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_87871c2e35e7:verdict=NEEDS_MORE_DATA:score=25.00:trades=7
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 7.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 510.48849263931845,
     "avg_pnl_per_contract": 72.92692751990263, "avg_win_per_contract": 72.92692751990263,
     "avg_loss_per_contract": 0.'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:15:05+00:00'
-  updated: '2026-07-11T03:15:05+00:00'
+  updated: '2026-07-22T06:08:42+00:00'
   notes: source=evolve_tick; structure=short_call_credit; never_auto_live=true
   dna:
     structure: short_call_credit
@@ -11042,16 +11136,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_947be4f06eaf
   exit_logic_ref: strategies.check_exits+dna:dna_947be4f06eaf
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_947be4f06eaf:verdict=SHIP:score=846.31:trades=52
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_research_trades.csv
   - 'metrics:{"n_trades": 52.0, "win_rate_pct": 88.46153846153845, "total_pnl_per_contract":
     960.2331931533442, "avg_pnl_per_contract": 18.46602294525662, "avg_win_per_contract":
     32.12203782763277, "avg_loss_per_c'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:16:17+00:00'
-  updated: '2026-07-11T03:16:17+00:00'
+  updated: '2026-07-22T06:08:43+00:00'
   notes: source=evolve_tick; structure=short_call_credit; never_auto_live=true
   dna:
     structure: short_call_credit
@@ -11149,16 +11245,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_5dc9f5a2f5c1
   exit_logic_ref: strategies.check_exits+dna:dna_5dc9f5a2f5c1
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_5dc9f5a2f5c1:verdict=SHIP:score=-51.07:trades=45
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 45.0, "win_rate_pct": 66.66666666666666, "total_pnl_per_contract":
     200.80040394987245, "avg_pnl_per_contract": 4.462231198886054, "avg_win_per_contract":
     29.270662440342548, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:16:18+00:00'
-  updated: '2026-07-11T03:16:18+00:00'
+  updated: '2026-07-22T06:08:43+00:00'
   notes: source=evolve_tick; structure=roll_defend; never_auto_live=true
   dna:
     structure: roll_defend
@@ -11255,16 +11353,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_59af47a8bacc
   exit_logic_ref: strategies.check_exits+dna:dna_59af47a8bacc
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_59af47a8bacc:verdict=SHIP:score=-64.21:trades=48
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 48.0, "win_rate_pct": 62.5, "total_pnl_per_contract": 58.24423644019171,
     "avg_pnl_per_contract": 1.213421592503994, "avg_win_per_contract": 13.857248265893181,
     "avg_loss_per_contract": -1'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:16:18+00:00'
-  updated: '2026-07-22T05:37:22+00:00'
+  updated: '2026-07-22T06:08:44+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -11357,16 +11457,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_5cb3650c1a6c
   exit_logic_ref: strategies.check_exits+dna:dna_5cb3650c1a6c
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_5cb3650c1a6c:verdict=NEEDS_MORE_DATA:score=20.93:trades=6
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 6.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 188.6596399191884,
     "avg_pnl_per_contract": 31.443273319864733, "avg_win_per_contract": 31.443273319864733,
     "avg_loss_per_contract": 0'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:16:18+00:00'
-  updated: '2026-07-11T03:16:18+00:00'
+  updated: '2026-07-22T06:08:45+00:00'
   notes: source=evolve_tick; structure=regime_short_premium; never_auto_live=true
   dna:
     structure: regime_short_premium
@@ -11459,16 +11561,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_52e71a329a4b
   exit_logic_ref: strategies.check_exits+dna:dna_52e71a329a4b
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_52e71a329a4b:verdict=NEEDS_MORE_DATA:score=16.92:trades=2
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 2.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 108.43004555329365,
     "avg_pnl_per_contract": 54.215022776646826, "avg_win_per_contract": 54.215022776646826,
     "avg_loss_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:16:19+00:00'
-  updated: '2026-07-11T03:16:19+00:00'
+  updated: '2026-07-22T06:08:46+00:00'
   notes: source=evolve_tick; structure=roll_defend; never_auto_live=true
   dna:
     structure: roll_defend
@@ -11560,16 +11664,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_758451f7b3bf
   exit_logic_ref: strategies.check_exits+dna:dna_758451f7b3bf
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_758451f7b3bf:verdict=SHIP:score=5.67:trades=47
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 47.0, "win_rate_pct": 63.829787234042556, "total_pnl_per_contract":
     75.36135178170386, "avg_pnl_per_contract": 1.603433016631997, "avg_win_per_contract":
     12.653907024100494, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:17:54+00:00'
-  updated: '2026-07-11T03:17:54+00:00'
+  updated: '2026-07-22T06:08:47+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -11871,16 +11977,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_e8ae2d4a7083
   exit_logic_ref: strategies.check_exits+dna:dna_e8ae2d4a7083
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_e8ae2d4a7083:verdict=NEEDS_MORE_DATA:score=23.10:trades=2
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 2.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 232.03794133823763,
     "avg_pnl_per_contract": 116.01897066911881, "avg_win_per_contract": 116.01897066911881,
     "avg_loss_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T03:17:55+00:00'
-  updated: '2026-07-11T04:28:17+00:00'
+  updated: '2026-07-22T06:08:48+00:00'
   notes: source=evolve_tick; structure=short_dte_aggressive; never_auto_live=true
   dna:
     structure: short_dte_aggressive
@@ -11970,16 +12078,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_6c89c025643b
   exit_logic_ref: strategies.check_exits+dna:dna_6c89c025643b
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_6c89c025643b:verdict=SHIP:score=75.50:trades=32
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 32.0, "win_rate_pct": 62.5, "total_pnl_per_contract": 203.26185508050685,
     "avg_pnl_per_contract": 6.351932971265839, "avg_win_per_contract": 30.515357844782027,
     "avg_loss_per_contract": -'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T04:01:10+00:00'
-  updated: '2026-07-11T04:01:10+00:00'
+  updated: '2026-07-22T06:08:49+00:00'
   notes: source=evolve_tick; structure=roll_defend; never_auto_live=true
   dna:
     structure: roll_defend
@@ -12076,16 +12186,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_bb47514e8323
   exit_logic_ref: strategies.check_exits+dna:dna_bb47514e8323
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_bb47514e8323:verdict=SHIP:score=-110.62:trades=59
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 59.0, "win_rate_pct": 69.49152542372882, "total_pnl_per_contract":
     153.81278222641225, "avg_pnl_per_contract": 2.6069963089222417, "avg_win_per_contract":
     21.921626464471437, "avg_loss_pe'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T04:01:11+00:00'
-  updated: '2026-07-11T04:01:11+00:00'
+  updated: '2026-07-22T06:08:50+00:00'
   notes: source=evolve_tick; structure=regime_short_premium; never_auto_live=true
   dna:
     structure: regime_short_premium
@@ -12387,16 +12499,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_7140d5e00af5
   exit_logic_ref: strategies.check_exits+dna:dna_7140d5e00af5
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_7140d5e00af5:verdict=SHIP:score=168.98:trades=33
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_calendar_trades.json
   - 'metrics:{"n_trades": 33, "win_rate_pct": 69.6969696969697, "total_pnl_per_contract":
     201.3663830968008, "avg_pnl_per_contract": 6.102011608993964, "profit_factor":
     2.0023240405418408, "max_dd_per_contract": 8'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T04:28:16+00:00'
-  updated: '2026-07-11T04:28:16+00:00'
+  updated: '2026-07-22T06:08:51+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -12499,16 +12613,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_f3edee20a595
   exit_logic_ref: strategies.check_exits+dna:dna_f3edee20a595
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_f3edee20a595:verdict=SHIP:score=-87.72:trades=57
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_pcs_trades.json
   - 'metrics:{"n_trades": 57, "win_rate_pct": 75.43859649122807, "total_pnl_per_contract":
     101.66165390173887, "avg_pnl_per_contract": 1.7835377877498049, "avg_win_per_contract":
     22.218574889290167, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T04:28:16+00:00'
-  updated: '2026-07-11T04:28:16+00:00'
+  updated: '2026-07-22T06:08:52+00:00'
   notes: source=evolve_tick; structure=call_credit_spread; never_auto_live=true
   dna:
     structure: call_credit_spread
@@ -12632,16 +12748,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_403daccd6070
   exit_logic_ref: strategies.check_exits+dna:dna_403daccd6070
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_403daccd6070:verdict=NEEDS_MORE_DATA:score=20.93:trades=6
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 6.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 188.65963991918824,
     "avg_pnl_per_contract": 31.443273319864705, "avg_win_per_contract": 31.4432733198647,
     "avg_loss_per_contract": 0.'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T04:28:17+00:00'
-  updated: '2026-07-11T04:28:17+00:00'
+  updated: '2026-07-22T06:08:53+00:00'
   notes: source=evolve_tick; structure=regime_short_premium; never_auto_live=true
   dna:
     structure: regime_short_premium
@@ -12735,16 +12853,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_18f734f2b2c5
   exit_logic_ref: strategies.check_exits+dna:dna_18f734f2b2c5
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_18f734f2b2c5:verdict=SHIP:score=477.75:trades=36
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_calendar_trades.json
   - 'metrics:{"n_trades": 36, "win_rate_pct": 77.77777777777779, "total_pnl_per_contract":
     415.50945066611985, "avg_pnl_per_contract": 11.541929185169996, "profit_factor":
     4.185377164795485, "max_dd_per_contract":'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T04:49:29+00:00'
-  updated: '2026-07-12T01:01:48+00:00'
+  updated: '2026-07-22T06:08:54+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -12850,16 +12970,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_1d2f917fff50
   exit_logic_ref: strategies.check_exits+dna:dna_1d2f917fff50
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_1d2f917fff50:verdict=SHIP:score=407.96:trades=38
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_calendar_trades.json
   - 'metrics:{"n_trades": 38, "win_rate_pct": 78.94736842105263, "total_pnl_per_contract":
     462.03200454764084, "avg_pnl_per_contract": 12.158736961780022, "profit_factor":
     2.2210891032351756, "max_dd_per_contract"'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T04:49:30+00:00'
-  updated: '2026-07-11T04:49:30+00:00'
+  updated: '2026-07-22T06:08:55+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -13285,16 +13407,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_b9dd256b2877
   exit_logic_ref: strategies.check_exits+dna:dna_b9dd256b2877
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_b9dd256b2877:verdict=SHIP:score=438.63:trades=38
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_calendar_trades.json
   - 'metrics:{"n_trades": 38, "win_rate_pct": 81.57894736842105, "total_pnl_per_contract":
     498.9442498320634, "avg_pnl_per_contract": 13.13011183768588, "profit_factor":
     2.3571835114870945, "max_dd_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T06:28:08+00:00'
-  updated: '2026-07-11T06:28:08+00:00'
+  updated: '2026-07-22T06:08:56+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -13400,16 +13524,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_f8ab5a83a18a
   exit_logic_ref: strategies.check_exits+dna:dna_f8ab5a83a18a
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_f8ab5a83a18a:verdict=SHIP:score=315.99:trades=35
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_calendar_trades.json
   - 'metrics:{"n_trades": 35, "win_rate_pct": 77.14285714285715, "total_pnl_per_contract":
     296.28045125259615, "avg_pnl_per_contract": 8.465155750074176, "profit_factor":
     3.08520837972596, "max_dd_per_contract": 6'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T06:28:09+00:00'
-  updated: '2026-07-11T06:28:09+00:00'
+  updated: '2026-07-22T06:08:57+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -13514,16 +13640,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_a7cd3148b21c
   exit_logic_ref: strategies.check_exits+dna:dna_a7cd3148b21c
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_a7cd3148b21c:verdict=SHIP:score=246.25:trades=42
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 42.0, "win_rate_pct": 69.04761904761905, "total_pnl_per_contract":
     462.01106543153054, "avg_pnl_per_contract": 11.00026346265549, "avg_win_per_contract":
     39.52266172620975, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T06:28:09+00:00'
-  updated: '2026-07-11T06:28:09+00:00'
+  updated: '2026-07-22T06:08:58+00:00'
   notes: source=evolve_tick; structure=short_dte_aggressive; never_auto_live=true
   dna:
     structure: short_dte_aggressive
@@ -13618,16 +13746,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_d6c733b44c9f
   exit_logic_ref: strategies.check_exits+dna:dna_d6c733b44c9f
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_d6c733b44c9f:verdict=SHIP:score=120.47:trades=49
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 49.0, "win_rate_pct": 63.26530612244898, "total_pnl_per_contract":
     216.27195695248292, "avg_pnl_per_contract": 4.413713407193529, "avg_win_per_contract":
     19.919864873312235, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T06:28:10+00:00'
-  updated: '2026-07-11T06:28:10+00:00'
+  updated: '2026-07-22T06:08:59+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -13721,16 +13851,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_0acdd1017453
   exit_logic_ref: strategies.check_exits+dna:dna_0acdd1017453
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_0acdd1017453:verdict=SHIP:score=585.65:trades=32
   - .cache/platform/evolve_backtests/SMCI_diagonal_trades.json
   - 'metrics:{"n_trades": 32, "win_rate_pct": 65.625, "total_pnl_per_contract": 679.8040774402327,
     "avg_pnl_per_contract": 21.243877420007273, "profit_factor": 2.31676708976519,
     "max_dd_per_contract": 153.30044056'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T06:29:29+00:00'
-  updated: '2026-07-11T06:29:29+00:00'
+  updated: '2026-07-22T06:09:00+00:00'
   notes: source=evolve_tick; structure=diagonal_spread; never_auto_live=true
   dna:
     structure: diagonal_spread
@@ -13838,16 +13970,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_7f15f94a3a37
   exit_logic_ref: strategies.check_exits+dna:dna_7f15f94a3a37
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_7f15f94a3a37:verdict=SHIP:score=295.13:trades=220
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_pcs_trades.json
   - 'metrics:{"n_trades": 220, "win_rate_pct": 67.27272727272727, "total_pnl_per_contract":
     877.677962582763, "avg_pnl_per_contract": 3.989445284467105, "avg_win_per_contract":
     23.356246304926014, "avg_loss_per_co'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T06:52:41+00:00'
-  updated: '2026-07-11T06:52:41+00:00'
+  updated: '2026-07-22T06:09:01+00:00'
   notes: source=evolve_tick; structure=put_credit_spread; never_auto_live=true
   dna:
     structure: put_credit_spread
@@ -14234,16 +14368,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_c857ef17b300
   exit_logic_ref: strategies.check_exits+dna:dna_c857ef17b300
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_c857ef17b300:verdict=SHIP:score=-88.26:trades=29
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 29.0, "win_rate_pct": 72.41379310344827, "total_pnl_per_contract":
     29.854112472887252, "avg_pnl_per_contract": 1.0294521542374915, "avg_win_per_contract":
     25.78816192358331, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T06:52:42+00:00'
-  updated: '2026-07-11T06:52:42+00:00'
+  updated: '2026-07-22T06:09:02+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -14344,16 +14480,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_12ecba439767
   exit_logic_ref: strategies.check_exits+dna:dna_12ecba439767
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_12ecba439767:verdict=SHIP:score=545.29:trades=39
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_calendar_trades.json
   - 'metrics:{"n_trades": 39, "win_rate_pct": 79.48717948717949, "total_pnl_per_contract":
     574.1387017731635, "avg_pnl_per_contract": 14.721505173670858, "profit_factor":
     2.717788329232229, "max_dd_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T07:37:41+00:00'
-  updated: '2026-07-11T07:37:41+00:00'
+  updated: '2026-07-22T06:09:03+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -14458,16 +14596,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_ba927670928f
   exit_logic_ref: strategies.check_exits+dna:dna_ba927670928f
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_ba927670928f:verdict=SHIP:score=418.62:trades=40
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_calendar_trades.json
   - 'metrics:{"n_trades": 40, "win_rate_pct": 70.0, "total_pnl_per_contract": 543.7498431150776,
     "avg_pnl_per_contract": 13.59374607787694, "profit_factor": 2.0428762441750075,
     "max_dd_per_contract": 180.984781285'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T07:37:42+00:00'
-  updated: '2026-07-11T07:37:42+00:00'
+  updated: '2026-07-22T06:09:03+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -14573,16 +14713,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_026f0dc81bfc
   exit_logic_ref: strategies.check_exits+dna:dna_026f0dc81bfc
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_026f0dc81bfc:verdict=SHIP:score=382.58:trades=21
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 21.0, "win_rate_pct": 85.71428571428571, "total_pnl_per_contract":
     492.4458498238187, "avg_pnl_per_contract": 23.449802372562797, "avg_win_per_contract":
     40.165564802870776, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T07:37:42+00:00'
-  updated: '2026-07-11T07:37:42+00:00'
+  updated: '2026-07-22T06:09:04+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -14800,16 +14942,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_6163263a0dbf
   exit_logic_ref: strategies.check_exits+dna:dna_6163263a0dbf
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_6163263a0dbf:verdict=NULL:score=79.97:trades=13
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_diagonal_trades.json
   - 'metrics:{"n_trades": 13, "win_rate_pct": 53.84615384615385, "total_pnl_per_contract":
     206.27996348004936, "avg_pnl_per_contract": 15.867689498465335, "profit_factor":
     1.6528930033946394, "max_dd_per_contract"'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T07:37:43+00:00'
-  updated: '2026-07-11T07:37:43+00:00'
+  updated: '2026-07-22T06:09:05+00:00'
   notes: source=evolve_tick; structure=diagonal_spread; never_auto_live=true
   dna:
     structure: diagonal_spread
@@ -14916,16 +15060,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_b75af82f121c
   exit_logic_ref: strategies.check_exits+dna:dna_b75af82f121c
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_b75af82f121c:verdict=NEEDS_MORE_DATA:score=40.00:trades=9
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 9.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 571.6054197887519,
     "avg_pnl_per_contract": 63.51171330986132, "avg_win_per_contract": 63.51171330986132,
     "avg_loss_per_contract": 0.0'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T07:37:43+00:00'
-  updated: '2026-07-11T07:37:43+00:00'
+  updated: '2026-07-22T06:09:06+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -15494,16 +15640,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_04dec3b8ef1c
   exit_logic_ref: strategies.check_exits+dna:dna_04dec3b8ef1c
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_04dec3b8ef1c:verdict=SHIP:score=53.15:trades=31
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 31.0, "win_rate_pct": 80.64516129032258, "total_pnl_per_contract":
     138.5798916308783, "avg_pnl_per_contract": 4.470319084867042, "avg_win_per_contract":
     16.49837056412326, "avg_loss_per_c'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T09:05:56+00:00'
-  updated: '2026-07-11T09:05:56+00:00'
+  updated: '2026-07-22T06:09:07+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true
   dna:
     structure: short_put_credit
@@ -15718,16 +15866,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_9d4c0903a7e2
   exit_logic_ref: strategies.check_exits+dna:dna_9d4c0903a7e2
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_9d4c0903a7e2:verdict=SHIP:score=34.07:trades=16
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_butterfly_trades.json
   - 'metrics:{"n_trades": 16, "win_rate_pct": 50.0, "total_pnl_per_contract": 5.210037627024492,
     "avg_pnl_per_contract": 0.32562735168903073, "profit_factor": 1.4490601451078577,
     "max_dd_per_contract": 5.117347632'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T09:05:57+00:00'
-  updated: '2026-07-11T09:05:57+00:00'
+  updated: '2026-07-22T06:09:08+00:00'
   notes: source=evolve_tick; structure=butterfly_spread; never_auto_live=true
   dna:
     structure: butterfly_spread
@@ -16506,16 +16656,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_ac7d75556a20
   exit_logic_ref: strategies.check_exits+dna:dna_ac7d75556a20
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_ac7d75556a20:verdict=SHIP:score=-73.40:trades=21
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_debit_vertical_trades.json
   - 'metrics:{"n_trades": 21, "win_rate_pct": 57.14285714285714, "total_pnl_per_contract":
     77.74801860259167, "avg_pnl_per_contract": 3.7022866001234127, "profit_factor":
     1.1551579224054582, "max_dd_per_contract":'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T11:05:09+00:00'
-  updated: '2026-07-11T23:57:01+00:00'
+  updated: '2026-07-22T06:09:09+00:00'
   notes: source=evolve_tick; structure=bull_call_debit_spread; never_auto_live=true
   dna:
     structure: bull_call_debit_spread
@@ -16963,16 +17115,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_0f109980e005
   exit_logic_ref: strategies.check_exits+dna:dna_0f109980e005
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_0f109980e005:verdict=SHIP:score=-15.74:trades=45
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 45.0, "win_rate_pct": 62.22222222222222, "total_pnl_per_contract":
     188.37277133900983, "avg_pnl_per_contract": 4.18606158531133, "avg_win_per_contract":
     31.040309369813823, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T17:02:03+00:00'
-  updated: '2026-07-11T17:02:03+00:00'
+  updated: '2026-07-22T06:09:10+00:00'
   notes: source=evolve_tick; structure=roll_defend; never_auto_live=true
   dna:
     structure: roll_defend
@@ -17198,16 +17352,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_be493fce54b7
   exit_logic_ref: strategies.check_exits+dna:dna_be493fce54b7
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_be493fce54b7:verdict=SHIP:score=-225.42:trades=43
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 43.0, "win_rate_pct": 65.11627906976744, "total_pnl_per_contract":
     116.63820300157204, "avg_pnl_per_contract": 2.7125163488737685, "avg_win_per_contract":
     33.16637055163159, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T17:02:04+00:00'
-  updated: '2026-07-11T17:02:04+00:00'
+  updated: '2026-07-22T06:09:11+00:00'
   notes: source=evolve_tick; structure=short_dte_aggressive; never_auto_live=true
   dna:
     structure: short_dte_aggressive
@@ -17415,16 +17571,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_0c755e575b61
   exit_logic_ref: strategies.check_exits+dna:dna_0c755e575b61
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_0c755e575b61:verdict=SHIP:score=477.03:trades=40
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_calendar_trades.json
   - 'metrics:{"n_trades": 40, "win_rate_pct": 85.0, "total_pnl_per_contract": 389.31022667550724,
     "avg_pnl_per_contract": 9.73275566688768, "profit_factor": 5.10904160801853, "max_dd_per_contract":
     36.961329707763'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T21:01:27+00:00'
-  updated: '2026-07-11T21:01:27+00:00'
+  updated: '2026-07-22T06:09:12+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -17779,16 +17937,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_bc767d654f3f
   exit_logic_ref: strategies.check_exits+dna:dna_bc767d654f3f
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_bc767d654f3f:verdict=NEEDS_MORE_DATA:score=21.58:trades=1
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_diagonal_trades.json
   - 'metrics:{"n_trades": 1, "win_rate_pct": 100.0, "total_pnl_per_contract": 201.6293887191411,
     "avg_pnl_per_contract": 201.6293887191411, "profit_factor": Infinity, "max_dd_per_contract":
     0.0, "avg_days_held": 8'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T21:01:29+00:00'
-  updated: '2026-07-11T21:01:29+00:00'
+  updated: '2026-07-22T06:09:13+00:00'
   notes: source=evolve_tick; structure=diagonal_spread; never_auto_live=true
   dna:
     structure: diagonal_spread
@@ -18197,16 +18357,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_c6c4229554d2
   exit_logic_ref: strategies.check_exits+dna:dna_c6c4229554d2
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_c6c4229554d2:verdict=SHIP:score=410.06:trades=65
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_research_trades.csv
   - 'metrics:{"n_trades": 65.0, "win_rate_pct": 73.84615384615385, "total_pnl_per_contract":
     807.6656429341356, "avg_pnl_per_contract": 12.425625275909779, "avg_win_per_contract":
     51.79638393067023, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:19:30+00:00'
-  updated: '2026-07-11T23:19:30+00:00'
+  updated: '2026-07-22T06:09:14+00:00'
   notes: source=evolve_tick; structure=short_dte_aggressive; never_auto_live=true
   dna:
     structure: short_dte_aggressive
@@ -18647,16 +18809,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_43023f49cae1
   exit_logic_ref: strategies.check_exits+dna:dna_43023f49cae1
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_43023f49cae1:verdict=SHIP:score=93.72:trades=24
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 24.0, "win_rate_pct": 79.16666666666666, "total_pnl_per_contract":
     149.6114459726914, "avg_pnl_per_contract": 6.233810248862142, "avg_win_per_contract":
     18.664982699238834, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:34:23+00:00'
-  updated: '2026-07-11T23:34:23+00:00'
+  updated: '2026-07-22T06:09:15+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true
   dna:
     structure: short_put_credit
@@ -18752,16 +18916,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_f8b78444c65b
   exit_logic_ref: strategies.check_exits+dna:dna_f8b78444c65b
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_f8b78444c65b:verdict=NULL:score=95.16:trades=8
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_iron_butterfly_trades.json
   - 'metrics:{"n_trades": 8, "win_rate_pct": 50.0, "total_pnl_per_contract": 104.8406939065547,
     "avg_pnl_per_contract": 13.105086738319338, "profit_factor": 2.2265265804404755,
     "max_dd_per_contract": 59.2149993154'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:34:23+00:00'
-  updated: '2026-07-11T23:34:23+00:00'
+  updated: '2026-07-22T06:09:16+00:00'
   notes: source=evolve_tick; structure=iron_butterfly; never_auto_live=true
   dna:
     structure: iron_butterfly
@@ -18875,16 +19041,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_d21a486c4c32
   exit_logic_ref: strategies.check_exits+dna:dna_d21a486c4c32
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_d21a486c4c32:verdict=NEEDS_MORE_DATA:score=8.19:trades=7
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_iron_butterfly_trades.json
   - 'metrics:{"n_trades": 7, "win_rate_pct": 42.857142857142854, "total_pnl_per_contract":
     125.8280996583325, "avg_pnl_per_contract": 17.975442808333217, "profit_factor":
     3.9528417368926965, "max_dd_per_contract":'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:34:24+00:00'
-  updated: '2026-07-11T23:34:24+00:00'
+  updated: '2026-07-22T06:09:17+00:00'
   notes: source=evolve_tick; structure=iron_butterfly; never_auto_live=true
   dna:
     structure: iron_butterfly
@@ -18998,16 +19166,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_2290bf4cd781
   exit_logic_ref: strategies.check_exits+dna:dna_2290bf4cd781
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_2290bf4cd781:verdict=NEEDS_MORE_DATA:score=0.76:trades=7
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_iron_butterfly_trades.json
   - 'metrics:{"n_trades": 7, "win_rate_pct": 42.857142857142854, "total_pnl_per_contract":
     41.91010687144082, "avg_pnl_per_contract": 5.987158124491545, "profit_factor":
     1.5888543539844868, "max_dd_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:34:24+00:00'
-  updated: '2026-07-11T23:34:24+00:00'
+  updated: '2026-07-22T06:09:18+00:00'
   notes: source=evolve_tick; structure=iron_butterfly; never_auto_live=true
   dna:
     structure: iron_butterfly
@@ -19122,16 +19292,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_10a3f1aed3b3
   exit_logic_ref: strategies.check_exits+dna:dna_10a3f1aed3b3
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_10a3f1aed3b3:verdict=NEEDS_MORE_DATA:score=-2.53:trades=7
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_iron_butterfly_trades.json
   - 'metrics:{"n_trades": 7, "win_rate_pct": 42.857142857142854, "total_pnl_per_contract":
     -26.77628679520904, "avg_pnl_per_contract": -3.8251838278870056, "profit_factor":
     0.5229967712824323, "max_dd_per_contract'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:34:25+00:00'
-  updated: '2026-07-11T23:34:25+00:00'
+  updated: '2026-07-22T06:09:19+00:00'
   notes: source=evolve_tick; structure=iron_butterfly; never_auto_live=true
   dna:
     structure: iron_butterfly
@@ -19361,16 +19533,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_e7716fc43d55
   exit_logic_ref: strategies.check_exits+dna:dna_e7716fc43d55
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_e7716fc43d55:verdict=SHIP:score=441.71:trades=37
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_calendar_trades.json
   - 'metrics:{"n_trades": 37, "win_rate_pct": 81.08108108108108, "total_pnl_per_contract":
     383.8684394980015, "avg_pnl_per_contract": 10.374822689135176, "profit_factor":
     3.973555543808249, "max_dd_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:45:24+00:00'
-  updated: '2026-07-11T23:45:24+00:00'
+  updated: '2026-07-22T06:09:20+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -19475,16 +19649,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_3067f9699aa6
   exit_logic_ref: strategies.check_exits+dna:dna_3067f9699aa6
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_3067f9699aa6:verdict=SHIP:score=378.88:trades=19
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 19.0, "win_rate_pct": 84.21052631578947, "total_pnl_per_contract":
     374.1428027638029, "avg_pnl_per_contract": 19.691726461252784, "avg_win_per_contract":
     32.63074214217217, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:45:24+00:00'
-  updated: '2026-07-11T23:45:24+00:00'
+  updated: '2026-07-22T06:09:21+00:00'
   notes: source=evolve_tick; structure=long_dte_conservative; never_auto_live=true
   dna:
     structure: long_dte_conservative
@@ -19578,16 +19754,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_6196fcc76896
   exit_logic_ref: strategies.check_exits+dna:dna_6196fcc76896
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_6196fcc76896:verdict=SHIP:score=376.05:trades=45
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_calendar_trades.json
   - 'metrics:{"n_trades": 45, "win_rate_pct": 84.44444444444444, "total_pnl_per_contract":
     300.29448160398937, "avg_pnl_per_contract": 6.673210702310874, "profit_factor":
     4.370124865132761, "max_dd_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:45:25+00:00'
-  updated: '2026-07-11T23:45:25+00:00'
+  updated: '2026-07-22T06:09:22+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -19810,16 +19988,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_b866307c7de5
   exit_logic_ref: strategies.check_exits+dna:dna_b866307c7de5
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_b866307c7de5:verdict=SHIP:score=209.45:trades=37
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_calendar_trades.json
   - 'metrics:{"n_trades": 37, "win_rate_pct": 67.56756756756756, "total_pnl_per_contract":
     414.23633145411236, "avg_pnl_per_contract": 11.195576525786821, "profit_factor":
     1.6869420387142475, "max_dd_per_contract"'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:45:26+00:00'
-  updated: '2026-07-12T01:46:02+00:00'
+  updated: '2026-07-22T06:09:23+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -19924,16 +20104,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_2c501c1a9fee
   exit_logic_ref: strategies.check_exits+dna:dna_2c501c1a9fee
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_2c501c1a9fee:verdict=SHIP:score=-86.22:trades=45
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 45.0, "win_rate_pct": 77.77777777777779, "total_pnl_per_contract":
     72.87340312408676, "avg_pnl_per_contract": 1.619408958313039, "avg_win_per_contract":
     13.892995872044267, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:45:27+00:00'
-  updated: '2026-07-11T23:45:27+00:00'
+  updated: '2026-07-22T06:09:24+00:00'
   notes: source=evolve_tick; structure=long_dte_conservative; never_auto_live=true
   dna:
     structure: long_dte_conservative
@@ -20512,16 +20694,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_b4ee51c040da
   exit_logic_ref: strategies.check_exits+dna:dna_b4ee51c040da
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_b4ee51c040da:verdict=SHIP:score=-39.24:trades=26
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 26.0, "win_rate_pct": 76.92307692307693, "total_pnl_per_contract":
     49.514417268827025, "avg_pnl_per_contract": 1.9044006641856548, "avg_win_per_contract":
     19.362467076376543, "avg_loss_pe'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:56:59+00:00'
-  updated: '2026-07-11T23:56:59+00:00'
+  updated: '2026-07-22T06:09:24+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true
   dna:
     structure: short_put_credit
@@ -20613,16 +20797,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_bc28b3d3ad19
   exit_logic_ref: strategies.check_exits+dna:dna_bc28b3d3ad19
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_bc28b3d3ad19:verdict=SHIP:score=-161.86:trades=56
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 56.0, "win_rate_pct": 71.42857142857143, "total_pnl_per_contract":
     167.9877839924773, "avg_pnl_per_contract": 2.999781857008523, "avg_win_per_contract":
     26.44049378671727, "avg_loss_per_c'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-11T23:57:00+00:00'
-  updated: '2026-07-11T23:57:00+00:00'
+  updated: '2026-07-22T06:09:25+00:00'
   notes: source=evolve_tick; structure=short_dte_aggressive; never_auto_live=true
   dna:
     structure: short_dte_aggressive
@@ -20833,16 +21019,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_5f0e0ee14474
   exit_logic_ref: strategies.check_exits+dna:dna_5f0e0ee14474
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_5f0e0ee14474:verdict=SHIP:score=684.59:trades=28
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_debit_vertical_trades.json
   - 'metrics:{"n_trades": 28, "win_rate_pct": 67.85714285714286, "total_pnl_per_contract":
     1192.854756948954, "avg_pnl_per_contract": 42.60195560531979, "profit_factor":
     2.3434038952472895, "max_dd_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-12T00:10:57+00:00'
-  updated: '2026-07-12T00:10:57+00:00'
+  updated: '2026-07-22T06:09:26+00:00'
   notes: source=evolve_tick; structure=bear_put_debit_spread; never_auto_live=true
   dna:
     structure: bear_put_debit_spread
@@ -20946,16 +21134,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_e85ea7f13428
   exit_logic_ref: strategies.check_exits+dna:dna_e85ea7f13428
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_e85ea7f13428:verdict=SHIP:score=423.91:trades=40
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_calendar_trades.json
   - 'metrics:{"n_trades": 40, "win_rate_pct": 82.5, "total_pnl_per_contract": 379.15538225627597,
     "avg_pnl_per_contract": 9.4788845564069, "profit_factor": 3.6316886746684593,
     "max_dd_per_contract": 49.12896987416'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T00:10:58+00:00'
-  updated: '2026-07-12T00:10:58+00:00'
+  updated: '2026-07-22T06:09:27+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -21198,16 +21388,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_da9dcee061e7
   exit_logic_ref: strategies.check_exits+dna:dna_da9dcee061e7
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_da9dcee061e7:verdict=SHIP:score=-11.46:trades=37
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 37.0, "win_rate_pct": 67.56756756756756, "total_pnl_per_contract":
     226.33315806452126, "avg_pnl_per_contract": 6.1171123801221965, "avg_win_per_contract":
     35.78497861768143, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T00:10:59+00:00'
-  updated: '2026-07-12T00:10:59+00:00'
+  updated: '2026-07-22T06:09:28+00:00'
   notes: source=evolve_tick; structure=short_dte_aggressive; never_auto_live=true
   dna:
     structure: short_dte_aggressive
@@ -21517,16 +21709,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_2b3d2295a1eb
   exit_logic_ref: strategies.check_exits+dna:dna_2b3d2295a1eb
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_2b3d2295a1eb:verdict=SHIP:score=420.24:trades=21
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 21.0, "win_rate_pct": 71.42857142857143, "total_pnl_per_contract":
     397.9660307703686, "avg_pnl_per_contract": 18.95076337001755, "avg_win_per_contract":
     35.63893247597456, "avg_loss_per_c'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-12T01:01:44+00:00'
-  updated: '2026-07-12T01:01:44+00:00'
+  updated: '2026-07-22T06:09:29+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -21731,16 +21925,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_bfcde6b04d6b
   exit_logic_ref: strategies.check_exits+dna:dna_bfcde6b04d6b
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_bfcde6b04d6b:verdict=SHIP:score=54.85:trades=21
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_iron_butterfly_trades.json
   - 'metrics:{"n_trades": 21, "win_rate_pct": 85.71428571428571, "total_pnl_per_contract":
     42.74301738722501, "avg_pnl_per_contract": 2.035381780344048, "profit_factor":
     1.543576269538861, "max_dd_per_contract": 4'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-12T01:01:46+00:00'
-  updated: '2026-07-12T01:01:46+00:00'
+  updated: '2026-07-22T06:09:30+00:00'
   notes: source=evolve_tick; structure=iron_butterfly; never_auto_live=true
   dna:
     structure: iron_butterfly
@@ -22084,16 +22280,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_34e16dbb5162
   exit_logic_ref: strategies.check_exits+dna:dna_34e16dbb5162
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_34e16dbb5162:verdict=SHIP:score=543.60:trades=28
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_debit_vertical_trades.json
   - 'metrics:{"n_trades": 28, "win_rate_pct": 64.28571428571429, "total_pnl_per_contract":
     791.8123953553286, "avg_pnl_per_contract": 28.279014119833164, "profit_factor":
     2.3718025856131657, "max_dd_per_contract":'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-12T01:19:15+00:00'
-  updated: '2026-07-12T01:19:15+00:00'
+  updated: '2026-07-22T06:09:31+00:00'
   notes: source=evolve_tick; structure=bear_put_debit_spread; never_auto_live=true
   dna:
     structure: bear_put_debit_spread
@@ -22436,16 +22634,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_ded1b11a8ff0
   exit_logic_ref: strategies.check_exits+dna:dna_ded1b11a8ff0
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_ded1b11a8ff0:verdict=SHIP:score=459.78:trades=38
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_calendar_trades.json
   - 'metrics:{"n_trades": 38, "win_rate_pct": 78.94736842105263, "total_pnl_per_contract":
     509.858793859862, "avg_pnl_per_contract": 13.417336680522684, "profit_factor":
     2.4172368799095274, "max_dd_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T01:33:59+00:00'
-  updated: '2026-07-12T01:33:59+00:00'
+  updated: '2026-07-22T06:09:32+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -22775,16 +22975,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_d05b440aa2db
   exit_logic_ref: strategies.check_exits+dna:dna_d05b440aa2db
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_d05b440aa2db:verdict=NULL:score=272.90:trades=8
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_iron_butterfly_trades.json
   - 'metrics:{"n_trades": 8, "win_rate_pct": 87.5, "total_pnl_per_contract": 161.4891284525008,
     "avg_pnl_per_contract": 20.1861410565626, "profit_factor": 5.99828559976344, "max_dd_per_contract":
     32.30890376895306'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T01:34:01+00:00'
-  updated: '2026-07-12T01:34:01+00:00'
+  updated: '2026-07-22T06:09:33+00:00'
   notes: source=evolve_tick; structure=iron_butterfly; never_auto_live=true
   dna:
     structure: iron_butterfly
@@ -23011,16 +23213,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_90b86928078f
   exit_logic_ref: strategies.check_exits+dna:dna_90b86928078f
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_90b86928078f:verdict=SHIP:score=738.46:trades=19
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 19.0, "win_rate_pct": 100.0, "total_pnl_per_contract": 508.4572483510032,
     "avg_pnl_per_contract": 26.760907807947536, "avg_win_per_contract": 26.760907807947536,
     "avg_loss_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-12T01:45:57+00:00'
-  updated: '2026-07-12T01:45:57+00:00'
+  updated: '2026-07-22T06:09:34+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -23218,16 +23422,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_169095ca0370
   exit_logic_ref: strategies.check_exits+dna:dna_169095ca0370
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_169095ca0370:verdict=SHIP:score=709.46:trades=38
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_calendar_trades.json
   - 'metrics:{"n_trades": 38, "win_rate_pct": 71.05263157894737, "total_pnl_per_contract":
     807.0562562726948, "avg_pnl_per_contract": 21.238322533491967, "profit_factor":
     2.821881582997979, "max_dd_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-12T01:45:59+00:00'
-  updated: '2026-07-12T01:45:59+00:00'
+  updated: '2026-07-22T06:09:35+00:00'
   notes: source=evolve_tick; structure=calendar_spread; never_auto_live=true
   dna:
     structure: calendar_spread
@@ -23331,16 +23537,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_9c21a7d5d7ec
   exit_logic_ref: strategies.check_exits+dna:dna_9c21a7d5d7ec
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_9c21a7d5d7ec:verdict=SHIP:score=374.47:trades=28
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 28.0, "win_rate_pct": 67.85714285714286, "total_pnl_per_contract":
     392.9682914527492, "avg_pnl_per_contract": 14.034581837598186, "avg_win_per_contract":
     33.36048713118636, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-12T01:46:00+00:00'
-  updated: '2026-07-12T01:46:00+00:00'
+  updated: '2026-07-22T06:09:36+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -23430,16 +23638,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_2ce0d6158517
   exit_logic_ref: strategies.check_exits+dna:dna_2ce0d6158517
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_2ce0d6158517:verdict=SHIP:score=222.60:trades=66
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_research_trades.csv
   - 'metrics:{"n_trades": 66.0, "win_rate_pct": 74.24242424242425, "total_pnl_per_contract":
     674.0729655297699, "avg_pnl_per_contract": 10.21322675045106, "avg_win_per_contract":
     49.120540672259054, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T01:46:00+00:00'
-  updated: '2026-07-12T01:46:00+00:00'
+  updated: '2026-07-22T06:09:37+00:00'
   notes: source=evolve_tick; structure=short_dte_aggressive; never_auto_live=true
   dna:
     structure: short_dte_aggressive
@@ -23652,16 +23862,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_30e513e3b648
   exit_logic_ref: strategies.check_exits+dna:dna_30e513e3b648
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_30e513e3b648:verdict=SHIP:score=16.13:trades=23
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 23.0, "win_rate_pct": 78.26086956521739, "total_pnl_per_contract":
     94.08652971369617, "avg_pnl_per_contract": 4.090718683204181, "avg_win_per_contract":
     17.480866971367867, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T04:26:00+00:00'
-  updated: '2026-07-12T04:26:00+00:00'
+  updated: '2026-07-22T06:09:38+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true
   dna:
     structure: short_put_credit
@@ -23758,16 +23970,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_bdb50af49a8c
   exit_logic_ref: strategies.check_exits+dna:dna_bdb50af49a8c
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_bdb50af49a8c:verdict=SHIP:score=-8.84:trades=16
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_iron_butterfly_trades.json
   - 'metrics:{"n_trades": 16, "win_rate_pct": 62.5, "total_pnl_per_contract": 66.43716930310048,
     "avg_pnl_per_contract": 4.15232308144378, "profit_factor": 1.2652612195051707,
     "max_dd_per_contract": 111.8336912761'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T04:26:01+00:00'
-  updated: '2026-07-12T04:26:01+00:00'
+  updated: '2026-07-22T06:09:39+00:00'
   notes: source=evolve_tick; structure=broken_wing_iron_butterfly; never_auto_live=true
   dna:
     structure: broken_wing_iron_butterfly
@@ -24006,16 +24220,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_34619279bfed
   exit_logic_ref: strategies.check_exits+dna:dna_34619279bfed
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_34619279bfed:verdict=SHIP:score=-87.98:trades=17
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_iron_butterfly_trades.json
   - 'metrics:{"n_trades": 17, "win_rate_pct": 52.94117647058824, "total_pnl_per_contract":
     21.25854431058971, "avg_pnl_per_contract": 1.2505026065052771, "profit_factor":
     1.0829793312758103, "max_dd_per_contract":'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T04:26:02+00:00'
-  updated: '2026-07-12T04:26:02+00:00'
+  updated: '2026-07-22T06:09:40+00:00'
   notes: source=evolve_tick; structure=broken_wing_iron_butterfly; never_auto_live=true
   dna:
     structure: broken_wing_iron_butterfly
@@ -24129,16 +24345,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_6f1d6badce12
   exit_logic_ref: strategies.check_exits+dna:dna_6f1d6badce12
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_6f1d6badce12:verdict=NULL:score=170.12:trades=10
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_iron_butterfly_trades.json
   - 'metrics:{"n_trades": 10, "win_rate_pct": 80.0, "total_pnl_per_contract": 163.09660330227314,
     "avg_pnl_per_contract": 16.309660330227313, "profit_factor": 2.4213897711546686,
     "max_dd_per_contract": 61.40775482'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T04:26:03+00:00'
-  updated: '2026-07-12T04:26:03+00:00'
+  updated: '2026-07-22T06:09:41+00:00'
   notes: source=evolve_tick; structure=broken_wing_iron_butterfly; never_auto_live=true
   dna:
     structure: broken_wing_iron_butterfly
@@ -24253,16 +24471,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_aa91d9e5a501
   exit_logic_ref: strategies.check_exits+dna:dna_aa91d9e5a501
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_aa91d9e5a501:verdict=NULL:score=170.12:trades=10
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_iron_butterfly_trades.json
   - 'metrics:{"n_trades": 10, "win_rate_pct": 80.0, "total_pnl_per_contract": 163.09660330227314,
     "avg_pnl_per_contract": 16.309660330227313, "profit_factor": 2.4213897711546686,
     "max_dd_per_contract": 61.40775482'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T04:26:04+00:00'
-  updated: '2026-07-12T04:26:04+00:00'
+  updated: '2026-07-22T06:09:42+00:00'
   notes: source=evolve_tick; structure=broken_wing_iron_butterfly; never_auto_live=true
   dna:
     structure: broken_wing_iron_butterfly
@@ -24377,16 +24597,18 @@ hypotheses:
   - SMCI
   entry_logic_ref: strategies.pick_entry+dna:dna_06b586a2d26a
   exit_logic_ref: strategies.check_exits+dna:dna_06b586a2d26a
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_06b586a2d26a:verdict=SHIP:score=2994.98:trades=71
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/SMCI_put_ratio_backspread_trades.json
   - 'metrics:{"n_trades": 71, "win_rate_pct": 64.7887323943662, "total_pnl_per_contract":
     3532.070590505961, "avg_pnl_per_contract": 49.74747310571776, "profit_factor":
     3.3843137929770197, "max_dd_per_contract": 6'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=9\
+    \ composite=57.5 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T05:04:48+00:00'
-  updated: '2026-07-12T05:04:48+00:00'
+  updated: '2026-07-22T06:09:43+00:00'
   notes: source=evolve_tick; structure=put_ratio_backspread; never_auto_live=true
   dna:
     structure: put_ratio_backspread
@@ -24719,16 +24941,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_9e22e0125af6
   exit_logic_ref: strategies.check_exits+dna:dna_9e22e0125af6
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_9e22e0125af6:verdict=SHIP:score=478.26:trades=63
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_put_ratio_backspread_trades.json
   - 'metrics:{"n_trades": 63, "win_rate_pct": 57.14285714285714, "total_pnl_per_contract":
     818.5550672246604, "avg_pnl_per_contract": 12.99293757499461, "profit_factor":
     1.8794882893177391, "max_dd_per_contract": '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T05:04:51+00:00'
-  updated: '2026-07-12T05:04:51+00:00'
+  updated: '2026-07-22T06:09:44+00:00'
   notes: source=evolve_tick; structure=put_ratio_backspread; never_auto_live=true
   dna:
     structure: put_ratio_backspread
@@ -25169,16 +25393,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_50973aa1a57c
   exit_logic_ref: strategies.check_exits+dna:dna_50973aa1a57c
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_50973aa1a57c:verdict=NULL:score=319.48:trades=59
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_put_ratio_backspread_trades.json
   - 'metrics:{"n_trades": 59, "win_rate_pct": 44.06779661016949, "total_pnl_per_contract":
     612.4144351490124, "avg_pnl_per_contract": 10.379905680491737, "profit_factor":
     1.6017220759491726, "max_dd_per_contract":'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-12T05:04:54+00:00'
-  updated: '2026-07-12T05:04:54+00:00'
+  updated: '2026-07-22T06:09:45+00:00'
   notes: source=evolve_tick; structure=put_ratio_backspread; never_auto_live=true
   dna:
     structure: put_ratio_backspread
@@ -25284,16 +25510,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_edb0f23732dd
   exit_logic_ref: strategies.check_exits+dna:dna_edb0f23732dd
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_edb0f23732dd:verdict=NEEDS_MORE_DATA:score=13.77:trades=2
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_pcs_trades.json
   - 'metrics:{"n_trades": 2, "win_rate_pct": 100.0, "total_pnl_per_contract": 45.35892400947663,
     "avg_pnl_per_contract": 22.679462004738316, "avg_win_per_contract": 22.679462004738316,
     "avg_loss_per_contract": 0.0'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-12T09:08:17+00:00'
-  updated: '2026-07-12T09:08:17+00:00'
+  updated: '2026-07-22T06:09:46+00:00'
   notes: source=evolve_tick; structure=call_credit_spread; never_auto_live=true
   dna:
     structure: call_credit_spread
@@ -25415,16 +25643,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_7336e19e7e17
   exit_logic_ref: strategies.check_exits+dna:dna_7336e19e7e17
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_7336e19e7e17:verdict=NEEDS_MORE_DATA:score=13.77:trades=2
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_pcs_trades.json
   - 'metrics:{"n_trades": 2, "win_rate_pct": 100.0, "total_pnl_per_contract": 45.35892400947663,
     "avg_pnl_per_contract": 22.679462004738316, "avg_win_per_contract": 22.679462004738316,
     "avg_loss_per_contract": 0.0'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-12T09:08:18+00:00'
-  updated: '2026-07-22T05:34:52+00:00'
+  updated: '2026-07-22T06:09:47+00:00'
   notes: source=evolve_tick; structure=call_credit_spread; never_auto_live=true
   dna:
     structure: call_credit_spread
@@ -26083,7 +26313,7 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_e1299b652b93
   exit_logic_ref: strategies.check_exits+dna:dna_e1299b652b93
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_e1299b652b93:verdict=SHIP:score=288.38:trades=86
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/NFLX_pcs_trades.json
@@ -26093,9 +26323,11 @@ hypotheses:
   - regime_stress:neg_ge3=7:hold=True:worst_pnl=-99.45:max_dd=216.16:path=.cache/platform/stress_regime_free_build2_20260712T0209.json
   - "2026-07-12 B4 cost/slip stress: hold=True note=soft_loss_at_5pct_defined_risk\
     \ \u2192 file:///Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/stress_cost_free_build2_20260712T0209.json"
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=5"
   null_results: []
   created: '2026-07-12T09:09:15+00:00'
-  updated: '2026-07-12T09:09:15+00:00'
+  updated: '2026-07-22T06:09:48+00:00'
   notes: source=evolve_tick; structure=put_credit_spread; never_auto_live=true; regime_stress_hold=True;neg_windows_ge3=7;worst_window_pnl=-99.45
   dna:
     structure: put_credit_spread
@@ -26217,7 +26449,7 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_372ee01a692c
   exit_logic_ref: strategies.check_exits+dna:dna_372ee01a692c
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_372ee01a692c:verdict=SHIP:score=71.82:trades=59
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
@@ -26226,9 +26458,11 @@ hypotheses:
     26.800865088114676, "avg_loss_per_co'
   - regime_stress:neg_ge3=3:hold=True:worst_pnl=-89.74:max_dd=230.88:path=.cache/platform/stress_regime_free_build2_20260712T0209.json
   - "2026-07-12 B4 cost/slip stress: hold=True note=survives_5pct_slip \u2192 file:///Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/stress_cost_free_build2_20260712T0209.json"
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=5"
   null_results: []
   created: '2026-07-12T09:09:16+00:00'
-  updated: '2026-07-12T09:09:16+00:00'
+  updated: '2026-07-22T06:09:49+00:00'
   notes: source=evolve_tick; structure=put_credit_spread; never_auto_live=true; regime_stress_hold=True;neg_windows_ge3=3;worst_window_pnl=-89.74
   dna:
     structure: put_credit_spread
@@ -26353,7 +26587,7 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_7d9981eedf3c
   exit_logic_ref: strategies.check_exits+dna:dna_7d9981eedf3c
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_7d9981eedf3c:verdict=SHIP:score=44.66:trades=102
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
@@ -26363,9 +26597,11 @@ hypotheses:
   - regime_stress:neg_ge3=8:hold=True:worst_pnl=-85.62:max_dd=220.68:path=.cache/platform/stress_regime_free_build2_20260712T0209.json
   - "2026-07-12 B4 cost/slip stress: hold=False note=large_loss_at_5pct_fragile \u2192\
     \ file:///Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/stress_cost_free_build2_20260712T0209.json"
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=5"
   null_results: []
   created: '2026-07-12T09:09:17+00:00'
-  updated: '2026-07-12T09:09:17+00:00'
+  updated: '2026-07-22T06:09:49+00:00'
   notes: source=evolve_tick; structure=put_credit_spread; never_auto_live=true; regime_stress_hold=True;neg_windows_ge3=8;worst_window_pnl=-85.62
   dna:
     structure: put_credit_spread
@@ -26489,7 +26725,7 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_6c4fea2bc4a1
   exit_logic_ref: strategies.check_exits+dna:dna_6c4fea2bc4a1
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_6c4fea2bc4a1:verdict=SHIP:score=-4.17:trades=39
   - /Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
@@ -26499,9 +26735,11 @@ hypotheses:
   - regime_stress:neg_ge3=4:hold=True:worst_pnl=-136.02:max_dd=155.87:path=.cache/platform/stress_regime_free_build2_20260712T0209.json
   - "2026-07-12 B4 cost/slip stress: hold=False note=large_loss_at_5pct_fragile \u2192\
     \ file:///Users/jarvis/dev/tsla-tsll-options-tracker/.cache/platform/stress_cost_free_build2_20260712T0209.json"
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=5"
   null_results: []
   created: '2026-07-12T09:09:18+00:00'
-  updated: '2026-07-12T09:09:18+00:00'
+  updated: '2026-07-22T06:09:50+00:00'
   notes: source=evolve_tick; structure=put_credit_spread; never_auto_live=true; regime_stress_hold=True;neg_windows_ge3=4;worst_window_pnl=-136.02
   dna:
     structure: put_credit_spread
@@ -26784,7 +27022,7 @@ hypotheses:
   - BAC
   entry_logic_ref: strategies.pick_entry+dna:dna_eb9a88f03c89
   exit_logic_ref: strategies.check_exits+dna:dna_eb9a88f03c89
-  status: testing
+  status: paper
   evidence_links:
   - evolve_sim:dna_eb9a88f03c89:verdict=SHIP:score=239.07:trades=18
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/BAC_pcs_trades.json
@@ -26793,9 +27031,11 @@ hypotheses:
     25.22082408420439, "avg_loss_per_c'
   - regime_stress:neg_ge3=2:hold=True:worst_pnl=-74.18:max_dd=103.28:path=.cache/platform/stress_regime_2026-07-20T0215.json
   - quality_push:2026-07-22:B3hold+B4SHIP@5pct:regime_new_20260722T053652
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:testing\u2192paper: paper_orders=1 evidence_n=5\
+    \ (paper sleeve only; no live)"
   null_results: []
   created: '2026-07-20T09:06:47+00:00'
-  updated: '2026-07-22T05:39:33+00:00'
+  updated: '2026-07-22T06:09:51+00:00'
   notes: source=evolve_tick; structure=put_credit_spread; never_auto_live=true; regime_stress_hold=True;neg_windows_ge3=2;worst_window_pnl=-74.18
   dna:
     structure: put_credit_spread
@@ -27447,7 +27687,7 @@ hypotheses:
   - PLTR
   entry_logic_ref: strategies.pick_entry+dna:dna_64e6033dfdc8
   exit_logic_ref: strategies.check_exits+dna:dna_64e6033dfdc8
-  status: candidate
+  status: paper
   evidence_links:
   - evolve_sim:dna_64e6033dfdc8:verdict=SHIP:score=16.78:trades=58
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/PLTR_pcs_trades.json
@@ -27455,9 +27695,12 @@ hypotheses:
     209.07221275371865, "avg_pnl_per_contract": 3.6046933233399767, "avg_win_per_contract":
     32.02168705068094, "avg_loss_per_c'
   - regime_stress:neg_ge3=1:hold=True:worst_pnl=-39.81:max_dd=229.94:path=.cache/platform/stress_regime_2026-07-20T0215.json
+  - paper_campaign:20260722T060756:auto_testing_for_scout
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:testing\u2192paper: paper_orders=1 evidence_n=5\
+    \ (paper sleeve only; no live)"
   null_results: []
   created: '2026-07-20T09:09:42+00:00'
-  updated: '2026-07-20T09:09:42+00:00'
+  updated: '2026-07-22T06:11:43+00:00'
   notes: source=evolve_tick; structure=put_credit_spread; never_auto_live=true; regime_stress_hold=True;neg_windows_ge3=1;worst_window_pnl=-39.81
   dna:
     structure: put_credit_spread
@@ -27845,16 +28088,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_0fc0494a0bbd
   exit_logic_ref: strategies.check_exits+dna:dna_0fc0494a0bbd
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_0fc0494a0bbd:verdict=NULL:score=297.87:trades=9
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
   - 'metrics:{"n_trades": 9, "win_rate_pct": 66.66666666666666, "total_pnl_per_contract":
     95.13984259512705, "avg_pnl_per_contract": 10.571093621680783, "avg_win_per_contract":
     17.630785635645662, "avg_loss_per_co'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-20T09:09:45+00:00'
-  updated: '2026-07-20T09:09:45+00:00'
+  updated: '2026-07-22T06:09:52+00:00'
   notes: source=evolve_tick; structure=put_credit_spread; never_auto_live=true
   dna:
     structure: put_credit_spread
@@ -28106,16 +28351,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_375d00bb6888
   exit_logic_ref: strategies.check_exits+dna:dna_375d00bb6888
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_375d00bb6888:verdict=NEEDS_MORE_DATA:score=12.58:trades=1
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/NFLX_pcs_trades.json
   - 'metrics:{"n_trades": 1, "win_rate_pct": 100.0, "total_pnl_per_contract": 21.51109987075941,
     "avg_pnl_per_contract": 21.51109987075941, "avg_win_per_contract": 21.51109987075941,
     "avg_loss_per_contract": 0.0, '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-20T09:09:47+00:00'
-  updated: '2026-07-20T09:09:47+00:00'
+  updated: '2026-07-22T06:09:53+00:00'
   notes: source=evolve_tick; structure=call_credit_spread; never_auto_live=true
   dna:
     structure: call_credit_spread
@@ -28236,16 +28483,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_d33ea9366e61
   exit_logic_ref: strategies.check_exits+dna:dna_d33ea9366e61
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_d33ea9366e61:verdict=NEEDS_MORE_DATA:score=12.58:trades=1
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/NFLX_pcs_trades.json
   - 'metrics:{"n_trades": 1, "win_rate_pct": 100.0, "total_pnl_per_contract": 21.51109987075941,
     "avg_pnl_per_contract": 21.51109987075941, "avg_win_per_contract": 21.51109987075941,
     "avg_loss_per_contract": 0.0, '
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-20T09:09:48+00:00'
-  updated: '2026-07-20T09:09:48+00:00'
+  updated: '2026-07-22T06:09:54+00:00'
   notes: source=evolve_tick; structure=call_credit_spread; never_auto_live=true
   dna:
     structure: call_credit_spread
@@ -28365,16 +28614,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_2977518cf98b
   exit_logic_ref: strategies.check_exits+dna:dna_2977518cf98b
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_2977518cf98b:verdict=SHIP:score=161.86:trades=26
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 26.0, "win_rate_pct": 73.07692307692307, "total_pnl_per_contract":
     376.63243758109195, "avg_pnl_per_contract": 14.485862983888152, "avg_win_per_contract":
     39.65994546312495, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-20T09:11:41+00:00'
-  updated: '2026-07-20T09:11:41+00:00'
+  updated: '2026-07-22T06:09:55+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -28477,16 +28728,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_55877f02a6ce
   exit_logic_ref: strategies.check_exits+dna:dna_55877f02a6ce
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_55877f02a6ce:verdict=SHIP:score=109.93:trades=49
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 49.0, "win_rate_pct": 63.26530612244898, "total_pnl_per_contract":
     205.20661062265094, "avg_pnl_per_contract": 4.187890012707162, "avg_win_per_contract":
     18.331739987417752, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-20T09:11:42+00:00'
-  updated: '2026-07-20T09:11:42+00:00'
+  updated: '2026-07-22T06:09:56+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -28578,16 +28831,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_bb9eb884f433
   exit_logic_ref: strategies.check_exits+dna:dna_bb9eb884f433
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_bb9eb884f433:verdict=SHIP:score=101.64:trades=49
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 49.0, "win_rate_pct": 63.26530612244898, "total_pnl_per_contract":
     199.17690679839404, "avg_pnl_per_contract": 4.064834832620287, "avg_win_per_contract":
     20.62474244799928, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-20T09:11:43+00:00'
-  updated: '2026-07-20T09:11:43+00:00'
+  updated: '2026-07-22T06:09:57+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -28884,16 +29139,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_59a5ecadd94b
   exit_logic_ref: strategies.check_exits+dna:dna_59a5ecadd94b
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_59a5ecadd94b:verdict=SHIP:score=381.03:trades=21
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 21.0, "win_rate_pct": 85.71428571428571, "total_pnl_per_contract":
     491.014513508362, "avg_pnl_per_contract": 23.38164350039819, "avg_win_per_contract":
     40.08604611867873, "avg_loss_per_co'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-22T05:33:41+00:00'
-  updated: '2026-07-22T05:33:41+00:00'
+  updated: '2026-07-22T06:09:58+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -28995,16 +29252,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_5c825fbf0a81
   exit_logic_ref: strategies.check_exits+dna:dna_5c825fbf0a81
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_5c825fbf0a81:verdict=SHIP:score=163.62:trades=27
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 27.0, "win_rate_pct": 85.18518518518519, "total_pnl_per_contract":
     212.8187251907428, "avg_pnl_per_contract": 7.882175007064548, "avg_win_per_contract":
     18.128891672898238, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-22T05:33:42+00:00'
-  updated: '2026-07-22T05:33:42+00:00'
+  updated: '2026-07-22T06:09:59+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -29097,16 +29356,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_610066474eac
   exit_logic_ref: strategies.check_exits+dna:dna_610066474eac
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_610066474eac:verdict=SHIP:score=120.47:trades=49
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 49.0, "win_rate_pct": 63.26530612244898, "total_pnl_per_contract":
     216.27195695248292, "avg_pnl_per_contract": 4.413713407193529, "avg_win_per_contract":
     19.919864873312235, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-22T05:33:43+00:00'
-  updated: '2026-07-22T05:33:43+00:00'
+  updated: '2026-07-22T06:10:00+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -29198,16 +29459,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_f5fede6a6646
   exit_logic_ref: strategies.check_exits+dna:dna_f5fede6a6646
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_f5fede6a6646:verdict=SHIP:score=90.55:trades=27
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 27.0, "win_rate_pct": 77.77777777777779, "total_pnl_per_contract":
     129.94597210161783, "avg_pnl_per_contract": 4.812813781541401, "avg_win_per_contract":
     20.560006419311993, "avg_loss_per'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-22T05:33:44+00:00'
-  updated: '2026-07-22T05:33:44+00:00'
+  updated: '2026-07-22T06:10:01+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true
   dna:
     structure: short_put_credit
@@ -29403,16 +29666,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_db6e15ecde71
   exit_logic_ref: strategies.check_exits+dna:dna_db6e15ecde71
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_db6e15ecde71:verdict=SHIP:score=456.63:trades=21
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/NFLX_pcs_trades.json
   - 'metrics:{"n_trades": 21, "win_rate_pct": 85.71428571428571, "total_pnl_per_contract":
     382.98897890586414, "avg_pnl_per_contract": 18.23757042408877, "avg_win_per_contract":
     27.263272728195236, "avg_loss_per_c'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-22T05:34:45+00:00'
-  updated: '2026-07-22T05:34:45+00:00'
+  updated: '2026-07-22T06:10:02+00:00'
   notes: source=evolve_tick; structure=call_credit_spread; never_auto_live=true
   dna:
     structure: call_credit_spread
@@ -29670,16 +29935,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_844d9a353011
   exit_logic_ref: strategies.check_exits+dna:dna_844d9a353011
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_844d9a353011:verdict=SHIP:score=2.38:trades=21
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/TSLL_pcs_trades.json
   - 'metrics:{"n_trades": 21, "win_rate_pct": 66.66666666666666, "total_pnl_per_contract":
     65.97393440715578, "avg_pnl_per_contract": 3.1416159241502752, "avg_win_per_contract":
     21.90193801195998, "avg_loss_per_co'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-22T05:34:47+00:00'
-  updated: '2026-07-22T05:34:47+00:00'
+  updated: '2026-07-22T06:10:03+00:00'
   notes: source=evolve_tick; structure=put_credit_spread; never_auto_live=true
   dna:
     structure: put_credit_spread
@@ -29935,16 +30202,19 @@ hypotheses:
   - PLTR
   entry_logic_ref: strategies.pick_entry+dna:dna_84426729c611
   exit_logic_ref: strategies.check_exits+dna:dna_84426729c611
-  status: candidate
+  status: paper
   evidence_links:
   - evolve_sim:dna_84426729c611:verdict=SHIP:score=-108.06:trades=28
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/PLTR_pcs_trades.json
   - 'metrics:{"n_trades": 28, "win_rate_pct": 64.28571428571429, "total_pnl_per_contract":
     104.96866618710524, "avg_pnl_per_contract": 3.7488809352537587, "avg_win_per_contract":
     34.31566777820999, "avg_loss_per_c'
+  - paper_campaign:20260722T060756:auto_testing_for_scout
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:testing\u2192paper: paper_orders=1 evidence_n=4\
+    \ (paper sleeve only; no live)"
   null_results: []
   created: '2026-07-22T05:34:49+00:00'
-  updated: '2026-07-22T05:34:49+00:00'
+  updated: '2026-07-22T06:11:44+00:00'
   notes: source=evolve_tick; structure=put_credit_spread; never_auto_live=true
   dna:
     structure: put_credit_spread
@@ -30327,16 +30597,18 @@ hypotheses:
   - NFLX
   entry_logic_ref: strategies.pick_entry+dna:dna_9456fb35d1ee
   exit_logic_ref: strategies.check_exits+dna:dna_9456fb35d1ee
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_9456fb35d1ee:verdict=SHIP:score=161.06:trades=24
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/NFLX_research_trades.csv
   - 'metrics:{"n_trades": 24.0, "win_rate_pct": 66.66666666666666, "total_pnl_per_contract":
     194.42058134469258, "avg_pnl_per_contract": 8.100857556028858, "avg_win_per_contract":
     25.38581827520947, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=6\
+    \ composite=60.64 cap_fit=fit_15k evidence_n=3"
   null_results: []
   created: '2026-07-22T05:37:17+00:00'
-  updated: '2026-07-22T05:37:17+00:00'
+  updated: '2026-07-22T06:10:04+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put
@@ -30729,16 +31001,18 @@ hypotheses:
   - TSLL
   entry_logic_ref: strategies.pick_entry+dna:dna_3debea78e9f5
   exit_logic_ref: strategies.check_exits+dna:dna_3debea78e9f5
-  status: candidate
+  status: testing
   evidence_links:
   - evolve_sim:dna_3debea78e9f5:verdict=SHIP:score=-278.28:trades=62
   - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/TSLL_research_trades.csv
   - 'metrics:{"n_trades": 62.0, "win_rate_pct": 61.29032258064516, "total_pnl_per_contract":
     47.16974176784798, "avg_pnl_per_contract": 0.7608022865781933, "avg_win_per_contract":
     16.70689382316106, "avg_loss_per_'
+  - "learn_tick:2026-07-21:NEEDS_MORE_DATA:promote candidate\u2192testing: research_rank=1\
+    \ composite=80.76 cap_fit=fit_3k evidence_n=3"
   null_results: []
   created: '2026-07-22T05:37:21+00:00'
-  updated: '2026-07-22T05:37:21+00:00'
+  updated: '2026-07-22T06:10:05+00:00'
   notes: source=evolve_tick; structure=cash_secured_put; never_auto_live=true
   dna:
     structure: cash_secured_put

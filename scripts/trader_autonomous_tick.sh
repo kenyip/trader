@@ -146,13 +146,15 @@ if [[ "$STATUS" == "NEXT_SURVIVOR" ]]; then
 fi
 
 # --- 3b) no qualified / other → quality residual (still autonomous progress) ---
-# Prefer full quality residual (research + evolve + optional B3/B4 + multi + paper).
+# Prefer full quality residual (research + evolve + optional B3/B4 + multi + paper + campaign).
 # Falls back to multi+paper if residual script missing. Never MoA thrash / densify bag.
 QUALITY_RES="$REPO/scripts/trader_quality_residual.sh"
+CAMPAIGN="$REPO/scripts/trader_paper_campaign.sh"
 if [[ "$STATUS" == "NO_QUALIFIED_STRATEGY" || "$STATUS" == "MISSING" ]]; then
   multi_rc=0
   paper_rc=0
   quality_rc=0
+  campaign_rc=0
   residual_mode="multi_paper"
   if [[ -x "$QUALITY_RES" || -f "$QUALITY_RES" ]]; then
     residual_mode="quality_residual"
@@ -173,11 +175,18 @@ if [[ "$STATUS" == "NO_QUALIFIED_STRATEGY" || "$STATUS" == "MISSING" ]]; then
       paper_rc=$?
       set -e
     fi
+    if [[ -f "$CAMPAIGN" ]]; then
+      set +e
+      bash "$CAMPAIGN" >"$RECEIPT_DIR/paper_campaign_stdout.txt" 2>"$RECEIPT_DIR/paper_campaign_stderr.txt"
+      campaign_rc=$?
+      set -e
+    fi
   fi
   write_receipt "no_survivor_quality_residual" "status=$STATUS" "residual_mode=$residual_mode" \
     "quality_rc=$quality_rc" "multi_symbol_rc=$multi_rc" "paper_loop_rc=$paper_rc" \
+    "paper_campaign_rc=$campaign_rc" \
     "note=expected_no_survivor_quality_residual" >/dev/null
-  echo "trader_autonomous_tick: no survivor — mode=$residual_mode quality_rc=$quality_rc multi_rc=$multi_rc paper_rc=$paper_rc (MoA not launched)"
+  echo "trader_autonomous_tick: no survivor — mode=$residual_mode quality_rc=$quality_rc multi_rc=$multi_rc paper_rc=$paper_rc campaign_rc=$campaign_rc (MoA not launched)"
   # Exit 0 so cron is green on honest no-edge engine results.
   exit 0
 fi

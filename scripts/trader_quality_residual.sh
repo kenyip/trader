@@ -84,9 +84,15 @@ set +e
 rc_multi=$?
 "$PY" "$REPO/scripts/trader_paper_loop.py" >"$OUT_DIR/paper_${STAMP}.txt" 2>&1
 rc_paper=$?
+# Self-driving paper campaign (learn + manage + optional paper place on shortlist leaders)
+rc_campaign=0
+if [[ -f "$REPO/scripts/trader_paper_campaign.sh" ]]; then
+  bash "$REPO/scripts/trader_paper_campaign.sh" >"$OUT_DIR/campaign_${STAMP}.txt" 2>&1
+  rc_campaign=$?
+fi
 set -e
 
-"$PY" - "$SUMMARY" "$STAMP" "$rc_research" "$rc_evolve_dr" "$rc_evolve_csp" "$rc_stress" "$rc_multi" "$rc_paper" "$LOG" <<'PY'
+"$PY" - "$SUMMARY" "$STAMP" "$rc_research" "$rc_evolve_dr" "$rc_evolve_csp" "$rc_stress" "$rc_multi" "$rc_paper" "$rc_campaign" "$LOG" <<'PY'
 import json, sys
 from pathlib import Path
 from datetime import datetime, timezone
@@ -101,12 +107,13 @@ payload = {
         "stress": int(sys.argv[6]),
         "multi_symbol": int(sys.argv[7]),
         "paper": int(sys.argv[8]),
+        "paper_campaign": int(sys.argv[9]),
     },
-    "log": sys.argv[9],
+    "log": sys.argv[10],
     "trading_authority": False,
     "live_authority": False,
     "execute_paper": False,
-    "note": "quality residual — paper-safe search only",
+    "note": "quality residual — paper-safe search + paper campaign; never live/arm",
 }
 path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 print(json.dumps(payload, indent=2, sort_keys=True))
