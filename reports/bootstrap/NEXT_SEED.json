@@ -1,6 +1,7 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. Quality worker now rotates B3/B4 onto unstressed multi-leg SHIPs (STRESS_ROTATION.json).",
+    "hint": "RTH manage: HOLD BAC+PLTR by order_id; PLTR elevated_watch (~27% ml used, short still ~$4 OTM); STAND_ASIDE new (2/2, open_risk$359); learn_tick on close; quality_worker continues rotated B3/B4",
+    "marks_et": "12:33",
     "open_orders": [
       {
         "max_loss_usd": 162.64,
@@ -8,7 +9,9 @@
         "status": "working",
         "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89",
         "structure": "put_credit_spread",
-        "symbol": "BAC"
+        "symbol": "BAC",
+        "mtm_usd_approx": 6.4,
+        "decision": "HOLD"
       },
       {
         "max_loss_usd": 196.54,
@@ -16,20 +19,13 @@
         "status": "working",
         "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
         "structure": "put_credit_spread",
-        "symbol": "PLTR"
+        "symbol": "PLTR",
+        "mtm_usd_approx": -54.0,
+        "decision": "HOLD_elevated_watch"
       }
-    ],
-    "coach": {
-      "stamp": "20260722T0908",
-      "loop": "stress_rotation",
-      "rejected": [
-        "hyp_dna_nflx_call_credit_spread_9545399b",
-        "hyp_dna_mu_put_credit_spread_1340cefb"
-      ],
-      "leader": "hyp_dna_bac_put_credit_spread_88f03c89"
-    }
+    ]
   },
-  "generated_at": "2026-07-22T16:08:30+00:00",
+  "generated_at": "2026-07-22T16:33:30+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -39,7 +35,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_coach",
-  "stamp": "20260722T160830",
+  "source": "rth_eval_2026-07-22T1230",
+  "stamp": "20260722T1633",
   "trading_authority": false
 }
