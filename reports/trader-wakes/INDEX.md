@@ -1,3 +1,4 @@
+- 2026-07-22T1232-rth — Late-RTH: HOLD BAC+PLTR PCS (BAC ~+$2.4; PLTR ~-$62 vs ml$197 short OTM~$2.25 improved); STAND_ASIDE new (2/2); campaign yaml thrash→HOLD by order_id; SMCI still +21%; no live/arm
 - 2026-07-22T1132-rth — Mid-afternoon RTH: HOLD BAC+PLTR PCS (BAC ~+$2; PLTR ~-$67 vs ml$197 short still OTM~$1.3 elevated); STAND_ASIDE new (2/2); campaign yaml thrash→HOLD by order_id; SMCI still +21% gap context; no live/arm
 - 2026-07-22T1032-rth — Midday RTH: HOLD BAC+PLTR PCS (BAC ~+$4; PLTR ~-$63 vs ml$197 short still OTM~$2.2 elevated); STAND_ASIDE new (2/2); campaign yaml thrash→HOLD by order_id; SMCI +23% gap noted; no live/arm
 - 2026-07-22T0933-rth — Midday RTH: HOLD BAC+PLTR PCS (BAC ~+$6; PLTR ~-$54 vs ml$197 short still OTM~$4); STAND_ASIDE new (2/2); campaign KeyError thrash→retry ok; no live/arm

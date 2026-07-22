@@ -1,9 +1,11 @@
 {
   "detail": {
     "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
+    "marks_asof_et": "15:32",
     "open_orders": [
       {
         "max_loss_usd": 162.64,
+        "mtm_usd_approx": 2.4,
         "order_id": "paper_2f78815a0614",
         "status": "working",
         "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89",
@@ -12,16 +14,18 @@
       },
       {
         "max_loss_usd": 196.54,
+        "mtm_usd_approx": -61.5,
+        "ml_used_frac_approx": 0.31,
         "order_id": "paper_c80aaa1cab46",
+        "short_otm_usd": 2.25,
         "status": "working",
         "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
         "structure": "put_credit_spread",
         "symbol": "PLTR"
       }
-    ],
-    "marks_note": "2026-07-22T14:31ET BAC HOLD mtm~+$2.4 OTM$1.59; PLTR HOLD_elevated mtm~-$66.5 OTM$1.30 ml_used~34%"
+    ]
   },
-  "generated_at": "2026-07-22T18:35:00+00:00",
+  "generated_at": "2026-07-22T19:33:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -31,7 +35,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "trader_rth_eval_2026-07-22T1132",
-  "stamp": "20260722T1132",
+  "source": "rth_eval_2026-07-22T1232",
+  "stamp": "20260722T1232",
   "trading_authority": false
 }
