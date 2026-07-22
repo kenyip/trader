@@ -394,6 +394,10 @@ trader-autonomous-tick:
 trader-quality-residual:
     bash scripts/trader_quality_residual.sh
 
+# Deterministic RTH residual (scout + autonomy dry-run). No agent import path. Never live/execute-paper.
+trader-rth-ops:
+    bash scripts/trader_rth_ops.sh
+
 # Fail-closed clean/main/origin completion check (BUILD wrapper runs this automatically).
 trader-run-gate mode="preflight" *ARGS:
     {{py}} scripts/trader_run_completion_gate.py {{mode}} --repo . {{ARGS}}

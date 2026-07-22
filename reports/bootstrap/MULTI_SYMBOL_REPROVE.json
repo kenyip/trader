@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-20T09:06:16+00:00",
+  "generated_at": "2026-07-22T05:18:13+00:00",
   "honesty": "Multi-symbol densify DNA stress \u2014 single-name F2 alone is not pack-grade.",
   "live_authority": false,
   "mode": "multi_symbol_pack",
@@ -13,7 +13,7 @@
         "AMZN"
       ],
       "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0",
-      "generated_at": "2026-07-20T09:06:10+00:00",
+      "generated_at": "2026-07-22T05:18:06+00:00",
       "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
       "live_authority": false,
       "min_symbols_with_f2": 2,
@@ -42,13 +42,13 @@
           "thick_enough": false
         },
         {
-          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "decision": "FAMILY_CLOSED",
           "f2": false,
           "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": 20,
-          "n_train_pass": 1,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
           "symbol": "KO",
-          "thick_enough": true
+          "thick_enough": false
         },
         {
           "decision": "FAMILY_CLOSED",
@@ -65,7 +65,7 @@
           "n_holdout_pass": 0,
           "n_trades_holdout_worst_axis": null,
           "n_train_pass": 0,
-          "symbol": "SPY",
+          "symbol": "AAPL",
           "thick_enough": false
         },
         {
@@ -78,40 +78,13 @@
           "thick_enough": false
         },
         {
-          "decision": "FAMILY_CLOSED",
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
           "f2": false,
           "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": null,
-          "n_train_pass": 0,
-          "symbol": "XOM",
-          "thick_enough": false
-        },
-        {
-          "decision": "FAMILY_CLOSED",
-          "f2": false,
-          "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": null,
-          "n_train_pass": 0,
-          "symbol": "JNJ",
-          "thick_enough": false
-        },
-        {
-          "decision": "FAMILY_CLOSED",
-          "f2": false,
-          "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": null,
-          "n_train_pass": 0,
-          "symbol": "WMT",
-          "thick_enough": false
-        },
-        {
-          "decision": "FAMILY_CLOSED",
-          "f2": false,
-          "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": null,
-          "n_train_pass": 0,
-          "symbol": "MSFT",
-          "thick_enough": false
+          "n_trades_holdout_worst_axis": 18,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
         }
       ],
       "quality_pass": false,
@@ -121,12 +94,9 @@
         "BAC",
         "KO",
         "IWM",
-        "SPY",
+        "AAPL",
         "QQQ",
-        "XOM",
-        "JNJ",
-        "WMT",
-        "MSFT"
+        "INTC"
       ],
       "thick_f2_symbols": [],
       "trading_authority": false
@@ -137,7 +107,7 @@
         "IWM"
       ],
       "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4",
-      "generated_at": "2026-07-20T09:06:16+00:00",
+      "generated_at": "2026-07-22T05:18:13+00:00",
       "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
       "live_authority": false,
       "min_symbols_with_f2": 2,
@@ -189,7 +159,7 @@
           "n_holdout_pass": 0,
           "n_trades_holdout_worst_axis": null,
           "n_train_pass": 0,
-          "symbol": "SPY",
+          "symbol": "AAPL",
           "thick_enough": false
         },
         {
@@ -207,34 +177,7 @@
           "n_holdout_pass": 0,
           "n_trades_holdout_worst_axis": null,
           "n_train_pass": 0,
-          "symbol": "XOM",
-          "thick_enough": false
-        },
-        {
-          "decision": "FAMILY_CLOSED",
-          "f2": false,
-          "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": null,
-          "n_train_pass": 0,
-          "symbol": "JNJ",
-          "thick_enough": false
-        },
-        {
-          "decision": "FAMILY_CLOSED",
-          "f2": false,
-          "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": null,
-          "n_train_pass": 0,
-          "symbol": "WMT",
-          "thick_enough": false
-        },
-        {
-          "decision": "FAMILY_CLOSED",
-          "f2": false,
-          "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": null,
-          "n_train_pass": 0,
-          "symbol": "MSFT",
+          "symbol": "INTC",
           "thick_enough": false
         }
       ],
@@ -245,12 +188,9 @@
         "BAC",
         "KO",
         "AMZN",
-        "SPY",
+        "AAPL",
         "QQQ",
-        "XOM",
-        "JNJ",
-        "WMT",
-        "MSFT"
+        "INTC"
       ],
       "thick_f2_symbols": [],
       "trading_authority": false
