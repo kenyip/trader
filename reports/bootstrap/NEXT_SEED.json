@@ -1,36 +1,44 @@
 {
-  "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
-    "open_orders": [
-      {
-        "max_loss_usd": 162.64,
-        "order_id": "paper_2f78815a0614",
-        "status": "working",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89",
-        "structure": "put_credit_spread",
-        "symbol": "BAC"
-      },
-      {
-        "max_loss_usd": 196.54,
-        "order_id": "paper_c80aaa1cab46",
-        "status": "working",
-        "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
-        "structure": "put_credit_spread",
-        "symbol": "PLTR"
-      }
-    ]
-  },
-  "generated_at": "2026-07-22T06:11:45+00:00",
+  "generated_at": "2026-07-22T13:34:00+00:00",
+  "ken_required": false,
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
     "fund_3k_at_packet"
   ],
-  "ken_required": false,
   "live_authority": false,
+  "trading_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "trader_paper_campaign",
-  "stamp": "20260722T061141",
-  "trading_authority": false
+  "source": "trader_rth_eval",
+  "stamp": "20260722T063400",
+  "detail": {
+    "hint": "RTH: HOLD open BAC+PLTR PCS; mark/manage; stand-aside new entries while concurrent=2 / open_risk~359; learn on close",
+    "decision": "HOLD_OPEN_STAND_ASIDE_NEW",
+    "session": "RTH_OPEN",
+    "regime_note": "SPY/QQQ mild red; PLTR -2.4% but PCS short still OTM; BAC green flat MTM",
+    "open_orders": [
+      {
+        "order_id": "paper_2f78815a0614",
+        "symbol": "BAC",
+        "structure": "put_credit_spread",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89",
+        "max_loss_usd": 162.64,
+        "status": "working",
+        "mtm_note": "flat_to_-2_usd"
+      },
+      {
+        "order_id": "paper_c80aaa1cab46",
+        "symbol": "PLTR",
+        "structure": "put_credit_spread",
+        "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
+        "max_loss_usd": 196.54,
+        "status": "working",
+        "mtm_note": "soft_-35_to_-40_usd_still_otm"
+      }
+    ],
+    "open_risk_usd": 359.18,
+    "new_entries": "STAND_ASIDE",
+    "ops_note": "quality_worker hyp yaml thrash can KeyError campaign; retry; do not commit thrash"
+  }
 }

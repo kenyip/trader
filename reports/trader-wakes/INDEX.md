@@ -1,3 +1,4 @@
+- 2026-07-22T0634-rth — RTH open: HOLD BAC+PLTR PCS paper (MTM flat/soft OTM); STAND_ASIDE new risk (2/2 concurrent, open_risk$359); worker ON; no live/arm
 - 2026-07-22T0016 tight-loop — non-stop quality_worker parallel cycles + LLM coach 9/15/21 + RTH manage; status shows worker ON
 # Trader wake index (newest first)
 - 2026-07-21T2315 anti-bottleneck — paper_campaign + NEXT_SEED ken_required=false; RTH campaign cron + evening judgment; BAC+PLTR paper working; Ken only gateway/arm/$3k
