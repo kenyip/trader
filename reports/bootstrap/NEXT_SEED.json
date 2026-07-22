@@ -1,7 +1,6 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_* with concurrent/risk headroom",
-    "mtm_note": "2026-07-22 ~10:33ET: BAC PCS ~flat OTM; PLTR PCS ~-$47 vs ml$197 still OTM ~$5 — HOLD both",
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
     "open_orders": [
       {
         "max_loss_usd": 162.64,
@@ -19,11 +18,9 @@
         "structure": "put_credit_spread",
         "symbol": "PLTR"
       }
-    ],
-    "open_risk_usd": 359.18,
-    "decision": "HOLD open; STAND_ASIDE new (2/2 concurrent)"
+    ]
   },
-  "generated_at": "2026-07-22T14:35:00+00:00",
+  "generated_at": "2026-07-22T15:35:22+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -33,7 +30,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "trader_rth_eval",
-  "stamp": "20260722T0735",
+  "source": "trader_paper_campaign",
+  "stamp": "20260722T153510",
   "trading_authority": false
 }

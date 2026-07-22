@@ -1,65 +1,63 @@
 {
-  "stamp": "20260722T0735",
-  "generated_at": "2026-07-22T14:35:00+00:00",
+  "stamp": "2026-07-22T0835",
   "session": "RTH",
-  "et_approx": "10:30-10:35",
+  "et": "2026-07-22T11:30-11:35",
   "phase": "PAPER",
   "decision": {
     "BAC_paper_2f78815a0614": "HOLD",
-    "PLTR_paper_c80aaa1cab46": "HOLD_WATCH",
+    "PLTR_paper_c80aaa1cab46": "HOLD_elevated_watch",
     "new_entries": "STAND_ASIDE",
-    "live_arm": false
+    "reason_new": "concurrent_2_of_2_open_risk_359_of_500"
   },
-  "spots": {
-    "SPY": 747.28,
-    "QQQ": 706.995,
-    "IWM": 295.11,
-    "BAC": 61.50,
-    "PLTR": 127.40,
-    "NFLX": 70.32
-  },
-  "open_paper": [
-    {
-      "order_id": "paper_2f78815a0614",
-      "symbol": "BAC",
-      "short": 60.0,
-      "long": 58.0,
-      "credit": 0.37,
-      "ml": 162.64,
-      "short_mark": 0.575,
+  "marks": {
+    "asof_et": "11:33",
+    "BAC": {
+      "spot": 61.71,
+      "prev_close": 61.22,
+      "short_k": 60.0,
+      "long_k": 58.0,
+      "short_mark": 0.515,
       "long_mark": 0.205,
-      "close_debit_approx": 0.37,
-      "mtm_usd_approx": 0.0,
-      "otm_cushion": 1.5
+      "entry_credit": 0.37,
+      "close_debit": 0.31,
+      "mtm_usd_approx": 6.0,
+      "max_loss_usd": 162.64,
+      "short_otm_usd": 1.71
     },
-    {
-      "order_id": "paper_c80aaa1cab46",
-      "symbol": "PLTR",
-      "short": 122.5,
-      "long": 120.0,
-      "credit": 0.53,
-      "ml": 196.54,
-      "short_mark_synth": 5.85,
-      "long_mark": 4.85,
-      "close_debit_approx": 1.0,
-      "mtm_usd_approx": -47.0,
-      "otm_cushion": 4.9
-    }
-  ],
-  "open_risk_usd": 359.18,
-  "concurrent_working": 2,
+    "PLTR": {
+      "spot": 126.83,
+      "prev_close": 132.66,
+      "short_k": 122.5,
+      "long_k": 120.0,
+      "short_mark_synthetic": 6.025,
+      "long_mark": 4.975,
+      "entry_credit": 0.53,
+      "close_debit": 1.05,
+      "mtm_usd_approx": -52.0,
+      "max_loss_usd": 196.54,
+      "short_otm_usd": 4.33,
+      "ml_used_frac_approx": 0.26
+    },
+    "SPY": 749.39,
+    "QQQ": 709.25
+  },
   "campaign": {
-    "stamp": "20260722T143139",
-    "rc": 0,
+    "stamp": "20260722T153510",
+    "learn_rc": 0,
+    "campaign_rc": 0,
     "placed": [],
-    "scout_n_intents": 8
+    "open_risk": 359.18,
+    "working": 2,
+    "scout_n_intents_retry": 0,
+    "scout_n_intents_prior": 8
   },
-  "rth_ops": {
-    "scout_rc": 1,
-    "scout_note": "yaml thrash ScannerError",
-    "autonomy_n_proposals": 0
+  "ops": {
+    "quality_worker": "ON",
+    "cycles": 123,
+    "hyp_yaml_thrash": "0byte_transient_then_recover",
+    "rth_ops": "timeout_once_fallback_campaign_rh"
   },
-  "quality_worker": "ON",
+  "next_action": "manage_open_paper_campaign",
   "ken_required": false,
-  "next_action": "manage_open_paper_campaign"
+  "live_authority": false
 }
