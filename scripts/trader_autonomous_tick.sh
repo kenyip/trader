@@ -146,17 +146,45 @@ if [[ "$STATUS" == "NEXT_SURVIVOR" ]]; then
 fi
 
 # --- 3b) no qualified / other → quality residual (still autonomous progress) ---
-# Prefer full quality residual (research + evolve + optional B3/B4 + multi + paper + campaign).
-# Falls back to multi+paper if residual script missing. Never MoA thrash / densify bag.
+# Prefer non-stop quality worker if alive (tight loop). Else run one residual cycle.
+# Never MoA thrash / densify bag.
 QUALITY_RES="$REPO/scripts/trader_quality_residual.sh"
+QUALITY_CYCLE="$REPO/scripts/trader_quality_cycle.py"
 CAMPAIGN="$REPO/scripts/trader_paper_campaign.sh"
+WORKER_HB="$REPO/.cache/platform/quality_worker/HEARTBEAT.json"
+WORKER_PID="$REPO/.cache/platform/quality_worker/worker.pid"
+
+worker_alive() {
+  [[ -f "$WORKER_PID" ]] || return 1
+  local wpid
+  wpid="$(cat "$WORKER_PID" 2>/dev/null || true)"
+  [[ "$wpid" =~ ^[0-9]+$ ]] && kill -0 "$wpid" 2>/dev/null
+}
+
 if [[ "$STATUS" == "NO_QUALIFIED_STRATEGY" || "$STATUS" == "MISSING" ]]; then
   multi_rc=0
   paper_rc=0
   quality_rc=0
   campaign_rc=0
   residual_mode="multi_paper"
-  if [[ -x "$QUALITY_RES" || -f "$QUALITY_RES" ]]; then
+
+  if worker_alive; then
+    residual_mode="defer_to_quality_worker"
+    write_receipt "no_survivor_quality_residual" "status=$STATUS" "residual_mode=$residual_mode" \
+      "quality_rc=0" "multi_symbol_rc=0" "paper_loop_rc=0" "paper_campaign_rc=0" \
+      "note=worker_owns_tight_loop" >/dev/null
+    echo "trader_autonomous_tick: no survivor — quality worker alive; skip duplicate residual"
+    exit 0
+  fi
+
+  # Prefer parallel quality cycle over old serial residual
+  if [[ -f "$QUALITY_CYCLE" ]]; then
+    residual_mode="quality_cycle_parallel"
+    set +e
+    "$PY" "$QUALITY_CYCLE" --json >"$RECEIPT_DIR/quality_cycle_LATEST.json" 2>"$RECEIPT_DIR/quality_cycle_LATEST.err"
+    quality_rc=$?
+    set -e
+  elif [[ -x "$QUALITY_RES" || -f "$QUALITY_RES" ]]; then
     residual_mode="quality_residual"
     set +e
     bash "$QUALITY_RES"
@@ -187,7 +215,6 @@ if [[ "$STATUS" == "NO_QUALIFIED_STRATEGY" || "$STATUS" == "MISSING" ]]; then
     "paper_campaign_rc=$campaign_rc" \
     "note=expected_no_survivor_quality_residual" >/dev/null
   echo "trader_autonomous_tick: no survivor — mode=$residual_mode quality_rc=$quality_rc multi_rc=$multi_rc paper_rc=$paper_rc campaign_rc=$campaign_rc (MoA not launched)"
-  # Exit 0 so cron is green on honest no-edge engine results.
   exit 0
 fi
 

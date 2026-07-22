@@ -402,6 +402,15 @@ trader-rth-ops:
 trader-paper-campaign:
     bash scripts/trader_paper_campaign.sh
 
+# Parallel quality cycle (one shot).
+trader-quality-cycle *ARGS:
+    {{py}} scripts/trader_quality_cycle.py {{ARGS}}
+
+# Non-stop tight quality worker (programmatic, no LLM).
+#   just trader-quality-worker start|stop|status|once|ensure
+trader-quality-worker *ARGS:
+    bash scripts/trader_quality_worker.sh {{ARGS}}
+
 # Go-live funnel (progress toward real trades — not densify bag %).
 #   just trader-status
 #   just trader-status --watch 10
@@ -412,7 +421,7 @@ trader-status *ARGS:
 # Trigger continuum residual now + print go-live funnel.
 #   just trader-run-now              # full autonomous tick
 #   just trader-run-now campaign     # paper campaign only (faster)
-#   just trader-run-now quality      # quality residual
+#   just trader-run-now quality      # one parallel quality cycle
 #   just trader-run-now status       # funnel only
 trader-run-now *ARGS:
     bash scripts/trader_run_now.sh {{ARGS}}

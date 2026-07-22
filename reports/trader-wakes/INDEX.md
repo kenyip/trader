@@ -1,3 +1,4 @@
+- 2026-07-22T0016 tight-loop — non-stop quality_worker parallel cycles + LLM coach 9/15/21 + RTH manage; status shows worker ON
 # Trader wake index (newest first)
 - 2026-07-21T2315 anti-bottleneck — paper_campaign + NEXT_SEED ken_required=false; RTH campaign cron + evening judgment; BAC+PLTR paper working; Ken only gateway/arm/$3k
 - 2026-07-21T2241 quality-push — BAC B3+B4 reconfirm; testing+paper_place OPEN_PCS; $500 CSP collateral wall; RTH ImportError=stale gateway restart + trader-rth-ops backup; RH snapshot refreshed L2+$500

@@ -33,8 +33,13 @@ case "$MODE" in
     bash "$REPO/scripts/trader_paper_campaign.sh"
     ;;
   quality|q)
-    echo "→ quality residual (research+evolve+stress+campaign)…"
-    bash "$REPO/scripts/trader_quality_residual.sh"
+    echo "→ parallel quality cycle…"
+    "$PY" "$REPO/scripts/trader_quality_cycle.py" --json | tail -40
+    ;;
+  worker|w)
+    echo "→ quality worker ensure (non-stop)…"
+    bash "$REPO/scripts/trader_quality_worker.sh" ensure
+    bash "$REPO/scripts/trader_quality_worker.sh" status
     ;;
   tick|auto|full|f|"")
     echo "→ autonomous tick (handoff → MoA or quality residual)…"

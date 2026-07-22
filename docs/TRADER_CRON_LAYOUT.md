@@ -18,41 +18,65 @@ Wake volume is **not** progress. Cron exists so Trader **keeps working the go-li
 
 Ken’s ongoing job is **not** to prompt every wake. Ken’s job is: keep gateway alive; fund $3k only at LIVE_PACKET; arm only when a LIVE_PACKET is drafted.
 
-**Anti-bottleneck pin (2026-07-21):** residual NEXT actions (paper campaign, quality residual, rth-ops, shortlist stress, learn_tick) must run from cron/scripts without waiting for Ken chat. Durable seed: `reports/bootstrap/NEXT_SEED.json`. Paper place on shortlist leaders is allowed via `trader_paper_campaign.sh` guards (never live/arm).
+**Anti-bottleneck pin (2026-07-21):** residual NEXT actions must run without Ken chat. Durable seed: `reports/bootstrap/NEXT_SEED.json`.
+
+**Tight-loop pin (2026-07-21 night):** programmatic search runs as a **non-stop quality worker** (parallel cycles), not only hourly cron. LLM wakes **coach** the worker results and own RTH opportunity/management — they do not replace the worker.
+
+## Architecture (two layers)
+
+```text
+┌─────────────────────────────────────────────────────────┐
+│  PROGRAMMATIC (no LLM) — tight / parallel               │
+│  trader_quality_worker  (non-stop cycles, ~20s gap)     │
+│    cycle: research → evolve DR → evolve CSP             │
+│         → parallel(regime, cost, multi)                 │
+│         → paper_loop → paper_campaign                   │
+│  supervisor cron */10 ensure worker alive               │
+│  NEVER densify bag drain · NEVER live/arm               │
+└─────────────────────────────────────────────────────────┘
+                         │ receipts + NEXT_SEED
+                         ▼
+┌─────────────────────────────────────────────────────────┐
+│  LLM AGENT wakes — full Trader smarts                    │
+│  RTH eval :30 — regime, opportunity, paper manage       │
+│  continuum-judgment 21:00 (+ optional midday coach)     │
+│    read worker heartbeat + go-live funnel + shortlist   │
+│    improve DNA/tools/shortlist; never wait for Ken      │
+│  MoA only if engine NEXT_SURVIVOR                       │
+└─────────────────────────────────────────────────────────┘
+```
 
 ## How autonomy works (single flight)
 
 ```text
 cron / just trader-autonomous-tick
   → if build_lab.lock live: skip
-  → route_batch (cached OHLCV → routes + panel)
-  → strategy engine handoff → .cache/strategy-engine/latest.json
-  → if NEXT_SURVIVOR: zero-input BUILD MoA (Sol → Grok → finalizer → integrate)
-  → if NO_QUALIFIED_STRATEGY: quality residual (research+evolve+B3/B4+multi+paper+**paper campaign**)
+  → route_batch + strategy engine handoff
+  → if NEXT_SURVIVOR: zero-input BUILD MoA
+  → if NO_QUALIFIED:
+       if quality worker alive → defer (worker owns tight loop)
+       else → one parallel quality_cycle
   → never live / shadow / arm
 ```
 
-BUILD lab cron scripts (`trader-build-lab-*.sh`) all call this tick via `trader-build-lab-canonical.sh`, so they no longer fail solely because a 6h-old handoff went stale.
-
-Receipt: `.cache/platform/autonomous/tick_LATEST.json`  
-Paper campaign: `.cache/platform/paper_campaign/LATEST.json` + `reports/bootstrap/NEXT_SEED.json`
+Receipts:
+- `.cache/platform/quality_worker/HEARTBEAT.json` — tight loop pulse  
+- `.cache/platform/autonomous/tick_LATEST.json` — hourly handoff  
+- `.cache/platform/paper_campaign/LATEST.json` + `reports/bootstrap/NEXT_SEED.json`  
+- `just trader-status` — go-live funnel
 
 ## Active set
 
 | Job | Schedule (America/Los_Angeles) | Mode | Purpose |
 |---|---|---|---|
-| `trader-rth-eval` | `30 6-12 * * 1-5` | agent + skill | Hourly RTH condition judgment |
+| **`trader-quality-worker`** | `*/10 * * * *` ensure | script | Keep **non-stop** parallel quality cycles alive |
+| `trader-rth-eval` | `30 6-12 * * 1-5` | agent + skill | RTH judgment: opportunity + paper manage |
 | `trader-rth-ops` | `35 6-12 * * 1-5` | script | Scout + dry autonomy (no agent import) |
-| `trader-paper-ops` | `5 6-12 * * 1-5` | script | Dry paper-loop + **paper campaign** |
+| `trader-paper-ops` | `5 6-12 * * 1-5` | script | Dry paper-loop + paper campaign |
 | `trader-paper-campaign` | `20 6-13 * * 1-5` | script | learn + shortlist paper place/manage |
-| `trader-autonomous-tick` | `15 * * * *` (hourly) | script | Continuum: handoff → MoA or **quality residual + campaign** |
-| `trader-continuum-judgment` | `0 21 * * 1-5` | agent + skill | Evening judgment on NEXT_SEED without Ken nudge |
-| `trader-build-lab-premarket` | `15 5 * * 1-5` | script → autonomous tick | Premarket continuum |
-| `trader-build-lab-postclose` | `15 14 * * 1-5` | script → autonomous tick | Postclose continuum |
-| `trader-build-lab-daily` | `45 16 * * 1-5` | script → autonomous tick | Primary weekday lab window |
-| `trader-build-lab-evening` | `0 20 * * 1-5` | script → autonomous tick | Evening lab window |
-| `trader-build-lab-weekend` | `0 10 * * 6` | script → autonomous tick | Saturday lab |
-| `trader-build-lab-weekly` | `0 17 * * 0` | script → autonomous tick | Sunday critic window |
+| `trader-autonomous-tick` | `15 * * * *` | script | Engine handoff; MoA or defer-to-worker |
+| `trader-continuum-judgment` | `0 9,15,21 * * 1-5` | agent + skill | Coach worker results; improve search |
+| `trader-build-lab-*` | named slots | script → tick | MoA path when survivor |
 
 Single-flight lock means overlapping ticks **skip**, they do not stack MoA processes.
 

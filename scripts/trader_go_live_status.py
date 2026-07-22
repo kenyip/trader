@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from dataclasses import asdict, dataclass, field
@@ -409,10 +410,21 @@ def collect() -> Funnel:
         "5. Draft LIVE_PACKET → Ken arms → place_* on Agentic only",
     ]
 
-    # continuum freshness
+    # Continuum freshness
     tick_at = tick.get("generated_at")
     camp_at = campaign.get("generated_at")
     handoff_status = handoff.get("status") or "MISSING"
+    worker_hb = _load_json(_REPO / ".cache" / "platform" / "quality_worker" / "HEARTBEAT.json") or {}
+    worker_status = _load_json(_REPO / ".cache" / "platform" / "quality_worker" / "STATUS.json") or {}
+    worker_pid_path = _REPO / ".cache" / "platform" / "quality_worker" / "worker.pid"
+    worker_running = False
+    if worker_pid_path.is_file():
+        try:
+            wpid = int(worker_pid_path.read_text().strip())
+            os.kill(wpid, 0)
+            worker_running = True
+        except Exception:
+            worker_running = False
 
     phase = "BUILD"
     if paper["working"] or paper["real_orders"] >= 2:
@@ -453,6 +465,11 @@ def collect() -> Funnel:
             "paper_campaign_at": camp_at,
             "paper_campaign_age_h": round(_age_hours(camp_at) or -1, 2),
             "paper_campaign_next": campaign.get("next_action"),
+            "quality_worker_running": worker_running,
+            "quality_worker_state": worker_status.get("state"),
+            "quality_worker_hb_at": worker_hb.get("generated_at"),
+            "quality_worker_hb_age_h": round(_age_hours(worker_hb.get("generated_at")) or -1, 2),
+            "quality_worker_stamp": worker_hb.get("stamp"),
         },
         paper=paper,
         shortlist_top=top,
@@ -481,6 +498,10 @@ def format_text(f: Funnel) -> str:
 
     lines.append("CONTINUUM (is it running?)")
     c = f.continuum
+    wr = "ON" if c.get("quality_worker_running") else "off"
+    lines.append(
+        f"  quality_worker={wr}  hb_age_h={c.get('quality_worker_hb_age_h')}  stamp={c.get('quality_worker_stamp')}"
+    )
     lines.append(
         f"  handoff={c.get('handoff_status')}  tick={c.get('autonomous_action')}  "
         f"age_h={c.get('autonomous_tick_age_h')}  campaign_age_h={c.get('paper_campaign_age_h')}"
