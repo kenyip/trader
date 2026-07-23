@@ -1,3 +1,4 @@
+- 2026-07-23T1230-rth.md — RTH manage: HOLD BAC (+$1.9/~flat OTM); PLTR HOLD_elevated (−$70/~36% ml ATM); STAND_ASIDE full book (AAL CCS scout blocked); book_full skip; SPY-1.3%/QQQ-2.0%
 - 2026-07-23T1132-rth.md — RTH manage: HOLD BAC (−$0.6/~0.4% ml OTM); PLTR HOLD_elevated (−$73/~37% ml mild ITM); STAND_ASIDE full book (AAL CCS scout blocked); book_full skip; SPY-1.3%/QQQ-2.0%
 - 2026-07-23T1032-rth.md — RTH manage: HOLD BAC (−$1/~1% ml OTM); PLTR HOLD_elevated (−$72/~36% ml mild ITM); STAND_ASIDE full book (AAL CCS scout blocked); campaign thrash→HOLD by order_id; SPY-1.2%/QQQ-1.8%
 - 2026-07-23T1231-rth.md — RTH manage: HOLD BAC (−\$3/~2% ml OTM); PLTR HOLD_elevated (−\$75/~38% ml mild ITM); STAND_ASIDE full book; campaign thrash→HOLD by order_id; risk-off SPY-1.1%/QQQ-1.6%

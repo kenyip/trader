@@ -1,32 +1,43 @@
 {
   "detail": {
     "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
-    "marks_et": "2026-07-23T14:32",
+    "marks": {
+      "BAC_paper_2f78815a0614": {
+        "action": "HOLD",
+        "mtm_usd": 1.9,
+        "ml_frac": 0.0,
+        "spot": 61.35,
+        "vs_short": "OTM_+1.35"
+      },
+      "PLTR_paper_c80aaa1cab46": {
+        "action": "HOLD_elevated",
+        "mtm_usd": -70.0,
+        "ml_frac": 0.36,
+        "spot": 122.5,
+        "vs_short": "ATM"
+      }
+    },
     "open_orders": [
       {
         "max_loss_usd": 162.64,
-        "mtm_usd_approx": -0.64,
         "order_id": "paper_2f78815a0614",
         "status": "working",
         "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89",
         "structure": "put_credit_spread",
-        "symbol": "BAC",
-        "vs_short": "OTM_+1.30"
+        "symbol": "BAC"
       },
       {
         "max_loss_usd": 196.54,
-        "mtm_usd_approx": -72.79,
         "order_id": "paper_c80aaa1cab46",
         "status": "working",
         "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
         "structure": "put_credit_spread",
-        "symbol": "PLTR",
-        "vs_short": "ITM_-0.21"
+        "symbol": "PLTR"
       }
     ],
-    "scout_note": "OPEN_CCS AAL ml~185 blocked by concurrent 2/2"
+    "scout_note": "OPEN_CCS AAL blocked by book 2/2; AAL PCS bearish STAND_ASIDE; BAC PCS filter STAND_ASIDE"
   },
-  "generated_at": "2026-07-23T18:32:30+00:00",
+  "generated_at": "2026-07-23T19:32:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -37,6 +48,6 @@
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
   "source": "trader_rth_eval",
-  "stamp": "2026-07-23T1132",
+  "stamp": "20260723T1230",
   "trading_authority": false
 }
