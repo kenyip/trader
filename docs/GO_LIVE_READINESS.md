@@ -1,14 +1,36 @@
 # Go-live readiness — Agentic $3k sleeve
 
 **Purpose:** Decide when the system may draft a **live arm packet** for Ken.
-Not a vibe. Three independent greens + Ken explicit arm.
+Not a vibe. Evidence + Ken explicit arm.
 
 **Capital:** $3,000 USD planning sleeve. Free within sleeve; use wisely; prefer 1-lot confident entries.
 
 **Phases:** `BUILD` → `PAPER` → `SHADOW` → `LIVE_PACKET` → (Ken arms) `agentic_live`
 
 Trader maintains: `reports/readiness/LATEST.md` (and dated copies).
-Human front door for wakes: `just trader-wakes` / `reports/trader-wakes/LATEST.md`.
+Human front door: `just trader-status` (simple 3-layer) · wakes in `reports/trader-wakes/LATEST.md`.
+
+---
+
+## Simple model (primary)
+
+```text
+EDGE  — sims find & kill strategies (24/7; no market hours required)
+ROBOT — paper + shadow prove the machine works (short live-clock sample)
+ARM   — Ken funds/arms 1-lot real money (never automatic)
+```
+
+| Layer | Question | Main evidence |
+|---|---|---|
+| **EDGE** | Is there a real after-cost strategy? | Shortlist B3+B4, pack-grade, capital-fit, placeable structure |
+| **ROBOT** | Does the software work end-to-end? | Paper open/manage/close across a few sessions; shadow propose→risk→log |
+| **ARM** | Should real cash trade? | LIVE_PACKET + Ken yes |
+
+**Rules of thumb**
+- Sims decide if it’s **good**. Paper/shadow decide if the **robot works**. Ken decides to **arm**.
+- Paper is a short dress rehearsal — **not** a second full proof of edge.
+- First live on RH MCP today = **single-leg** class (CSP/long). Multi-leg PCS/CCS stays research/paper until RH multi-leg place exists.
+- Letter gates A/B/C below are the detailed checklist behind the simple view (`just trader-status --json` / `--legacy`).
 
 ---
 

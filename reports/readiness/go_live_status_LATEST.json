@@ -1,39 +1,102 @@
 {
+  "activity": {
+    "note": "Search activity (cycles). Not the same as ready-to-trade.",
+    "paper_hold_hours_oldest": 24.98,
+    "paper_real_orders": 3,
+    "paper_session_days": 2,
+    "paper_working": 2,
+    "quality_cycles_completed": 278,
+    "worker_hb_age_h": 0.036,
+    "worker_hb_fresh": true,
+    "worker_running": true
+  },
+  "activity_label": "SEARCHING",
+  "activity_pct": 96.0,
   "agentic_enabled": false,
   "blockers": [
-    "shadow window not done",
-    "need more multi-session paper evidence",
-    "test sleeve cash $500 \u2014 CSP ATM rarely fits; $3k at LIVE_PACKET",
-    "MCP place = single-leg only (multi-leg BAC/PLTR = paper/research until RH multi-leg)",
-    "place_* blocked until Ken LIVE_PACKET arm"
+    "No pack-grade edge yet (sims still filtering)",
+    "First-live CSP sizing: CSP BP ~$6.5k \u2014 oversized for $500 and $3k sleeve. Research toy until resized/cheaper underlying or funded $3k+ and OTM ",
+    "Paper ops sample 2/3 sessions (robot check, not edge proof)",
+    "Shadow rehearsal incomplete",
+    "Real money blocked until Ken LIVE_PACKET arm",
+    "Test cash $500 \u2014 full $3k only at arm packet"
   ],
   "continuum": {
     "autonomous_action": "no_survivor_quality_residual",
-    "autonomous_tick_age_h": 0.56,
-    "autonomous_tick_at": "2026-07-22T06:20:25+00:00",
+    "autonomous_tick_age_h": 0.41,
+    "autonomous_tick_at": "2026-07-23T06:15:37+00:00",
     "handoff_status": "NO_QUALIFIED_STRATEGY",
-    "paper_campaign_age_h": 0.02,
-    "paper_campaign_at": "2026-07-22T06:53:06+00:00",
+    "paper_campaign_age_h": 0.07,
+    "paper_campaign_at": "2026-07-23T06:36:16+00:00",
     "paper_campaign_next": "manage_open_paper_campaign",
-    "quality_residual_at": "2026-07-22T06:20:25+00:00"
+    "quality_cycles_completed": 278,
+    "quality_residual_at": "2026-07-23T06:30:16+00:00",
+    "quality_worker_hb_age_h": 0.04,
+    "quality_worker_hb_at": "2026-07-23T06:38:09+00:00",
+    "quality_worker_running": true,
+    "quality_worker_stamp": "20260723T063016",
+    "quality_worker_state": "running"
   },
-  "generated_at": "2026-07-22T06:54:00+00:00",
+  "generated_at": "2026-07-23T06:40:18+00:00",
+  "glossary": {
+    "ARM": "Ken turns on real money for one named strategy, 1 lot, after a LIVE_PACKET review.",
+    "EDGE": "Simulation search + stress. Proves strategy looks real after costs. No market hours required.",
+    "ROBOT": "Paper (fake money, real clock) + shadow (would-trade log). Proves software/ops work.",
+    "pack-grade": "Edge thick enough (not a thin lucky backtest) to deserve paper/shadow focus.",
+    "paper": "Dress rehearsal with fake money \u2014 not a second proof of edge.",
+    "session": "A market weekday the paper book was open \u2014 holding overnight counts.",
+    "shadow": "System proposes trades and risk-checks them; nothing is sent to the broker."
+  },
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
     "fund_3k_at_packet"
   ],
   "ken_required": false,
+  "layers": {
+    "arm": {
+      "cash_test_usd": 500.0,
+      "ken_required_now": false,
+      "mcp_place": "single_leg_only",
+      "name": "ARM",
+      "plain": "Real money \u2014 Ken decision only",
+      "plan_sleeve_usd": 3000,
+      "status": "BLOCKED",
+      "summary": "Ken only: gateway up \u2192 LIVE_PACKET \u2192 $3k \u2192 arm 1-lot. Never auto."
+    },
+    "edge": {
+      "first_live_candidate": "NFLX cash_secured_put \u2014 CSP BP ~$6.5k \u2014 oversized for $500 and $3k sleeve. Research toy until resized/cheaper underlying or ",
+      "name": "EDGE",
+      "pack_grade": false,
+      "paper_research_leader": "hyp_dna_bac_put_credit_spread_3954107b",
+      "plain": "Sims find & kill strategies (24/7)",
+      "status": "PARTIAL",
+      "stressed_count": 6,
+      "summary": "6 stressed survivors on shortlist \u2014 not pack-grade yet"
+    },
+    "robot": {
+      "live_disarmed": true,
+      "name": "ROBOT",
+      "paper_open": 2,
+      "paper_open_risk_usd": 359.18,
+      "paper_sessions": 2,
+      "paper_sessions_target": 3,
+      "plain": "Paper + shadow = machine works",
+      "shadow": "PARTIAL",
+      "status": "PARTIAL",
+      "summary": "paper=partial; shadow=partial; platform=ok"
+    }
+  },
   "next_action": "manage_open_paper_campaign",
   "opportunity": [
     {
-      "detail": "evaluate at RTH via rth-eval/scout",
+      "detail": "only matters on arm day",
       "id": "C1",
-      "name": "regime matches (day-of)",
+      "name": "regime day-of",
       "status": "NA"
     },
     {
-      "detail": "doctrine default 1 lot",
+      "detail": "default 1 lot",
       "id": "C2",
       "name": "size 1-lot",
       "status": "PASS"
@@ -41,25 +104,28 @@
     {
       "detail": "cash\u2248500.0 open_risk=$359.18",
       "id": "C3",
-      "name": "BP free / no pile-on",
+      "name": "room to trade",
       "status": "PASS"
     },
     {
-      "detail": "risk_limits present; live stop wire later",
+      "detail": "config present; live wire later",
       "id": "C4",
-      "name": "daily loss stop configured",
+      "name": "daily loss stop",
       "status": "PARTIAL"
     }
   ],
   "option_level": "option_level_2",
-  "overall_label": "PAPER_PROGRESS",
-  "overall_pct": 66.0,
+  "overall_label": "IN_PROGRESS",
+  "overall_pct": 71.7,
   "paper": {
     "closedish": 1,
     "filled": 0,
     "ledger_path": "/Users/jarvis/dev/trader/.cache/platform/paper_ledger.json",
+    "oldest_open_hold_hours": 24.98,
     "open": [
       {
+        "created": "2026-07-22T05:41:21+00:00",
+        "hold_hours": 24.98,
         "max_loss_usd": 162.64,
         "order_id": "paper_2f78815a0614",
         "status": "working",
@@ -68,6 +134,8 @@
         "symbol": "BAC"
       },
       {
+        "created": "2026-07-22T06:10:41+00:00",
+        "hold_hours": 24.49,
         "max_loss_usd": 196.54,
         "order_id": "paper_c80aaa1cab46",
         "status": "working",
@@ -78,50 +146,54 @@
     ],
     "open_risk_usd": 359.18,
     "real_orders": 3,
-    "session_days": 1,
+    "session_dates": [
+      "2026-07-22",
+      "2026-07-23"
+    ],
+    "session_days": 2,
     "working": 2
   },
   "path_to_live": [
-    "1. Paper campaign multi-session (manage BAC/PLTR; learn_tick) \u2014 IN PROGRESS",
-    "2. Promote one hyp to pack-grade TOP_HYP (B3+B4 + thicker n + quality_pass)",
-    "3. Shadow window + kill drill (no broker mutate)",
-    "4. First-live DNA must be MCP single-leg capital-fit (or multi-leg when RH supports)",
-    "5. Draft LIVE_PACKET \u2192 Ken arms \u2192 place_* on Agentic only"
+    "1. EDGE \u2014 sims find one stressed, capital-fit strategy (worker, 24/7)",
+    "2. ROBOT/paper \u2014 short live-clock sample (2/3 sessions, open=2)",
+    "3. ROBOT/shadow \u2014 propose\u2192risk\u2192log (PARTIAL)",
+    "4. First live must be placeable on RH MCP (single-leg/CSP class today)",
+    "5. ARM \u2014 LIVE_PACKET \u2192 Ken $3k \u2192 Ken arms 1-lot"
   ],
   "phase": "PAPER",
   "platform": [
     {
       "detail": "venv present",
       "id": "A1",
-      "name": "smoke / platform runnable",
+      "name": "platform runnable",
       "status": "PASS"
     },
     {
-      "detail": "max_open_risk=0.0",
+      "detail": "max_open_risk=0.0 (campaign guard ~500 if unset)",
       "id": "A2",
       "name": "risk limits sleeve-aware",
       "status": "PARTIAL"
     },
     {
-      "detail": "real_orders=3 working=2 open_risk=$359.18",
+      "detail": "orders=3 open=2 risk=$359.18",
       "id": "A3",
       "name": "paper path durable",
       "status": "PASS"
     },
     {
-      "detail": "no multi-session shadow window logged yet",
+      "detail": "path exercised (audit_tail=0, artifact=True, smoke=False) \u2014 need deliberate multi-session window",
       "id": "A4",
       "name": "shadow path exercised",
-      "status": "FAIL"
-    },
-    {
-      "detail": "policy docs exist; kill drill not yet run as packet evidence",
-      "id": "A5",
-      "name": "kill switch documented",
       "status": "PARTIAL"
     },
     {
-      "detail": "doctrine + hygiene",
+      "detail": "policy exists; full kill-drill still packet evidence",
+      "id": "A5",
+      "name": "kill switch",
+      "status": "PARTIAL"
+    },
+    {
+      "detail": "hygiene ok",
       "id": "A6",
       "name": "secrets not in git",
       "status": "PASS"
@@ -129,104 +201,146 @@
     {
       "detail": "agentic.enabled=False",
       "id": "A7",
-      "name": "live disarmed until Ken arm",
+      "name": "live disarmed",
       "status": "PASS"
     }
   ],
   "shortlist_top": [
     {
-      "hyp_id": "hyp_dna_bac_put_credit_spread_88f03c89",
+      "b3_hold": true,
+      "b4_cost_hold": true,
+      "hyp_id": "hyp_dna_bac_put_credit_spread_3954107b",
       "lane": "paper_research",
-      "notes": "Best risk profile among stressed PCS: tight DD, few dense-neg, cost survives 5%, now testing + scoutable.",
+      "notes": "Best risk profile among rotated B3/B4",
+      "placeable": "multi_leg",
       "stress_priority": true,
       "structure": "put_credit_spread",
       "symbol": "BAC"
     },
     {
-      "hyp_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
+      "b3_hold": true,
+      "b4_cost_hold": true,
+      "hyp_id": "hyp_dna_ccl_call_credit_spread_ee09043e",
       "lane": "paper_research",
-      "notes": "Dense SHIP + cost hold; higher path DD than BAC leader.",
+      "notes": "Rotated stress survivor; secondary to tighter-DD leader",
+      "placeable": "multi_leg",
       "stress_priority": true,
-      "structure": "put_credit_spread",
-      "symbol": "PLTR"
+      "structure": "call_credit_spread",
+      "symbol": "CCL"
     },
     {
-      "hyp_id": "hyp_dna_pltr_put_credit_spread_6729c611",
+      "b3_hold": true,
+      "b4_cost_hold": true,
+      "hyp_id": "hyp_dna_bac_put_credit_spread_4fb68257",
       "lane": "paper_research",
-      "notes": "New DR SHIP; denser trades but worse dense-neg and thin slip edge vs BAC.",
+      "notes": "Rotated stress survivor; secondary to tighter-DD leader",
+      "placeable": "multi_leg",
       "stress_priority": false,
       "structure": "put_credit_spread",
-      "symbol": "PLTR"
+      "symbol": "BAC"
     },
     {
-      "hyp_id": "hyp_dna_nflx_call_credit_spread_15ecde71",
+      "b3_hold": true,
+      "b4_cost_hold": true,
+      "hyp_id": "hyp_dna_aal_put_credit_spread_eaa3fbfc",
       "lane": "paper_research",
-      "notes": "CCS direction-bias SHIP; secondary to BAC PCS risk profile.",
+      "notes": "Rotated stress survivor; secondary to tighter-DD leader",
+      "placeable": "multi_leg",
+      "stress_priority": false,
+      "structure": "put_credit_spread",
+      "symbol": "AAL"
+    },
+    {
+      "b3_hold": true,
+      "b4_cost_hold": true,
+      "hyp_id": "hyp_dna_aal_put_credit_spread_d4894f79",
+      "lane": "paper_research",
+      "notes": "Rotated stress survivor; secondary to tighter-DD leader",
+      "placeable": "multi_leg",
+      "stress_priority": false,
+      "structure": "put_credit_spread",
+      "symbol": "AAL"
+    },
+    {
+      "b3_hold": true,
+      "b4_cost_hold": true,
+      "hyp_id": "hyp_dna_aal_call_credit_spread_9b32c444",
+      "lane": "paper_research",
+      "notes": "Rotated stress survivor; secondary to tighter-DD leader",
+      "placeable": "multi_leg",
       "stress_priority": false,
       "structure": "call_credit_spread",
-      "symbol": "NFLX"
+      "symbol": "AAL"
     },
     {
+      "b3_hold": null,
+      "b4_cost_hold": null,
       "hyp_id": "hyp_dna_nflx_cash_secured_put_0d3e1748",
       "lane": "mcp_native_live_candidate_path",
       "notes": "MCP single-leg class; evolve SHIP.",
+      "placeable": "single_leg",
       "stress_priority": false,
       "structure": "cash_secured_put",
       "symbol": "NFLX"
     },
     {
+      "b3_hold": null,
+      "b4_cost_hold": null,
       "hyp_id": "hyp_dna_tsll_cash_secured_put_5fbf0a81",
       "lane": "mcp_native_live_candidate_path",
       "notes": "Cheapest liquid MCP CSP class among SHIPs; levered ETF.",
+      "placeable": "single_leg",
       "stress_priority": false,
       "structure": "cash_secured_put",
       "symbol": "TSLL"
     }
   ],
+  "simple_next": "Manage open paper (2 working, sessions 2/3). Search continues off-hours. ken_required=false.",
   "sleeve_cash_usd": 500.0,
   "sleeve_plan_usd": 3000,
   "strategy": [
     {
-      "detail": "leader=hyp_dna_bac_put_credit_spread_88f03c89 plan_sleeve=3000 cash\u2248500.0 (multi-leg paper OK; MCP first-live single-leg needs fit)",
+      "detail": "paper leader=hyp_dna_bac_put_credit_spread_3954107b; first-live lane=NFLX cash_secured_put (hyp_dna_nflx_cash_secured_put_0d3e1748); cash\u2248500.0",
       "id": "B1",
-      "name": "capital fit \u2264 sleeve",
+      "name": "capital fit",
       "status": "PARTIAL"
     },
     {
-      "detail": "shortlist leaders exist; densify n\u22489 still thin \u2014 quality_pass=false on engine densify",
+      "detail": "6 stressed survivors on shortlist \u2014 not pack-grade yet",
       "id": "B2",
-      "name": "ship bar / not thin vanity",
+      "name": "edge quality",
       "status": "PARTIAL"
     },
     {
-      "detail": "leader=hyp_dna_bac_put_credit_spread_88f03c89",
+      "detail": "leader=hyp_dna_bac_put_credit_spread_3954107b",
       "id": "B3",
-      "name": "regime stress (B3)",
+      "name": "regime stress",
       "status": "PASS"
     },
     {
-      "detail": "leader=hyp_dna_bac_put_credit_spread_88f03c89",
+      "detail": "leader=hyp_dna_bac_put_credit_spread_3954107b",
       "id": "B4",
-      "name": "cost/slip stress (B4)",
+      "name": "cost stress",
       "status": "PASS"
     },
     {
-      "detail": "DNA present on shortlist hyps; management path still paper-learning",
+      "detail": "DNA on shortlist; management still learning in paper",
       "id": "B5",
-      "name": "entry+exit DNA explicit",
+      "name": "entry/exit rules",
       "status": "PARTIAL"
     },
     {
-      "detail": "session_days=1 real_orders=3 working=2",
+      "detail": "sessions=2/3 orders=3 open=2 dates=['2026-07-22', '2026-07-23']",
       "id": "B6",
-      "name": "multi-session paper sample",
+      "name": "paper ops sample",
       "status": "PARTIAL"
     },
     {
-      "detail": "not started",
+      "detail": "path exercised (audit_tail=0, artifact=True, smoke=False) \u2014 need deliberate multi-session window",
       "id": "B7",
-      "name": "shadow window clean",
-      "status": "FAIL"
+      "name": "shadow rehearsal",
+      "status": "PARTIAL"
     }
-  ]
+  ],
+  "why_overall_stuck": "Ready-to-trade moves on evidence, not cycle count. Remaining: edge not pack-grade; paper 2/3 sessions; shadow incomplete; arm=Ken only. Search activity separate (96.0%, cycles=278)."
 }
