@@ -353,3 +353,114 @@ def test_select_skips_negative_score_shipish(tmp_path: Path, monkeypatch):
     assert ids[0] == "hyp_dna_bac_put_credit_spread_leader"
     assert "hyp_dna_bac_put_credit_spread_pos" in ids
     assert "hyp_dna_tsll_put_credit_spread_neg" not in ids
+
+
+def test_rank_key_prefers_dense_zero_over_dense_one(tmp_path: Path, monkeypatch):
+    """dense_neg=0 must not be treated as missing (0 or 99 bug)."""
+    import scripts.trader_ingest_stress_rotation as ing
+
+    repo = tmp_path
+    bootstrap = repo / "reports" / "bootstrap"
+    bootstrap.mkdir(parents=True)
+    ledger = {
+        "by_hyp_id": {
+            "hyp_dense0": {
+                "hyp_id": "hyp_dense0",
+                "symbol": "AAL",
+                "structure": "put_credit_spread",
+                "capital_path_ok": True,
+                "reject_reason": None,
+                "b3_hold": True,
+                "b4_cost_hold": True,
+                "dense_neg_ge3": 0,
+                "max_dd": 35.0,
+                "b4_slip5_verdict": "SHIP",
+                "b4_slip5_pnl": 300.0,
+                "full_pnl": 400.0,
+                "max_loss_usd": 180.0,
+                "source": "test",
+                "stressed_at": "2026-07-23T12:00:00+00:00",
+            },
+            "hyp_dense1": {
+                "hyp_id": "hyp_dense1",
+                "symbol": "AAL",
+                "structure": "call_credit_spread",
+                "capital_path_ok": True,
+                "reject_reason": None,
+                "b3_hold": True,
+                "b4_cost_hold": True,
+                "dense_neg_ge3": 1,
+                "max_dd": 48.0,
+                "b4_slip5_verdict": "SHIP",
+                "b4_slip5_pnl": 290.0,
+                "full_pnl": 370.0,
+                "max_loss_usd": 185.0,
+                "source": "test",
+                "stressed_at": "2026-07-23T12:00:00+00:00",
+            },
+        }
+    }
+    (bootstrap / "STRESS_ROTATION.json").write_text(json.dumps(ledger), encoding="utf-8")
+    (bootstrap / "QUALITY_SHORTLIST.json").write_text(
+        json.dumps({"shortlist": [], "rejected_tonight": []}), encoding="utf-8"
+    )
+    monkeypatch.setattr(ing, "_LEDGER", bootstrap / "STRESS_ROTATION.json")
+    monkeypatch.setattr(ing, "_SHORTLIST", bootstrap / "QUALITY_SHORTLIST.json")
+    res = ing.refresh_shortlist_from_ledger()
+    assert res["top_ids"][0] == "hyp_dense0"
+    assert res["top_ids"][1] == "hyp_dense1"
+
+
+def test_select_skips_fresh_capital_path_leaders(tmp_path: Path, monkeypatch):
+    """Leaders already capital_path_ok within TTL free stress slots for fresh DNA."""
+    from datetime import datetime, timezone
+
+    repo = tmp_path
+    shortlist = {
+        "shortlist": [
+            {
+                "hyp_id": "hyp_dna_bac_put_credit_spread_leader",
+                "structure": "put_credit_spread",
+                "symbol": "BAC",
+                "stress_priority": True,
+                "full_pnl": 500,
+            }
+        ]
+    }
+    bootstrap = repo / "reports" / "bootstrap"
+    bootstrap.mkdir(parents=True)
+    (bootstrap / "QUALITY_SHORTLIST.json").write_text(json.dumps(shortlist), encoding="utf-8")
+    now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    (bootstrap / "STRESS_ROTATION.json").write_text(
+        json.dumps(
+            {
+                "by_hyp_id": {
+                    "hyp_dna_bac_put_credit_spread_leader": {
+                        "hyp_id": "hyp_dna_bac_put_credit_spread_leader",
+                        "capital_path_ok": True,
+                        "stressed_at": now,
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    log_dir = repo / ".cache" / "platform" / "quality_residual"
+    log_dir.mkdir(parents=True)
+    (log_dir / "evolve_dr_test.log").write_text(
+        "SHIP                 500.00     40  call_credit_spread/NFLX  positive_sim\n"
+        "created: hyp_dna_nflx_call_credit_spread_fresh1\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(sel, "_REPO", repo)
+    monkeypatch.setattr(sel, "_SHORTLIST", bootstrap / "QUALITY_SHORTLIST.json")
+    monkeypatch.setattr(sel, "_HYPS", repo / "missing_hyps.yaml")
+    monkeypatch.setattr(sel, "_EVOLVE_LOG_DIR", log_dir)
+    monkeypatch.setattr(sel, "_ROTATION", bootstrap / "STRESS_ROTATION.json")
+
+    res = sel.select_stress_hyps(
+        limit=4, n_leaders=1, include_logs=True, leader_ttl_hours=6.0, min_fresh_trades=0
+    )
+    assert "hyp_dna_bac_put_credit_spread_leader" not in res["hyp_ids"]
+    assert "hyp_dna_bac_put_credit_spread_leader" in res["skipped_fresh_leaders"]
+    assert "hyp_dna_nflx_call_credit_spread_fresh1" in res["hyp_ids"]

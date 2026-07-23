@@ -1,3 +1,4 @@
+- 2026-07-23T0906-continuum-judgment.md — Coach: dens=0 shortlist falsy-rank fix + leader 24h TTL + min_fresh_trades=6; shortlist AAL/BAC dens0 PCS; HOLD BAC / HOLD_elevated PLTR paper
 - 2026-07-23T1131-rth.md — RTH manage: HOLD BAC (−$14/~8% ml OTM); PLTR HOLD_elevated first short ITM (−$79/~40% ml); STAND_ASIDE full book; risk-off SPY-1.6%/QQQ-2.5%; campaign KeyError shortlist drift
 - 2026-07-23T0733-rth.md — RTH manage HOLD BAC+PLTR · STAND_ASIDE full book · campaign KeyError shortlist drift
 - 2026-07-23T0636-rth — RTH open: HOLD BAC flat (+$0.4); PLTR HOLD elevated (-$69/~35% ml, short OTM $0.24); STAND_ASIDE new (2/2); SPY-1%/QQQ-1.4%; campaign ok after yaml thrash; no live/arm

@@ -1,35 +1,33 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; elevated PLTR (short ITM); HOLD BAC; learn_tick; stand-aside if no new capital-fit OPEN_* / book full",
-    "marks_et": "2026-07-23T11:32",
+    "hint": "RTH: mark/manage paper; HOLD BAC; HOLD_elevated PLTR (~36% ml); stand-aside new while 2/2. Off-hours: quality cycles use dens0 shortlist leaders + 24h leader TTL skip + min_fresh_trades=6.",
     "open_orders": [
       {
         "max_loss_usd": 162.64,
-        "mtm_usd_approx": -13.64,
         "order_id": "paper_2f78815a0614",
-        "spot": 60.74,
         "status": "working",
         "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89",
         "structure": "put_credit_spread",
         "symbol": "BAC",
-        "vs_short": "OTM_+0.74",
         "action": "HOLD"
       },
       {
         "max_loss_usd": 196.54,
-        "mtm_usd_approx": -79.04,
         "order_id": "paper_c80aaa1cab46",
-        "spot": 120.84,
         "status": "working",
         "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
         "structure": "put_credit_spread",
         "symbol": "PLTR",
-        "vs_short": "ITM_-1.67",
         "action": "HOLD_elevated"
       }
-    ]
+    ],
+    "shortlist_leaders": [
+      "hyp_dna_aal_put_credit_spread_972ca6be",
+      "hyp_dna_bac_put_credit_spread_5575695d"
+    ],
+    "coach_fix": "dense_neg=0 falsy rank + leader 24h TTL + min_fresh_trades=6"
   },
-  "generated_at": "2026-07-23T15:35:00+00:00",
+  "generated_at": "2026-07-23T16:06:50+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -39,7 +37,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "rth_eval_2026-07-23T1131",
-  "stamp": "20260723T153500",
+  "source": "continuum_judgment_2026-07-23T0906",
+  "stamp": "20260723T0906",
   "trading_authority": false
 }

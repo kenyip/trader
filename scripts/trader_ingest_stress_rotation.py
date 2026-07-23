@@ -284,11 +284,17 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
 
     # Rank capital-path-ok multi-leg by risk profile (not vanity SHIP $).
     # Verdict quality before DD: SHIP@5% must beat NULL@slightly-tighter-DD.
+    # IMPORTANT: dense_neg=0 / max_dd=0 / slip=0 are valid bests — never use `x or default`
+    # (Python treats 0 as falsy; dens=0 was ranked as 99 until 2026-07-23 coach).
     def rank_key(e: dict[str, Any]) -> tuple:
-        dense = int(e.get("dense_neg_ge3") or 99)
-        dd = float(e.get("max_dd") or 1e9)
-        slip = float(e.get("b4_slip5_pnl") or -1e9)
-        pnl = float(e.get("full_pnl") or -1e9)
+        dense_raw = e.get("dense_neg_ge3")
+        dense = int(dense_raw) if dense_raw is not None else 99
+        dd_raw = e.get("max_dd")
+        dd = float(dd_raw) if dd_raw is not None else 1e9
+        slip_raw = e.get("b4_slip5_pnl")
+        slip = float(slip_raw) if slip_raw is not None else -1e9
+        pnl_raw = e.get("full_pnl")
+        pnl = float(pnl_raw) if pnl_raw is not None else -1e9
         vrank = _slip_verdict_rank(e.get("b4_slip5_verdict"))
         return (-int(bool(e.get("capital_path_ok"))), dense, vrank, dd, -slip, -pnl)
 

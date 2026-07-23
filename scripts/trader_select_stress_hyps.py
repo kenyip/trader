@@ -6,10 +6,12 @@ Problem this fixes:
   (identical regime/cost artifacts) while evolve minted dozens of unstressed SHIPs.
 
 Policy:
-  - Keep up to `n_leaders` shortlist stress_priority multi-leg leaders (regression).
+  - Keep up to `n_leaders` shortlist stress_priority multi-leg leaders (regression),
+    but **skip** leaders already capital_path_ok in STRESS_ROTATION with a fresh
+    stressed_at inside leader_ttl_hours (default 24h) so B3/B4 budget goes to new DNA.
   - Fill remaining slots with unstressed multi-leg SHIP-ish hyps from the registry
     (or evolve_dr logs as fallback), preferring higher evolve scores / trade counts
-    and symbol diversity.
+    and symbol diversity. Prefer n_trades >= min_fresh_trades when known.
   - Never include CSP/wheel single-leg here (pcs_* stress scripts are multi-leg).
 
 Prints comma-separated hyp ids on stdout. JSON summary with --json.
@@ -21,7 +23,7 @@ import json
 import re
 import sys
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -48,16 +50,51 @@ _STRESS_MARKERS = (
 )
 
 
-def _rotation_stressed_ids() -> set[str]:
-    """Hyp ids already B3/B4'd via rotation ledger (avoids hyp yaml write races)."""
+def _load_rotation() -> dict[str, Any]:
     if not _ROTATION.is_file():
-        return set()
+        return {}
     try:
         d = json.loads(_ROTATION.read_text(encoding="utf-8"))
     except Exception:
-        return set()
+        return {}
+    return d if isinstance(d, dict) else {}
+
+
+def _rotation_stressed_ids() -> set[str]:
+    """Hyp ids already B3/B4'd via rotation ledger (avoids hyp yaml write races)."""
+    d = _load_rotation()
     by = d.get("by_hyp_id") or {}
     return {str(k) for k in by.keys()}
+
+
+def _parse_iso_ts(s: Any) -> datetime | None:
+    if not s:
+        return None
+    try:
+        t = str(s).replace("Z", "+00:00")
+        dt = datetime.fromisoformat(t)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
+    except Exception:
+        return None
+
+
+def _leader_freshly_capital_ok(hid: str, *, ttl_hours: float) -> bool:
+    """True when leader already has a fresh capital_path_ok B3/B4 on the ledger."""
+    if ttl_hours <= 0:
+        return False
+    by = (_load_rotation().get("by_hyp_id") or {})
+    row = by.get(hid) or by.get(str(hid))
+    if not isinstance(row, dict):
+        return False
+    if not row.get("capital_path_ok"):
+        return False
+    ts = _parse_iso_ts(row.get("stressed_at"))
+    if ts is None:
+        return False
+    age = datetime.now(timezone.utc) - ts
+    return age <= timedelta(hours=float(ttl_hours))
 
 
 def _now() -> str:
@@ -148,7 +185,9 @@ def _shortlist_leaders(limit: int) -> list[dict[str, Any]]:
     return out
 
 
-def _registry_unstressed(limit: int, exclude: set[str]) -> list[dict[str, Any]]:
+def _registry_unstressed(
+    limit: int, exclude: set[str], *, min_fresh_trades: int = 0
+) -> list[dict[str, Any]]:
     if not _HYPS.is_file():
         return []
     already = _rotation_stressed_ids()
@@ -181,6 +220,9 @@ def _registry_unstressed(limit: int, exclude: set[str]) -> list[dict[str, Any]]:
         # Prefer SHIP-tagged or positive score; still allow unscored fresh DNA.
         # Known non-positive composite is vanity SHIP (positive_sim + DD penalty) — do not B3/B4 burn.
         if score is not None and score <= 0:
+            continue
+        # Skip thin known n when configured (n=1 CCS twins waste stress slots).
+        if min_fresh_trades > 0 and n is not None and n < min_fresh_trades:
             continue
         blob = " ".join(str(x) for x in (h.evidence_links or [])).upper() + " " + str(h.notes or "").upper()
         shipish = "SHIP" in blob or (score is not None and score > 0)
@@ -228,7 +270,9 @@ def _registry_unstressed(limit: int, exclude: set[str]) -> list[dict[str, Any]]:
     return picked
 
 
-def _evolve_log_fresh(limit: int, exclude: set[str]) -> list[dict[str, Any]]:
+def _evolve_log_fresh(
+    limit: int, exclude: set[str], *, min_fresh_trades: int = 0
+) -> list[dict[str, Any]]:
     """Map positive DR SHIP rows in recent evolve_dr logs to created hyp ids (best-effort)."""
     if not _EVOLVE_LOG_DIR.is_dir():
         return []
@@ -247,7 +291,10 @@ def _evolve_log_fresh(limit: int, exclude: set[str]) -> list[dict[str, Any]]:
             score = float(m.group(1))
             if score <= 0:
                 continue
-            ships.append((score, int(m.group(2)), m.group(3), m.group(4).upper()))
+            n_tr = int(m.group(2))
+            if min_fresh_trades > 0 and n_tr < min_fresh_trades:
+                continue
+            ships.append((score, n_tr, m.group(3), m.group(4).upper()))
         created: list[str] = []
         for m in re.finditer(r"^created:\s*(.+)$", text, re.M):
             for part in m.group(1).split(","):
@@ -311,22 +358,34 @@ def select_stress_hyps(
     limit: int = 6,
     n_leaders: int = 2,
     include_logs: bool = True,
+    leader_ttl_hours: float = 24.0,
+    min_fresh_trades: int = 6,
 ) -> dict[str, Any]:
     leaders = _shortlist_leaders(n_leaders)
     ids: list[str] = []
     rows: list[dict[str, Any]] = []
+    skipped_fresh_leaders: list[str] = []
     for r in leaders:
         hid = r["hyp_id"]
+        if _leader_freshly_capital_ok(hid, ttl_hours=leader_ttl_hours):
+            skipped_fresh_leaders.append(hid)
+            continue
         if hid not in ids:
             ids.append(hid)
             rows.append(r)
-    exclude = set(ids)
+    exclude = set(ids) | set(skipped_fresh_leaders)
     need = max(0, limit - len(ids))
 
     # Prefer registry unstressed; supplement with evolve-log mapping
-    fresh = _registry_unstressed(need * 3, exclude) if need else []
+    fresh = (
+        _registry_unstressed(need * 3, exclude, min_fresh_trades=min_fresh_trades)
+        if need
+        else []
+    )
     if include_logs and len(fresh) < need:
-        for r in _evolve_log_fresh(need * 3, exclude | {x["hyp_id"] for x in fresh}):
+        for r in _evolve_log_fresh(
+            need * 3, exclude | {x["hyp_id"] for x in fresh}, min_fresh_trades=min_fresh_trades
+        ):
             if r["hyp_id"] not in {x["hyp_id"] for x in fresh}:
                 fresh.append(r)
 
@@ -385,11 +444,17 @@ def select_stress_hyps(
         "csv": ",".join(ids),
         "n": len(ids),
         "rows": rows,
+        "skipped_fresh_leaders": skipped_fresh_leaders,
         "policy": {
             "limit": limit,
             "n_leaders": n_leaders,
             "include_logs": include_logs,
-            "note": "mix shortlist leaders + unstressed multi-leg SHIPs (score>0 when known); no densify bag",
+            "leader_ttl_hours": leader_ttl_hours,
+            "min_fresh_trades": min_fresh_trades,
+            "note": (
+                "mix shortlist leaders (skip fresh capital_path_ok within TTL) + "
+                "unstressed multi-leg SHIPs score>0 / n>=min_fresh when known; no densify bag"
+            ),
         },
     }
 
@@ -398,6 +463,18 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--limit", type=int, default=6)
     ap.add_argument("--n-leaders", type=int, default=2)
+    ap.add_argument(
+        "--leader-ttl-hours",
+        type=float,
+        default=24.0,
+        help="Skip shortlist leaders already capital_path_ok within this many hours (0=always include).",
+    )
+    ap.add_argument(
+        "--min-fresh-trades",
+        type=int,
+        default=6,
+        help="When n_trades known on unstressed DNA, require at least this many (0=off).",
+    )
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--no-logs", action="store_true")
     args = ap.parse_args(argv)
@@ -405,6 +482,8 @@ def main(argv: list[str] | None = None) -> int:
         limit=int(args.limit),
         n_leaders=int(args.n_leaders),
         include_logs=not args.no_logs,
+        leader_ttl_hours=float(args.leader_ttl_hours),
+        min_fresh_trades=int(args.min_fresh_trades),
     )
     if args.json:
         print(json.dumps(res, indent=2, sort_keys=True))
