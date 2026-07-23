@@ -84,7 +84,7 @@ def test_ingest_marks_rejects_and_ranks_leader(tmp_path: Path, monkeypatch):
                 "summary": {
                     "regime_hold": True,
                     "n_negative_n_ge_3": 1,
-                    "max_dd_across_windows": 58,
+                    "max_dd_across_windows": 68.2,
                     "worst_window_pnl": -20,
                 },
             },
@@ -132,9 +132,21 @@ def test_ingest_marks_rejects_and_ranks_leader(tmp_path: Path, monkeypatch):
                 "summary": {
                     "regime_hold": True,
                     "n_negative_n_ge_3": 1,
-                    # Same dens; slightly worse DD than BAC — SHIP@5% BAC must still lead
-                    "max_dd_across_windows": 59,
+                    # Tighter DD than BAC SHIP — still must NOT lead (verdict before DD)
+                    "max_dd_across_windows": 58.98,
                     "worst_window_pnl": -15,
+                },
+            },
+            {
+                "hyp_id": "hyp_f_bac_softloss",
+                "symbol": "BAC",
+                "structure": "put_credit_spread",
+                "full_history": {"pnl": 340, "n_trades": 25, "verdict": "SHIP", "max_loss_usd": 160},
+                "summary": {
+                    "regime_hold": True,
+                    "n_negative_n_ge_3": 1,
+                    "max_dd_across_windows": 71,
+                    "worst_window_pnl": -30,
                 },
             },
         ]
@@ -176,6 +188,13 @@ def test_ingest_marks_rejects_and_ranks_leader(tmp_path: Path, monkeypatch):
                 "slip_5_pnl": 80.47,
                 "note": "survives_5pct_slip",
             },
+            {
+                "hyp": "hyp_f_bac_softloss",
+                "cost_hold": True,
+                "slip_5_verdict": "NEEDS_MORE_DATA",
+                "slip_5_pnl": -31.92,
+                "note": "soft_loss_at_5pct_defined_risk",
+            },
         ]
     }
     rp = tmp_path / "regime.json"
@@ -189,7 +208,7 @@ def test_ingest_marks_rejects_and_ranks_leader(tmp_path: Path, monkeypatch):
     (bootstrap / "QUALITY_SHORTLIST.json").write_text(json.dumps({"shortlist": []}), encoding="utf-8")
 
     res = ing.ingest_pair(rp, cp, source="test")
-    assert res["n_ledger"] == 5
+    assert res["n_ledger"] == 6
     ledger = json.loads((bootstrap / "STRESS_ROTATION.json").read_text(encoding="utf-8"))
     assert ledger["by_hyp_id"]["hyp_a_bac"]["capital_path_ok"] is True
     assert ledger["by_hyp_id"]["hyp_b_mu"]["capital_path_ok"] is False
@@ -197,6 +216,8 @@ def test_ingest_marks_rejects_and_ranks_leader(tmp_path: Path, monkeypatch):
     assert "NULL/~0" in (ledger["by_hyp_id"]["hyp_c_smci_softnull"].get("reject_reason") or "")
     assert ledger["by_hyp_id"]["hyp_d_smci_negfull"]["capital_path_ok"] is False
     assert ledger["by_hyp_id"]["hyp_e_nflx_null_pos"]["capital_path_ok"] is True
+    assert ledger["by_hyp_id"]["hyp_f_bac_softloss"]["capital_path_ok"] is False
+    assert "soft_loss" in (ledger["by_hyp_id"]["hyp_f_bac_softloss"].get("reject_reason") or "")
 
     sl = ing.refresh_shortlist_from_ledger()
     data = json.loads((bootstrap / "QUALITY_SHORTLIST.json").read_text(encoding="utf-8"))
@@ -206,11 +227,18 @@ def test_ingest_marks_rejects_and_ranks_leader(tmp_path: Path, monkeypatch):
     assert "hyp_b_mu" not in ids
     assert "hyp_c_smci_softnull" not in ids
     assert "hyp_d_smci_negfull" not in ids
+    assert "hyp_f_bac_softloss" not in ids
     assert any(r.get("hyp_id") == "hyp_b_mu" for r in data["rejected_tonight"])
     assert any(r.get("hyp_id") == "hyp_c_smci_softnull" for r in data["rejected_tonight"])
-    # SHIP@5% BAC ranks above NULL@positive NFLX when dens/dd comparable-ish
+    assert any(r.get("hyp_id") == "hyp_f_bac_softloss" for r in data["rejected_tonight"])
+    # SHIP@5% BAC ranks above NULL@positive NFLX even when NFLX has tighter DD
     assert data["shortlist"][0]["hyp_id"] == "hyp_a_bac"
     assert data["shortlist"][0]["stress_priority"] is True
+    assert data["shortlist"][0]["hyp_id"] != "hyp_e_nflx_null_pos" or data["shortlist"][0]["hyp_id"] == "hyp_a_bac"
+    # NFLX may remain on shortlist but not ahead of SHIP when dens equal
+    nflx_i = ids.index("hyp_e_nflx_null_pos")
+    bac_i = ids.index("hyp_a_bac")
+    assert bac_i < nflx_i
 
 
 def test_rescore_flips_soft_null_zero(tmp_path: Path, monkeypatch):
@@ -232,6 +260,20 @@ def test_rescore_flips_soft_null_zero(tmp_path: Path, monkeypatch):
                 "dense_neg_ge3": 1,
                 "max_dd": 50,
                 "full_pnl": 200,
+                "capital_path_ok": True,
+                "reject_reason": None,
+            },
+            "hyp_softloss": {
+                "hyp_id": "hyp_softloss",
+                "symbol": "BAC",
+                "structure": "put_credit_spread",
+                "b3_hold": True,
+                "b4_cost_hold": True,
+                "b4_slip5_verdict": "NEEDS_MORE_DATA",
+                "b4_slip5_pnl": -31.92,
+                "dense_neg_ge3": 1,
+                "max_dd": 71,
+                "full_pnl": 340,
                 "capital_path_ok": True,
                 "reject_reason": None,
             },
@@ -258,11 +300,56 @@ def test_rescore_flips_soft_null_zero(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(ing, "_SHORTLIST", bootstrap / "QUALITY_SHORTLIST.json")
 
     res = ing.rescore_ledger(source="test")
-    assert res["n_flipped_off"] == 1
+    assert res["n_flipped_off"] == 2
     data = json.loads((bootstrap / "STRESS_ROTATION.json").read_text(encoding="utf-8"))
     assert data["by_hyp_id"]["hyp_soft"]["capital_path_ok"] is False
+    assert data["by_hyp_id"]["hyp_softloss"]["capital_path_ok"] is False
     assert data["by_hyp_id"]["hyp_ship"]["capital_path_ok"] is True
     ing.refresh_shortlist_from_ledger()
     sl = json.loads((bootstrap / "QUALITY_SHORTLIST.json").read_text(encoding="utf-8"))
     ids = [r["hyp_id"] for r in sl["shortlist"]]
     assert ids == ["hyp_ship"]
+
+
+def test_select_skips_negative_score_shipish(tmp_path: Path, monkeypatch):
+    """Vanity SHIP tag + negative composite must not burn B3/B4 slots."""
+    repo = tmp_path
+    shortlist = {
+        "shortlist": [
+            {
+                "hyp_id": "hyp_dna_bac_put_credit_spread_leader",
+                "structure": "put_credit_spread",
+                "symbol": "BAC",
+                "stress_priority": True,
+                "full_pnl": 500,
+            }
+        ]
+    }
+    bootstrap = repo / "reports" / "bootstrap"
+    bootstrap.mkdir(parents=True)
+    (bootstrap / "QUALITY_SHORTLIST.json").write_text(json.dumps(shortlist), encoding="utf-8")
+    (bootstrap / "STRESS_ROTATION.json").write_text(json.dumps({"by_hyp_id": {}}), encoding="utf-8")
+
+    hyps_yaml = repo / "hyps.yaml"
+    # Minimal registry-compatible rows via monkeypatch of HypothesisRegistry path is heavy;
+    # use evolve log path: only positive scores are emitted; registry returns empty.
+    log_dir = repo / ".cache" / "platform" / "quality_residual"
+    log_dir.mkdir(parents=True)
+    (log_dir / "evolve_dr_test.log").write_text(
+        "SHIP                -146.58     27  put_credit_spread/TSLL  positive_sim\n"
+        "SHIP                  37.33     26  put_credit_spread/BAC  positive_sim\n"
+        "created: hyp_dna_tsll_put_credit_spread_neg, hyp_dna_bac_put_credit_spread_pos\n",
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(sel, "_REPO", repo)
+    monkeypatch.setattr(sel, "_SHORTLIST", bootstrap / "QUALITY_SHORTLIST.json")
+    monkeypatch.setattr(sel, "_HYPS", hyps_yaml)
+    monkeypatch.setattr(sel, "_EVOLVE_LOG_DIR", log_dir)
+    monkeypatch.setattr(sel, "_ROTATION", bootstrap / "STRESS_ROTATION.json")
+
+    res = sel.select_stress_hyps(limit=4, n_leaders=1, include_logs=True)
+    ids = res["hyp_ids"]
+    assert ids[0] == "hyp_dna_bac_put_credit_spread_leader"
+    assert "hyp_dna_bac_put_credit_spread_pos" in ids
+    assert "hyp_dna_tsll_put_credit_spread_neg" not in ids

@@ -178,7 +178,10 @@ def _registry_unstressed(limit: int, exclude: set[str]) -> list[dict[str, Any]]:
         if _is_stressed(h):
             continue
         score, n = _parse_score_n(h)
-        # Prefer SHIP-tagged or positive score; still allow unscored fresh DNA
+        # Prefer SHIP-tagged or positive score; still allow unscored fresh DNA.
+        # Known non-positive composite is vanity SHIP (positive_sim + DD penalty) — do not B3/B4 burn.
+        if score is not None and score <= 0:
+            continue
         blob = " ".join(str(x) for x in (h.evidence_links or [])).upper() + " " + str(h.notes or "").upper()
         shipish = "SHIP" in blob or (score is not None and score > 0)
         if not shipish and score is None:
@@ -386,7 +389,7 @@ def select_stress_hyps(
             "limit": limit,
             "n_leaders": n_leaders,
             "include_logs": include_logs,
-            "note": "mix shortlist leaders + unstressed multi-leg SHIPs; no densify bag",
+            "note": "mix shortlist leaders + unstressed multi-leg SHIPs (score>0 when known); no densify bag",
         },
     }
 

@@ -1,23 +1,6 @@
 {
   "detail": {
-    "hint": "After close: HOLD open BAC+PLTR paper by order_id through multi-session B6; quality_worker continues stress rotation with hardened capital-path gates (soft NULL@~0 + non-pos full_pnl rejected). Next stress slots: CCL PCS + NFLX CCS leaders + unstressed multi-leg (PLTR/BAC/AAL/SMCI PCS). No densify thrash. No live/arm.",
-    "coach_20260722T1504": {
-      "flipped_off_capital_path": 35,
-      "n_capital_path_ok": 69,
-      "n_ledger": 290,
-      "shortlist_top": [
-        "hyp_dna_ccl_put_credit_spread_c901235d",
-        "hyp_dna_nflx_call_credit_spread_5141ccf8",
-        "hyp_dna_bac_put_credit_spread_3954107b",
-        "hyp_dna_ccl_call_credit_spread_ee09043e",
-        "hyp_dna_bac_put_credit_spread_4fb68257",
-        "hyp_dna_tsll_call_credit_spread_1987d036"
-      ],
-      "removed_from_priority": [
-        "hyp_dna_smci_call_credit_spread_9c5c963f",
-        "hyp_dna_smci_call_credit_spread_dc6e78da"
-      ]
-    },
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. Off-hours: worker stresses BAC/CCL SHIP leaders + positive-score fresh multi-leg (soft-loss + score<=0 skipped).",
     "open_orders": [
       {
         "max_loss_usd": 162.64,
@@ -35,9 +18,14 @@
         "structure": "put_credit_spread",
         "symbol": "PLTR"
       }
-    ]
+    ],
+    "shortlist_leaders": [
+      "hyp_dna_bac_put_credit_spread_3954107b",
+      "hyp_dna_ccl_call_credit_spread_ee09043e"
+    ],
+    "coach_stamp": "2026-07-22T2103"
   },
-  "generated_at": "2026-07-22T22:04:30+00:00",
+  "generated_at": "2026-07-23T04:03:30+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -47,7 +35,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_coach",
-  "stamp": "20260722T1504",
+  "source": "continuum_judgment_20260722T2103",
+  "stamp": "20260722T2103",
   "trading_authority": false
 }

@@ -8,9 +8,11 @@ Capital-path policy (risk profile, not vanity full-history SHIP $):
   - B3 regime_hold required
   - B4 cost_hold not false
   - Soft NULL@5% with missing/≤0 slip PnL is NOT capital-path (edge vanished)
+  - Soft-loss at 5% (slip5_pnl < 0 even if cost_hold/NEEDS_MORE_DATA) is NOT capital-path
   - Full-history non-positive PnL is NOT capital-path
   - Extreme dense-neg + high window DD rejected vs leader bar
-  - Rank: dense_neg → max_dd → slip verdict quality → slip5 pnl → full pnl
+  - Rank: dense_neg → slip verdict quality (SHIP < NEEDS < NULL) → max_dd → slip5 pnl → full pnl
+    (verdict before DD so NULL@slightly-tighter-DD cannot outrank SHIP@5%)
 """
 from __future__ import annotations
 
@@ -74,14 +76,18 @@ def capital_path_decision(
     if full_pnl_f is not None and full_pnl_f <= 0:
         return False, f"full_history non-positive pnl={full_pnl_f}"
     # Soft cost_hold can still be soft_loss / vanished edge under 5% slip.
+    # Negative slip PnL is never capital-path (soft_loss_at_5pct / fragile edge).
+    if slip5_pnl_f is not None and slip5_pnl_f < 0:
+        return (
+            False,
+            f"B4 slip5 soft_loss/neg pnl={slip5_pnl} v={slip5_v} (not capital-path)",
+        )
     if slip_v == "NULL":
         if slip5_pnl_f is None or slip5_pnl_f <= _SLIP_EDGE_EPS:
             return (
                 False,
                 f"B4 slip5 NULL/~0 pnl={slip5_pnl} (soft cost only; edge vanished)",
             )
-        if slip5_pnl_f < 0:
-            return False, f"B4 slip5 NULL/neg pnl={slip5_pnl} (soft cost only)"
     if dense >= 4 and dd > 200:
         return (
             False,
@@ -276,14 +282,15 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
             by_id[hid] = e
     prev = _load_json(_SHORTLIST)
 
-    # Rank capital-path-ok multi-leg by risk profile (not vanity SHIP $)
+    # Rank capital-path-ok multi-leg by risk profile (not vanity SHIP $).
+    # Verdict quality before DD: SHIP@5% must beat NULL@slightly-tighter-DD.
     def rank_key(e: dict[str, Any]) -> tuple:
         dense = int(e.get("dense_neg_ge3") or 99)
         dd = float(e.get("max_dd") or 1e9)
         slip = float(e.get("b4_slip5_pnl") or -1e9)
         pnl = float(e.get("full_pnl") or -1e9)
         vrank = _slip_verdict_rank(e.get("b4_slip5_verdict"))
-        return (-int(bool(e.get("capital_path_ok"))), dense, dd, vrank, -slip, -pnl)
+        return (-int(bool(e.get("capital_path_ok"))), dense, vrank, dd, -slip, -pnl)
 
     multi = [
         e
@@ -362,7 +369,8 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
         "honesty": (
             "Proxy BS sims + B3/B4 only. Not TOP_HYP. Multi-leg not MCP-live. "
             "Stress rotation ledger drives shortlist; quality_cycle mixes leaders+fresh. "
-            "Soft NULL@~0 slip and non-positive full PnL are capital-path rejects."
+            "Capital-path rejects: soft NULL@~0, soft-loss/neg@5%, non-pos full PnL. "
+            "Rank dens → slip verdict (SHIP>NEEDS>NULL) → dd → slip pnl."
         ),
         "agentic": prev.get("agentic")
         or {
@@ -381,7 +389,7 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
         "next": [
             "Manage open paper campaign (BAC/PLTR) through multi-session B6",
             "Quality cycles rotate unstressed multi-leg SHIPs into B3/B4",
-            "Shortlist prefers SHIP@5% / positive slip edge over soft-NULL~0",
+            "Shortlist prefers SHIP@5% over NULL@positive; reject soft-loss@5%",
             "Do not arm multi-leg; MCP lane remains CSP sized to cash",
             "No densify bag thrash",
         ],

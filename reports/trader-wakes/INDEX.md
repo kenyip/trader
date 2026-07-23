@@ -1,3 +1,4 @@
+- 2026-07-22T2103-continuum-judgment — Coach: reject soft-loss@5%; rank SHIP verdict before DD; skip score<=0 unstressed; flipped_off=13; shortlist BAC/CCL SHIP leaders; HOLD paper; tests 4p
 - 2026-07-22T1504-continuum-judgment — Coach: capital_path reject soft NULL@~0 + non-pos full_pnl; rescore flipped_off=35; shortlist CCL/NFLX/BAC; SMCI soft-nulls demoted; HOLD paper; tests 3p
 - 2026-07-22T1232-rth — Late-RTH: HOLD BAC+PLTR PCS (BAC ~+$2.4; PLTR ~-$62 vs ml$197 short OTM~$2.25 improved); STAND_ASIDE new (2/2); campaign yaml thrash→HOLD by order_id; SMCI still +21%; no live/arm
 - 2026-07-22T1132-rth — Mid-afternoon RTH: HOLD BAC+PLTR PCS (BAC ~+$2; PLTR ~-$67 vs ml$197 short still OTM~$1.3 elevated); STAND_ASIDE new (2/2); campaign yaml thrash→HOLD by order_id; SMCI still +21% gap context; no live/arm
