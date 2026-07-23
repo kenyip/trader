@@ -1,31 +1,46 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. Off-hours: worker stresses BAC/CCL SHIP leaders + positive-score fresh multi-leg (soft-loss + score<=0 skipped).",
+    "hint": "RTH: HOLD BAC flat; elevated-watch PLTR (~35% ml, short OTM ~$0.24); force-manage only strike breach / DNA stop / loss→ml; STAND_ASIDE new while 2/2; learn_tick on campaign cadence",
+    "marks_et": "2026-07-23T09:35",
     "open_orders": [
       {
         "max_loss_usd": 162.64,
+        "mtm_usd_approx": 0.36,
         "order_id": "paper_2f78815a0614",
+        "otm_cushion": 1.28,
+        "spot": 61.28,
         "status": "working",
         "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89",
         "structure": "put_credit_spread",
-        "symbol": "BAC"
+        "symbol": "BAC",
+        "decision": "HOLD"
       },
       {
         "max_loss_usd": 196.54,
+        "mtm_usd_approx": -68.54,
+        "ml_used_pct": 34.9,
         "order_id": "paper_c80aaa1cab46",
+        "otm_cushion": 0.24,
+        "short_mark_synth": 7.75,
+        "long_mark": 6.53,
+        "spot": 122.74,
         "status": "working",
         "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
         "structure": "put_credit_spread",
-        "symbol": "PLTR"
+        "symbol": "PLTR",
+        "decision": "HOLD_ELEVATED_WATCH"
       }
     ],
-    "shortlist_leaders": [
-      "hyp_dna_bac_put_credit_spread_3954107b",
-      "hyp_dna_ccl_call_credit_spread_ee09043e"
-    ],
-    "coach_stamp": "2026-07-22T2103"
+    "session": {
+      "spy_day_pct": -0.95,
+      "qqq_day_pct": -1.41,
+      "book_full": true,
+      "open_risk_usd": 359.18,
+      "paper_sessions": "2/3"
+    },
+    "new_entries": "STAND_ASIDE"
   },
-  "generated_at": "2026-07-23T04:03:30+00:00",
+  "generated_at": "2026-07-23T13:36:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -35,7 +50,8 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_20260722T2103",
-  "stamp": "20260722T2103",
-  "trading_authority": false
+  "source": "trader_rth_eval",
+  "stamp": "20260723T0636",
+  "trading_authority": false,
+  "wake": "reports/trader-wakes/2026-07-23T0636-rth.md"
 }

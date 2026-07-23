@@ -1,43 +1,29 @@
-# WAKE — 2026-07-22T2340 status simplify + forward progress
+# WAKE — 2026-07-23T0636 RTH open eval
 
-WAKE: 2026-07-22 ~23:30–23:45 PDT  
+WAKE: 2026-07-23 ~09:31–09:36 ET (RTH open)  
 PHASE: PAPER  
 SLEEVE: 3000 plan · cash≈500 · live_armed=false  
-ECONOMIC MECHANISM: n/a (ops/status clarity + funnel honesty)  
-CANDIDATE/FAMILY SCOPE: status UX; paper BAC/PLTR; MCP first-live CSP lane  
-FUNNEL: ROBOT paper 2/3 sessions; EDGE stressed not pack-grade  
-OUTCOME: BLOCKER_REMOVED_AND_RETESTED (status complexity + B6 session under-count)  
-STRATEGY ADVANCEMENT: false  
-CHOSE: Simplify status to EDGE/ROBOT/ARM; fix paper session counting; nudge shadow honesty
+CHOSE: manage_open_paper_campaign — live mark + HOLD/STAND_ASIDE  
+OUTCOME: ops reconfirm (no new seat)
 
-## DID
+## State
+- EDGE: worker ON; shortlist stressed multi-leg (AAL CCS lead) — not pack-grade
+- ROBOT: paper **2/3** sessions · open=2 · risk=$359.18 · HOLD BAC+PLTR
+- ARM: WAIT Ken only
 
-1. Rewrote `scripts/trader_go_live_status.py` human view:
-   - Primary: EDGE / ROBOT / ARM + plain NEXT + glossary
-   - Legacy A/B/C only via `--json` / `--legacy`
-2. Fixed paper **session_days**: count NY weekdays spanned while orders open (overnight hold advances 1→2), not create-date only
-3. Shadow scoring: no false PASS from historical audit noise; PARTIAL until multi-session window artifact
-4. Attempted `autonomy_loop --mode shadow` — blocked by `hypotheses.yaml` ScannerError mid quality_worker write (known thrash); wrote honest `.cache/platform/shadow/LATEST.json` PARTIAL
-5. Tests: `tests/test_go_live_status_simple.py` 4 passed
-6. Docs: `docs/GO_LIVE_READINESS.md` simple model at top; readiness LATEST simplified
+## Open paper (live RH ~09:35 ET)
+| Order | Sym | Strikes | Spot | OTM | MTM≈ | ml | Action |
+|---|---|---|---:|---:|---:|---:|---|
+| paper_2f78815a0614 | BAC PCS | 60/58p Aug7 | 61.28 | +1.28 | **+$0.36** | 162.64 | **HOLD** |
+| paper_c80aaa1cab46 | PLTR PCS | 122.5/120p Aug7 | 122.74 | +0.24 | **−$68.54** (~35% ml) | 196.54 | **HOLD elevated** |
 
-## EVIDENCE
+Market: SPY −0.95% · QQQ −1.41%. PLTR short synth avg(122p/123p).
 
-- `just trader-status` → simple 3-layer
-- paper sessions now 2/3 with ~25h hold
-- pytest tests/test_go_live_status_simple.py → 4 passed
-- shadow LATEST PARTIAL (no broker mutate)
-
-## DURABLE
-
-- Status language = EDGE/ROBOT/ARM
-- Session span math for paper ops sample
-- Doctrine simple model in GO_LIVE_READINESS
+## New entries
+**STAND_ASIDE** — book 2/2 full. Scout had 8 OPEN_* (SMCI/NFLX/PLTR); campaign placed=[]. Autonomy dry failed once on yaml thrash; campaign OK after settle.
 
 ## NEXT SEED
-
-manage_open_paper_campaign — paper 2/3→3/3; worker EDGE search for sleeve-fit MCP single-leg; shadow multi-session when yaml stable. ken_required=false
+manage_open_paper_campaign — HOLD BAC; watch PLTR; 2/3→3/3 sessions; no new while full. ken_required=false
 
 ## GATES
-
-none (Ken: gateway | LIVE_PACKET arm | $3k at packet)
+none
