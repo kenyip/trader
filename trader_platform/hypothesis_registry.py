@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+import time
 import uuid
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
@@ -86,21 +88,57 @@ class HypothesisRegistry:
     def _empty_store(self) -> dict[str, Any]:
         return {"version": 1, "hypotheses": []}
 
-    def load(self) -> dict[str, Any]:
+    def load(self, *, retries: int = 8, retry_sleep_s: float = 0.05) -> dict[str, Any]:
+        """Load registry YAML.
+
+        Retries on mid-write parse errors. Writers must use :meth:`save` (atomic
+        replace); concurrent readers can still race a long dump, so retry briefly
+        before failing closed.
+        """
         if not self.path.exists():
             return self._empty_store()
-        with self.path.open() as f:
-            data = yaml.safe_load(f) or {}
-        if not isinstance(data, dict):
-            raise ValueError(f"registry must be a mapping: {self.path}")
-        data.setdefault("version", 1)
-        data.setdefault("hypotheses", [])
-        return data
+        last_err: Exception | None = None
+        attempts = max(1, int(retries))
+        for i in range(attempts):
+            try:
+                with self.path.open() as f:
+                    data = yaml.safe_load(f) or {}
+                if not isinstance(data, dict):
+                    raise ValueError(f"registry must be a mapping: {self.path}")
+                data.setdefault("version", 1)
+                data.setdefault("hypotheses", [])
+                return data
+            except yaml.YAMLError as e:
+                last_err = e
+                if i + 1 >= attempts:
+                    break
+                time.sleep(retry_sleep_s * (i + 1))
+        assert last_err is not None
+        raise last_err
 
     def save(self, store: dict[str, Any]) -> None:
+        """Atomically persist registry YAML (temp file + os.replace).
+
+        Non-atomic open('w') previously truncated the live path mid-dump, which
+        raced quality_worker evolve ticks against autonomy/shadow readers and
+        produced ScannerError thrash on large hypotheses.yaml files.
+        """
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        with self.path.open("w") as f:
-            yaml.safe_dump(store, f, sort_keys=False, default_flow_style=False)
+        tmp_path = self.path.with_name(
+            f".{self.path.name}.{os.getpid()}.{uuid.uuid4().hex}.tmp"
+        )
+        try:
+            with tmp_path.open("w") as f:
+                yaml.safe_dump(store, f, sort_keys=False, default_flow_style=False)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(tmp_path, self.path)
+        finally:
+            if tmp_path.exists():
+                try:
+                    tmp_path.unlink()
+                except OSError:
+                    pass
 
     def list(self, status: Optional[str] = None) -> list[Hypothesis]:
         store = self.load()
