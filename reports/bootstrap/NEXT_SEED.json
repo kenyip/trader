@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
+    "hint": "RTH: mark/manage paper; learn_tick only when book has room; stand-aside if no new capital-fit OPEN_*. Off-hours: worker EDGE with twin-dedupe + family cool selector.",
     "open_orders": [
       {
         "max_loss_usd": 162.64,
@@ -18,9 +18,10 @@
         "structure": "put_credit_spread",
         "symbol": "PLTR"
       }
-    ]
+    ],
+    "coach_note": "2026-07-23T2106: campaign skip-learn under full book; selector cools NFLX CCS fail streak + metric twins"
   },
-  "generated_at": "2026-07-23T22:05:33+00:00",
+  "generated_at": "2026-07-24T04:06:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -30,7 +31,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "trader_paper_campaign",
-  "stamp": "20260723T220524",
+  "source": "continuum_judgment_coach",
+  "stamp": "20260723T2106",
   "trading_authority": false
 }

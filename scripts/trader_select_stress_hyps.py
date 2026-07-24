@@ -97,6 +97,65 @@ def _leader_freshly_capital_ok(hid: str, *, ttl_hours: float) -> bool:
     return age <= timedelta(hours=float(ttl_hours))
 
 
+def _metric_twin_key(row: dict[str, Any]) -> tuple[Any, ...]:
+    """Evolve-score fingerprint — identical twins burn B3/B4 slots without new info."""
+    sym = str(row.get("symbol") or "?").upper()
+    st = str(row.get("structure") or "")
+    sc_r: float | None = None
+    raw_sc = row.get("score")
+    if raw_sc is not None:
+        try:
+            sc = float(raw_sc)
+            if sc > -1e8:
+                sc_r = round(sc, 1)
+        except (TypeError, ValueError):
+            sc_r = None
+    try:
+        n = int(row.get("n_trades") or 0)
+    except (TypeError, ValueError):
+        n = 0
+    return (sym, st, sc_r, n)
+
+
+def _family_recent_fail_cooled(
+    symbol: str | None,
+    structure: str | None,
+    *,
+    window_hours: float = 6.0,
+    min_fails: int = 2,
+) -> bool:
+    """Cool symbol×structure after repeated recent B3/B4 fails with zero capital_path_ok.
+
+    Observed 2026-07-24 coach: NFLX CCS 32 fails / 0 ok in 6h while selector kept
+    queueing score-twin clones (n=46 score=475.65 × many hyp_ids).
+    """
+    if not symbol or not structure or window_hours <= 0 or min_fails <= 0:
+        return False
+    sym_u = str(symbol).upper()
+    st = str(structure)
+    by = _load_rotation().get("by_hyp_id") or {}
+    now = datetime.now(timezone.utc)
+    fails = 0
+    oks = 0
+    for row in by.values():
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("symbol") or "").upper() != sym_u:
+            continue
+        if str(row.get("structure") or "") != st:
+            continue
+        ts = _parse_iso_ts(row.get("stressed_at"))
+        if ts is None:
+            continue
+        if (now - ts) > timedelta(hours=float(window_hours)):
+            continue
+        if row.get("capital_path_ok"):
+            oks += 1
+        else:
+            fails += 1
+    return fails >= int(min_fails) and oks == 0
+
+
 def _now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
@@ -360,11 +419,15 @@ def select_stress_hyps(
     include_logs: bool = True,
     leader_ttl_hours: float = 24.0,
     min_fresh_trades: int = 6,
+    family_fail_window_hours: float = 6.0,
+    family_fail_min: int = 2,
 ) -> dict[str, Any]:
     leaders = _shortlist_leaders(n_leaders)
     ids: list[str] = []
     rows: list[dict[str, Any]] = []
     skipped_fresh_leaders: list[str] = []
+    skipped_metric_twins: list[str] = []
+    skipped_family_cooled: list[str] = []
     for r in leaders:
         hid = r["hyp_id"]
         if _leader_freshly_capital_ok(hid, ttl_hours=leader_ttl_hours):
@@ -378,13 +441,13 @@ def select_stress_hyps(
 
     # Prefer registry unstressed; supplement with evolve-log mapping
     fresh = (
-        _registry_unstressed(need * 3, exclude, min_fresh_trades=min_fresh_trades)
+        _registry_unstressed(need * 4, exclude, min_fresh_trades=min_fresh_trades)
         if need
         else []
     )
-    if include_logs and len(fresh) < need:
+    if include_logs and len(fresh) < need * 2:
         for r in _evolve_log_fresh(
-            need * 3, exclude | {x["hyp_id"] for x in fresh}, min_fresh_trades=min_fresh_trades
+            need * 4, exclude | {x["hyp_id"] for x in fresh}, min_fresh_trades=min_fresh_trades
         ):
             if r["hyp_id"] not in {x["hyp_id"] for x in fresh}:
                 fresh.append(r)
@@ -403,40 +466,69 @@ def select_stress_hyps(
         return (sc_f, n_i)
 
     fresh.sort(key=fkey, reverse=True)
+
+    # Collapse evolve-score twins (same symbol/structure/score/n, different hyp_id)
+    deduped: list[dict[str, Any]] = []
+    seen_metric: set[tuple[Any, ...]] = set()
+    for r in fresh:
+        key = _metric_twin_key(r)
+        # Only collapse when score+n known (avoid collapsing unscored unknowns)
+        if key[2] is not None and key[3] > 0:
+            if key in seen_metric:
+                skipped_metric_twins.append(str(r.get("hyp_id")))
+                continue
+            seen_metric.add(key)
+        deduped.append(r)
+    fresh = deduped
+
     per_sym: dict[str, int] = defaultdict(int)
+    per_family: dict[tuple[str, str], int] = defaultdict(int)
     # count leaders toward diversity soft-cap
     for r in rows:
         per_sym[str(r.get("symbol") or "?")] += 1
+        per_family[(str(r.get("symbol") or "?").upper(), str(r.get("structure") or ""))] += 1
 
-    # Pass 1: max 1 fresh hyp per symbol (breadth over vanity twins)
-    for r in fresh:
+    def _try_add(r: dict[str, Any], *, max_per_sym: int, max_per_family: int) -> bool:
         if len(ids) >= limit:
-            break
+            return False
         hid = r["hyp_id"]
         if hid in exclude:
-            continue
+            return False
         sym = str(r.get("symbol") or "?")
-        if per_sym[sym] >= 1:
-            continue
+        st = str(r.get("structure") or "")
+        fam = (sym.upper(), st)
+        if _family_recent_fail_cooled(
+            sym,
+            st,
+            window_hours=family_fail_window_hours,
+            min_fails=family_fail_min,
+        ):
+            skipped_family_cooled.append(hid)
+            exclude.add(hid)
+            return False
+        if per_sym[sym] >= max_per_sym:
+            return False
+        if st and per_family[fam] >= max_per_family:
+            return False
         ids.append(hid)
         rows.append(r)
         exclude.add(hid)
         per_sym[sym] += 1
+        per_family[fam] += 1
+        return True
 
-    # Pass 2: allow a second per symbol only if still under limit
+    # Pass 1: max 1 fresh hyp per symbol AND per symbol×structure (breadth)
     for r in fresh:
         if len(ids) >= limit:
             break
-        hid = r["hyp_id"]
-        if hid in exclude:
-            continue
-        sym = str(r.get("symbol") or "?")
-        if per_sym[sym] >= 2:
-            continue
-        ids.append(hid)
-        rows.append(r)
-        exclude.add(hid)
-        per_sym[sym] += 1
+        _try_add(r, max_per_sym=1, max_per_family=1)
+
+    # Pass 2: allow a second slot per symbol/family only after breadth fill
+    # (leaders + one unstressed same-family still OK; metric-twin dedupe blocks clones)
+    for r in fresh:
+        if len(ids) >= limit:
+            break
+        _try_add(r, max_per_sym=2, max_per_family=2)
 
     return {
         "generated_at": _now(),
@@ -445,15 +537,21 @@ def select_stress_hyps(
         "n": len(ids),
         "rows": rows,
         "skipped_fresh_leaders": skipped_fresh_leaders,
+        "skipped_metric_twins": skipped_metric_twins[:40],
+        "skipped_family_cooled": sorted(set(skipped_family_cooled))[:40],
         "policy": {
             "limit": limit,
             "n_leaders": n_leaders,
             "include_logs": include_logs,
             "leader_ttl_hours": leader_ttl_hours,
             "min_fresh_trades": min_fresh_trades,
+            "family_fail_window_hours": family_fail_window_hours,
+            "family_fail_min": family_fail_min,
             "note": (
                 "mix shortlist leaders (skip fresh capital_path_ok within TTL) + "
-                "unstressed multi-leg SHIPs score>0 / n>=min_fresh when known; no densify bag"
+                "unstressed multi-leg SHIPs score>0 / n>=min_fresh when known; "
+                "dedupe evolve metric twins; cool symbol×structure after recent fail streak; "
+                "no densify bag"
             ),
         },
     }
@@ -475,6 +573,18 @@ def main(argv: list[str] | None = None) -> int:
         default=6,
         help="When n_trades known on unstressed DNA, require at least this many (0=off).",
     )
+    ap.add_argument(
+        "--family-fail-window-hours",
+        type=float,
+        default=6.0,
+        help="Cool symbol×structure after repeated fails with zero capital_path_ok in this window (0=off).",
+    )
+    ap.add_argument(
+        "--family-fail-min",
+        type=int,
+        default=2,
+        help="Min recent fails (with 0 ok) to cool a symbol×structure family.",
+    )
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--no-logs", action="store_true")
     args = ap.parse_args(argv)
@@ -484,6 +594,8 @@ def main(argv: list[str] | None = None) -> int:
         include_logs=not args.no_logs,
         leader_ttl_hours=float(args.leader_ttl_hours),
         min_fresh_trades=int(args.min_fresh_trades),
+        family_fail_window_hours=float(args.family_fail_window_hours),
+        family_fail_min=int(args.family_fail_min),
     )
     if args.json:
         print(json.dumps(res, indent=2, sort_keys=True))

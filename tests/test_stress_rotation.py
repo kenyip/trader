@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 import scripts.trader_select_stress_hyps as sel
@@ -507,3 +508,117 @@ def test_select_skips_fresh_capital_path_leaders(tmp_path: Path, monkeypatch):
     assert "hyp_dna_bac_put_credit_spread_leader" not in res["hyp_ids"]
     assert "hyp_dna_bac_put_credit_spread_leader" in res["skipped_fresh_leaders"]
     assert "hyp_dna_nflx_call_credit_spread_fresh1" in res["hyp_ids"]
+
+
+def test_metric_twin_key_and_dedupe(tmp_path, monkeypatch):
+    """Identical evolve score/n twins collapse to one stress slot."""
+    repo = tmp_path
+    bootstrap = repo / "reports" / "bootstrap"
+    bootstrap.mkdir(parents=True)
+    (bootstrap / "QUALITY_SHORTLIST.json").write_text(
+        json.dumps({"shortlist": []}), encoding="utf-8"
+    )
+    (bootstrap / "STRESS_ROTATION.json").write_text(
+        json.dumps({"by_hyp_id": {}}), encoding="utf-8"
+    )
+    log_dir = repo / ".cache" / "platform" / "quality_residual"
+    log_dir.mkdir(parents=True)
+    # Two SHIP lines same score/n/symbol + two created ids (twins)
+    (log_dir / "evolve_dr_twins.log").write_text(
+        "SHIP                 475.65     46  call_credit_spread/NFLX  positive_sim\n"
+        "SHIP                 475.65     46  call_credit_spread/NFLX  positive_sim\n"
+        "SHIP                 200.00     20  put_credit_spread/AAL  positive_sim\n"
+        "created: hyp_dna_nflx_call_credit_spread_twin_a,"
+        "hyp_dna_nflx_call_credit_spread_twin_b,"
+        "hyp_dna_aal_put_credit_spread_other\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(sel, "_REPO", repo)
+    monkeypatch.setattr(sel, "_SHORTLIST", bootstrap / "QUALITY_SHORTLIST.json")
+    monkeypatch.setattr(sel, "_HYPS", repo / "missing_hyps.yaml")
+    monkeypatch.setattr(sel, "_EVOLVE_LOG_DIR", log_dir)
+    monkeypatch.setattr(sel, "_ROTATION", bootstrap / "STRESS_ROTATION.json")
+
+    k1 = sel._metric_twin_key(
+        {"symbol": "NFLX", "structure": "call_credit_spread", "score": 475.65, "n_trades": 46}
+    )
+    k2 = sel._metric_twin_key(
+        {"symbol": "NFLX", "structure": "call_credit_spread", "score": 475.649, "n_trades": 46}
+    )
+    assert k1 == k2
+
+    res = sel.select_stress_hyps(
+        limit=4,
+        n_leaders=0,
+        include_logs=True,
+        leader_ttl_hours=0,
+        min_fresh_trades=0,
+        family_fail_window_hours=0,  # disable cool for this unit
+    )
+    nflx = [h for h in res["hyp_ids"] if "nflx_call_credit_spread" in h]
+    assert len(nflx) == 1, res
+    assert len(res.get("skipped_metric_twins") or []) >= 1
+    assert "hyp_dna_aal_put_credit_spread_other" in res["hyp_ids"]
+
+
+def test_family_recent_fail_cooled(tmp_path, monkeypatch):
+    """Symbol×structure with recent fails and zero capital_ok is cooled."""
+    repo = tmp_path
+    bootstrap = repo / "reports" / "bootstrap"
+    bootstrap.mkdir(parents=True)
+    now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    (bootstrap / "QUALITY_SHORTLIST.json").write_text(
+        json.dumps({"shortlist": []}), encoding="utf-8"
+    )
+    (bootstrap / "STRESS_ROTATION.json").write_text(
+        json.dumps(
+            {
+                "by_hyp_id": {
+                    "hyp_dna_nflx_call_credit_spread_old1": {
+                        "hyp_id": "hyp_dna_nflx_call_credit_spread_old1",
+                        "symbol": "NFLX",
+                        "structure": "call_credit_spread",
+                        "capital_path_ok": False,
+                        "stressed_at": now,
+                    },
+                    "hyp_dna_nflx_call_credit_spread_old2": {
+                        "hyp_id": "hyp_dna_nflx_call_credit_spread_old2",
+                        "symbol": "NFLX",
+                        "structure": "call_credit_spread",
+                        "capital_path_ok": False,
+                        "stressed_at": now,
+                    },
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    log_dir = repo / ".cache" / "platform" / "quality_residual"
+    log_dir.mkdir(parents=True)
+    (log_dir / "evolve_dr_cool.log").write_text(
+        "SHIP                 475.65     46  call_credit_spread/NFLX  positive_sim\n"
+        "SHIP                 300.00     30  put_credit_spread/AAL  positive_sim\n"
+        "created: hyp_dna_nflx_call_credit_spread_freshx,hyp_dna_aal_put_credit_spread_freshy\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(sel, "_REPO", repo)
+    monkeypatch.setattr(sel, "_SHORTLIST", bootstrap / "QUALITY_SHORTLIST.json")
+    monkeypatch.setattr(sel, "_HYPS", repo / "missing_hyps.yaml")
+    monkeypatch.setattr(sel, "_EVOLVE_LOG_DIR", log_dir)
+    monkeypatch.setattr(sel, "_ROTATION", bootstrap / "STRESS_ROTATION.json")
+
+    assert sel._family_recent_fail_cooled("NFLX", "call_credit_spread", window_hours=6.0, min_fails=2)
+    assert not sel._family_recent_fail_cooled("AAL", "put_credit_spread", window_hours=6.0, min_fails=2)
+
+    res = sel.select_stress_hyps(
+        limit=4,
+        n_leaders=0,
+        include_logs=True,
+        leader_ttl_hours=0,
+        min_fresh_trades=0,
+        family_fail_window_hours=6.0,
+        family_fail_min=2,
+    )
+    assert "hyp_dna_nflx_call_credit_spread_freshx" not in res["hyp_ids"]
+    assert "hyp_dna_aal_put_credit_spread_freshy" in res["hyp_ids"]
+    assert "hyp_dna_nflx_call_credit_spread_freshx" in res.get("skipped_family_cooled", [])

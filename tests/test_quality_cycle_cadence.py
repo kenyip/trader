@@ -69,3 +69,18 @@ def test_paper_campaign_manage_only_gate():
     assert (len(real_open1) >= max_conc or open_risk1 >= max_risk) is False
     # risk headroom gone alone
     assert (1 >= max_conc or 500.0 >= max_risk) is True
+
+
+def test_book_full_skips_learn_tick_predicate():
+    """Bash campaign peeks ledger before learn; full book → skip learn (300s hang fix)."""
+    max_conc = 2
+    max_risk = 500.0
+
+    def manage_only(working: int, risk: float, force_learn: bool = False) -> bool:
+        full = working >= max_conc or risk >= max_risk
+        return full and not force_learn
+
+    assert manage_only(2, 359.0) is True
+    assert manage_only(1, 160.0) is False
+    assert manage_only(2, 359.0, force_learn=True) is False
+    assert manage_only(0, 500.0) is True

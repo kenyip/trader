@@ -24,6 +24,11 @@ RECEIPT="$OUT_DIR/LATEST.json"
 
 # Optional: TRADER_PAPER_CAMPAIGN_EXECUTE=0 to force dry-only (default 1 = paper place allowed)
 EXECUTE="${TRADER_PAPER_CAMPAIGN_EXECUTE:-1}"
+# Optional: force learn_tick even under full book (default 0 = skip learn when manage-only)
+FORCE_LEARN="${TRADER_PAPER_CAMPAIGN_FORCE_LEARN:-0}"
+LEDGER="${TRADER_PAPER_LEDGER:-$REPO/.cache/platform/paper_ledger.json}"
+MAX_CONCURRENT="${TRADER_PAPER_CAMPAIGN_MAX_CONCURRENT:-2}"
+MAX_OPEN_RISK="${TRADER_PAPER_CAMPAIGN_MAX_OPEN_RISK:-500}"
 
 exec > >(tee -a "$LOG") 2>&1
 echo "trader_paper_campaign: start $STAMP execute=$EXECUTE"
@@ -31,10 +36,52 @@ echo "trader_paper_campaign: start $STAMP execute=$EXECUTE"
 rc_learn=0
 rc_campaign=0
 
-set +e
-"$PY" -m trader_platform.learn_tick --once --apply --json >"$OUT_DIR/learn_${STAMP}.json"
-rc_learn=$?
-set -e
+# Cheap book peek BEFORE learn_tick. learn_tick loads the full hyp registry and was
+# hanging past quality_cycle's 300s campaign timeout under worker yaml thrash while
+# the book was already 2/2 (run logs stopped at "start", 2026-07-23/24 coach).
+BOOK_MANAGE_ONLY=0
+if [[ -f "$LEDGER" ]]; then
+  BOOK_MANAGE_ONLY="$("$PY" - "$LEDGER" "$MAX_CONCURRENT" "$MAX_OPEN_RISK" <<'PY' || echo 0
+import json, sys
+from pathlib import Path
+path, max_c, max_r = Path(sys.argv[1]), int(float(sys.argv[2])), float(sys.argv[3])
+try:
+    d = json.loads(path.read_text(encoding="utf-8"))
+except Exception:
+    print(0); raise SystemExit(0)
+orders = d.get("orders") or {}
+items = list(orders.values()) if isinstance(orders, dict) else list(orders)
+working = 0
+risk = 0.0
+for o in items:
+    if not isinstance(o, dict):
+        continue
+    tag = str(o.get("tag") or "")
+    if "smoke" in tag.lower() or "m0_stub" in tag:
+        continue
+    st = str(o.get("status") or "").lower()
+    if st not in ("working", "open"):
+        continue
+    working += 1
+    try:
+        risk += float(o.get("max_loss_usd") or 0.0)
+    except Exception:
+        pass
+print(1 if (working >= max_c or risk >= max_r) else 0)
+PY
+)"
+fi
+
+if [[ "$BOOK_MANAGE_ONLY" == "1" && "$FORCE_LEARN" != "1" ]]; then
+  echo "trader_paper_campaign: skip learn_tick (book full / risk cap — manage path)"
+  printf '%s\n' '{"skipped":true,"reason":"book_full_manage_skip_learn"}' >"$OUT_DIR/learn_${STAMP}.json"
+  rc_learn=0
+else
+  set +e
+  "$PY" -m trader_platform.learn_tick --once --apply --json >"$OUT_DIR/learn_${STAMP}.json"
+  rc_learn=$?
+  set -e
+fi
 
 set +e
 "$PY" - "$SHORTLIST" "$NEXT_SEED" "$RECEIPT" "$STAMP" "$EXECUTE" "$OUT_DIR" <<'PY'
