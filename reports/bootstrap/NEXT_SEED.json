@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "Weekend→Mon RTH: mark/manage open BAC+PLTR paper; stand-aside new if book full. Worker stress queue unblocked via cooled-family challenge slot.",
+    "hint": "Weekend/RTH: mark/manage open BAC+PLTR paper; stand-aside new if book full. Stress queue may be empty while toxic PLTR/NFLX CCS blocked — not 'no edge'; prefer AAL/F/BAC family evolve.",
     "open_orders": [
       {
         "max_loss_usd": 162.64,
@@ -19,15 +19,14 @@
         "symbol": "PLTR"
       }
     ],
-    "coach_20260724T1507": {
-      "selector_fix": "cooled_family_challenge_slot=1",
-      "stressed": "20260724T220537",
-      "capital_path_ok": 0,
-      "challenged": 6,
-      "note": "NFLX/XOM/PLTR/TSLL/SMCI/SNAP challenges falsified mostly B4"
+    "search_system": {
+      "coach": "2026-07-24T2106",
+      "shortlist_leaders": ["AAL dens1 tight-DD", "BAC dens0", "F dens1"],
+      "toxic_challenge_block": true,
+      "note": "empty stress queue beats toxic B3/B4 burn"
     }
   },
-  "generated_at": "2026-07-24T22:07:00+00:00",
+  "generated_at": "2026-07-25T04:07:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -37,7 +36,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_20260724T1507",
-  "stamp": "20260724T1507",
+  "source": "continuum_judgment_coach_20260724T2106",
+  "stamp": "20260724T2106",
   "trading_authority": false
 }

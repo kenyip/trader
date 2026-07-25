@@ -632,6 +632,145 @@ def test_family_recent_fail_cooled(tmp_path, monkeypatch):
     assert len(nflx_ids) == 1, res
 
 
+def test_family_challenge_toxic_blocks_zero_challenge(tmp_path, monkeypatch):
+    """Toxic families (many recent fails, 0 ok) get 0 challenge slots — not 1/cycle burn."""
+    repo = tmp_path
+    bootstrap = repo / "reports" / "bootstrap"
+    bootstrap.mkdir(parents=True)
+    now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    (bootstrap / "QUALITY_SHORTLIST.json").write_text(
+        json.dumps({"shortlist": []}), encoding="utf-8"
+    )
+    by = {}
+    # 8 recent PLTR CCS fails → toxic
+    for i in range(8):
+        hid = f"hyp_dna_pltr_call_credit_spread_old{i}"
+        by[hid] = {
+            "hyp_id": hid,
+            "symbol": "PLTR",
+            "structure": "call_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now,
+        }
+    # cooled-but-not-toxic NFLX: only 2 fails
+    by["hyp_dna_nflx_call_credit_spread_old1"] = {
+        "hyp_id": "hyp_dna_nflx_call_credit_spread_old1",
+        "symbol": "NFLX",
+        "structure": "call_credit_spread",
+        "capital_path_ok": False,
+        "stressed_at": now,
+    }
+    by["hyp_dna_nflx_call_credit_spread_old2"] = {
+        "hyp_id": "hyp_dna_nflx_call_credit_spread_old2",
+        "symbol": "NFLX",
+        "structure": "call_credit_spread",
+        "capital_path_ok": False,
+        "stressed_at": now,
+    }
+    (bootstrap / "STRESS_ROTATION.json").write_text(
+        json.dumps({"by_hyp_id": by}), encoding="utf-8"
+    )
+    log_dir = repo / ".cache" / "platform" / "quality_residual"
+    log_dir.mkdir(parents=True)
+    (log_dir / "evolve_dr_toxic.log").write_text(
+        "SHIP                 500.00     40  call_credit_spread/PLTR  positive_sim\n"
+        "SHIP                 300.00     30  call_credit_spread/NFLX  positive_sim\n"
+        "SHIP                 200.00     20  put_credit_spread/AAL  positive_sim\n"
+        "created: hyp_dna_pltr_call_credit_spread_freshx,"
+        "hyp_dna_nflx_call_credit_spread_freshy,"
+        "hyp_dna_aal_put_credit_spread_freshz\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(sel, "_REPO", repo)
+    monkeypatch.setattr(sel, "_SHORTLIST", bootstrap / "QUALITY_SHORTLIST.json")
+    monkeypatch.setattr(sel, "_HYPS", repo / "missing_hyps.yaml")
+    monkeypatch.setattr(sel, "_EVOLVE_LOG_DIR", log_dir)
+    monkeypatch.setattr(sel, "_ROTATION", bootstrap / "STRESS_ROTATION.json")
+
+    assert sel._family_challenge_toxic("PLTR", "call_credit_spread", toxic_fail_min=8)
+    assert not sel._family_challenge_toxic("NFLX", "call_credit_spread", toxic_fail_min=8)
+    assert sel._family_recent_fail_cooled("NFLX", "call_credit_spread", min_fails=2)
+
+    res = sel.select_stress_hyps(
+        limit=4,
+        n_leaders=0,
+        include_logs=True,
+        leader_ttl_hours=0,
+        min_fresh_trades=0,
+        family_fail_window_hours=6.0,
+        family_fail_min=2,
+        toxic_fail_min=8,
+        lifetime_fail_min=0,  # unit isolates recent toxic path
+    )
+    # Non-cooled AAL first; NFLX gets one cooled challenge; PLTR toxic → zero.
+    assert "hyp_dna_aal_put_credit_spread_freshz" in res["hyp_ids"], res
+    assert "hyp_dna_nflx_call_credit_spread_freshy" in res["hyp_ids"], res
+    assert "hyp_dna_pltr_call_credit_spread_freshx" not in res["hyp_ids"], res
+    assert "hyp_dna_pltr_call_credit_spread_freshx" in res.get("skipped_family_toxic", []), res
+    assert not any("PLTR:call_credit_spread:" in c for c in res.get("challenged_cooled_families") or [])
+
+
+def test_shortlist_dens_bucket_surfaces_tight_dd_dens1(tmp_path: Path, monkeypatch):
+    """dens1 + tight DD can outrank dens0 + loose DD within low-dens bucket."""
+    import scripts.trader_ingest_stress_rotation as ing
+
+    repo = tmp_path
+    bootstrap = repo / "reports" / "bootstrap"
+    bootstrap.mkdir(parents=True)
+    by = {
+        "hyp_bac_dens0_loose": {
+            "hyp_id": "hyp_bac_dens0_loose",
+            "symbol": "BAC",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "reject_reason": None,
+            "b3_hold": True,
+            "b4_cost_hold": True,
+            "dense_neg_ge3": 0,
+            "max_dd": 100.0,
+            "b4_slip5_verdict": "SHIP",
+            "b4_slip5_pnl": 150.0,
+            "full_pnl": 500.0,
+            "max_loss_usd": 80.0,
+            "source": "test",
+            "stressed_at": "2026-07-24T12:00:00+00:00",
+        },
+        "hyp_aal_dens1_tight": {
+            "hyp_id": "hyp_aal_dens1_tight",
+            "symbol": "AAL",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "reject_reason": None,
+            "b3_hold": True,
+            "b4_cost_hold": True,
+            "dense_neg_ge3": 1,
+            "max_dd": 34.0,
+            "b4_slip5_verdict": "SHIP",
+            "b4_slip5_pnl": 58.0,
+            "full_pnl": 186.0,
+            "max_loss_usd": 90.0,
+            "source": "test",
+            "stressed_at": "2026-07-24T12:00:00+00:00",
+        },
+    }
+    (bootstrap / "STRESS_ROTATION.json").write_text(
+        json.dumps({"by_hyp_id": by}), encoding="utf-8"
+    )
+    (bootstrap / "QUALITY_SHORTLIST.json").write_text(
+        json.dumps({"shortlist": []}), encoding="utf-8"
+    )
+    monkeypatch.setattr(ing, "_REPO", repo)
+    monkeypatch.setattr(ing, "_LEDGER", bootstrap / "STRESS_ROTATION.json")
+    monkeypatch.setattr(ing, "_SHORTLIST", bootstrap / "QUALITY_SHORTLIST.json")
+
+    ing.refresh_shortlist_from_ledger()
+    data = json.loads((bootstrap / "QUALITY_SHORTLIST.json").read_text(encoding="utf-8"))
+    multi = [r for r in data["shortlist"] if r.get("lane") == "paper_research"]
+    assert multi[0]["hyp_id"] == "hyp_aal_dens1_tight", multi
+    assert multi[0]["symbol"] == "AAL"
+    assert any(r["hyp_id"] == "hyp_bac_dens0_loose" for r in multi)
+
+
 def test_shortlist_caps_per_symbol_for_diversity(tmp_path: Path, monkeypatch):
     """≤3 multi-leg rows per symbol so dens0 non-leader names surface."""
     import scripts.trader_ingest_stress_rotation as ing

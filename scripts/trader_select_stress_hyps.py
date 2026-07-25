@@ -117,25 +117,15 @@ def _metric_twin_key(row: dict[str, Any]) -> tuple[Any, ...]:
     return (sym, st, sc_r, n)
 
 
-def _family_recent_fail_cooled(
+def _family_window_fail_ok(
     symbol: str | None,
     structure: str | None,
     *,
     window_hours: float = 6.0,
-    min_fails: int = 2,
-) -> bool:
-    """Cool symbol×structure after repeated recent B3/B4 fails with zero capital_path_ok.
-
-    Observed 2026-07-24 coach: NFLX CCS 32 fails / 0 ok in 6h while selector kept
-    queueing score-twin clones (n=46 score=475.65 × many hyp_ids).
-
-    Cool means *spray block*, not permanent quarantine: select_stress_hyps still
-    allows one highest-score unstressed challenge per cooled family so evolve SHIP
-    progress is not starved (2026-07-24T1500 coach: queue n=0 while XOM/PLTR/NFLX
-    positive multi-leg SHIPs sat only on cooled families).
-    """
-    if not symbol or not structure or window_hours <= 0 or min_fails <= 0:
-        return False
+) -> tuple[int, int]:
+    """Return (fails, oks) for symbol×structure inside the recent stress window."""
+    if not symbol or not structure or window_hours <= 0:
+        return 0, 0
     sym_u = str(symbol).upper()
     st = str(structure)
     by = _load_rotation().get("by_hyp_id") or {}
@@ -158,7 +148,91 @@ def _family_recent_fail_cooled(
             oks += 1
         else:
             fails += 1
+    return fails, oks
+
+
+def _family_lifetime_fail_ok(symbol: str | None, structure: str | None) -> tuple[int, int]:
+    """Return lifetime (fails, oks) for symbol×structure on the rotation ledger."""
+    if not symbol or not structure:
+        return 0, 0
+    sym_u = str(symbol).upper()
+    st = str(structure)
+    by = _load_rotation().get("by_hyp_id") or {}
+    fails = 0
+    oks = 0
+    for row in by.values():
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("symbol") or "").upper() != sym_u:
+            continue
+        if str(row.get("structure") or "") != st:
+            continue
+        if row.get("capital_path_ok"):
+            oks += 1
+        else:
+            fails += 1
+    return fails, oks
+
+
+def _family_recent_fail_cooled(
+    symbol: str | None,
+    structure: str | None,
+    *,
+    window_hours: float = 6.0,
+    min_fails: int = 2,
+) -> bool:
+    """Cool symbol×structure after repeated recent B3/B4 fails with zero capital_path_ok.
+
+    Observed 2026-07-24 coach: NFLX CCS 32 fails / 0 ok in 6h while selector kept
+    queueing score-twin clones (n=46 score=475.65 × many hyp_ids).
+
+    Cool means *spray block*, not permanent quarantine: select_stress_hyps still
+    allows one highest-score unstressed challenge per cooled family so evolve SHIP
+    progress is not starved (2026-07-24T1500 coach: queue n=0 while XOM/PLTR/NFLX
+    positive multi-leg SHIPs sat only on cooled families).
+
+    Escalation (2026-07-24T2100 coach): when recent fails hit toxic_fail_min with 0 ok,
+    or lifetime fails are hopeless (many fails, 0 ok ever), challenges are hard-blocked
+    via `_family_challenge_toxic` — empty queue beats burning B3/B4 on PLTR/NFLX CCS.
+    """
+    if min_fails <= 0:
+        return False
+    fails, oks = _family_window_fail_ok(symbol, structure, window_hours=window_hours)
     return fails >= int(min_fails) and oks == 0
+
+
+def _family_challenge_toxic(
+    symbol: str | None,
+    structure: str | None,
+    *,
+    window_hours: float = 6.0,
+    toxic_fail_min: int = 8,
+    lifetime_fail_min: int = 20,
+) -> bool:
+    """Hard-block cooled-family challenge slots for hopeless families.
+
+    2026-07-24T2100 coach: after cool→1-challenge, worker still spent every cycle on
+    PLTR CCS / NFLX CCS / SMCI CCS (50/43/9 fails in 6h, lifetime 244/413/65 with 0 ok).
+    Selector n=2 was *only* toxic challenges. Soft cost NULL@~0 dominated rejects.
+    Toxic = recent fails>=toxic_fail_min & 0 ok, OR lifetime fails>=lifetime_fail_min & 0 ok.
+    """
+    if not symbol or not structure:
+        return False
+    if toxic_fail_min > 0 and window_hours > 0:
+        fails, oks = _family_window_fail_ok(symbol, structure, window_hours=window_hours)
+        if fails >= int(toxic_fail_min) and oks == 0:
+            return True
+    if lifetime_fail_min > 0:
+        lf, lo = _family_lifetime_fail_ok(symbol, structure)
+        if lf >= int(lifetime_fail_min) and lo == 0:
+            return True
+    return False
+
+
+def _family_capital_path_prior(symbol: str | None, structure: str | None) -> int:
+    """Lifetime capital_path_ok count — prefer families that have proven at least once."""
+    _fails, oks = _family_lifetime_fail_ok(symbol, structure)
+    return int(oks)
 
 
 def _now() -> str:
@@ -426,6 +500,8 @@ def select_stress_hyps(
     min_fresh_trades: int = 6,
     family_fail_window_hours: float = 6.0,
     family_fail_min: int = 2,
+    toxic_fail_min: int = 8,
+    lifetime_fail_min: int = 20,
 ) -> dict[str, Any]:
     leaders = _shortlist_leaders(n_leaders)
     ids: list[str] = []
@@ -433,6 +509,7 @@ def select_stress_hyps(
     skipped_fresh_leaders: list[str] = []
     skipped_metric_twins: list[str] = []
     skipped_family_cooled: list[str] = []
+    skipped_family_toxic: list[str] = []
     challenged_cooled_families: list[str] = []
     for r in leaders:
         hid = r["hyp_id"]
@@ -458,7 +535,7 @@ def select_stress_hyps(
             if r["hyp_id"] not in {x["hyp_id"] for x in fresh}:
                 fresh.append(r)
 
-    # re-rank combined fresh
+    # re-rank combined fresh: prior capital_path families before raw vanity score
     def fkey(r: dict[str, Any]) -> tuple:
         sc = r.get("score")
         try:
@@ -469,7 +546,9 @@ def select_stress_hyps(
             n_i = int(r.get("n_trades") or 0)
         except (TypeError, ValueError):
             n_i = 0
-        return (sc_f, n_i)
+        prior = _family_capital_path_prior(r.get("symbol"), r.get("structure"))
+        # prior>0 beats prior==0; then score/n
+        return (1 if prior > 0 else 0, sc_f, n_i)
 
     fresh.sort(key=fkey, reverse=True)
 
@@ -495,7 +574,13 @@ def select_stress_hyps(
         per_sym[str(r.get("symbol") or "?")] += 1
         per_family[(str(r.get("symbol") or "?").upper(), str(r.get("structure") or ""))] += 1
 
-    def _try_add(r: dict[str, Any], *, max_per_sym: int, max_per_family: int) -> bool:
+    def _try_add(
+        r: dict[str, Any],
+        *,
+        max_per_sym: int,
+        max_per_family: int,
+        allow_cooled_challenge: bool,
+    ) -> bool:
         if len(ids) >= limit:
             return False
         hid = r["hyp_id"]
@@ -504,19 +589,31 @@ def select_stress_hyps(
         sym = str(r.get("symbol") or "?")
         st = str(r.get("structure") or "")
         fam = (sym.upper(), st)
+        toxic = _family_challenge_toxic(
+            sym,
+            st,
+            window_hours=family_fail_window_hours,
+            toxic_fail_min=toxic_fail_min,
+            lifetime_fail_min=lifetime_fail_min,
+        )
         cooled = _family_recent_fail_cooled(
             sym,
             st,
             window_hours=family_fail_window_hours,
             min_fails=family_fail_min,
         )
+        if toxic:
+            skipped_family_toxic.append(hid)
+            exclude.add(hid)
+            return False
         if cooled:
-            # One challenge per cooled family (fresh is score-desc) — else spray-block.
+            if not allow_cooled_challenge:
+                return False
+            # One challenge per cooled family — else spray-block.
             if fam in cooled_challenge_used:
                 skipped_family_cooled.append(hid)
                 exclude.add(hid)
                 return False
-            # challenge slot reserved below if other caps pass
         if per_sym[sym] >= max_per_sym:
             return False
         if st and per_family[fam] >= max_per_family:
@@ -532,19 +629,26 @@ def select_stress_hyps(
         per_family[fam] += 1
         return True
 
-    # Pass 1: max 1 fresh hyp per symbol AND per symbol×structure (breadth)
+    # Pass 1–2: non-cooled / non-toxic first (breadth, then second slot).
+    # High-score toxic cooled DNA must not crowd out lower-score proven families.
     for r in fresh:
         if len(ids) >= limit:
             break
-        _try_add(r, max_per_sym=1, max_per_family=1)
+        _try_add(r, max_per_sym=1, max_per_family=1, allow_cooled_challenge=False)
+    for r in fresh:
+        if len(ids) >= limit:
+            break
+        _try_add(r, max_per_sym=2, max_per_family=2, allow_cooled_challenge=False)
 
-    # Pass 2: allow a second slot per symbol/family only after breadth fill
-    # (leaders + one unstressed same-family still OK; metric-twin dedupe blocks clones)
-    # Cooled families stay at 1 total via cooled_challenge_used.
+    # Pass 3–4: only then one challenge per non-toxic cooled family.
     for r in fresh:
         if len(ids) >= limit:
             break
-        _try_add(r, max_per_sym=2, max_per_family=2)
+        _try_add(r, max_per_sym=1, max_per_family=1, allow_cooled_challenge=True)
+    for r in fresh:
+        if len(ids) >= limit:
+            break
+        _try_add(r, max_per_sym=2, max_per_family=2, allow_cooled_challenge=True)
 
     return {
         "generated_at": _now(),
@@ -555,6 +659,7 @@ def select_stress_hyps(
         "skipped_fresh_leaders": skipped_fresh_leaders,
         "skipped_metric_twins": skipped_metric_twins[:40],
         "skipped_family_cooled": sorted(set(skipped_family_cooled))[:40],
+        "skipped_family_toxic": sorted(set(skipped_family_toxic))[:40],
         "challenged_cooled_families": challenged_cooled_families[:40],
         "policy": {
             "limit": limit,
@@ -564,13 +669,17 @@ def select_stress_hyps(
             "min_fresh_trades": min_fresh_trades,
             "family_fail_window_hours": family_fail_window_hours,
             "family_fail_min": family_fail_min,
+            "toxic_fail_min": toxic_fail_min,
+            "lifetime_fail_min": lifetime_fail_min,
             "cooled_family_challenge_slots": 1,
             "note": (
                 "mix shortlist leaders (skip fresh capital_path_ok within TTL) + "
                 "unstressed multi-leg SHIPs score>0 / n>=min_fresh when known; "
+                "prefer families with prior capital_path_ok; fill non-cooled first; "
                 "dedupe evolve metric twins; cool symbol×structure after recent fail streak "
-                "but allow 1 highest-score unstressed challenge per cooled family; "
-                "no densify bag"
+                "with 1 challenge/family unless toxic (recent fails>=toxic_fail_min or "
+                "lifetime fails>=lifetime_fail_min with 0 ok → 0 challenges); "
+                "empty queue beats toxic B3/B4 burn; no densify bag"
             ),
         },
     }
@@ -604,6 +713,18 @@ def main(argv: list[str] | None = None) -> int:
         default=2,
         help="Min recent fails (with 0 ok) to cool a symbol×structure family.",
     )
+    ap.add_argument(
+        "--toxic-fail-min",
+        type=int,
+        default=8,
+        help="Recent fails (0 ok) that hard-block cooled-family challenges (0=off).",
+    )
+    ap.add_argument(
+        "--lifetime-fail-min",
+        type=int,
+        default=20,
+        help="Lifetime fails with 0 capital_path_ok ever → hard-block challenges (0=off).",
+    )
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--no-logs", action="store_true")
     args = ap.parse_args(argv)
@@ -615,6 +736,8 @@ def main(argv: list[str] | None = None) -> int:
         min_fresh_trades=int(args.min_fresh_trades),
         family_fail_window_hours=float(args.family_fail_window_hours),
         family_fail_min=int(args.family_fail_min),
+        toxic_fail_min=int(args.toxic_fail_min),
+        lifetime_fail_min=int(args.lifetime_fail_min),
     )
     if args.json:
         print(json.dumps(res, indent=2, sort_keys=True))

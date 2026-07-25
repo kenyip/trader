@@ -297,6 +297,10 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
     def rank_key(e: dict[str, Any]) -> tuple:
         dense_raw = e.get("dense_neg_ge3")
         dense = int(dense_raw) if dense_raw is not None else 99
+        # dens 0 and 1 are both "low dens" — let window DD break ties so tight-DD
+        # dens1 AAL/F can surface over dens0 high-DD clones (2026-07-24T2100 coach).
+        # dens>=2 stay strictly worse tiers.
+        dense_bucket = 0 if dense <= 1 else dense
         dd_raw = e.get("max_dd")
         dd = float(dd_raw) if dd_raw is not None else 1e9
         slip_raw = e.get("b4_slip5_pnl")
@@ -304,7 +308,16 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
         pnl_raw = e.get("full_pnl")
         pnl = float(pnl_raw) if pnl_raw is not None else -1e9
         vrank = _slip_verdict_rank(e.get("b4_slip5_verdict"))
-        return (-int(bool(e.get("capital_path_ok"))), dense, vrank, dd, -slip, -pnl)
+        # keep raw dens as micro-tie after dd so true dens0 still edges dens1 at equal dd
+        return (
+            -int(bool(e.get("capital_path_ok"))),
+            dense_bucket,
+            vrank,
+            dd,
+            dense,
+            -slip,
+            -pnl,
+        )
 
     multi = [
         e
@@ -397,7 +410,7 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
             "Proxy BS sims + B3/B4 only. Not TOP_HYP. Multi-leg not MCP-live. "
             "Stress rotation ledger drives shortlist; quality_cycle mixes leaders+fresh. "
             "Capital-path rejects: soft NULL@~0, soft-loss/neg@5%, non-pos full PnL. "
-            "Rank dens → slip verdict (SHIP>NEEDS>NULL) → dd → slip pnl. "
+            "Rank dens_bucket(0-1 tied) → slip verdict (SHIP>NEEDS>NULL) → dd → raw dens → slip pnl. "
             "Multi-leg shortlist caps ≤3 per symbol so non-leader names can surface."
         ),
         "agentic": prev.get("agentic")
