@@ -6,6 +6,10 @@
 #   just trader-run-now campaign     # paper campaign only (faster)
 #   just trader-run-now quality      # quality residual only
 #   just trader-run-now status       # funnel only (no run)
+#   just trader-run-now first-live   # rebuild first-live single-leg lane
+#   just trader-run-now shadow       # shadow propose→risk→log rehearsal
+#   just trader-run-now multi-reprove  # multi-symbol re-prove w/ shortlist symbols
+#   just trader-run-now progress     # A+B+C progress pack (first-live + multi + shadow)
 set -euo pipefail
 
 REPO="${TRADER_REPO:-/Users/jarvis/dev/trader}"
@@ -41,13 +45,39 @@ case "$MODE" in
     bash "$REPO/scripts/trader_quality_worker.sh" ensure
     bash "$REPO/scripts/trader_quality_worker.sh" status
     ;;
+  first-live|first_live|fl)
+    echo "→ first-live single-leg capital-fit lane…"
+    "$PY" "$REPO/scripts/trader_first_live_lane.py"
+    ;;
+  shadow|sh)
+    echo "→ shadow rehearsal (propose→risk→log only)…"
+    # Prefer real scout; fall back to stub if scout empty / errors
+    if ! "$PY" "$REPO/scripts/trader_shadow_rehearsal.py" --ticks 1; then
+      echo "real scout path failed — retrying with --stub"
+      "$PY" "$REPO/scripts/trader_shadow_rehearsal.py" --ticks 1 --stub
+    fi
+    ;;
+  multi-reprove|multi|ms)
+    echo "→ multi-symbol re-prove (quality shortlist symbols + densify DNA)…"
+    "$PY" "$REPO/scripts/trader_multi_symbol_reprove.py" --from-shortlist
+    ;;
+  progress|pack|p)
+    echo "→ progress pack: first-live → multi-reprove → shadow…"
+    "$PY" "$REPO/scripts/trader_first_live_lane.py"
+    echo
+    "$PY" "$REPO/scripts/trader_multi_symbol_reprove.py" --from-shortlist
+    echo
+    if ! "$PY" "$REPO/scripts/trader_shadow_rehearsal.py" --ticks 1; then
+      "$PY" "$REPO/scripts/trader_shadow_rehearsal.py" --ticks 1 --stub
+    fi
+    ;;
   tick|auto|full|f|"")
     echo "→ autonomous tick (handoff → MoA or quality residual)…"
     bash "$REPO/scripts/trader_autonomous_tick.sh"
     ;;
   *)
     echo "unknown mode: $MODE" >&2
-    echo "use: tick | campaign | quality | status" >&2
+    echo "use: tick | campaign | quality | status | first-live | shadow | multi-reprove | progress" >&2
     exit 2
     ;;
 esac

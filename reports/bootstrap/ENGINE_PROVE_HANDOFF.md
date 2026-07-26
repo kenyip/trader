@@ -1,6 +1,7 @@
 # Engine prove → Hermes Trader handoff
 
 **Generated:** 2026-07-19  
+**Updated:** 2026-07-26 — progress pack tools (first-live / multi-reprove shortlist / shadow)  
 **Status:** Engine plumbing proven; starter pack is **thin L0 research DNA** — Trader owns ops, not self-arm live.
 
 ## Prove results (this run)
@@ -42,6 +43,11 @@ Specs live under `.cache/platform/spine/discovery/…` (local). Registry seats a
 ## Operator surface (Trader defaults)
 
 ```bash
+just trader-status
+just trader-first-live-lane               # MCP single-leg capital-fit board
+just trader-multi-symbol-reprove --from-shortlist
+just trader-shadow-rehearsal              # deliberate shadow (stub=PARTIAL only)
+just trader-run-now progress              # one-shot progress pack + status
 just trader-progress
 just trader-bootstrap --candidates-only   # or full re-prove
 just trader-path-stress --spec <spec.json> --symbols SYM
@@ -51,6 +57,17 @@ just trader-paper-handoff --plumbing-smoke
 just trader-promote-paper --top 5
 # CPU discovery (not the primary wake): just trader-discover
 ```
+
+### Dual lane (2026-07-26)
+
+| Surface | Role |
+|---|---|
+| `QUALITY_SHORTLIST.json` | Research/paper multi-leg stress survivors |
+| `FIRST_LIVE_LANE.json` | RH MCP placeable single-leg fit_3k seats |
+| `MULTI_SYMBOL_REPROVE.json` | Pack-grade honesty (`--from-shortlist` includes AAL/BAC) |
+| `.cache/platform/shadow/LATEST.json` | Deliberate shadow window |
+
+Do **not** promote multi-leg shortlist leaders as first arm DNA while MCP place is single-leg only.
 
 **Primary path:** StrategySpec → evaluate_proxy → living seat → path stress → watch → RiskGovernor → paper.  
 **Secondary:** StrategyDNA / scout — only if spine has no seats.

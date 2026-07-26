@@ -34,6 +34,7 @@ _CACHE = _REPO / ".cache" / "platform"
 _BOOT = _REPO / "reports" / "bootstrap"
 _NEXT = _BOOT / "NEXT_SEED.json"
 _SHORTLIST = _BOOT / "QUALITY_SHORTLIST.json"
+_FIRST_LIVE = _BOOT / "FIRST_LIVE_LANE.json"
 _TICK = _CACHE / "autonomous" / "tick_LATEST.json"
 _CAMPAIGN = _CACHE / "paper_campaign" / "LATEST.json"
 _QUALITY = _CACHE / "quality_residual" / "LATEST.json"
@@ -143,6 +144,7 @@ class Funnel:
     paper: dict[str, Any] = field(default_factory=dict)
     activity: dict[str, Any] = field(default_factory=dict)
     shortlist_top: list[dict[str, Any]] = field(default_factory=list)
+    first_live_lane: dict[str, Any] = field(default_factory=dict)
     blockers: list[str] = field(default_factory=list)
     path_to_live: list[str] = field(default_factory=list)
     why_overall_stuck: str = ""
@@ -320,11 +322,48 @@ def _shadow_stats() -> dict[str, Any]:
 
 def _classify_structure(structure: str) -> str:
     s = (structure or "").lower()
-    if s in ("cash_secured_put", "csp", "long_put", "long_call", "wheel", "wheel_assignment"):
+    if s in (
+        "cash_secured_put",
+        "csp",
+        "long_put",
+        "long_call",
+        "wheel",
+        "wheel_assignment",
+        "short_put_credit",
+        "short_call_credit",
+        "regime_short_premium",
+        "short_dte_aggressive",
+        "long_dte_conservative",
+    ):
         return "single_leg"
     if s in ("put_credit_spread", "call_credit_spread", "iron_condor", "iron_butterfly", "calendar"):
         return "multi_leg"
     return "other"
+
+
+def _load_first_live_lane() -> dict[str, Any]:
+    """Dedicated first-live single-leg ranker report (not multi-leg research shortlist)."""
+    data = _load_json(_FIRST_LIVE) or {}
+    if not data:
+        return {"leader": None, "shortlist": [], "n_eligible": 0}
+    leader = data.get("leader")
+    # Reject oversized leaders that slipped through older artifacts
+    if leader:
+        bp = leader.get("csp_bp_proxy")
+        try:
+            if bp is not None and float(bp) > 3000:
+                leader = None
+        except (TypeError, ValueError):
+            pass
+        if leader and leader.get("eligible") is False:
+            leader = None
+    return {
+        "leader": leader,
+        "shortlist": list(data.get("shortlist") or [])[:8],
+        "n_eligible": int(data.get("n_eligible") or 0),
+        "generated_at": data.get("generated_at"),
+        "honesty": data.get("honesty"),
+    }
 
 
 def collect() -> Funnel:
@@ -364,6 +403,7 @@ def collect() -> Funnel:
 
     next_seed = _load_json(_NEXT) or {}
     shortlist = _load_json(_SHORTLIST) or {}
+    first_live_lane = _load_first_live_lane()
     tick = _load_json(_TICK) or {}
     campaign = _load_json(_CAMPAIGN) or {}
     quality = _load_json(_QUALITY) or {}
@@ -438,15 +478,41 @@ def collect() -> Funnel:
     strategy: list[Check] = []
     # Prefer stressed multi-leg research leader for paper edge view
     leader = None
-    first_live = None  # MCP single-leg candidate
+    first_live = None  # MCP single-leg capital-fit candidate
+    # Primary source: dedicated first-live lane ranker
+    fl_leader = first_live_lane.get("leader")
+    if fl_leader and fl_leader.get("symbol"):
+        first_live = {
+            "hyp_id": fl_leader.get("hyp_id"),
+            "symbol": fl_leader.get("symbol"),
+            "structure": fl_leader.get("structure"),
+            "lane": "first_live_single_leg",
+            "caveat": fl_leader.get("caveat") or fl_leader.get("why"),
+            "why": fl_leader.get("why"),
+            "csp_bp_proxy": fl_leader.get("csp_bp_proxy"),
+            "capital_fit": fl_leader.get("capital_fit"),
+            "n_trades": fl_leader.get("n_trades"),
+            "verdict": fl_leader.get("verdict"),
+        }
     for r in rows:
         struct = str(r.get("structure") or "")
         lane = str(r.get("lane") or "")
         if first_live is None and (
             "mcp" in lane.lower()
+            or "first_live" in lane.lower()
             or _classify_structure(struct) == "single_leg"
         ):
-            first_live = r
+            # Only accept single-leg rows that look capital-fit (no NFLX-scale toys)
+            ml = r.get("max_loss_usd_approx") or r.get("max_loss_usd")
+            try:
+                ml_f = float(ml) if ml is not None else None
+            except (TypeError, ValueError):
+                ml_f = None
+            # CSP collateral proxy not on shortlist; reject multi-leg as first-live
+            if _classify_structure(struct) == "single_leg":
+                first_live = r
+            elif ml_f is not None and ml_f > 3000:
+                pass
         if leader is None and (
             r.get("stress_priority")
             or r.get("b3_hold") is True
@@ -640,12 +706,34 @@ def collect() -> Funnel:
     edge_status = "PASS" if pack else ("PARTIAL" if edge_ok else "FAIL")
     edge_summary = b2_detail
     if first_live:
-        caveat = (first_live.get("caveat") or first_live.get("why") or "")[:100]
+        bp = first_live.get("csp_bp_proxy")
+        fit = first_live.get("capital_fit")
+        n_tr = first_live.get("n_trades")
+        verd = first_live.get("verdict")
         edge_first = f"{fl_sym} {fl_struct}"
-        if caveat:
-            edge_first += f" — {caveat}"
+        bits = []
+        if verd:
+            bits.append(str(verd))
+        if n_tr is not None:
+            bits.append(f"n={n_tr}")
+        if fit:
+            bits.append(str(fit))
+        if bp is not None:
+            try:
+                bits.append(f"csp_bp≈${float(bp):.0f}")
+            except (TypeError, ValueError):
+                pass
+        if bits:
+            edge_first += " — " + ", ".join(bits)
+        else:
+            caveat = (first_live.get("caveat") or first_live.get("why") or "")[:100]
+            if caveat:
+                edge_first += f" — {caveat}"
     else:
-        edge_first = "no MCP single-leg candidate on shortlist yet"
+        edge_first = (
+            "no capital-fit single-leg seat yet "
+            f"(run just trader-first-live-lane; eligible={first_live_lane.get('n_eligible', 0)})"
+        )
 
     robot_bits = []
     robot_pts = 0.0
@@ -683,6 +771,7 @@ def collect() -> Funnel:
             "summary": edge_summary,
             "paper_research_leader": lid,
             "first_live_candidate": edge_first,
+            "first_live_eligible_n": int(first_live_lane.get("n_eligible") or 0),
             "stressed_count": len(stressed),
             "pack_grade": pack,
         },
@@ -742,10 +831,22 @@ def collect() -> Funnel:
     if not pack:
         blockers.append("No pack-grade edge yet (sims still filtering)")
     if first_live is None:
-        blockers.append("No MCP single-leg first-live candidate named")
+        blockers.append(
+            "No capital-fit single-leg first-live seat "
+            "(just trader-first-live-lane)"
+        )
     elif first_live is not None:
-        cav = str(first_live.get("caveat") or "")
-        if "oversized" in cav.lower() or ">$500" in cav or "BP" in cav:
+        cav = str(first_live.get("caveat") or first_live.get("why") or "")
+        bp = first_live.get("csp_bp_proxy")
+        try:
+            bp_f = float(bp) if bp is not None else None
+        except (TypeError, ValueError):
+            bp_f = None
+        if bp_f is not None and bp_f > 3000:
+            blockers.append(
+                f"First-live CSP sizing: {fl_sym} csp_bp≈${bp_f:.0f} oversized for $3k sleeve"
+            )
+        elif "oversized" in cav.lower():
             blockers.append(f"First-live CSP sizing: {cav[:120]}")
     if b6_status != "PASS":
         blockers.append(f"Paper ops sample {session_days}/3 sessions (robot check, not edge proof)")
@@ -843,6 +944,12 @@ def collect() -> Funnel:
         paper=paper,
         activity=activity,
         shortlist_top=top,
+        first_live_lane={
+            "n_eligible": first_live_lane.get("n_eligible"),
+            "generated_at": first_live_lane.get("generated_at"),
+            "leader": first_live,
+            "shortlist": first_live_lane.get("shortlist") or [],
+        },
         blockers=blockers,
         path_to_live=path,
         why_overall_stuck=why_stuck,
@@ -899,6 +1006,9 @@ def format_text(f: Funnel) -> str:
     lines.append(f"   {_st_mark(str(edge.get('status')))} {edge.get('summary')}")
     lines.append(f"   research leader: {edge.get('paper_research_leader')}")
     lines.append(f"   first-live lane: {edge.get('first_live_candidate')}")
+    fl_n = edge.get("first_live_eligible_n")
+    if fl_n is not None:
+        lines.append(f"   first-live seats eligible: {fl_n}  (just trader-first-live-lane)")
     lines.append("")
 
     lines.append("2) ROBOT — machine check (paper + shadow)")
@@ -943,7 +1053,7 @@ def format_text(f: Funnel) -> str:
         lines.append(f"   note: {f.why_overall_stuck}")
     lines.append("")
 
-    lines.append("TOP CANDIDATES")
+    lines.append("TOP CANDIDATES (research multi-leg)")
     if not f.shortlist_top:
         lines.append("   (empty)")
     for r in f.shortlist_top[:6]:
@@ -952,6 +1062,23 @@ def format_text(f: Funnel) -> str:
         lines.append(
             f"  {sp} {r.get('symbol')} {r.get('structure')}  "
             f"[{r.get('lane') or '?'} · {place}]"
+        )
+    lines.append("FIRST-LIVE SEATS (single-leg capital-fit)")
+    fl_seats = (f.first_live_lane or {}).get("shortlist") or []
+    if not fl_seats:
+        lines.append("   (none — just trader-first-live-lane)")
+    for i, r in enumerate(fl_seats[:5]):
+        sp = "*" if i == 0 else " "
+        bp = r.get("csp_bp_proxy")
+        bp_s = ""
+        if bp is not None:
+            try:
+                bp_s = f" csp_bp≈${float(bp):.0f}"
+            except (TypeError, ValueError):
+                bp_s = ""
+        lines.append(
+            f"  {sp} {r.get('symbol')} {r.get('structure')}  "
+            f"[{r.get('verdict')} n={r.get('n_trades')}{bp_s}]"
         )
     lines.append("")
 
@@ -966,9 +1093,12 @@ def format_text(f: Funnel) -> str:
     lines.append("")
 
     lines.append("COMMANDS")
-    lines.append("   just trader-status           # this view")
-    lines.append("   just trader-status --json    # full detail / legacy A-B-C")
-    lines.append("   just trader-run-now          # nudge continuum + status")
+    lines.append("   just trader-status              # this view")
+    lines.append("   just trader-status --json       # full detail / legacy A-B-C")
+    lines.append("   just trader-first-live-lane     # rebuild single-leg capital-fit seats")
+    lines.append("   just trader-multi-symbol-reprove --from-shortlist")
+    lines.append("   just trader-shadow-rehearsal    # propose→risk→log sample")
+    lines.append("   just trader-run-now progress    # run all three + status")
     lines.append("")
     lines.append("WORDS")
     for k in ("EDGE", "ROBOT", "ARM", "paper", "shadow"):

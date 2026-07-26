@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "Weekend/RTH: mark/manage open BAC+PLTR paper; stand-aside new if book full. Stress queue may be empty while toxic PLTR/NFLX CCS blocked — not 'no edge'; prefer AAL/F/BAC family evolve.",
+    "hint": "RTH: mark/manage open BAC+PLTR paper; prefer closes when DNA rules fire. Off-hours/coach: just trader-first-live-lane; just trader-multi-symbol-reprove --from-shortlist; just trader-shadow-rehearsal (non-stub when scout works). One-shot: just trader-run-now progress.",
     "open_orders": [
       {
         "max_loss_usd": 162.64,
@@ -19,14 +19,26 @@
         "symbol": "PLTR"
       }
     ],
-    "search_system": {
-      "coach": "2026-07-24T2106",
-      "shortlist_leaders": ["AAL dens1 tight-DD", "BAC dens0", "F dens1"],
-      "toxic_challenge_block": true,
-      "note": "empty stress queue beats toxic B3/B4 burn"
-    }
+    "progress_pack": [
+      "just trader-first-live-lane",
+      "just trader-multi-symbol-reprove --from-shortlist",
+      "just trader-shadow-rehearsal",
+      "just trader-run-now progress"
+    ],
+    "first_live_leader": "SNAP cash_secured_put fit_3k csp_bp~419",
+    "artifacts": [
+      "reports/bootstrap/FIRST_LIVE_LANE.json",
+      "reports/bootstrap/MULTI_SYMBOL_REPROVE.json",
+      ".cache/platform/shadow/LATEST.json",
+      "reports/trader-wakes/LATEST.md"
+    ],
+    "do_not": [
+      "treat multi-leg QUALITY_SHORTLIST as first-live arm DNA",
+      "declare shadow PASS from stub-only ticks",
+      "commit hypotheses.yaml thrash"
+    ]
   },
-  "generated_at": "2026-07-25T04:07:00+00:00",
+  "generated_at": "2026-07-26T05:05:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -36,7 +48,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_coach_20260724T2106",
-  "stamp": "20260724T2106",
+  "source": "progress_pack_20260726",
+  "stamp": "20260726T050500",
   "trading_authority": false
 }

@@ -428,20 +428,111 @@ def multi_symbol_reprove(
     }
 
 
+DEFAULT_QUALITY_SHORTLIST = _REPO / "reports" / "bootstrap" / "QUALITY_SHORTLIST.json"
+DEFAULT_SEED_SPECS = _REPO / "configs" / "strategy_specs"
+
+
+def symbols_from_quality_shortlist(
+    path: str | Path | None = None,
+    *,
+    top_n: int = 12,
+) -> list[str]:
+    """Extract leader symbols from QUALITY_SHORTLIST (AAL/BAC/… research leaders)."""
+    p = Path(path) if path else DEFAULT_QUALITY_SHORTLIST
+    if not p.is_file():
+        return []
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    out: list[str] = []
+    for row in list(data.get("shortlist") or [])[: max(1, int(top_n))]:
+        sym = str(row.get("symbol") or "").strip().upper()
+        if sym and sym not in out:
+            out.append(sym)
+    return out
+
+
+def load_dna_items_for_multi_symbol(
+    *,
+    shortlist: Sequence[Mapping[str, Any]] | None = None,
+    include_seed_specs: bool = False,
+    seed_specs_dir: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    """Bootstrap densify DNA (+ optional frozen seed StrategySpecs) for multi-symbol re-prove."""
+    items: list[dict[str, Any]] = []
+    seen: set[str] = set()
+
+    if shortlist is None:
+        if DEFAULT_BOOTSTRAP_REPORT.is_file():
+            boot = json.loads(DEFAULT_BOOTSTRAP_REPORT.read_text(encoding="utf-8"))
+            shortlist = list(boot.get("shortlist") or [])
+        else:
+            shortlist = []
+
+    for item in shortlist:
+        sp = str(item.get("spec_path") or "")
+        cid = str(item.get("candidate_id") or sp)
+        if cid in seen:
+            continue
+        seen.add(cid)
+        items.append(dict(item))
+
+    if include_seed_specs:
+        sdir = Path(seed_specs_dir) if seed_specs_dir else DEFAULT_SEED_SPECS
+        if sdir.is_dir():
+            for path in sorted(sdir.glob("*.json")):
+                try:
+                    raw = json.loads(path.read_text(encoding="utf-8"))
+                except Exception:
+                    continue
+                cid = str(raw.get("candidate_id") or path.stem)
+                if cid in seen:
+                    continue
+                seen.add(cid)
+                items.append(
+                    {
+                        "candidate_id": cid,
+                        "spec_path": str(path.resolve()),
+                        "symbols": list(raw.get("symbols") or []),
+                        "symbols_proved": [],
+                        "source": "seed_spec",
+                    }
+                )
+    return items
+
+
 def run_multi_symbol_pack(
     *,
     shortlist: Sequence[Mapping[str, Any]] | None = None,
     symbols: Sequence[str] | None = None,
     report_path: str | Path | None = None,
     evaluate_fn: Any = None,
+    include_seed_specs: bool = False,
+    from_quality_shortlist: bool = False,
+    quality_shortlist_path: str | Path | None = None,
+    quality_top_n: int = 12,
 ) -> dict[str, Any]:
-    """Multi-symbol re-prove each bootstrap shortlist DNA."""
-    if shortlist is None:
-        boot = json.loads(DEFAULT_BOOTSTRAP_REPORT.read_text(encoding="utf-8"))
-        shortlist = list(boot.get("shortlist") or [])
-    book = list(symbols or DEFAULT_MULTI_SYMBOL_BOOK)
+    """Multi-symbol re-prove densify DNA (+ optional seeds) across a symbol book.
+
+    When ``from_quality_shortlist`` is set, leader symbols from QUALITY_SHORTLIST
+    (e.g. AAL/BAC densify research leaders) are prepended to the multi-symbol book
+    so single-name luck is stress-tested on the names the continuum actually ranks.
+    """
+    items = load_dna_items_for_multi_symbol(
+        shortlist=shortlist,
+        include_seed_specs=include_seed_specs,
+    )
+    book = [str(s).upper() for s in (symbols or DEFAULT_MULTI_SYMBOL_BOOK) if str(s).strip()]
+    quality_syms: list[str] = []
+    if from_quality_shortlist:
+        quality_syms = symbols_from_quality_shortlist(
+            quality_shortlist_path, top_n=quality_top_n
+        )
+        book = list(dict.fromkeys(quality_syms + book))
+
     rows: list[dict[str, Any]] = []
-    for item in shortlist:
+    for item in items:
         sp = item.get("spec_path")
         if not sp or not Path(str(sp)).exists():
             rows.append(
@@ -453,7 +544,11 @@ def run_multi_symbol_pack(
             )
             continue
         # Include original symbol first
-        orig = [str(s).upper() for s in (item.get("symbols_proved") or item.get("symbols") or [])]
+        orig = [
+            str(s).upper()
+            for s in (item.get("symbols_proved") or item.get("symbols") or [])
+            if str(s).strip()
+        ]
         test_syms = list(dict.fromkeys(orig + book))
         rows.append(
             multi_symbol_reprove(
@@ -468,10 +563,18 @@ def run_multi_symbol_pack(
         "n_dna": len(rows),
         "n_quality_pass": sum(1 for r in rows if r.get("quality_pass")),
         "n_multi_f2": sum(1 for r in rows if r.get("multi_symbol_f2")),
+        "book_symbols": book,
+        "quality_shortlist_symbols": quality_syms,
+        "from_quality_shortlist": bool(from_quality_shortlist),
+        "include_seed_specs": bool(include_seed_specs),
         "results": rows,
         "trading_authority": False,
         "live_authority": False,
-        "honesty": "Multi-symbol densify DNA stress — single-name F2 alone is not pack-grade.",
+        "honesty": (
+            "Multi-symbol densify DNA stress — single-name F2 alone is not pack-grade. "
+            "Quality-shortlist symbols expand the book so research leaders (AAL/BAC/…) "
+            "are included in the re-prove, not only default core names."
+        ),
     }
     path = write_bootstrap_report(payload, report_path or DEFAULT_MULTI_SYMBOL_REPORT)
     payload["report_path"] = str(path)

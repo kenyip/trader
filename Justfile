@@ -423,6 +423,10 @@ trader-status *ARGS:
 #   just trader-run-now campaign     # paper campaign only (faster)
 #   just trader-run-now quality      # one parallel quality cycle
 #   just trader-run-now status       # funnel only
+#   just trader-run-now first-live   # rebuild first-live single-leg lane
+#   just trader-run-now shadow       # shadow propose→risk→log
+#   just trader-run-now multi-reprove
+#   just trader-run-now progress     # first-live + multi-reprove + shadow
 trader-run-now *ARGS:
     bash scripts/trader_run_now.sh {{ARGS}}
 
@@ -514,8 +518,22 @@ trader-paper-loop *ARGS:
 # Multi-symbol re-prove densify DNA (kill single-name luck)
 #   just trader-multi-symbol-reprove
 #   just trader-multi-symbol-reprove --symbols BAC,KO,IWM,AMZN
+#   just trader-multi-symbol-reprove --from-shortlist --include-seed-specs
 trader-multi-symbol-reprove *ARGS:
     {{py}} scripts/trader_multi_symbol_reprove.py {{ARGS}}
+
+# First-live lane: RH-placeable single-leg seats that fit $3k (not multi-leg research)
+#   just trader-first-live-lane
+#   just trader-first-live-lane -- --min-trades 12 --top 8
+trader-first-live-lane *ARGS:
+    {{py}} scripts/trader_first_live_lane.py {{ARGS}}
+
+# Shadow rehearsal: propose → risk → log only (no paper mutate, no live)
+#   just trader-shadow-rehearsal
+#   just trader-shadow-rehearsal -- --stub --ticks 1
+#   just trader-shadow-rehearsal -- --symbols TSLL SMCI BAC
+trader-shadow-rehearsal *ARGS:
+    {{py}} scripts/trader_shadow_rehearsal.py {{ARGS}}
 
 # Paper handoff (dry-run default; plumbing-smoke forces one ledger order)
 #   just trader-paper-handoff

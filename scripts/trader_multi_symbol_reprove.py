@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Multi-symbol re-prove densify DNA (kill single-name luck)."""
+"""Multi-symbol re-prove densify DNA (kill single-name luck).
+
+Default: bootstrap densify shortlist × core multi-symbol book.
+With --from-shortlist: prepend QUALITY_SHORTLIST leader symbols (AAL/BAC/…).
+With --include-seed-specs: also re-prove configs/strategy_specs/*.json.
+"""
 
 from __future__ import annotations
 
@@ -22,19 +27,56 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Multi-symbol dual-cost re-prove")
     p.add_argument(
         "--symbols",
-        default=",".join(DEFAULT_MULTI_SYMBOL_BOOK),
-        help="Comma-separated symbols to test each DNA on",
+        default=None,
+        help="Comma-separated symbols to test each DNA on (default: core book)",
+    )
+    p.add_argument(
+        "--from-shortlist",
+        action="store_true",
+        help="Prepend QUALITY_SHORTLIST leader symbols (AAL/BAC/…) to the book",
+    )
+    p.add_argument(
+        "--quality-shortlist",
+        default=None,
+        help="Path to QUALITY_SHORTLIST.json",
+    )
+    p.add_argument(
+        "--quality-top",
+        type=int,
+        default=12,
+        help="How many shortlist rows to take symbols from",
+    )
+    p.add_argument(
+        "--include-seed-specs",
+        action="store_true",
+        help="Also re-prove configs/strategy_specs/*.json DNA",
     )
     p.add_argument("--report", default=None)
     args = p.parse_args(argv)
-    symbols = [s.strip().upper() for s in args.symbols.split(",") if s.strip()]
-    report = run_multi_symbol_pack(symbols=symbols, report_path=args.report)
+
+    if args.symbols:
+        symbols = [s.strip().upper() for s in args.symbols.split(",") if s.strip()]
+    else:
+        symbols = list(DEFAULT_MULTI_SYMBOL_BOOK)
+
+    report = run_multi_symbol_pack(
+        symbols=symbols,
+        report_path=args.report,
+        include_seed_specs=args.include_seed_specs,
+        from_quality_shortlist=args.from_shortlist,
+        quality_shortlist_path=args.quality_shortlist,
+        quality_top_n=args.quality_top,
+    )
     print(
         json.dumps(
             {
                 "n_dna": report.get("n_dna"),
                 "n_quality_pass": report.get("n_quality_pass"),
                 "n_multi_f2": report.get("n_multi_f2"),
+                "book_symbols": report.get("book_symbols"),
+                "quality_shortlist_symbols": report.get("quality_shortlist_symbols"),
+                "from_quality_shortlist": report.get("from_quality_shortlist"),
+                "include_seed_specs": report.get("include_seed_specs"),
                 "report_path": report.get("report_path"),
                 "results": [
                     {
@@ -57,6 +99,7 @@ def main(argv: list[str] | None = None) -> int:
                     for r in (report.get("results") or [])
                 ],
                 "honesty": report.get("honesty"),
+                "live_authority": False,
             },
             indent=2,
         )

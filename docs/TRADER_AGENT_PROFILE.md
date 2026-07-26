@@ -18,7 +18,12 @@ Dedicated **self-evolving** Hermes profile for Ken's research → paper → shad
 Default instruments (agent may choose):
 
 ```bash
+just trader-status
 just trader-progress
+just trader-first-live-lane          # MCP single-leg capital-fit board
+just trader-multi-symbol-reprove --from-shortlist
+just trader-shadow-rehearsal         # deliberate shadow (stub=PARTIAL only)
+just trader-run-now progress         # first-live + multi + shadow + status
 just trader-opportunity
 just trader-paper-loop
 just trader-bootstrap
@@ -27,6 +32,8 @@ just trader-paper-handoff
 # optional: just trader-discover   # Wave A only — not dense bag
 just desk-brief                   # Desk A personal book
 ```
+
+**Dual lane (2026-07-26):** research multi-leg shortlist ≠ first-live arm path. Read `FIRST_LIVE_LANE.json` + status FIRST-LIVE SEATS for MCP CSP class; keep multi-leg as paper/research until multi-leg place exists.
 ## Current local profile
 
 ```text

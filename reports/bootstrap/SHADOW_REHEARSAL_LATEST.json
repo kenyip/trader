@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-07-26T05:03:14+00:00",
+  "mode": "shadow_rehearsal",
+  "ok": true,
+  "status": "PARTIAL",
+  "window_complete": false,
+  "session_days": 0,
+  "session_day_list": [],
+  "min_session_days_for_pass": 2,
+  "n_history_ticks": 2,
+  "n_live_scout_ticks": 0,
+  "n_stub_ticks": 2,
+  "n_shadow_log_total": 2,
+  "authority_creep": false,
+  "live_authority": false,
+  "trading_authority": false,
+  "stub_used": true,
+  "detail": "stub/plumbing path only (stub_ticks=2, live_ticks=0) \u2014 PASS requires non-stub multi-session propose\u2192risk\u2192log",
+  "honesty": "Shadow only. PASS needs non-stub multi-session window."
+}
