@@ -1,3 +1,4 @@
+- 2026-07-27T0732-rth.md — RTH mid-morning manage: HOLD BAC+PLTR PCS (BAC +$21 OTM $2.40; PLTR −$47 OTM $4.91 vs open $3.33); book 2/2 STAND_ASIDE; campaign 20260727T143201; ken_required=false
 - 2026-07-27T0635-rth.md — RTH Mon open manage: HOLD BAC+PLTR PCS (BAC +$21 OTM $2.61; PLTR −$47 OTM $3.33 vs Fri −$63/$1.27); book 2/2 STAND_ASIDE; campaign 20260727T133218; ken_required=false
 - 2026-07-26T0505-progress-pack.md — Progress pack: first-live lane + multi-reprove --from-shortlist + shadow rehearsal; status dual-lane; skill/MEMORY pin; 20 tests
 - 2026-07-24T2106-continuum-judgment.md — Coach: toxic-family 0-challenge + non-cooled-first + dens_bucket shortlist→AAL/F lead; selector n=0 skips PLTR/NFLX CCS burn; 14 tests
