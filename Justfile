@@ -522,6 +522,12 @@ trader-paper-loop *ARGS:
 trader-multi-symbol-reprove *ARGS:
     {{py}} scripts/trader_multi_symbol_reprove.py {{ARGS}}
 
+# Shortlist capital_path_ok multi-leg DNA × peer symbols (pack-grade honesty)
+#   just trader-shortlist-dna-multi
+#   just trader-shortlist-dna-multi -- --top-n 3 --max-peers 6
+trader-shortlist-dna-multi *ARGS:
+    {{py}} scripts/trader_shortlist_dna_multi_symbol.py {{ARGS}}
+
 # First-live lane: RH-placeable single-leg seats that fit $3k (not multi-leg research)
 #   just trader-first-live-lane
 #   just trader-first-live-lane -- --min-trades 12 --top 8

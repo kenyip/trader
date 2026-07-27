@@ -535,14 +535,20 @@ def collect() -> Funnel:
         if r.get("b3_hold") is True and r.get("b4_cost_hold") is True
     ]
     edge_ok = len(stressed) >= 1
-    # pack-grade: stressed + not thin vanity — we still lack multi-symbol quality_pass
+    # pack-grade: stressed + multi-symbol honesty (densify pack OR shortlist DNA peers)
     pack = False
     multi = _load_json(_BOOT / "MULTI_SYMBOL_REPROVE.json") or {}
-    if multi.get("quality_pass") is True:
+    shortlist_multi = _load_json(_BOOT / "SHORTLIST_DNA_MULTI.json") or {}
+    if multi.get("quality_pass") is True or shortlist_multi.get("quality_pass") is True:
         pack = True
+    pack_src = (
+        "shortlist_dna_multi"
+        if shortlist_multi.get("quality_pass") is True
+        else ("densify_multi" if multi.get("quality_pass") is True else None)
+    )
     b2_status = "PASS" if pack else ("PARTIAL" if edge_ok else "FAIL")
     b2_detail = (
-        "pack-grade quality_pass"
+        f"pack-grade quality_pass via {pack_src}"
         if pack
         else (
             f"{len(stressed)} stressed survivors on shortlist — not pack-grade yet"

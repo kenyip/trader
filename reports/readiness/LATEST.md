@@ -1,8 +1,8 @@
-# Readiness snapshot — 2026-07-27T1231 RTH eval
+# Readiness snapshot — 2026-07-27T1509 continuum judgment
 
 PHASE: PAPER  
-EDGE: searching — AAL/BAC multi-leg shortlist; worker ON; first-live SNAP CSP; quality_pass=0  
-ROBOT: paper open=2 BAC+PLTR **HOLD** (BAC +$17 OTM $2.16; PLTR −$27 OTM $8.96); sessions 4/3; shadow PARTIAL stub  
-ARM: Ken only · live_armed=false · cash≈$500  
+EDGE: **pack-grade** via shortlist_dna_multi (BAC PCS 631f9804 multi-ok AAL+TSLL; AAL CCS 5a213de0 multi-ok NFLX/TSLL/CCL). AAL PCS shortlist leader still 1-peer only. Densify multi remains 0.  
+ROBOT: paper open=2 BAC+PLTR HOLD path; sessions 4/3; shadow PARTIAL stub — next residual non-stub shadow  
+ARM: Ken only · live_armed=false · cash≈$500 · first-live SNAP CSP fit_3k (multi-leg ≠ MCP place)
 
-RTH 1231: book full manage; STAND_ASIDE new; campaign manage_fast_path ok (stamp 20260727T193057).
+Coach 1509: toxic family refuse at evolve apply; shortlist DNA multi wired into quality cycle/residual/run_now; ready-bar ~79.5%.

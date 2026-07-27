@@ -99,6 +99,9 @@ fi
 set +e
 "$PY" "$REPO/scripts/trader_multi_symbol_reprove.py" --from-shortlist >"$OUT_DIR/multi_${STAMP}.json"
 rc_multi=$?
+"$PY" "$REPO/scripts/trader_shortlist_dna_multi_symbol.py" --top-n 3 --max-peers 6 --min-peer-pass 2 >"$OUT_DIR/shortlist_dna_multi_${STAMP}.json"
+rc_sdm=$?
+rc_multi=$(( rc_multi != 0 || rc_sdm != 0 ? 1 : 0 ))
 "$PY" "$REPO/scripts/trader_paper_loop.py" >"$OUT_DIR/paper_${STAMP}.txt" 2>&1
 rc_paper=$?
 # Self-driving paper campaign (learn + manage + optional paper place on shortlist leaders)

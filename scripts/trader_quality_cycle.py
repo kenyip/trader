@@ -352,10 +352,23 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
     # Always expand multi-symbol book with QUALITY_SHORTLIST leaders (AAL/BAC/…)
     # so pack-grade honesty tracks research DNA, not densify seed book only.
     parallel_jobs: dict[str, list[str]] = {
+        # Densify seed multi (AMZN/IWM) expands book with shortlist symbols.
         "multi_symbol": [
             py,
             str(_REPO / "scripts" / "trader_multi_symbol_reprove.py"),
             "--from-shortlist",
+        ],
+        # Research leaders (AAL/BAC PCS DNA) peer-symbol honesty — densify multi alone
+        # left quality_pass=0 forever (2026-07-27 continuum coach).
+        "shortlist_dna_multi": [
+            py,
+            str(_REPO / "scripts" / "trader_shortlist_dna_multi_symbol.py"),
+            "--top-n",
+            "3",
+            "--max-peers",
+            "6",
+            "--min-peer-pass",
+            "2",
         ],
     }
     if hyps:

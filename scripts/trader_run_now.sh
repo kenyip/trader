@@ -58,14 +58,18 @@ case "$MODE" in
     fi
     ;;
   multi-reprove|multi|ms)
-    echo "→ multi-symbol re-prove (quality shortlist symbols + densify DNA)…"
+    echo "→ multi-symbol re-prove (densify DNA + shortlist DNA peers)…"
     "$PY" "$REPO/scripts/trader_multi_symbol_reprove.py" --from-shortlist
+    echo
+    "$PY" "$REPO/scripts/trader_shortlist_dna_multi_symbol.py" --top-n 3 --max-peers 6
     ;;
   progress|pack|p)
-    echo "→ progress pack: first-live → multi-reprove → shadow…"
+    echo "→ progress pack: first-live → multi-reprove → shortlist-dna-multi → shadow…"
     "$PY" "$REPO/scripts/trader_first_live_lane.py"
     echo
     "$PY" "$REPO/scripts/trader_multi_symbol_reprove.py" --from-shortlist
+    echo
+    "$PY" "$REPO/scripts/trader_shortlist_dna_multi_symbol.py" --top-n 3 --max-peers 6
     echo
     if ! "$PY" "$REPO/scripts/trader_shadow_rehearsal.py" --ticks 1; then
       "$PY" "$REPO/scripts/trader_shadow_rehearsal.py" --ticks 1 --stub

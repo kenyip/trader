@@ -43,6 +43,12 @@ from trader_platform.strategy_dna import (
     mutate_dna,
     seed_population,
 )
+from trader_platform.stress_family_policy import (
+    dna_primary_symbol,
+    dna_structure,
+    family_challenge_toxic,
+    load_rotation,
+)
 
 _REPO = Path(__file__).resolve().parents[1]
 _CACHE = _REPO / ".cache" / "platform"
@@ -766,6 +772,8 @@ def apply_results(
     registry: HypothesisRegistry,
     max_create: int = 5,
     ship_only: bool = False,
+    rotation: dict[str, Any] | None = None,
+    skip_toxic_families: bool = True,
 ) -> tuple[list[str], list[str]]:
     """Write SHIP (and optionally strong NEEDS_MORE_DATA) as candidates with DNA.
 
@@ -773,6 +781,11 @@ def apply_results(
     penalties) is discovery noise only: do not create or update registry rows.
     Stress selector already refuses score<=0 for B3/B4; registering them burned
     max_create slots and starved the stress queue (2026-07-24 continuum coach).
+
+    Toxic symbol×structure families (STRESS_ROTATION: many B3/B4 fails, 0 capital_path_ok)
+    also skip *new* registry creates so NFLX/PLTR CCS vanity does not occupy max_create
+    (2026-07-27 continuum coach: evolve still minted toxic CCS while selector blocked).
+    Existing rows may still update evidence.
     """
     created: list[str] = []
     updated: list[str] = []
@@ -780,6 +793,7 @@ def apply_results(
     reg.ensure_seeded()
     store = reg.load()
     by_id = {h.get("id"): h for h in store.get("hypotheses") or []}
+    rot = rotation if rotation is not None else (load_rotation() if skip_toxic_families else {})
 
     def _rank_key(r: SimVerdict) -> tuple[int, float]:
         # SHIP before NEEDS_MORE_DATA/NULL even if raw score is lower.
@@ -790,6 +804,13 @@ def apply_results(
         if r.verdict == "SHIP" and _finite(r.score, default=-1e9) <= 0:
             return False
         return True
+
+    def _is_toxic_family(r: SimVerdict) -> bool:
+        if not skip_toxic_families:
+            return False
+        sym = dna_primary_symbol(r.dna)
+        struct = dna_structure(r.dna)
+        return family_challenge_toxic(sym, struct, rotation=rot)
 
     ranked = sorted(
         [
@@ -817,7 +838,12 @@ def apply_results(
         ]
         ranked.sort(key=_rank_key, reverse=True)
 
-    for r in ranked[:max_create]:
+    # Budget is successful write slots; toxic new-creates skip without consuming budget
+    # so non-toxic DNA still fills max_create (2026-07-27 coach).
+    n_written = 0
+    for r in ranked:
+        if n_written >= max_create:
+            break
         if r.verdict == "REJECT":
             continue
         dna = r.dna
@@ -846,7 +872,11 @@ def apply_results(
                     raw.setdefault("null_results", []).append(note)
             # never auto escalate status here
             updated.append(hid)
+            n_written += 1
         else:
+            # Toxic families: do not mint new hyp rows (updates above still allowed).
+            if _is_toxic_family(r):
+                continue
             # only create on SHIP or NEEDS_MORE_DATA with trades
             if r.verdict not in {"SHIP", "NEEDS_MORE_DATA"} and not (r.n_trades >= 8 and r.score > 50):
                 continue
@@ -866,9 +896,11 @@ def apply_results(
                 )
                 created.append(h.id)
                 by_id[h.id] = {"id": h.id}
+                n_written += 1
             except ValueError:
                 # race/dup
                 updated.append(hid)
+                n_written += 1
 
     # persist updates for existing
     if updated:
