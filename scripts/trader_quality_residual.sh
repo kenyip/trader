@@ -51,11 +51,18 @@ set -e
 
 # Best-effort B3/B4: mix shortlist leaders + unstressed multi-leg SHIPs
 # (see scripts/trader_select_stress_hyps.py — avoids re-stress thrash on 2 leaders only).
+# Successful empty selector = intentional (TTL / toxic / no fresh). Do NOT fall back
+# to stress_priority leaders — that re-burns AAL/BAC every residual (2026-07-27 coach).
 hyps=""
+selector_ok=0
 if [[ -f "$REPO/scripts/trader_select_stress_hyps.py" ]]; then
-  hyps="$("$PY" "$REPO/scripts/trader_select_stress_hyps.py" --limit 6 --n-leaders 2 2>/dev/null || true)"
+  if hyps="$("$PY" "$REPO/scripts/trader_select_stress_hyps.py" --limit 6 --n-leaders 2 2>/dev/null)"; then
+    selector_ok=1
+  else
+    hyps=""
+  fi
 fi
-if [[ -z "${hyps:-}" && -f "$REPO/reports/bootstrap/QUALITY_SHORTLIST.json" ]]; then
+if [[ -z "${hyps:-}" && "$selector_ok" -eq 0 && -f "$REPO/reports/bootstrap/QUALITY_SHORTLIST.json" ]]; then
   SHORTLIST="$REPO/reports/bootstrap/QUALITY_SHORTLIST.json"
   hyps="$("$PY" - "$SHORTLIST" <<'PY'
 import json, sys
@@ -71,6 +78,7 @@ for row in d.get("shortlist") or []:
 print(",".join(ids[:6]))
 PY
 )"
+  echo "stress_selector_failed_fallback_leaders=$hyps"
 fi
 if [[ -n "${hyps:-}" ]]; then
   set +e
@@ -83,10 +91,13 @@ if [[ -n "${hyps:-}" ]]; then
   rc_stress=$(( r1 != 0 || r2 != 0 ? 1 : 0 ))
   set -e
   echo "stress_hyps=$hyps rc_stress=$rc_stress"
+else
+  echo "stress_hyps= (empty queue — skip B3/B4; empty beats leader re-stress)"
+  rc_stress=0
 fi
 
 set +e
-"$PY" "$REPO/scripts/trader_multi_symbol_reprove.py" >"$OUT_DIR/multi_${STAMP}.json"
+"$PY" "$REPO/scripts/trader_multi_symbol_reprove.py" --from-shortlist >"$OUT_DIR/multi_${STAMP}.json"
 rc_multi=$?
 "$PY" "$REPO/scripts/trader_paper_loop.py" >"$OUT_DIR/paper_${STAMP}.txt" 2>&1
 rc_paper=$?

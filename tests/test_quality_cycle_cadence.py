@@ -1,6 +1,7 @@
 """Cadence / sprint helpers for quality_cycle."""
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 
@@ -84,3 +85,101 @@ def test_book_full_skips_learn_tick_predicate():
     assert manage_only(1, 160.0) is False
     assert manage_only(2, 359.0, force_learn=True) is False
     assert manage_only(0, 500.0) is True
+
+
+def test_shortlist_hyps_trusts_empty_selector(tmp_path, monkeypatch):
+    """Empty selector queue must NOT fall back to stress_priority leaders (AAL re-burn)."""
+    import types
+    import importlib.util
+
+    out = tmp_path / "quality_residual"
+    out.mkdir()
+    monkeypatch.setattr(qc, "_OUT", out)
+    monkeypatch.setattr(qc, "_REPO", tmp_path)
+    sel_path = tmp_path / "scripts" / "trader_select_stress_hyps.py"
+    sel_path.parent.mkdir(parents=True)
+    sel_path.write_text("# stub\n", encoding="utf-8")
+
+    def select_stress_hyps(**kwargs):
+        return {
+            "csv": "",
+            "hyp_ids": [],
+            "n": 0,
+            "skipped_fresh_leaders": [
+                "hyp_dna_aal_put_credit_spread_32c7191f",
+                "hyp_dna_aal_put_credit_spread_a337c5ac",
+            ],
+        }
+
+    def fake_spec(name, path, *a, **k):
+        if "trader_select_stress_hyps" in str(name) or "trader_select_stress_hyps" in str(path):
+            spec = types.SimpleNamespace()
+            spec.loader = types.SimpleNamespace(
+                exec_module=lambda mod: setattr(mod, "select_stress_hyps", select_stress_hyps)
+            )
+            return spec
+        raise AssertionError(f"unexpected spec load {name} {path}")
+
+    monkeypatch.setattr(importlib.util, "spec_from_file_location", fake_spec)
+    monkeypatch.setattr(
+        importlib.util, "module_from_spec", lambda spec: types.ModuleType("trader_select_stress_hyps")
+    )
+    shortlist = tmp_path / "QUALITY_SHORTLIST.json"
+    shortlist.write_text(
+        json.dumps(
+            {
+                "shortlist": [
+                    {
+                        "hyp_id": "hyp_dna_aal_put_credit_spread_32c7191f",
+                        "structure": "put_credit_spread",
+                        "stress_priority": True,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(qc, "_SHORTLIST", shortlist)
+
+    csv = qc._shortlist_hyps(limit=6)
+    assert csv == ""
+    receipt = out / "stress_selection_LATEST.json"
+    assert receipt.is_file()
+    data = json.loads(receipt.read_text(encoding="utf-8"))
+    assert data.get("n") == 0
+    assert "hyp_dna_aal_put_credit_spread_32c7191f" in (data.get("skipped_fresh_leaders") or [])
+
+
+def test_shortlist_hyps_returns_selector_csv(tmp_path, monkeypatch):
+    import types
+    import importlib.util
+
+    out = tmp_path / "quality_residual"
+    out.mkdir()
+    monkeypatch.setattr(qc, "_OUT", out)
+    monkeypatch.setattr(qc, "_REPO", tmp_path)
+    sel_path = tmp_path / "scripts" / "trader_select_stress_hyps.py"
+    sel_path.parent.mkdir(parents=True)
+    sel_path.write_text("# stub\n", encoding="utf-8")
+
+    def select_stress_hyps(**kwargs):
+        return {
+            "csv": "hyp_dna_ccl_call_credit_spread_fresh",
+            "hyp_ids": ["hyp_dna_ccl_call_credit_spread_fresh"],
+            "n": 1,
+        }
+
+    def fake_spec(name, path, *a, **k):
+        if "trader_select_stress_hyps" in str(name) or "trader_select_stress_hyps" in str(path):
+            spec = types.SimpleNamespace()
+            spec.loader = types.SimpleNamespace(
+                exec_module=lambda mod: setattr(mod, "select_stress_hyps", select_stress_hyps)
+            )
+            return spec
+        raise AssertionError(f"unexpected spec load {name} {path}")
+
+    monkeypatch.setattr(importlib.util, "spec_from_file_location", fake_spec)
+    monkeypatch.setattr(
+        importlib.util, "module_from_spec", lambda spec: types.ModuleType("trader_select_stress_hyps")
+    )
+    assert qc._shortlist_hyps(limit=6) == "hyp_dna_ccl_call_credit_spread_fresh"

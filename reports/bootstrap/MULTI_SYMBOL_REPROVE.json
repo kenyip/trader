@@ -1,6 +1,9 @@
 {
   "book_symbols": [
+    "AAL",
     "BAC",
+    "NFLX",
+    "TSLL",
     "KO",
     "IWM",
     "AMZN",
@@ -8,8 +11,8 @@
     "QQQ",
     "INTC"
   ],
-  "from_quality_shortlist": false,
-  "generated_at": "2026-07-26T05:08:24+00:00",
+  "from_quality_shortlist": true,
+  "generated_at": "2026-07-27T16:04:53+00:00",
   "honesty": "Multi-symbol densify DNA stress \u2014 single-name F2 alone is not pack-grade. Quality-shortlist symbols expand the book so research leaders (AAL/BAC/\u2026) are included in the re-prove, not only default core names.",
   "include_seed_specs": false,
   "live_authority": false,
@@ -17,7 +20,12 @@
   "n_dna": 2,
   "n_multi_f2": 0,
   "n_quality_pass": 0,
-  "quality_shortlist_symbols": [],
+  "quality_shortlist_symbols": [
+    "AAL",
+    "BAC",
+    "NFLX",
+    "TSLL"
+  ],
   "results": [
     {
       "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0",
@@ -25,7 +33,7 @@
         "AMZN"
       ],
       "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0",
-      "generated_at": "2026-07-26T05:08:19+00:00",
+      "generated_at": "2026-07-27T16:04:51+00:00",
       "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
       "live_authority": false,
       "min_symbols_with_f2": 2,
@@ -50,7 +58,34 @@
           "n_holdout_pass": 0,
           "n_trades_holdout_worst_axis": null,
           "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
           "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "NFLX",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
           "thick_enough": false
         },
         {
@@ -103,7 +138,10 @@
       "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0294_20260719T114455Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0__prove.json",
       "symbols_tested": [
         "AMZN",
+        "AAL",
         "BAC",
+        "NFLX",
+        "TSLL",
         "KO",
         "IWM",
         "AAPL",
@@ -119,7 +157,7 @@
         "IWM"
       ],
       "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4",
-      "generated_at": "2026-07-26T05:08:24+00:00",
+      "generated_at": "2026-07-27T16:04:53+00:00",
       "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
       "live_authority": false,
       "min_symbols_with_f2": 2,
@@ -144,7 +182,34 @@
           "n_holdout_pass": 0,
           "n_trades_holdout_worst_axis": null,
           "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
           "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "NFLX",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
           "thick_enough": false
         },
         {
@@ -197,7 +262,10 @@
       "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0343_20260719T120559Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4__prove.json",
       "symbols_tested": [
         "IWM",
+        "AAL",
         "BAC",
+        "NFLX",
+        "TSLL",
         "KO",
         "AMZN",
         "AAPL",

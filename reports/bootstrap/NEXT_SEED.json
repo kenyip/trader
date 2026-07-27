@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
+    "hint": "RTH: mark/manage paper; stand-aside new (book full). EDGE: empty stress queue skips B3/B4 — do not re-burn AAL leaders. multi --from-shortlist now default in worker.",
     "open_orders": [
       {
         "max_loss_usd": 162.64,
@@ -18,9 +18,14 @@
         "structure": "put_credit_spread",
         "symbol": "PLTR"
       }
-    ]
+    ],
+    "coach_20260727T0906": {
+      "fix": "empty_selector_no_leader_fallback + multi --from-shortlist",
+      "ccl_reject": "hyp_dna_ccl_call_credit_spread_f7cf87ef",
+      "multi_book_includes": ["AAL", "BAC"]
+    }
   },
-  "generated_at": "2026-07-27T15:30:23+00:00",
+  "generated_at": "2026-07-27T16:06:30+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -30,7 +35,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "trader_paper_campaign",
-  "stamp": "20260727T153023",
+  "source": "continuum_judgment_20260727T0906",
+  "stamp": "20260727T0906",
   "trading_authority": false
 }

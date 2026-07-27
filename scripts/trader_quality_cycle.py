@@ -133,8 +133,86 @@ def _due(every: int, cycle_n: int) -> bool:
     return (cycle_n % every) == 0
 
 
+def _persist_stress_selection(res: dict[str, Any]) -> None:
+    """Coach receipt — including empty queue (TTL / toxic / no fresh SHIP)."""
+    try:
+        _OUT.mkdir(parents=True, exist_ok=True)
+        (_OUT / "stress_selection_LATEST.json").write_text(
+            json.dumps(res, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    except Exception:
+        pass
+
+
+def _legacy_shortlist_leader_csv(limit: int) -> str:
+    """Last-resort when selector cannot import/run. Still skips fresh capital_path_ok."""
+    if not _SHORTLIST.is_file():
+        return ""
+    try:
+        d = json.loads(_SHORTLIST.read_text(encoding="utf-8"))
+    except Exception:
+        return ""
+    # Best-effort TTL filter via rotation ledger (same policy as selector).
+    ttl_h = float(os.environ.get("TRADER_QC_LEADER_TTL_HOURS", "24"))
+    skip_fresh: set[str] = set()
+    try:
+        import importlib.util
+
+        selector = _REPO / "scripts" / "trader_select_stress_hyps.py"
+        if selector.is_file() and ttl_h > 0:
+            spec = importlib.util.spec_from_file_location(
+                "trader_select_stress_hyps_ttl", selector
+            )
+            if spec and spec.loader:
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)
+                for row in d.get("shortlist") or []:
+                    hid = row.get("hyp_id") or row.get("id")
+                    if hid and mod._leader_freshly_capital_ok(str(hid), ttl_hours=ttl_h):
+                        skip_fresh.add(str(hid))
+    except Exception:
+        skip_fresh = set()
+
+    ids: list[str] = []
+    for row in d.get("shortlist") or []:
+        hid = row.get("hyp_id") or row.get("id")
+        st = row.get("structure")
+        if not hid:
+            continue
+        hid_s = str(hid)
+        if hid_s in skip_fresh:
+            continue
+        if st in ("put_credit_spread", "call_credit_spread", "iron_condor") and row.get(
+            "stress_priority", True
+        ):
+            ids.append(hid_s)
+        if len(ids) >= limit:
+            break
+    if not ids:
+        for row in d.get("shortlist") or []:
+            hid = row.get("hyp_id") or row.get("id")
+            st = row.get("structure")
+            if not hid:
+                continue
+            hid_s = str(hid)
+            if hid_s in skip_fresh:
+                continue
+            if hid and st in ("put_credit_spread", "call_credit_spread", "iron_condor"):
+                ids.append(hid_s)
+            if len(ids) >= limit:
+                break
+    return ",".join(ids)
+
+
 def _shortlist_hyps(limit: int | None = None) -> str:
-    """Mix shortlist leaders + unstressed multi-leg SHIPs (anti re-stress thrash)."""
+    """Mix shortlist leaders + unstressed multi-leg SHIPs (anti re-stress thrash).
+
+    Successful selector runs are authoritative: an **empty** csv means leaders are
+    TTL-fresh capital_path_ok and/or families are cooled/toxic with no score>0 fresh
+    SHIP. Falling back to shortlist stress_priority leaders in that case re-burns the
+    same AAL/BAC DNA every cycle (2026-07-27 continuum coach).
+    """
     if limit is None:
         limit = int(os.environ.get("TRADER_QC_STRESS_LIMIT", "8"))
     selector = _REPO / "scripts" / "trader_select_stress_hyps.py"
@@ -149,48 +227,19 @@ def _shortlist_hyps(limit: int | None = None) -> str:
                 spec.loader.exec_module(mod)
                 n_leaders = int(os.environ.get("TRADER_QC_STRESS_LEADERS", "2"))
                 res = mod.select_stress_hyps(limit=limit, n_leaders=n_leaders)
-                csv = str(res.get("csv") or "")
-                if csv:
-                    # persist selection receipt for coach wakes
-                    try:
-                        _OUT.mkdir(parents=True, exist_ok=True)
-                        (_OUT / "stress_selection_LATEST.json").write_text(
-                            json.dumps(res, indent=2, sort_keys=True) + "\n",
-                            encoding="utf-8",
-                        )
-                    except Exception:
-                        pass
-                    return csv
-        except Exception:
-            pass
-    # Legacy fallback: shortlist stress_priority multi-leg only
-    if not _SHORTLIST.is_file():
-        return ""
-    try:
-        d = json.loads(_SHORTLIST.read_text(encoding="utf-8"))
-    except Exception:
-        return ""
-    ids: list[str] = []
-    for row in d.get("shortlist") or []:
-        hid = row.get("hyp_id") or row.get("id")
-        st = row.get("structure")
-        if not hid:
-            continue
-        if st in ("put_credit_spread", "call_credit_spread", "iron_condor") and row.get(
-            "stress_priority", True
-        ):
-            ids.append(str(hid))
-        if len(ids) >= limit:
-            break
-    if not ids:
-        for row in d.get("shortlist") or []:
-            hid = row.get("hyp_id") or row.get("id")
-            st = row.get("structure")
-            if hid and st in ("put_credit_spread", "call_credit_spread", "iron_condor"):
-                ids.append(str(hid))
-            if len(ids) >= limit:
-                break
-    return ",".join(ids)
+                _persist_stress_selection(res if isinstance(res, dict) else {"raw": res})
+                # Trust empty queue — empty beats leader re-stress thrash.
+                return str((res or {}).get("csv") or "")
+        except Exception as exc:
+            _persist_stress_selection(
+                {
+                    "error": f"{type(exc).__name__}: {exc}",
+                    "fallback": "legacy_shortlist_leaders_ttl_filtered",
+                    "generated_at": _now(),
+                }
+            )
+    # Selector missing or crashed only — TTL-filter leaders if possible.
+    return _legacy_shortlist_leader_csv(limit)
 
 
 def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
@@ -300,8 +349,14 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
 
     # --- phase 3: parallel prove (+ optional paper_loop) ---
     hyps = _shortlist_hyps()
+    # Always expand multi-symbol book with QUALITY_SHORTLIST leaders (AAL/BAC/…)
+    # so pack-grade honesty tracks research DNA, not densify seed book only.
     parallel_jobs: dict[str, list[str]] = {
-        "multi_symbol": [py, str(_REPO / "scripts" / "trader_multi_symbol_reprove.py")],
+        "multi_symbol": [
+            py,
+            str(_REPO / "scripts" / "trader_multi_symbol_reprove.py"),
+            "--from-shortlist",
+        ],
     }
     if hyps:
         parallel_jobs["regime_stress"] = [
