@@ -1,3 +1,4 @@
+- [2026-07-27T0931-rth](2026-07-27T0931-rth.md) — RTH midday manage: HOLD BAC+PLTR PCS (BAC +$18 OTM $2.24; PLTR −$30 OTM $7.70); book 2/2 STAND_ASIDE; campaign 20260727T163058; ken_required=false
 - [2026-07-27T0906-continuum-judgment](2026-07-27T0906-continuum-judgment.md) — coach: empty selector no AAL re-burn; multi --from-shortlist; paper HOLD BAC/PLTR
 - 2026-07-27T0831-rth.md — RTH late-morning manage: HOLD BAC+PLTR PCS (BAC +$18 OTM $2.36; PLTR -$30 OTM $7.22 improved vs mid -$47/$4.91); book 2/2 STAND_ASIDE; campaign 20260727T153023; ken_required=false
 - 2026-07-27T0732-rth.md — RTH mid-morning manage: HOLD BAC+PLTR PCS (BAC +$21 OTM $2.40; PLTR −$47 OTM $4.91 vs open $3.33); book 2/2 STAND_ASIDE; campaign 20260727T143201; ken_required=false

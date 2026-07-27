@@ -1,6 +1,11 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; stand-aside new (book full). EDGE: empty stress queue skips B3/B4 — do not re-burn AAL leaders. multi --from-shortlist now default in worker.",
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
+    "marks_et": "2026-07-27T12:31",
+    "mtm": {
+      "BAC": {"order_id": "paper_2f78815a0614", "mtm_usd": 17.9, "short_otm": 2.24, "decision": "HOLD"},
+      "PLTR": {"order_id": "paper_c80aaa1cab46", "mtm_usd": -30.3, "short_otm": 7.70, "decision": "HOLD"}
+    },
     "open_orders": [
       {
         "max_loss_usd": 162.64,
@@ -19,13 +24,10 @@
         "symbol": "PLTR"
       }
     ],
-    "coach_20260727T0906": {
-      "fix": "empty_selector_no_leader_fallback + multi --from-shortlist",
-      "ccl_reject": "hyp_dna_ccl_call_credit_spread_f7cf87ef",
-      "multi_book_includes": ["AAL", "BAC"]
-    }
+    "stand_aside_new": true,
+    "reason": "book_full_2_of_2 concurrent; open_risk 359.18 <= 500"
   },
-  "generated_at": "2026-07-27T16:06:30+00:00",
+  "generated_at": "2026-07-27T16:31:30+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -35,7 +37,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_20260727T0906",
-  "stamp": "20260727T0906",
+  "source": "trader_rth_eval_20260727T0931",
+  "stamp": "20260727T0931",
   "trading_authority": false
 }
