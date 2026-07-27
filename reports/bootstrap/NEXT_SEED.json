@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage open BAC+PLTR paper; prefer closes when DNA rules fire. Off-hours/coach: just trader-first-live-lane; just trader-multi-symbol-reprove --from-shortlist; just trader-shadow-rehearsal (non-stub when scout works). One-shot: just trader-run-now progress.",
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
     "open_orders": [
       {
         "max_loss_usd": 162.64,
@@ -19,26 +19,14 @@
         "symbol": "PLTR"
       }
     ],
-    "progress_pack": [
-      "just trader-first-live-lane",
-      "just trader-multi-symbol-reprove --from-shortlist",
-      "just trader-shadow-rehearsal",
-      "just trader-run-now progress"
-    ],
-    "first_live_leader": "SNAP cash_secured_put fit_3k csp_bp~419",
-    "artifacts": [
-      "reports/bootstrap/FIRST_LIVE_LANE.json",
-      "reports/bootstrap/MULTI_SYMBOL_REPROVE.json",
-      ".cache/platform/shadow/LATEST.json",
-      "reports/trader-wakes/LATEST.md"
-    ],
-    "do_not": [
-      "treat multi-leg QUALITY_SHORTLIST as first-live arm DNA",
-      "declare shadow PASS from stub-only ticks",
-      "commit hypotheses.yaml thrash"
-    ]
+    "rth_marks_et": "2026-07-27T09:35",
+    "decisions": {
+      "BAC": "HOLD",
+      "PLTR": "HOLD",
+      "new": "STAND_ASIDE_book_full"
+    }
   },
-  "generated_at": "2026-07-26T05:05:00+00:00",
+  "generated_at": "2026-07-27T13:36:58+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -48,7 +36,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "progress_pack_20260726",
-  "stamp": "20260726T050500",
+  "source": "rth_eval_2026-07-27T0635",
+  "stamp": "20260727T0635",
   "trading_authority": false
 }
