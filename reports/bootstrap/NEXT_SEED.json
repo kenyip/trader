@@ -18,17 +18,9 @@
         "structure": "put_credit_spread",
         "symbol": "PLTR"
       }
-    ],
-    "rth_marks": {
-      "BAC_mtm_usd": 21.4,
-      "BAC_otm_usd": 2.4,
-      "PLTR_mtm_usd": -46.5,
-      "PLTR_otm_usd": 4.91,
-      "decision": "HOLD_BOTH_STAND_ASIDE_NEW",
-      "asof": "2026-07-27T14:32Z"
-    }
+    ]
   },
-  "generated_at": "2026-07-27T14:33:30+00:00",
+  "generated_at": "2026-07-27T15:30:23+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -38,7 +30,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "rth_eval_2026-07-27T0732",
-  "stamp": "20260727T0732",
+  "source": "trader_paper_campaign",
+  "stamp": "20260727T153023",
   "trading_authority": false
 }
