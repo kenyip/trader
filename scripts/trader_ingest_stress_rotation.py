@@ -7,9 +7,9 @@ Never touches live/arm. Does not rewrite hypotheses.yaml (worker owns that).
 Capital-path policy (risk profile, not vanity full-history SHIP $):
   - B3 regime_hold required
   - B4 cost_hold not false
-  - Soft NULL@5% with missing/≤0 slip PnL is NOT capital-path (edge vanished)
-  - Soft-loss at 5% (slip5_pnl < 0 even if cost_hold/NEEDS_MORE_DATA) is NOT capital-path
-  - NEEDS_MORE_DATA @5% is NOT capital-path (require SHIP@5%)
+  - Soft-loss at 5% (slip5_pnl < 0 even if cost_hold) is NOT capital-path
+  - Capital-path requires SHIP@5% — NULL / NEEDS_MORE_DATA / missing / REJECT fail closed
+    (NULL@tiny-positive was a soft cost_hold leak; coach 2026-07-27T2100)
   - Full-history non-positive PnL is NOT capital-path
   - Extreme dense-neg + high window DD rejected vs leader bar
   - Rank: dense_neg → slip verdict quality (SHIP < NEEDS < NULL) → max_dd → slip5 pnl → full pnl
@@ -27,7 +27,7 @@ _REPO = Path(__file__).resolve().parents[1]
 _LEDGER = _REPO / "reports" / "bootstrap" / "STRESS_ROTATION.json"
 _SHORTLIST = _REPO / "reports" / "bootstrap" / "QUALITY_SHORTLIST.json"
 
-# Soft NULL with edge essentially gone (survives_5pct_slip + pnl~0 trap).
+# Kept for rescore message specificity / tests; capital-path no longer admits NULL@eps+.
 _SLIP_EDGE_EPS = 0.01
 
 
@@ -83,18 +83,22 @@ def capital_path_decision(
             False,
             f"B4 slip5 soft_loss/neg pnl={slip5_pnl} v={slip5_v} (not capital-path)",
         )
-    if slip_v == "NULL":
-        if slip5_pnl_f is None or slip5_pnl_f <= _SLIP_EDGE_EPS:
+    # Require SHIP@5% — soft cost_hold + NULL/NEEDS with any non-neg pnl is not edge.
+    # Coach 2026-07-27T2100: 80 ledger rows were capital_path_ok on NULL@tiny+ (TSLL CCS thrash).
+    if slip_v != "SHIP":
+        if slip_v == "NULL" and (slip5_pnl_f is None or slip5_pnl_f <= _SLIP_EDGE_EPS):
             return (
                 False,
                 f"B4 slip5 NULL/~0 pnl={slip5_pnl} (soft cost only; edge vanished)",
             )
-    # NEEDS_MORE_DATA @5% is discovery residue, not capital-path (coach 2026-07-23).
-    # Require SHIP@5% so thin/fragile slip edges cannot inflate capital_path_ok.
-    if slip_v == "NEEDS_MORE_DATA":
+        if slip_v == "NEEDS_MORE_DATA":
+            return (
+                False,
+                f"B4 slip5 NEEDS_MORE_DATA pnl={slip5_pnl} (not SHIP@5%; not capital-path)",
+            )
         return (
             False,
-            f"B4 slip5 NEEDS_MORE_DATA pnl={slip5_pnl} (not SHIP@5%; not capital-path)",
+            f"B4 slip5 {slip5_v or 'missing'} pnl={slip5_pnl} (not SHIP@5%; not capital-path)",
         )
     if dense >= 4 and dd > 200:
         return (

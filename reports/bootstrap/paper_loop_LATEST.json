@@ -1,7 +1,7 @@
 {
   "doctrine": "docs/TRADER_BUILD.md",
   "execute_paper": false,
-  "generated_at": "2026-07-22T05:20:19+00:00",
+  "generated_at": "2026-07-28T03:49:30+00:00",
   "handoff": {
     "intent_max_loss_usd": null,
     "intent_structure": null,
@@ -94,18 +94,18 @@
   "watch": {
     "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
     "desk": "B_agentic",
-    "generated_at": "2026-07-22T05:18:14+00:00",
+    "generated_at": "2026-07-28T03:49:25+00:00",
     "live_authority": false,
     "living_watchable_count": 819,
     "packet": {
-      "bar_time": "2026-07-21 00:00:00",
+      "bar_time": "2026-07-27 00:00:00",
       "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
       "confidence_stage": "f2_holdout",
       "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
       "forecast": "ingested from spine evaluate_proxy F2 survivor",
       "funnel_stage": "F2_UNTOUCHED_HOLDOUT",
       "invalidation": "regime flip, credit/max-loss filters fail, or risk governor deny",
-      "iv_rank": 80.95238095238095,
+      "iv_rank": 76.98412698412699,
       "legs": [],
       "live_authority": false,
       "management": {
@@ -125,7 +125,7 @@
         "sleeve_usd": 3000.0
       },
       "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2_INTC",
-      "spot": 105.44999694824219,
+      "spot": 91.86000061035156,
       "structure": "call_credit_spread",
       "symbol": "INTC",
       "trading_authority": false,

@@ -216,7 +216,9 @@ def test_ingest_marks_rejects_and_ranks_leader(tmp_path: Path, monkeypatch):
     assert ledger["by_hyp_id"]["hyp_c_smci_softnull"]["capital_path_ok"] is False
     assert "NULL/~0" in (ledger["by_hyp_id"]["hyp_c_smci_softnull"].get("reject_reason") or "")
     assert ledger["by_hyp_id"]["hyp_d_smci_negfull"]["capital_path_ok"] is False
-    assert ledger["by_hyp_id"]["hyp_e_nflx_null_pos"]["capital_path_ok"] is True
+    # NULL@positive is not capital-path — require SHIP@5% (coach 2026-07-27T2100)
+    assert ledger["by_hyp_id"]["hyp_e_nflx_null_pos"]["capital_path_ok"] is False
+    assert "not SHIP@5%" in (ledger["by_hyp_id"]["hyp_e_nflx_null_pos"].get("reject_reason") or "")
     assert ledger["by_hyp_id"]["hyp_f_bac_softloss"]["capital_path_ok"] is False
     assert "soft_loss" in (ledger["by_hyp_id"]["hyp_f_bac_softloss"].get("reject_reason") or "")
 
@@ -224,7 +226,7 @@ def test_ingest_marks_rejects_and_ranks_leader(tmp_path: Path, monkeypatch):
     data = json.loads((bootstrap / "QUALITY_SHORTLIST.json").read_text(encoding="utf-8"))
     ids = [r["hyp_id"] for r in data["shortlist"]]
     assert "hyp_a_bac" in ids
-    assert "hyp_e_nflx_null_pos" in ids
+    assert "hyp_e_nflx_null_pos" not in ids
     assert "hyp_b_mu" not in ids
     assert "hyp_c_smci_softnull" not in ids
     assert "hyp_d_smci_negfull" not in ids
@@ -232,14 +234,10 @@ def test_ingest_marks_rejects_and_ranks_leader(tmp_path: Path, monkeypatch):
     assert any(r.get("hyp_id") == "hyp_b_mu" for r in data["rejected_tonight"])
     assert any(r.get("hyp_id") == "hyp_c_smci_softnull" for r in data["rejected_tonight"])
     assert any(r.get("hyp_id") == "hyp_f_bac_softloss" for r in data["rejected_tonight"])
-    # SHIP@5% BAC ranks above NULL@positive NFLX even when NFLX has tighter DD
+    assert any(r.get("hyp_id") == "hyp_e_nflx_null_pos" for r in data["rejected_tonight"])
+    # Only SHIP@5% capital-path survivor leads
     assert data["shortlist"][0]["hyp_id"] == "hyp_a_bac"
     assert data["shortlist"][0]["stress_priority"] is True
-    assert data["shortlist"][0]["hyp_id"] != "hyp_e_nflx_null_pos" or data["shortlist"][0]["hyp_id"] == "hyp_a_bac"
-    # NFLX may remain on shortlist but not ahead of SHIP when dens equal
-    nflx_i = ids.index("hyp_e_nflx_null_pos")
-    bac_i = ids.index("hyp_a_bac")
-    assert bac_i < nflx_i
 
 
 def test_rescore_flips_soft_null_zero(tmp_path: Path, monkeypatch):
@@ -341,6 +339,31 @@ def test_capital_path_requires_ship_at_5pct():
     )
     assert ok is False
     assert "NEEDS_MORE_DATA" in (reason or "")
+
+    # Soft cost_hold + NULL@tiny-positive is NOT capital-path (coach 2026-07-27T2100).
+    ok_null, reason_null = ing.capital_path_decision(
+        b3=True,
+        b4=True,
+        slip5_v="NULL",
+        slip5_pnl=4.14,
+        dense_neg=4,
+        max_dd=174.04,
+        full_pnl=343.48,
+    )
+    assert ok_null is False
+    assert "not SHIP@5%" in (reason_null or "")
+
+    ok_missing, reason_missing = ing.capital_path_decision(
+        b3=True,
+        b4=True,
+        slip5_v=None,
+        slip5_pnl=50.0,
+        dense_neg=0,
+        max_dd=40.0,
+        full_pnl=200.0,
+    )
+    assert ok_missing is False
+    assert "not SHIP@5%" in (reason_missing or "")
 
     ok2, reason2 = ing.capital_path_decision(
         b3=True,

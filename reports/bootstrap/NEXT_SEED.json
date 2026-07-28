@@ -1,51 +1,37 @@
 {
-  "detail": {
-    "hint": "After-hours: worker runs shortlist_dna_multi each cycle; ROBOT next=shadow non-stub. Paper book full → manage only next RTH.",
-    "pack_grade": {
-      "source": "shortlist_dna_multi",
-      "quality_pass": true,
-      "multi_ok": [
-        "hyp_dna_bac_put_credit_spread_631f9804",
-        "hyp_dna_aal_call_credit_spread_5a213de0"
-      ],
-      "aal_pcs_leader_peers": 1,
-      "note": "AAL PCS shortlist leader only 1 peer (BAC); BAC PCS DNA multi-ok on AAL+TSLL; multi-leg still not MCP first-live"
-    },
-    "open_orders": [
-      {
-        "max_loss_usd": 162.64,
-        "order_id": "paper_2f78815a0614",
-        "status": "working",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89",
-        "structure": "put_credit_spread",
-        "symbol": "BAC"
-      },
-      {
-        "max_loss_usd": 196.54,
-        "order_id": "paper_c80aaa1cab46",
-        "status": "working",
-        "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
-        "structure": "put_credit_spread",
-        "symbol": "PLTR"
-      }
-    ],
-    "coach": {
-      "toxic_evolve_block": true,
-      "shortlist_dna_multi_wired": true,
-      "first_live_refreshed": true
-    }
-  },
-  "generated_at": "2026-07-27T22:10:00+00:00",
+  "generated_at": "2026-07-28T04:06:30+00:00",
+  "ken_required": false,
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
     "fund_3k_at_packet"
   ],
-  "ken_required": false,
   "live_authority": false,
+  "trading_authority": false,
   "next_action": "shadow_rehearsal_non_stub_then_manage_paper",
+  "detail": {
+    "hint": "Deliberate non-stub shadow (just trader-shadow-rehearsal); HOLD/manage open BAC+PLTR paper; worker search continues; empty stress queue OK",
+    "open_orders": [
+      {
+        "order_id": "paper_2f78815a0614",
+        "symbol": "BAC",
+        "structure": "put_credit_spread",
+        "status": "working",
+        "max_loss_usd": 162.64,
+        "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89"
+      },
+      {
+        "order_id": "paper_c80aaa1cab46",
+        "symbol": "PLTR",
+        "structure": "put_credit_spread",
+        "status": "working",
+        "max_loss_usd": 196.54,
+        "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8"
+      }
+    ],
+    "coach": "capital_path requires SHIP@5%; flipped_off=80"
+  },
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_20260727T1509",
-  "stamp": "20260727T1509",
-  "trading_authority": false
+  "source": "continuum_judgment_coach",
+  "stamp": "2026-07-27T2106"
 }
