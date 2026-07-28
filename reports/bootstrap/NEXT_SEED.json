@@ -1,37 +1,40 @@
 {
-  "generated_at": "2026-07-28T04:06:30+00:00",
-  "ken_required": false,
+  "detail": {
+    "hint": "RTH: mark/manage remaining BAC PCS; PLTR closed 2026-07-28T1431Z on DNA delta_breach+short ITM (mtm≈-90). Headroom for 1 new capital-fit defined-risk paper only if OPEN_* + guards pass — prefer stand-aside unless quality leader fires cleanly.",
+    "closed_this_session": [
+      {
+        "order_id": "paper_c80aaa1cab46",
+        "symbol": "PLTR",
+        "structure": "put_credit_spread",
+        "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
+        "status": "closed",
+        "exit_reason": "delta_breach",
+        "mtm_usd": -90.29,
+        "max_loss_usd": 196.54
+      }
+    ],
+    "open_orders": [
+      {
+        "max_loss_usd": 162.64,
+        "order_id": "paper_2f78815a0614",
+        "status": "working",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89",
+        "structure": "put_credit_spread",
+        "symbol": "BAC"
+      }
+    ]
+  },
+  "generated_at": "2026-07-28T14:35:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
     "fund_3k_at_packet"
   ],
+  "ken_required": false,
   "live_authority": false,
-  "trading_authority": false,
-  "next_action": "shadow_rehearsal_non_stub_then_manage_paper",
-  "detail": {
-    "hint": "Deliberate non-stub shadow (just trader-shadow-rehearsal); HOLD/manage open BAC+PLTR paper; worker search continues; empty stress queue OK",
-    "open_orders": [
-      {
-        "order_id": "paper_2f78815a0614",
-        "symbol": "BAC",
-        "structure": "put_credit_spread",
-        "status": "working",
-        "max_loss_usd": 162.64,
-        "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89"
-      },
-      {
-        "order_id": "paper_c80aaa1cab46",
-        "symbol": "PLTR",
-        "structure": "put_credit_spread",
-        "status": "working",
-        "max_loss_usd": 196.54,
-        "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8"
-      }
-    ],
-    "coach": "capital_path requires SHIP@5%; flipped_off=80"
-  },
+  "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_coach",
-  "stamp": "2026-07-27T2106"
+  "source": "rth_eval_2026-07-28T0735",
+  "stamp": "20260728T143500",
+  "trading_authority": false
 }

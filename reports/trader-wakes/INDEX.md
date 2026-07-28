@@ -1,3 +1,4 @@
+- [2026-07-28T0735-rth](2026-07-28T0735-rth.md) — RTH manage: **CLOSE PLTR PCS** delta_breach+ITM MTM −$90 (~46%ml); HOLD BAC +$20 OTM $2.3; book 1/2 risk $163; STAND_ASIDE new; ken_required=false
 - [2026-07-28T0631-rth](2026-07-28T0631-rth.md) — RTH open manage: HOLD BAC+PLTR PCS (BAC +$17 OTM $2.14; **PLTR gap -4.5% MTM -$64 OTM $3.17 ~33%ml**); book 2/2 STAND_ASIDE; campaign 20260728T133044; ken_required=false
 - [2026-07-27T2106-continuum-judgment](2026-07-27T2106-continuum-judgment.md) — coach: capital_path requires SHIP@5% (NULL@tiny+ leak closed; flipped_off=80); shortlist pure SHIP; shadow next; ken_required=false
 - [2026-07-27T1509-continuum-judgment](2026-07-27T1509-continuum-judgment.md) — coach: toxic evolve block + shortlist DNA multi quality_pass=true (BAC PCS + AAL CCS); EDGE pack-grade; shadow next; ken_required=false
