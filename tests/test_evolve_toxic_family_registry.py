@@ -1,11 +1,16 @@
 """Toxic symbol×structure families must not occupy evolve --apply create slots."""
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from pathlib import Path
 
 from trader_platform.evolve_tick import SimVerdict, apply_results
 from trader_platform.hypothesis_registry import HypothesisRegistry
 from trader_platform.strategy_dna import dna_from_structure
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
 def _verdict(sym: str, structure: str, score: float, verdict: str = "SHIP") -> SimVerdict:
@@ -27,7 +32,8 @@ def test_apply_skips_toxic_family_creates(tmp_path: Path):
     hyps = tmp_path / "hypotheses.yaml"
     hyps.write_text("version: 1\nhypotheses: []\n", encoding="utf-8")
     reg = HypothesisRegistry(hyps)
-    # Synthetic rotation: NFLX CCS is toxic (many fails, 0 ok); BAC PCS clean.
+    now = _now()
+    # Synthetic rotation: NFLX CCS is toxic (many recent fails, 0 ok); BAC PCS clean.
     rotation = {
         "by_hyp_id": {
             f"hyp_dna_nflx_call_credit_spread_{i:02d}": {
@@ -35,7 +41,7 @@ def test_apply_skips_toxic_family_creates(tmp_path: Path):
                 "symbol": "NFLX",
                 "structure": "call_credit_spread",
                 "capital_path_ok": False,
-                "stressed_at": "2026-07-27T20:00:00+00:00",
+                "stressed_at": now,
             }
             for i in range(10)
         }
@@ -63,13 +69,14 @@ def test_apply_toxic_skip_does_not_consume_max_create_budget(tmp_path: Path):
     hyps = tmp_path / "hypotheses.yaml"
     hyps.write_text("version: 1\nhypotheses: []\n", encoding="utf-8")
     reg = HypothesisRegistry(hyps)
+    now = _now()
     rotation = {
         "by_hyp_id": {
             f"hyp_dna_pltr_call_credit_spread_{i:02d}": {
                 "symbol": "PLTR",
                 "structure": "call_credit_spread",
                 "capital_path_ok": False,
-                "stressed_at": "2026-07-27T20:00:00+00:00",
+                "stressed_at": now,
             }
             for i in range(12)
         }

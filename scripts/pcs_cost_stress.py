@@ -46,10 +46,17 @@ def _load_hyps(ids: list[str]) -> list[dict[str, Any]]:
     store = yaml.safe_load(HYPS_PATH.read_text()) or {}
     by_id = {h["id"]: h for h in (store.get("hypotheses") or []) if isinstance(h, dict) and h.get("id")}
     out = []
+    missing: list[str] = []
     for hid in ids:
         if hid not in by_id:
-            raise SystemExit(f"missing hyp {hid}")
+            missing.append(hid)
+            continue
         out.append(by_id[hid])
+    if missing:
+        # Soft-skip ghosts — do not abort whole B4 batch (2026-07-28 coach).
+        print(f"missing hyps (skipped): {missing}", file=sys.stderr)
+    if not out:
+        raise SystemExit(f"missing hyps (none living): {missing or ids}")
     return out
 
 

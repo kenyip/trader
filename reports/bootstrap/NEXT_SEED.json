@@ -1,47 +1,38 @@
 {
   "detail": {
-    "hint": "Paper book FLAT after BAC PCS profit_target close 2026-07-28T1411 (mtm≈+$23.86). PLTR already closed morning delta_breach. Off-hours EDGE continues via quality_worker. Next RTH: scout capital-fit defined-risk OPEN_* (AAL/BAC leaders); paper at most 1 if guards pass — else STAND_ASIDE. No live/arm.",
+    "hint": "Coach 2026-07-28T1439 fixed stress thrash: toxic max_ok_rate=0.05 (NFLX CCS ~585f/4ok now blocked), ghost hyp soft-skip, leader TTL 48h. Paper book FLAT. Next: confirm next quality cycle stress rc!=1 and NFLX absent from shortlist_hyps; then deliberate non-stub shadow rehearsal (ROBOT). RTH: scout capital-fit defined-risk OPEN_* on empty book (AAL/BAC class) — paper ≤1 if guards pass else STAND_ASIDE. No live/arm.",
     "closed_this_session": [
       {
         "order_id": "paper_c80aaa1cab46",
         "symbol": "PLTR",
-        "structure": "put_credit_spread",
-        "strategy_id": "hyp_dna_pltr_put_credit_spread_033dfdc8",
-        "status": "closed",
         "exit_reason": "delta_breach",
-        "mtm_usd": -90.29,
-        "max_loss_usd": 196.54,
         "closed_at_wake": "2026-07-28T0735"
       },
       {
         "order_id": "paper_2f78815a0614",
         "symbol": "BAC",
-        "structure": "put_credit_spread",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_88f03c89",
-        "status": "closed",
         "exit_reason": "profit_target",
-        "mtm_usd": 23.86,
-        "max_loss_usd": 162.64,
-        "profit_frac_of_credit": 0.6387,
         "closed_at_wake": "2026-07-28T1411"
       }
     ],
     "open_orders": [],
     "open_risk_usd": 0.0,
     "working": 0,
-    "session_note": "post_rth_close_2026-07-28"
+    "coach_fix": {
+      "stamp": "2026-07-28T1439",
+      "toxic_max_ok_rate": 0.05,
+      "leader_ttl_hours": 48,
+      "ghost_soft_skip": true,
+      "nflx_ccs_toxic_live": true
+    }
   },
-  "generated_at": "2026-07-28T21:11:30+00:00",
-  "ken_only_for": [
-    "gateway_up",
-    "LIVE_PACKET_arm",
-    "fund_3k_at_packet"
-  ],
+  "generated_at": "2026-07-28T21:40:00+00:00",
+  "ken_only_for": ["gateway_up", "LIVE_PACKET_arm", "fund_3k_at_packet"],
   "ken_required": false,
   "live_authority": false,
-  "next_action": "stand_aside_empty_book_until_rth_scout",
+  "next_action": "confirm_stress_healthy_then_shadow_rehearsal_non_stub",
   "paper_campaign_execute": true,
-  "source": "rth_eval_2026-07-28T1411",
-  "stamp": "20260728T211100",
+  "source": "continuum_judgment_2026-07-28T1439",
+  "stamp": "20260728T214000",
   "trading_authority": false
 }

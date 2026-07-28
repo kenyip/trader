@@ -340,8 +340,13 @@ def main(argv: list[str] | None = None) -> int:
     ids = [x.strip() for x in args.hyps.split(",") if x.strip()]
     missing = [i for i in ids if i not in by_id]
     if missing:
-        print("missing hyps", missing)
-        return 1
+        # Soft-skip ghosts so one deleted hyp_id cannot abort the whole B3 batch
+        # (2026-07-28 coach: XOM 54c72849 missing → 11 cycles of regime/cost rc=1).
+        print("missing hyps (skipped)", missing)
+        ids = [i for i in ids if i in by_id]
+        if not ids:
+            print("no living hyps left after ghost filter")
+            return 1
 
     df_cache: dict[str, pd.DataFrame] = {}
     results = []

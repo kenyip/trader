@@ -104,6 +104,34 @@ def family_lifetime_fail_ok(
     return fails, oks
 
 
+def _hopeless_fail_ok(
+    fails: int,
+    oks: int,
+    *,
+    fail_min: int,
+    max_ok_rate: float,
+) -> bool:
+    """True when fails dominate and residual oks look like soft/legacy flukes.
+
+    2026-07-28 coach: NFLX CCS had lifetime fails≈583 with only ~4 capital_path_ok
+    (legacy soft holds). Zero-ok toxic never tripped, so selector kept burning
+    B3/B4 on vanity CCS clones every cycle. Treat low ok-rate as toxic once
+    fail_min is met — empty queue beats toxic thrash.
+    """
+    if fail_min <= 0 or fails < int(fail_min):
+        return False
+    total = int(fails) + int(oks)
+    if total <= 0:
+        return False
+    if oks <= 0:
+        return True
+    try:
+        rate = float(oks) / float(total)
+    except (TypeError, ValueError, ZeroDivisionError):
+        return False
+    return rate <= float(max_ok_rate)
+
+
 def family_challenge_toxic(
     symbol: str | None,
     structure: str | None,
@@ -112,10 +140,13 @@ def family_challenge_toxic(
     window_hours: float = 6.0,
     toxic_fail_min: int = 8,
     lifetime_fail_min: int = 20,
+    max_ok_rate: float = 0.05,
 ) -> bool:
     """Hard-block hopeless symbol×structure families (same thresholds as selector).
 
-    Toxic = recent fails>=toxic_fail_min & 0 ok, OR lifetime fails>=lifetime_fail_min & 0 ok.
+    Toxic when (recent or lifetime) fails meet the floor AND oks are zero or a
+    tiny residual rate (default ≤5% oks). Zero-ok remains the hard case; low
+    ok-rate catches legacy soft capital_path flukes (NFLX CCS 583f/4ok).
     """
     if not symbol or not structure:
         return False
@@ -124,11 +155,15 @@ def family_challenge_toxic(
         fails, oks = family_window_fail_ok(
             symbol, structure, rotation=rot, window_hours=window_hours
         )
-        if fails >= int(toxic_fail_min) and oks == 0:
+        if _hopeless_fail_ok(
+            fails, oks, fail_min=int(toxic_fail_min), max_ok_rate=max_ok_rate
+        ):
             return True
     if lifetime_fail_min > 0:
         lf, lo = family_lifetime_fail_ok(symbol, structure, rotation=rot)
-        if lf >= int(lifetime_fail_min) and lo == 0:
+        if _hopeless_fail_ok(
+            lf, lo, fail_min=int(lifetime_fail_min), max_ok_rate=max_ok_rate
+        ):
             return True
     return False
 

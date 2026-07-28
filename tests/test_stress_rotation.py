@@ -733,6 +733,141 @@ def test_family_challenge_toxic_blocks_zero_challenge(tmp_path, monkeypatch):
     assert not any("PLTR:call_credit_spread:" in c for c in res.get("challenged_cooled_families") or [])
 
 
+def test_family_challenge_toxic_low_ok_rate_blocks_legacy_flukes(tmp_path, monkeypatch):
+    """Lifetime fails with tiny residual capital_path_ok rate is toxic (NFLX CCS thrash)."""
+    from trader_platform.stress_family_policy import family_challenge_toxic
+
+    by = {}
+    # 40 lifetime fails + 2 soft oks (~4.8% ok) → toxic at max_ok_rate=0.05
+    for i in range(40):
+        by[f"hyp_dna_nflx_call_credit_spread_f{i}"] = {
+            "symbol": "NFLX",
+            "structure": "call_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": "2026-07-20T12:00:00+00:00",
+        }
+    for i in range(2):
+        by[f"hyp_dna_nflx_call_credit_spread_ok{i}"] = {
+            "symbol": "NFLX",
+            "structure": "call_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": "2026-07-10T12:00:00+00:00",
+        }
+    # Healthy AAL: many oks
+    for i in range(10):
+        by[f"hyp_dna_aal_put_credit_spread_ok{i}"] = {
+            "symbol": "AAL",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": "2026-07-20T12:00:00+00:00",
+        }
+    for i in range(5):
+        by[f"hyp_dna_aal_put_credit_spread_f{i}"] = {
+            "symbol": "AAL",
+            "structure": "put_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": "2026-07-20T12:00:00+00:00",
+        }
+    rot = {"by_hyp_id": by}
+    assert family_challenge_toxic(
+        "NFLX", "call_credit_spread", rotation=rot, lifetime_fail_min=20, max_ok_rate=0.05
+    )
+    assert not family_challenge_toxic(
+        "AAL", "put_credit_spread", rotation=rot, lifetime_fail_min=20, max_ok_rate=0.05
+    )
+
+    # Selector path: NFLX fresh SHIP must not enter queue
+    repo = tmp_path
+    bootstrap = repo / "reports" / "bootstrap"
+    bootstrap.mkdir(parents=True)
+    (bootstrap / "QUALITY_SHORTLIST.json").write_text(
+        json.dumps({"shortlist": []}), encoding="utf-8"
+    )
+    (bootstrap / "STRESS_ROTATION.json").write_text(json.dumps(rot), encoding="utf-8")
+    log_dir = repo / ".cache" / "platform" / "quality_residual"
+    log_dir.mkdir(parents=True)
+    (log_dir / "evolve_dr_rate.log").write_text(
+        "SHIP                 400.00     40  call_credit_spread/NFLX  positive_sim\n"
+        "SHIP                 200.00     20  put_credit_spread/AAL  positive_sim\n"
+        "created: hyp_dna_nflx_call_credit_spread_fresh_rate,"
+        "hyp_dna_aal_put_credit_spread_fresh_rate\n",
+        encoding="utf-8",
+    )
+    hyps = repo / "hyps.yaml"
+    # Presence tokens so ghost filter keeps living ids from logs
+    hyps.write_text(
+        "hyp_dna_nflx_call_credit_spread_fresh_rate\n"
+        "hyp_dna_aal_put_credit_spread_fresh_rate\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(sel, "_REPO", repo)
+    monkeypatch.setattr(sel, "_SHORTLIST", bootstrap / "QUALITY_SHORTLIST.json")
+    monkeypatch.setattr(sel, "_HYPS", hyps)
+    monkeypatch.setattr(sel, "_EVOLVE_LOG_DIR", log_dir)
+    monkeypatch.setattr(sel, "_ROTATION", bootstrap / "STRESS_ROTATION.json")
+
+    res = sel.select_stress_hyps(
+        limit=4,
+        n_leaders=0,
+        include_logs=True,
+        leader_ttl_hours=0,
+        min_fresh_trades=0,
+        family_fail_window_hours=6.0,
+        family_fail_min=2,
+        toxic_fail_min=8,
+        lifetime_fail_min=20,
+        max_ok_rate=0.05,
+    )
+    assert "hyp_dna_aal_put_credit_spread_fresh_rate" in res["hyp_ids"], res
+    assert "hyp_dna_nflx_call_credit_spread_fresh_rate" not in res["hyp_ids"], res
+    assert "hyp_dna_nflx_call_credit_spread_fresh_rate" in res.get(
+        "skipped_family_toxic", []
+    ), res
+
+
+def test_select_drops_ghost_hyp_ids_missing_from_registry(tmp_path, monkeypatch):
+    """Evolve-log mapped hyp_ids deleted before stress must not enter csv."""
+    repo = tmp_path
+    bootstrap = repo / "reports" / "bootstrap"
+    bootstrap.mkdir(parents=True)
+    (bootstrap / "QUALITY_SHORTLIST.json").write_text(
+        json.dumps({"shortlist": []}), encoding="utf-8"
+    )
+    (bootstrap / "STRESS_ROTATION.json").write_text(
+        json.dumps({"by_hyp_id": {}}), encoding="utf-8"
+    )
+    log_dir = repo / ".cache" / "platform" / "quality_residual"
+    log_dir.mkdir(parents=True)
+    (log_dir / "evolve_dr_ghost.log").write_text(
+        "SHIP                 300.00     30  put_credit_spread/XOM  positive_sim\n"
+        "SHIP                 200.00     20  put_credit_spread/AAL  positive_sim\n"
+        "created: hyp_dna_xom_put_credit_spread_ghost,"
+        "hyp_dna_aal_put_credit_spread_live\n",
+        encoding="utf-8",
+    )
+    hyps = repo / "hyps.yaml"
+    # Only AAL present — XOM is a ghost
+    hyps.write_text("id: hyp_dna_aal_put_credit_spread_live\n", encoding="utf-8")
+    # pad size past 10k guard
+    hyps.write_text(hyps.read_text(encoding="utf-8") + ("x" * 12000), encoding="utf-8")
+    monkeypatch.setattr(sel, "_REPO", repo)
+    monkeypatch.setattr(sel, "_SHORTLIST", bootstrap / "QUALITY_SHORTLIST.json")
+    monkeypatch.setattr(sel, "_HYPS", hyps)
+    monkeypatch.setattr(sel, "_EVOLVE_LOG_DIR", log_dir)
+    monkeypatch.setattr(sel, "_ROTATION", bootstrap / "STRESS_ROTATION.json")
+
+    res = sel.select_stress_hyps(
+        limit=4,
+        n_leaders=0,
+        include_logs=True,
+        leader_ttl_hours=0,
+        min_fresh_trades=0,
+    )
+    assert "hyp_dna_aal_put_credit_spread_live" in res["hyp_ids"], res
+    assert "hyp_dna_xom_put_credit_spread_ghost" not in res["hyp_ids"], res
+    assert "hyp_dna_xom_put_credit_spread_ghost" in res.get("skipped_missing_hyps", []), res
+
+
 def test_shortlist_dens_bucket_surfaces_tight_dd_dens1(tmp_path: Path, monkeypatch):
     """dens1 + tight DD can outrank dens0 + loose DD within low-dens bucket."""
     import scripts.trader_ingest_stress_rotation as ing

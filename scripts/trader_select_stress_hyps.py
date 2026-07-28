@@ -208,25 +208,81 @@ def _family_challenge_toxic(
     window_hours: float = 6.0,
     toxic_fail_min: int = 8,
     lifetime_fail_min: int = 20,
+    max_ok_rate: float = 0.05,
 ) -> bool:
     """Hard-block cooled-family challenge slots for hopeless families.
 
-    2026-07-24T2100 coach: after cool→1-challenge, worker still spent every cycle on
-    PLTR CCS / NFLX CCS / SMCI CCS (50/43/9 fails in 6h, lifetime 244/413/65 with 0 ok).
-    Selector n=2 was *only* toxic challenges. Soft cost NULL@~0 dominated rejects.
-    Toxic = recent fails>=toxic_fail_min & 0 ok, OR lifetime fails>=lifetime_fail_min & 0 ok.
+    Delegates to shared stress_family_policy so evolve apply and selector agree.
+    2026-07-28 coach: also treat low residual ok-rate as toxic (NFLX CCS ~583f/4ok
+    never tripped zero-ok toxic and burned every B3/B4 cycle).
     """
     if not symbol or not structure:
         return False
-    if toxic_fail_min > 0 and window_hours > 0:
-        fails, oks = _family_window_fail_ok(symbol, structure, window_hours=window_hours)
-        if fails >= int(toxic_fail_min) and oks == 0:
-            return True
-    if lifetime_fail_min > 0:
-        lf, lo = _family_lifetime_fail_ok(symbol, structure)
-        if lf >= int(lifetime_fail_min) and lo == 0:
-            return True
-    return False
+    try:
+        sys.path.insert(0, str(_REPO))
+        from trader_platform.stress_family_policy import (  # noqa: WPS433
+            family_challenge_toxic,
+            load_rotation,
+        )
+
+        return bool(
+            family_challenge_toxic(
+                symbol,
+                structure,
+                rotation=load_rotation(_ROTATION),
+                window_hours=window_hours,
+                toxic_fail_min=toxic_fail_min,
+                lifetime_fail_min=lifetime_fail_min,
+                max_ok_rate=max_ok_rate,
+            )
+        )
+    except Exception:
+        # Fallback mirrors shared policy (incl. low ok-rate) if import path fails.
+        if toxic_fail_min > 0 and window_hours > 0:
+            fails, oks = _family_window_fail_ok(
+                symbol, structure, window_hours=window_hours
+            )
+            total = fails + oks
+            if fails >= int(toxic_fail_min) and (
+                oks <= 0 or (total > 0 and oks / total <= float(max_ok_rate))
+            ):
+                return True
+        if lifetime_fail_min > 0:
+            lf, lo = _family_lifetime_fail_ok(symbol, structure)
+            total = lf + lo
+            if lf >= int(lifetime_fail_min) and (
+                lo <= 0 or (total > 0 and lo / total <= float(max_ok_rate))
+            ):
+                return True
+        return False
+
+
+def _hyp_ids_in_registry(ids: list[str]) -> set[str]:
+    """Return subset of hyp ids present in living registry (ghost filter).
+
+    2026-07-28 coach: evolve-log / thrash can queue hyp_ids deleted before B3/B4;
+    pcs_* stress then fail-closed the *whole* batch (missing XOM 54c72849 for ~11 cycles).
+    Fast path: substring scan of yaml bytes — avoid full HypothesisRegistry load when
+    only presence matters.
+    """
+    if not ids or not _HYPS.is_file():
+        return set()
+    try:
+        sz = _HYPS.stat().st_size
+        if sz < 10_000:
+            return set()
+        blob = _HYPS.read_bytes()
+    except Exception:
+        return set()
+    present: set[str] = set()
+    for hid in ids:
+        token = hid.encode("utf-8", errors="ignore")
+        if not token:
+            continue
+        # Match common yaml shapes: "id: hyp_..." or bare id token
+        if token in blob:
+            present.add(hid)
+    return present
 
 
 def _family_capital_path_prior(symbol: str | None, structure: str | None) -> int:
@@ -496,12 +552,13 @@ def select_stress_hyps(
     limit: int = 6,
     n_leaders: int = 2,
     include_logs: bool = True,
-    leader_ttl_hours: float = 24.0,
+    leader_ttl_hours: float = 48.0,
     min_fresh_trades: int = 6,
     family_fail_window_hours: float = 6.0,
     family_fail_min: int = 2,
     toxic_fail_min: int = 8,
     lifetime_fail_min: int = 20,
+    max_ok_rate: float = 0.05,
 ) -> dict[str, Any]:
     leaders = _shortlist_leaders(n_leaders)
     ids: list[str] = []
@@ -510,6 +567,7 @@ def select_stress_hyps(
     skipped_metric_twins: list[str] = []
     skipped_family_cooled: list[str] = []
     skipped_family_toxic: list[str] = []
+    skipped_missing_hyps: list[str] = []
     challenged_cooled_families: list[str] = []
     for r in leaders:
         hid = r["hyp_id"]
@@ -595,6 +653,7 @@ def select_stress_hyps(
             window_hours=family_fail_window_hours,
             toxic_fail_min=toxic_fail_min,
             lifetime_fail_min=lifetime_fail_min,
+            max_ok_rate=max_ok_rate,
         )
         cooled = _family_recent_fail_cooled(
             sym,
@@ -650,6 +709,22 @@ def select_stress_hyps(
             break
         _try_add(r, max_per_sym=2, max_per_family=2, allow_cooled_challenge=True)
 
+    # Drop ghost hyp_ids (deleted between evolve-log map and stress) so B3/B4
+    # does not fail-closed the whole batch.
+    if ids:
+        present = _hyp_ids_in_registry(ids)
+        if present:
+            kept_ids: list[str] = []
+            kept_rows: list[dict[str, Any]] = []
+            for r in rows:
+                hid = str(r.get("hyp_id") or "")
+                if hid in present:
+                    kept_ids.append(hid)
+                    kept_rows.append(r)
+                else:
+                    skipped_missing_hyps.append(hid)
+            ids, rows = kept_ids, kept_rows
+
     return {
         "generated_at": _now(),
         "hyp_ids": ids,
@@ -660,6 +735,7 @@ def select_stress_hyps(
         "skipped_metric_twins": skipped_metric_twins[:40],
         "skipped_family_cooled": sorted(set(skipped_family_cooled))[:40],
         "skipped_family_toxic": sorted(set(skipped_family_toxic))[:40],
+        "skipped_missing_hyps": sorted(set(skipped_missing_hyps))[:40],
         "challenged_cooled_families": challenged_cooled_families[:40],
         "policy": {
             "limit": limit,
@@ -671,14 +747,15 @@ def select_stress_hyps(
             "family_fail_min": family_fail_min,
             "toxic_fail_min": toxic_fail_min,
             "lifetime_fail_min": lifetime_fail_min,
+            "max_ok_rate": max_ok_rate,
             "cooled_family_challenge_slots": 1,
             "note": (
                 "mix shortlist leaders (skip fresh capital_path_ok within TTL) + "
                 "unstressed multi-leg SHIPs score>0 / n>=min_fresh when known; "
                 "prefer families with prior capital_path_ok; fill non-cooled first; "
                 "dedupe evolve metric twins; cool symbol×structure after recent fail streak "
-                "with 1 challenge/family unless toxic (recent fails>=toxic_fail_min or "
-                "lifetime fails>=lifetime_fail_min with 0 ok → 0 challenges); "
+                "with 1 challenge/family unless toxic (fails>=floor with ok-rate<=max_ok_rate, "
+                "incl. zero-ok); drop ghost hyp_ids missing from registry; "
                 "empty queue beats toxic B3/B4 burn; no densify bag"
             ),
         },
@@ -692,7 +769,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--leader-ttl-hours",
         type=float,
-        default=24.0,
+        default=48.0,
         help="Skip shortlist leaders already capital_path_ok within this many hours (0=always include).",
     )
     ap.add_argument(
@@ -723,7 +800,13 @@ def main(argv: list[str] | None = None) -> int:
         "--lifetime-fail-min",
         type=int,
         default=20,
-        help="Lifetime fails with 0 capital_path_ok ever → hard-block challenges (0=off).",
+        help="Lifetime fails meeting floor with ok-rate<=max-ok-rate → hard-block (0=off).",
+    )
+    ap.add_argument(
+        "--max-ok-rate",
+        type=float,
+        default=0.05,
+        help="Max capital_path_ok rate still treated as toxic once fail floors met (default 0.05).",
     )
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--no-logs", action="store_true")
@@ -738,6 +821,7 @@ def main(argv: list[str] | None = None) -> int:
         family_fail_min=int(args.family_fail_min),
         toxic_fail_min=int(args.toxic_fail_min),
         lifetime_fail_min=int(args.lifetime_fail_min),
+        max_ok_rate=float(args.max_ok_rate),
     )
     if args.json:
         print(json.dumps(res, indent=2, sort_keys=True))

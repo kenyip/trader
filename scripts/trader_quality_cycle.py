@@ -154,7 +154,7 @@ def _legacy_shortlist_leader_csv(limit: int) -> str:
     except Exception:
         return ""
     # Best-effort TTL filter via rotation ledger (same policy as selector).
-    ttl_h = float(os.environ.get("TRADER_QC_LEADER_TTL_HOURS", "24"))
+    ttl_h = float(os.environ.get("TRADER_QC_LEADER_TTL_HOURS", "48"))
     skip_fresh: set[str] = set()
     try:
         import importlib.util
@@ -226,7 +226,14 @@ def _shortlist_hyps(limit: int | None = None) -> str:
                 mod = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(mod)
                 n_leaders = int(os.environ.get("TRADER_QC_STRESS_LEADERS", "2"))
-                res = mod.select_stress_hyps(limit=limit, n_leaders=n_leaders)
+                ttl_h = float(os.environ.get("TRADER_QC_LEADER_TTL_HOURS", "48"))
+                max_ok = float(os.environ.get("TRADER_QC_TOXIC_MAX_OK_RATE", "0.05"))
+                res = mod.select_stress_hyps(
+                    limit=limit,
+                    n_leaders=n_leaders,
+                    leader_ttl_hours=ttl_h,
+                    max_ok_rate=max_ok,
+                )
                 _persist_stress_selection(res if isinstance(res, dict) else {"raw": res})
                 # Trust empty queue — empty beats leader re-stress thrash.
                 return str((res or {}).get("csv") or "")

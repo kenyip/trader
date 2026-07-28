@@ -1,8 +1,8 @@
-# Readiness snapshot — 2026-07-28T0631 RTH open
+# Readiness snapshot — 2026-07-28T1439 continuum coach
 
 PHASE: PAPER  
-EDGE: pack-grade via shortlist_dna_multi; worker ON; first-live SNAP CSP fit_3k  
-ROBOT: paper open=2 BAC+PLTR sessions 5/3; **PLTR open gap path ~−$64 / ~33% ml short still OTM $3.17 → HOLD**; shadow PARTIAL stub  
+EDGE: pack-grade shortlist_dna_multi; **stress thrash repaired** (low-ok-rate toxic + ghost soft-skip + leader TTL 48h)  
+ROBOT: paper flat 5/3 sessions open=0; shadow PARTIAL stub — next non-stub sample  
 ARM: Ken only · live_armed=false · cash≈$500
 
-RTH 0631: book full STAND_ASIDE new; manage_open_paper_campaign residual.
+Coach: NFLX CCS now toxic under live ledger; do not treat cycle wall timeouts alone as edge progress.
