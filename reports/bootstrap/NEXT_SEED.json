@@ -1,7 +1,7 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper with wide-quote-safe ladder; dual-gate profit_target (mark+adverse); learn_tick residual; stand-aside new while 2/2",
-    "closed_this_session": [],
+    "hint": "RTH: mark/manage paper; watch BAC |\u0394| near 0.45 / short OTM thin; CLOSE on ladder only; learn_tick; stand-aside if no new capital-fit OPEN_*",
+    "watch": "BAC PCS |\u0394|~0.436 vs breach 0.45; OTM~$0.19 \u2014 next tick may CLOSE on delta_breach or ITM path",
     "open_orders": [
       {
         "order_id": "paper_4712ce62fd1c",
@@ -10,18 +10,27 @@
         "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
         "status": "working",
         "max_loss_usd": 184.64,
-        "spot": 14.995,
+        "spot": 14.850199699401855,
         "short_strike": 16.5,
         "long_strike": 18.5,
-        "otm": 1.51,
-        "mtm_usd": 1.36,
-        "mtm_adverse_usd": -6.64,
-        "abs_delta": 0.21,
-        "ml_used_frac": 0.036,
-        "profit_target_usd": 7.68,
+        "exp": "2026-08-14",
+        "entry_credit": 0.15361246514783317,
+        "mtm_usd": -3.138753485216683,
+        "mtm_adverse_usd": -8.638753485216682,
+        "short_otm": 1.6498003005981445,
+        "short_itm": false,
+        "short_delta_approx": 0.20604286861659138,
+        "ml_used_frac": 0.04678700977695344,
+        "profit_target_usd": 7.6806,
+        "delta_breach": 0.45,
+        "defined_loss_exit_frac": 0.85,
         "decision": "HOLD",
-        "reasons": ["short_OTM_or_quiet_path; mtm within budget"],
-        "quote_note": "18.5c wide BA repaired via last; naive mid false +$23 rejected"
+        "reasons": [
+          "short_OTM_or_quiet_path; mtm within budget"
+        ],
+        "quote_flags": [],
+        "long_mark_src": "last_wide_ba",
+        "short_mark_src": "bid_ask"
       },
       {
         "order_id": "paper_75490f40655b",
@@ -30,31 +39,54 @@
         "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
         "status": "working",
         "max_loss_usd": 79.6,
-        "spot": 61.587,
+        "spot": 61.185001373291016,
         "short_strike": 61.0,
         "long_strike": 60.0,
-        "otm": 0.59,
-        "mtm_usd": -6.6,
-        "mtm_adverse_usd": -9.6,
-        "abs_delta": 0.37,
-        "ml_used_frac": 0.121,
-        "profit_target_usd": 10.2,
+        "exp": "2026-08-07",
+        "entry_credit": 0.2040317702904515,
+        "mtm_usd": -10.096822970954856,
+        "mtm_adverse_usd": -13.596822970954852,
+        "short_otm": 0.18500137329101562,
+        "short_itm": false,
+        "short_delta_approx": -0.43585660089164113,
+        "ml_used_frac": 0.17081435893159364,
+        "profit_target_usd": 10.2016,
+        "delta_breach": 0.45,
+        "defined_loss_exit_frac": 0.85,
         "decision": "HOLD",
-        "reasons": ["short_OTM_or_quiet_path; mtm within budget"]
+        "reasons": [
+          "short_OTM_or_quiet_path; mtm within budget"
+        ],
+        "quote_flags": [],
+        "long_mark_src": "bid_ask",
+        "short_mark_src": "bid_ask"
       }
     ],
-    "book": {
-      "working": 2,
-      "max_concurrent": 2,
-      "open_risk_usd": 264.24,
-      "max_open_risk": 500.0,
-      "stand_aside_new": true
+    "equities": {
+      "AAL": 14.845000267028809,
+      "BAC": 61.185001373291016,
+      "SNAP": 4.789999961853027,
+      "SPY": 735.510009765625,
+      "QQQ": 671.2600708007812,
+      "PLTR": 124.33499908447266
     },
-    "rth_ops_stamp": "20260729T183350",
-    "marks_generated_at": "2026-07-29T18:33:49.618945+00:00",
-    "wake_stamp": "2026-07-29T1134"
+    "book_full": true,
+    "working": 2,
+    "open_risk_usd": 264.24,
+    "marks_path": ".cache/platform/rth_eval_marks_latest.json",
+    "marks_generated_at": "2026-07-29T19:31:18.306626+00:00",
+    "rth_ops_stamp": "20260729T193136",
+    "scout": {
+      "n_intents": 8,
+      "n_candidates": 88,
+      "n_stand_asides": 69
+    },
+    "autonomy": "research_only x5 (CCL CCS twins + PLTR PCS) \u2014 not paper probes",
+    "decision": "HOLD_BOTH_STAND_ASIDE_NEW",
+    "closed_this_session": [],
+    "wake_stamp": "2026-07-29T1230"
   },
-  "generated_at": "2026-07-29T18:34:50+00:00",
+  "generated_at": "2026-07-29T19:33:41.716807+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -64,7 +96,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "rth_eval_2026-07-29T1134",
-  "stamp": "20260729T1134",
+  "source": "rth_eval_1230",
+  "stamp": "20260729T193200",
   "trading_authority": false
 }
