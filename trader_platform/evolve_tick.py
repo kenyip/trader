@@ -766,6 +766,11 @@ def hyp_id_for_dna(dna: StrategyDNA) -> str:
     return f"hyp_dna_{_slug(sym)}_{_slug(dna.structure)}_{dna.ensure_id()[-8:]}"
 
 
+# Min trades for *new* registry rows. Stress selector defaults min_fresh_trades=6;
+# thinner NEEDS/SHIP clones filled yaml and left B3/B4 queue empty (2026-07-28 coach).
+MIN_CREATE_TRADES = 6
+
+
 def apply_results(
     results: Sequence[SimVerdict],
     *,
@@ -774,6 +779,7 @@ def apply_results(
     ship_only: bool = False,
     rotation: dict[str, Any] | None = None,
     skip_toxic_families: bool = True,
+    min_create_trades: int = MIN_CREATE_TRADES,
 ) -> tuple[list[str], list[str]]:
     """Write SHIP (and optionally strong NEEDS_MORE_DATA) as candidates with DNA.
 
@@ -786,6 +792,10 @@ def apply_results(
     also skip *new* registry creates so NFLX/PLTR CCS vanity does not occupy max_create
     (2026-07-27 continuum coach: evolve still minted toxic CCS while selector blocked).
     Existing rows may still update evidence.
+
+    New creates also require score>0 and n_trades>=min_create_trades so thin
+    NEEDS_MORE_DATA (n=3–5) cannot bloat the registry while never entering the
+    stress queue (2026-07-28 continuum coach: 142 unstressed multi-leg, 0 selectable).
     """
     created: list[str] = []
     updated: list[str] = []
@@ -794,6 +804,7 @@ def apply_results(
     store = reg.load()
     by_id = {h.get("id"): h for h in store.get("hypotheses") or []}
     rot = rotation if rotation is not None else (load_rotation() if skip_toxic_families else {})
+    min_tr = max(0, int(min_create_trades))
 
     def _rank_key(r: SimVerdict) -> tuple[int, float]:
         # SHIP before NEEDS_MORE_DATA/NULL even if raw score is lower.
@@ -804,6 +815,29 @@ def apply_results(
         if r.verdict == "SHIP" and _finite(r.score, default=-1e9) <= 0:
             return False
         return True
+
+    def _eligible_for_new_create(r: SimVerdict) -> bool:
+        """Stricter than update path — only DNA the stress selector can actually queue."""
+        if not _eligible_for_registry(r):
+            return False
+        if _finite(r.score, default=-1e9) <= 0:
+            return False
+        try:
+            n_tr = int(r.n_trades or 0)
+        except (TypeError, ValueError):
+            n_tr = 0
+        if min_tr > 0 and n_tr < min_tr:
+            return False
+        if r.verdict == "SHIP":
+            return True
+        if ship_only:
+            return False
+        # NEEDS_MORE_DATA: only dense enough positive-score rows (not thin n=3 toys).
+        if r.verdict == "NEEDS_MORE_DATA" and n_tr >= max(min_tr, 12) and _finite(r.score) > 0:
+            return True
+        if r.verdict == "NULL" and n_tr >= 8 and _finite(r.score) > 50:
+            return True
+        return False
 
     def _is_toxic_family(r: SimVerdict) -> bool:
         if not skip_toxic_families:
@@ -877,8 +911,8 @@ def apply_results(
             # Toxic families: do not mint new hyp rows (updates above still allowed).
             if _is_toxic_family(r):
                 continue
-            # only create on SHIP or NEEDS_MORE_DATA with trades
-            if r.verdict not in {"SHIP", "NEEDS_MORE_DATA"} and not (r.n_trades >= 8 and r.score > 50):
+            # New creates: score>0 + min trades + SHIP (or dense NEEDS); no thin toys.
+            if not _eligible_for_new_create(r):
                 continue
             try:
                 h = reg.add(

@@ -335,14 +335,49 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
     rejected: list[dict[str, Any]] = list(prev.get("rejected_tonight") or [])
     seen_reject = {r.get("hyp_id") for r in rejected}
 
-    # Keep MCP-native rows from previous shortlist (CSP/wheel) — not restressed here
-    mcp_prev = [
-        r
-        for r in (prev.get("shortlist") or [])
-        if r.get("lane") == "mcp_native_live_candidate_path"
-        or r.get("structure")
-        in ("cash_secured_put", "wheel_assignment", "short_put_credit")
-    ]
+    # MCP-native seats: prefer live FIRST_LIVE_LANE board (fit_3k SNAP/F/…) over
+    # stale shortlist CSP toys (NFLX oversized) that never get restressed here.
+    # 2026-07-28 continuum coach: shortlist MCP tier lagged first-live by days.
+    mcp_prev: list[dict[str, Any]] = []
+    fl_path = _REPO / "reports" / "bootstrap" / "FIRST_LIVE_LANE.json"
+    if fl_path.is_file():
+        try:
+            fl = json.loads(fl_path.read_text(encoding="utf-8"))
+        except Exception:
+            fl = {}
+        for r in fl.get("shortlist") or []:
+            if not isinstance(r, dict) or not r.get("eligible"):
+                continue
+            hid = r.get("hyp_id") or r.get("id")
+            if not hid:
+                continue
+            mcp_prev.append(
+                {
+                    "hyp_id": hid,
+                    "structure": r.get("structure"),
+                    "symbol": r.get("symbol"),
+                    "lane": "mcp_native_live_candidate_path",
+                    "stress_priority": False,
+                    "ship_score": r.get("score"),
+                    "n_trades": r.get("n_trades"),
+                    "csp_bp_proxy": r.get("csp_bp_proxy"),
+                    "capital_fit": r.get("capital_fit"),
+                    "why": r.get("why")
+                    or f"FIRST_LIVE_LANE {r.get('structure')} on {r.get('symbol')}",
+                    "caveat": r.get("caveat")
+                    or "MCP single-leg board; not multi-leg paper research leader.",
+                }
+            )
+            if len(mcp_prev) >= 3:
+                break
+    if not mcp_prev:
+        mcp_prev = [
+            r
+            for r in (prev.get("shortlist") or [])
+            if r.get("lane") == "mcp_native_live_candidate_path"
+            or r.get("structure")
+            in ("cash_secured_put", "wheel_assignment", "short_put_credit")
+        ]
 
     # Cap multi-leg per symbol so dens0 non-BAC survivors (TSLL/CCL/…) surface.
     # Observed 2026-07-24 coach: 20 dens0 BAC PCS clones filled all 6 slots while

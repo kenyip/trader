@@ -340,47 +340,68 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
     evolve_lanes = (os.environ.get("TRADER_QC_EVOLVE_LANES", "one") or "one").strip().lower()
     evolve_csp_first = (cycle_n % 2) == 0
 
+    # 2026-07-28 coach: thin NEEDS (n<6) + max_create=8 bloated yaml and left
+    # stress selector empty (all unstressed failed min_fresh). Prefer SHIP-only
+    # dense creates so B3/B4 queue can refill.
+    max_create = os.environ.get("TRADER_QC_MAX_CREATE", "2")
+    ship_only = (os.environ.get("TRADER_QC_SHIP_ONLY", "1") or "1").strip().lower() not in (
+        "0",
+        "false",
+        "no",
+        "off",
+    )
+
     def _evolve_dr() -> dict[str, Any]:
+        cmd = [
+            py,
+            "-m",
+            "trader_platform.evolve_tick",
+            "--once",
+            "--structures",
+            "put_credit_spread",
+            "call_credit_spread",
+            "--top-symbols",
+            top_dr,
+            "--mutants",
+            mut_dr,
+            "--sleeve-usd",
+            str(sleeve),
+            "--max-create",
+            str(max_create),
+            "--apply",
+        ]
+        if ship_only:
+            cmd.append("--ship-only")
         return _run(
-            [
-                py,
-                "-m",
-                "trader_platform.evolve_tick",
-                "--once",
-                "--structures",
-                "put_credit_spread",
-                "call_credit_spread",
-                "--top-symbols",
-                top_dr,
-                "--mutants",
-                mut_dr,
-                "--sleeve-usd",
-                str(sleeve),
-                "--apply",
-            ],
+            cmd,
             out / f"evolve_dr_{stamp}.log",
             timeout=int(os.environ.get("TRADER_QC_EVOLVE_TIMEOUT", "600")),
         )
 
     def _evolve_csp() -> dict[str, Any]:
+        cmd = [
+            py,
+            "-m",
+            "trader_platform.evolve_tick",
+            "--once",
+            "--structures",
+            "cash_secured_put",
+            "wheel_assignment",
+            "short_put_credit",
+            "--top-symbols",
+            top_csp,
+            "--mutants",
+            mut_csp,
+            "--sleeve-usd",
+            str(sleeve),
+            "--max-create",
+            str(max_create),
+            "--apply",
+        ]
+        if ship_only:
+            cmd.append("--ship-only")
         return _run(
-            [
-                py,
-                "-m",
-                "trader_platform.evolve_tick",
-                "--once",
-                "--structures",
-                "cash_secured_put",
-                "wheel_assignment",
-                "short_put_credit",
-                "--top-symbols",
-                top_csp,
-                "--mutants",
-                mut_csp,
-                "--sleeve-usd",
-                str(sleeve),
-                "--apply",
-            ],
+            cmd,
             out / f"evolve_csp_{stamp}.log",
             timeout=int(os.environ.get("TRADER_QC_EVOLVE_TIMEOUT", "600")),
         )

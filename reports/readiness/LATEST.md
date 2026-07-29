@@ -1,8 +1,8 @@
-# Readiness snapshot — 2026-07-28T1758 continuum coach
+# Readiness snapshot — 2026-07-28T2105 continuum coach
 
 PHASE: PAPER  
-EDGE: pack-grade shortlist_dna_multi; **registry thrash cleared** (45MB→1.8MB) + evolve skip-on-bloat + one-lane evolve  
-ROBOT: paper flat 5/3 sessions open=0; shadow PARTIAL **non-stub** 1/2 sessions (need second session day)  
+EDGE: pack-grade shortlist_dna_multi; **create-gate aligned to stress selector** (ship-only, n≥6, max_create=2); registry re-prune 5MB→1.8MB; shortlist MCP = FIRST_LIVE SNAP/AAL/SMCI fit_3k  
+ROBOT: paper open 2/2 AAL CCS + BAC PCS risk~$264 (6/3 sessions); shadow PARTIAL non-stub 1/2 (need next session day)  
 ARM: Ken only · live_armed=false · cash≈$500
 
-Coach: stress rc=0 alone ≠ healthy cycles — evolve/campaign TIMEOUT on bloated yaml was the wall sink. Prune off-hours with worker stopped; do not commit hyp yaml thrash.
+Coach: empty stress queue was thin NEEDS bloat, not missing edge. Toxic NFLX CCS still correctly blocked even when SHIP score&gt;0.

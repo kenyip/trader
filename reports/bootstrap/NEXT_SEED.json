@@ -1,42 +1,41 @@
 {
+  "generated_at": "2026-07-29T04:09:00+00:00",
+  "ken_required": false,
+  "ken_only_for": [
+    "gateway_up",
+    "LIVE_PACKET_arm",
+    "fund_3k_at_packet"
+  ],
+  "live_authority": false,
+  "trading_authority": false,
+  "next_action": "manage_open_paper_campaign",
+  "paper_campaign_execute": true,
+  "source": "continuum_judgment_coach",
+  "stamp": "20260729T040900",
   "detail": {
-    "hint": "Coach 2026-07-28T1758: pruned hyp registry 10.7k→400 (44.7MB→1.84MB); quality_cycle skips evolve when yaml>12MB; EVOLVE_LANES=one; campaign skips learn on bloat. Worker restarted. Shadow non-stub live-scout 1/2 sessions. Next: confirm next cycle evolve rc!=124 and wall≪30m; second non-stub shadow session day; empty-book paper OPEN_* defined-risk AAL/BAC if filters else STAND_ASIDE. No live/arm.",
-    "closed_this_session": [
+    "hint": "RTH: mark/manage open AAL CCS + BAC PCS; DNA exits (profit_target/delta_breach/defined_loss). Off-hours: worker ship-only max_create=2; non-toxic dense multi-leg SHIP→B3/B4. Second non-stub shadow session day next RTH. No densify bag.",
+    "open_orders": [
       {
-        "order_id": "paper_c80aaa1cab46",
-        "symbol": "PLTR",
-        "exit_reason": "delta_breach",
-        "closed_at_wake": "2026-07-28T0735"
+        "order_id": "paper_4712ce62fd1c",
+        "symbol": "AAL",
+        "structure": "call_credit_spread",
+        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
+        "max_loss_usd": 184.64,
+        "status": "working"
       },
       {
-        "order_id": "paper_2f78815a0614",
+        "order_id": "paper_75490f40655b",
         "symbol": "BAC",
-        "exit_reason": "profit_target",
-        "closed_at_wake": "2026-07-28T1411"
+        "structure": "put_credit_spread",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
+        "max_loss_usd": 79.6,
+        "status": "working"
       }
     ],
-    "open_orders": [],
-    "open_risk_usd": 0.0,
-    "working": 0,
-    "coach_fix": {
-      "stamp": "2026-07-28T1758",
-      "registry_bytes_before": 44715628,
-      "registry_bytes_after": 1836637,
-      "n_hyps_before": 10789,
-      "n_hyps_after": 400,
-      "registry_max_bytes": 12000000,
-      "evolve_lanes": "one",
-      "shadow_non_stub_sessions": 1,
-      "shadow_status": "PARTIAL"
-    }
-  },
-  "generated_at": "2026-07-29T00:58:30+00:00",
-  "ken_only_for": ["gateway_up", "LIVE_PACKET_arm", "fund_3k_at_packet"],
-  "ken_required": false,
-  "live_authority": false,
-  "next_action": "confirm_fast_cycle_then_second_shadow_session",
-  "paper_campaign_execute": true,
-  "source": "continuum_judgment_2026-07-28T1758",
-  "stamp": "20260729T005830",
-  "trading_authority": false
+    "coach_fixes": [
+      "evolve new-create gate: score>0 and n_trades>=6; quality cycle --ship-only --max-create 2",
+      "REGISTRY_MAX_BYTES 6MB; prune 5MB→1.8MB",
+      "shortlist MCP tier from FIRST_LIVE_LANE (SNAP/AAL/SMCI fit_3k)"
+    ]
+  }
 }

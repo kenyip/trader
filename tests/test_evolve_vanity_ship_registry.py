@@ -57,3 +57,43 @@ def test_apply_ship_only_also_skips_vanity(tmp_path: Path):
     )
     assert len(created) == 1
     assert "bac" in created[0]
+
+
+def test_apply_skips_thin_needs_and_neg_score_creates(tmp_path: Path):
+    """Thin NEEDS (n<6) and score<=0 must not mint rows the stress selector cannot queue."""
+    hyps = tmp_path / "hypotheses.yaml"
+    hyps.write_text("version: 1\nhypotheses: []\n", encoding="utf-8")
+    reg = HypothesisRegistry(hyps)
+
+    def _v(sym: str, score: float, n: int, verdict: str) -> SimVerdict:
+        dna = dna_from_structure("put_credit_spread", [sym])
+        return SimVerdict(
+            dna=dna,
+            ok=True,
+            skipped=False,
+            reason="positive_sim",
+            n_trades=n,
+            metrics={"pnl": 10.0, "max_dd": 20.0},
+            score=score,
+            verdict=verdict,
+            evidence_path="",
+        )
+
+    results = [
+        _v("XOM", -1.68, 3, "NEEDS_MORE_DATA"),  # thin + neg
+        _v("AAL", 3.38, 5, "NEEDS_MORE_DATA"),  # thin positive NEEDS
+        _v("SOFI", 20.0, 14, "NEEDS_MORE_DATA"),  # dense NEEDS ok when not ship_only
+        _v("BAC", 12.0, 40, "SHIP"),  # good SHIP
+    ]
+    created, _ = apply_results(results, registry=reg, max_create=5, ship_only=False)
+    joined = " ".join(created)
+    assert "bac" in joined
+    assert "sofi" in joined
+    assert "xom" not in joined
+    assert "aal" not in joined
+    # ship_only drops dense NEEDS too
+    hyps.write_text("version: 1\nhypotheses: []\n", encoding="utf-8")
+    reg2 = HypothesisRegistry(hyps)
+    created2, _ = apply_results(results, registry=reg2, max_create=5, ship_only=True)
+    assert len(created2) == 1
+    assert "bac" in created2[0]
