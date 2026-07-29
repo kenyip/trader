@@ -1,39 +1,64 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; CLOSE only on DNA ladder (PT 0.5 / delta 0.45 / 0.85 ml / ITM path); stand-aside new while book 2/2",
-    "marks_at": "2026-07-29T14:32:35+00:00",
-    "decisions": {
-      "paper_4712ce62fd1c": "HOLD",
-      "paper_75490f40655b": "HOLD",
-      "new_entries": "STAND_ASIDE"
-    },
+    "hint": "RTH: mark/manage paper; CLOSE only on DNA ladder (PT 0.5 / delta 0.45 / defined_loss 0.85·ml / short ITM); STAND_ASIDE new while 2/2",
+    "closed_this_session": [],
     "open_orders": [
       {
-        "max_loss_usd": 184.64,
         "order_id": "paper_4712ce62fd1c",
-        "status": "working",
-        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
-        "structure": "call_credit_spread",
         "symbol": "AAL",
-        "mtm_usd": 0.86,
-        "short_otm": 1.39
+        "structure": "call_credit_spread",
+        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
+        "status": "working",
+        "max_loss_usd": 184.64,
+        "spot": 15.07,
+        "short_strike": 16.5,
+        "long_strike": 18.5,
+        "exp": "2026-08-14",
+        "entry_credit": 0.154,
+        "mtm_usd": -2.14,
+        "otm_usd": 1.43,
+        "ml_used_frac": 0.012,
+        "short_delta_abs": 0.22,
+        "decision": "HOLD",
+        "reason": "short OTM $1.43; MTM -2.14 (~1% ml); |Δ|0.22 << 0.45; far from PT"
       },
       {
-        "max_loss_usd": 79.6,
         "order_id": "paper_75490f40655b",
-        "status": "working",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
-        "structure": "put_credit_spread",
         "symbol": "BAC",
-        "mtm_usd": -4.6,
-        "short_otm": 0.87,
-        "note": "soft red vs open +4.40; still OTM |d|~0.33"
+        "structure": "put_credit_spread",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
+        "status": "working",
+        "max_loss_usd": 79.6,
+        "spot": 62.03,
+        "short_strike": 61.0,
+        "long_strike": 60.0,
+        "exp": "2026-08-07",
+        "entry_credit": 0.204,
+        "mtm_usd": -1.10,
+        "otm_usd": 1.03,
+        "ml_used_frac": 0.014,
+        "short_delta_abs": 0.30,
+        "decision": "HOLD",
+        "reason": "short OTM $1.03; MTM -1.10 after bounce from mid -4.60; |Δ|0.30 < 0.45"
       }
     ],
-    "rth_ops_stamp": "20260729T143153",
-    "wake": "2026-07-29T0733-rth"
+    "new_entries": "STAND_ASIDE",
+    "book": {
+      "working": 2,
+      "max_concurrent": 2,
+      "open_risk_usd": 264.24,
+      "max_open_risk_usd": 500.0,
+      "book_full": true
+    },
+    "dry_open_signals": [
+      "OPEN_CCS CCL Ks=29/31 ml≈174 research_only",
+      "OPEN_PCS PLTR Ks=112.5/110 ml≈199 research_only"
+    ],
+    "marks_at": "2026-07-29T15:30:45+00:00",
+    "rth_ops_stamp": "20260729T153046",
+    "wake": "2026-07-29T0830-rth"
   },
-  "generated_at": "2026-07-29T14:33:30+00:00",
+  "generated_at": "2026-07-29T15:32:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -43,7 +68,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "rth_eval_2026-07-29T0733",
-  "stamp": "20260729T0733",
+  "source": "rth_eval_2026-07-29T0830",
+  "stamp": "20260729T153200",
   "trading_authority": false
 }
