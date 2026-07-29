@@ -1,3 +1,4 @@
+- [2026-07-29T1032-rth](2026-07-29T1032-rth.md) — RTH early-afternoon manage: HOLD AAL CCS (+$7.36 ~48% credit, pt need $7.68 OTM $1.47 |Δ|~0.21) + BAC PCS (−$5.10 OTM $0.94 |Δ|~0.32 ~6%ml); book 2/2 STAND_ASIDE; rth-ops CCL/PLTR research_only; ken_required=false
 - [2026-07-29T0932-rth](2026-07-29T0932-rth.md) — RTH midday manage: HOLD AAL CCS (+$0.86 OTM $1.41 |Δ|~0.21) + BAC PCS (−$10.10 OTM $0.76 |Δ|~0.36 ~13%ml); book 2/2 STAND_ASIDE; rth-ops CCL/PLTR research_only; ken_required=false
 - [2026-07-29T0904-continuum-judgment](2026-07-29T0904-continuum-judgment.md) — coach: hot fail-streak toxic (AAL CCS) + shortlist dens/dd/pnl twin skip; worker restarted; paper 2/2 manage; ken_required=false
 - [2026-07-29T0830-rth](2026-07-29T0830-rth.md) — RTH late-morning manage: HOLD AAL CCS (−$2.14 OTM $1.43 |Δ|~0.22) + BAC PCS (−$1.10 OTM $1.03 |Δ|~0.30 recovered from mid −$4.60); book 2/2 STAND_ASIDE; rth-ops CCL/PLTR research_only; ken_required=false
