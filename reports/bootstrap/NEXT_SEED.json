@@ -1,92 +1,35 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; watch BAC |\u0394| near 0.45 / short OTM thin; CLOSE on ladder only; learn_tick; stand-aside if no new capital-fit OPEN_*",
-    "watch": "BAC PCS |\u0394|~0.436 vs breach 0.45; OTM~$0.19 \u2014 next tick may CLOSE on delta_breach or ITM path",
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. Off-hours: worker evolve unblocked after 2026-07-29T1505 prune (~1.8MB registry).",
     "open_orders": [
       {
-        "order_id": "paper_4712ce62fd1c",
-        "symbol": "AAL",
-        "structure": "call_credit_spread",
-        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
-        "status": "working",
         "max_loss_usd": 184.64,
-        "spot": 14.850199699401855,
-        "short_strike": 16.5,
-        "long_strike": 18.5,
-        "exp": "2026-08-14",
-        "entry_credit": 0.15361246514783317,
-        "mtm_usd": -3.138753485216683,
-        "mtm_adverse_usd": -8.638753485216682,
-        "short_otm": 1.6498003005981445,
-        "short_itm": false,
-        "short_delta_approx": 0.20604286861659138,
-        "ml_used_frac": 0.04678700977695344,
-        "profit_target_usd": 7.6806,
-        "delta_breach": 0.45,
-        "defined_loss_exit_frac": 0.85,
-        "decision": "HOLD",
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ],
-        "quote_flags": [],
-        "long_mark_src": "last_wide_ba",
-        "short_mark_src": "bid_ask"
+        "order_id": "paper_4712ce62fd1c",
+        "status": "working",
+        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
+        "structure": "call_credit_spread",
+        "symbol": "AAL"
       },
       {
-        "order_id": "paper_75490f40655b",
-        "symbol": "BAC",
-        "structure": "put_credit_spread",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
-        "status": "working",
         "max_loss_usd": 79.6,
-        "spot": 61.185001373291016,
-        "short_strike": 61.0,
-        "long_strike": 60.0,
-        "exp": "2026-08-07",
-        "entry_credit": 0.2040317702904515,
-        "mtm_usd": -10.096822970954856,
-        "mtm_adverse_usd": -13.596822970954852,
-        "short_otm": 0.18500137329101562,
-        "short_itm": false,
-        "short_delta_approx": -0.43585660089164113,
-        "ml_used_frac": 0.17081435893159364,
-        "profit_target_usd": 10.2016,
-        "delta_breach": 0.45,
-        "defined_loss_exit_frac": 0.85,
-        "decision": "HOLD",
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ],
-        "quote_flags": [],
-        "long_mark_src": "bid_ask",
-        "short_mark_src": "bid_ask"
+        "order_id": "paper_75490f40655b",
+        "status": "working",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
+        "structure": "put_credit_spread",
+        "symbol": "BAC"
       }
     ],
-    "equities": {
-      "AAL": 14.845000267028809,
-      "BAC": 61.185001373291016,
-      "SNAP": 4.789999961853027,
-      "SPY": 735.510009765625,
-      "QQQ": 671.2600708007812,
-      "PLTR": 124.33499908447266
-    },
-    "book_full": true,
-    "working": 2,
-    "open_risk_usd": 264.24,
-    "marks_path": ".cache/platform/rth_eval_marks_latest.json",
-    "marks_generated_at": "2026-07-29T19:31:18.306626+00:00",
-    "rth_ops_stamp": "20260729T193136",
-    "scout": {
-      "n_intents": 8,
-      "n_candidates": 88,
-      "n_stand_asides": 69
-    },
-    "autonomy": "research_only x5 (CCL CCS twins + PLTR PCS) \u2014 not paper probes",
-    "decision": "HOLD_BOTH_STAND_ASIDE_NEW",
-    "closed_this_session": [],
-    "wake_stamp": "2026-07-29T1230"
+    "coach_20260729T1505": {
+      "registry_bytes_before": 6001614,
+      "registry_bytes_after": 1831566,
+      "n_hyps_before": 1466,
+      "n_hyps_after": 400,
+      "evolve_unblocked": true,
+      "fresh_stress_ok": "hyp_dna_aal_put_credit_spread_e4ad3be2",
+      "fresh_stress_note": "B3 hold + B4 SHIP@5% capital_path_ok dens_neg=2 secondary to dens1 AAL / dens0 BAC leaders"
+    }
   },
-  "generated_at": "2026-07-29T19:33:41.716807+00:00",
+  "generated_at": "2026-07-29T22:05:50+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -96,7 +39,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "rth_eval_1230",
-  "stamp": "20260729T193200",
+  "source": "continuum_judgment_20260729T1505",
+  "stamp": "20260729T1505",
   "trading_authority": false
 }

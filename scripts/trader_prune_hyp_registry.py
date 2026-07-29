@@ -5,10 +5,15 @@ Off-hours / idle-worker only. Never live/arm. Does not touch paper ledger.
 
 Keep set (union):
   - QUALITY_SHORTLIST hyp_ids
-  - FIRST_LIVE_LANE shortlist / leader hyp_ids
+  - FIRST_LIVE_LANE shortlist / leader hyp_ids (when present in registry)
+  - open paper ledger working strategy_ids (must never drop live paper DNA)
   - STRESS_ROTATION capital_path_ok hyp_ids
   - status in testing|paper|shadow|live
   - optional: top N remaining candidates by score / freshest updated_at
+
+FIRST_LIVE_LANE often cites sim DNA ids that were never registered — those are
+ghosts (reported, not forced). Open paper ledger strategy_ids are forced when
+present so manage residual cannot lose DNA mid-hold.
 
 Writes atomic via HypothesisRegistry.save. Backs up prior file under .cache.
 """
@@ -32,6 +37,7 @@ _HYPS = _REPO / "trader_platform" / "data" / "hypotheses.yaml"
 _SHORTLIST = _REPO / "reports" / "bootstrap" / "QUALITY_SHORTLIST.json"
 _FIRST_LIVE = _REPO / "reports" / "bootstrap" / "FIRST_LIVE_LANE.json"
 _ROTATION = _REPO / "reports" / "bootstrap" / "STRESS_ROTATION.json"
+_PAPER_LEDGER = _REPO / ".cache" / "platform" / "paper_ledger.json"
 _BACKUP_DIR = _REPO / ".cache" / "platform" / "registry_prune"
 
 
@@ -44,6 +50,31 @@ def _load_json(path: Path) -> dict[str, Any]:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return {}
+
+
+def _paper_open_strategy_ids(path: Path | None = None) -> set[str]:
+    """Working (and any non-closed) paper order strategy_ids that must survive prune."""
+    if path is None:
+        path = _PAPER_LEDGER
+    out: set[str] = set()
+    raw = _load_json(path)
+    orders = raw.get("orders") or {}
+    if isinstance(orders, dict):
+        values = orders.values()
+    elif isinstance(orders, list):
+        values = orders
+    else:
+        values = []
+    for o in values:
+        if not isinstance(o, dict):
+            continue
+        st = str(o.get("status") or "").lower()
+        if st in {"closed", "cancelled", "canceled", "rejected", "filled_closed"}:
+            continue
+        sid = o.get("strategy_id") or o.get("hyp_id") or o.get("hypothesis_id")
+        if sid:
+            out.add(str(sid))
+    return out
 
 
 def _collect_keep_ids() -> set[str]:
@@ -69,6 +100,7 @@ def _collect_keep_ids() -> set[str]:
                 continue
             if row.get("capital_path_ok") is True:
                 keep.add(str(hid))
+    keep |= _paper_open_strategy_ids()
     return keep
 
 
@@ -108,18 +140,22 @@ def prune(
         return {"ok": False, "error": f"missing {path}"}
     bytes_before = path.stat().st_size
     keep_ids = _collect_keep_ids()
-    # Prefer shortlist / first-live / capital_path_ok over raw status flood.
+    # Prefer shortlist / first-live / open-paper / capital_path_ok over raw status flood.
     shortlist_ids: set[str] = set()
     sl = _load_json(_SHORTLIST)
     for r in sl.get("shortlist") or []:
         if isinstance(r, dict) and (r.get("hyp_id") or r.get("id")):
             shortlist_ids.add(str(r.get("hyp_id") or r.get("id")))
     fl = _load_json(_FIRST_LIVE)
+    first_live_ids: set[str] = set()
     if isinstance(fl.get("leader"), dict) and fl["leader"].get("hyp_id"):
-        shortlist_ids.add(str(fl["leader"]["hyp_id"]))
+        first_live_ids.add(str(fl["leader"]["hyp_id"]))
     for r in fl.get("shortlist") or []:
         if isinstance(r, dict) and r.get("hyp_id"):
-            shortlist_ids.add(str(r["hyp_id"]))
+            first_live_ids.add(str(r["hyp_id"]))
+    shortlist_ids |= first_live_ids
+    paper_open_ids = _paper_open_strategy_ids()
+    shortlist_ids |= paper_open_ids
 
     reg = HypothesisRegistry(path)
     store = reg.load(retries=12, retry_sleep_s=0.2)
@@ -135,9 +171,14 @@ def prune(
         if hid and hid not in by_id:
             by_id[hid] = h
 
+    ghost_first_live = sorted(hid for hid in first_live_ids if hid not in by_id)
+    ghost_paper_open = sorted(hid for hid in paper_open_ids if hid not in by_id)
+
     def priority(hid: str, h: dict[str, Any]) -> tuple[int, float, str]:
         st = str(h.get("status") or "").lower()
-        if hid in shortlist_ids:
+        if hid in paper_open_ids:
+            tier = 0  # open paper DNA never optional
+        elif hid in shortlist_ids:
             tier = 0
         elif hid in keep_ids:
             tier = 1
@@ -148,7 +189,7 @@ def prune(
         return (tier, -_score(h), hid)
 
     ranked_ids = sorted(by_id.keys(), key=lambda hid: priority(hid, by_id[hid]))
-    # Always force-include shortlist / first-live ids.
+    # Always force-include shortlist / first-live / open-paper ids present in registry.
     forced = [hid for hid in sorted(shortlist_ids) if hid in by_id]
     ordered: list[str] = []
     seen: set[str] = set()
@@ -163,13 +204,14 @@ def prune(
         seen.add(hid)
         if len(ordered) >= int(max_keep):
             break
-    # If shortlist alone exceeds max_keep, keep all forced (must not drop leaders).
+    # If forced set alone exceeds max_keep, keep all forced (must not drop leaders/paper).
     if len(forced) > int(max_keep):
         ordered = forced[:]
 
     keep_rows = [by_id[hid] for hid in ordered if hid in by_id]
     keep_rows.sort(
         key=lambda h: (
+            0 if str(h.get("id")) in paper_open_ids else 1,
             0 if str(h.get("id")) in shortlist_ids else 1,
             0 if str(h.get("id")) in keep_ids else 1,
             0 if str(h.get("status") or "").lower() in protected_status else 1,
@@ -189,9 +231,15 @@ def prune(
         "n_dropped": dropped,
         "n_keep_ids_seed": len(keep_ids),
         "n_shortlist_forced": len(forced),
+        "n_paper_open_forced": sum(1 for hid in paper_open_ids if hid in by_id),
+        "n_first_live_ghosts": len(ghost_first_live),
+        "n_paper_open_ghosts": len(ghost_paper_open),
+        "first_live_ghosts_sample": ghost_first_live[:12],
         "max_keep": max_keep,
         "dry_run": dry_run,
-        "keep_ids_sample": sorted(shortlist_ids | set(ordered[:20]))[:40],
+        "keep_ids_sample": sorted(
+            (shortlist_ids & set(by_id)) | set(ordered[:20])
+        )[:40],
         "trading_authority": False,
         "live_authority": False,
     }
