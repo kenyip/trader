@@ -382,10 +382,41 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
     # Cap multi-leg per symbol so dens0 non-BAC survivors (TSLL/CCL/…) surface.
     # Observed 2026-07-24 coach: 20 dens0 BAC PCS clones filled all 6 slots while
     # dens0 TSLL PCS + CCL CCS never appeared — shortlist looked like monoculture.
+    # 2026-07-29 coach: also skip metric twins (same dens/dd/pnl/verdict profile) so
+    # three AAL PCS clones with identical risk numbers cannot occupy 3 slots.
     max_per_symbol = 3
     multi_cap = 6
     per_sym: dict[str, int] = {}
     multi_added = 0
+    seen_profile_twins: set[tuple] = set()
+
+    def _profile_twin_key(row: dict[str, Any]) -> tuple:
+        dense_raw = row.get("dense_neg_ge3")
+        dense = int(dense_raw) if dense_raw is not None else None
+        dd_raw = row.get("max_dd")
+        try:
+            dd = round(float(dd_raw), 1) if dd_raw is not None else None
+        except (TypeError, ValueError):
+            dd = None
+        pnl_raw = row.get("full_pnl")
+        try:
+            pnl = round(float(pnl_raw), 0) if pnl_raw is not None else None
+        except (TypeError, ValueError):
+            pnl = None
+        slip_raw = row.get("b4_slip5_pnl")
+        try:
+            slip = round(float(slip_raw), 0) if slip_raw is not None else None
+        except (TypeError, ValueError):
+            slip = None
+        return (
+            str(row.get("symbol") or "").upper(),
+            str(row.get("structure") or "").strip().lower(),
+            dense,
+            dd,
+            pnl,
+            slip,
+            str(row.get("b4_slip5_verdict") or "").upper(),
+        )
 
     for e in multi_sorted:
         hid = e["hyp_id"]
@@ -398,6 +429,9 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
             continue
         sym_u = str(e.get("symbol") or "?").upper()
         if per_sym.get(sym_u, 0) >= max_per_symbol:
+            continue
+        twin_k = _profile_twin_key(e)
+        if twin_k in seen_profile_twins:
             continue
         # stress_priority: first 2 *accepted* capital-path rows (still rank-ordered)
         shortlist.append(
@@ -431,6 +465,7 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
                 "stressed_at": e.get("stressed_at"),
             }
         )
+        seen_profile_twins.add(twin_k)
         per_sym[sym_u] = per_sym.get(sym_u, 0) + 1
         multi_added += 1
         if multi_added >= multi_cap:
@@ -450,7 +485,7 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
             "Stress rotation ledger drives shortlist; quality_cycle mixes leaders+fresh. "
             "Capital-path rejects: soft NULL@~0, soft-loss/neg@5%, non-pos full PnL. "
             "Rank dens_bucket(0-1 tied) → slip verdict (SHIP>NEEDS>NULL) → dd → raw dens → slip pnl. "
-            "Multi-leg shortlist caps ≤3 per symbol so non-leader names can surface."
+            "Multi-leg shortlist caps ≤3 per symbol; skip identical dens/dd/pnl risk twins."
         ),
         "agentic": prev.get("agentic")
         or {

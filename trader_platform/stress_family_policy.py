@@ -132,6 +132,78 @@ def _hopeless_fail_ok(
     return rate <= float(max_ok_rate)
 
 
+def family_recent_capital_path_outcomes(
+    symbol: str | None,
+    structure: str | None,
+    *,
+    rotation: dict[str, Any] | None = None,
+    lookback: int = 8,
+    window_hours: float = 24.0,
+) -> list[bool]:
+    """Newest-first capital_path_ok outcomes for symbol×structure (bounded).
+
+    Used for hot fail-streak toxic: lifetime ok-rate can stay healthy while the
+    last N create→B3/B4 attempts all die at soft NULL@5% (AAL CCS 2026-07-29).
+    """
+    if not symbol or not structure or lookback <= 0:
+        return []
+    by = (rotation or load_rotation()).get("by_hyp_id") or {}
+    if not isinstance(by, dict):
+        return []
+    now = datetime.now(timezone.utc)
+    cutoff = now - timedelta(hours=float(window_hours)) if window_hours > 0 else None
+    sym_u = str(symbol).upper()
+    struct = str(structure).strip().lower()
+    rows: list[tuple[datetime, bool]] = []
+    for row in by.values():
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("symbol") or "").upper() != sym_u:
+            continue
+        if str(row.get("structure") or "").strip().lower() != struct:
+            continue
+        ts = _parse_iso_ts(row.get("stressed_at"))
+        if ts is None:
+            continue
+        if cutoff is not None and ts < cutoff:
+            continue
+        rows.append((ts, bool(row.get("capital_path_ok"))))
+    rows.sort(key=lambda t: t[0], reverse=True)
+    return [ok for _, ok in rows[: int(lookback)]]
+
+
+def family_hot_fail_streak_toxic(
+    symbol: str | None,
+    structure: str | None,
+    *,
+    rotation: dict[str, Any] | None = None,
+    lookback: int = 8,
+    window_hours: float = 24.0,
+    fail_min: int = 6,
+    max_ok_in_lookback: int = 1,
+) -> bool:
+    """True when the newest lookback stresses are almost all capital_path fails.
+
+    Complements lifetime/window ok-rate toxic: a family with historic oks can still
+    mint full-history SHIP clones that burn B3/B4 every cycle while soft-failing @5%.
+    Default: ≥6 fails and ≤1 ok in the last 8 stresses (24h window).
+    """
+    if not symbol or not structure or fail_min <= 0:
+        return False
+    outcomes = family_recent_capital_path_outcomes(
+        symbol,
+        structure,
+        rotation=rotation,
+        lookback=lookback,
+        window_hours=window_hours,
+    )
+    if len(outcomes) < int(fail_min):
+        return False
+    oks = sum(1 for ok in outcomes if ok)
+    fails = len(outcomes) - oks
+    return fails >= int(fail_min) and oks <= int(max_ok_in_lookback)
+
+
 def family_challenge_toxic(
     symbol: str | None,
     structure: str | None,
@@ -141,12 +213,22 @@ def family_challenge_toxic(
     toxic_fail_min: int = 8,
     lifetime_fail_min: int = 20,
     max_ok_rate: float = 0.05,
+    streak_lookback: int = 8,
+    streak_window_hours: float = 24.0,
+    streak_fail_min: int = 6,
+    streak_max_ok: int = 1,
 ) -> bool:
     """Hard-block hopeless symbol×structure families (same thresholds as selector).
 
-    Toxic when (recent or lifetime) fails meet the floor AND oks are zero or a
-    tiny residual rate (default ≤5% oks). Zero-ok remains the hard case; low
-    ok-rate catches legacy soft capital_path flukes (NFLX CCS 583f/4ok).
+    Toxic when:
+    - (recent or lifetime) fails meet the floor AND oks are zero or a tiny residual
+      rate (default ≤5% oks); or
+    - the newest stress streak is almost all capital_path fails (hot fail streak),
+      even if lifetime ok-rate still looks healthy.
+
+    Zero-ok remains the hard case; low ok-rate catches legacy soft capital_path
+    flukes (NFLX CCS 583f/4ok). Hot streak catches AAL CCS clone thrash where
+    full-history SHIP dies at B4 soft NULL@5% repeatedly (2026-07-29 coach).
     """
     if not symbol or not structure:
         return False
@@ -163,6 +245,17 @@ def family_challenge_toxic(
         lf, lo = family_lifetime_fail_ok(symbol, structure, rotation=rot)
         if _hopeless_fail_ok(
             lf, lo, fail_min=int(lifetime_fail_min), max_ok_rate=max_ok_rate
+        ):
+            return True
+    if streak_fail_min > 0 and streak_lookback > 0:
+        if family_hot_fail_streak_toxic(
+            symbol,
+            structure,
+            rotation=rot,
+            lookback=int(streak_lookback),
+            window_hours=float(streak_window_hours),
+            fail_min=int(streak_fail_min),
+            max_ok_in_lookback=int(streak_max_ok),
         ):
             return True
     return False

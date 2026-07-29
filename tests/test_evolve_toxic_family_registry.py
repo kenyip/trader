@@ -100,3 +100,42 @@ def test_apply_toxic_skip_does_not_consume_max_create_budget(tmp_path: Path):
     joined = " ".join(created)
     assert "bac" in joined and "aal" in joined
     assert "pltr" not in joined
+
+
+def test_apply_skips_hot_fail_streak_family_creates(tmp_path: Path):
+    """Recent capital_path fail streak blocks creates even with historic oks."""
+    hyps = tmp_path / "hypotheses.yaml"
+    hyps.write_text("version: 1\nhypotheses: []\n", encoding="utf-8")
+    reg = HypothesisRegistry(hyps)
+    now = datetime.now(timezone.utc).replace(microsecond=0)
+    by = {}
+    # Historic ok keeps lifetime rate healthy
+    by["hyp_dna_aal_call_credit_spread_old_ok"] = {
+        "symbol": "AAL",
+        "structure": "call_credit_spread",
+        "capital_path_ok": True,
+        "stressed_at": (now.replace(year=2026, month=7, day=20)).isoformat(),
+    }
+    # Newest 7 fails (24h) → hot streak toxic
+    for i in range(7):
+        by[f"hyp_dna_aal_call_credit_spread_hot{i}"] = {
+            "symbol": "AAL",
+            "structure": "call_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now.isoformat(),
+        }
+    results = [
+        _verdict("AAL", "call_credit_spread", 50.0),
+        _verdict("F", "put_credit_spread", 12.0),
+    ]
+    created, _ = apply_results(
+        results,
+        registry=reg,
+        max_create=3,
+        ship_only=True,
+        rotation={"by_hyp_id": by},
+        skip_toxic_families=True,
+    )
+    assert len(created) == 1
+    assert "f_" in created[0] or "put_credit_spread" in created[0]
+    assert not any("aal" in c and "call_credit" in c for c in created)

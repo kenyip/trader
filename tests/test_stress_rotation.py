@@ -1011,3 +1011,150 @@ def test_shortlist_caps_per_symbol_for_diversity(tmp_path: Path, monkeypatch):
     assert "CCL" in syms, multi
     assert multi[0]["stress_priority"] is True
     assert multi[0]["symbol"] == "BAC"
+
+
+def test_family_hot_fail_streak_toxic_blocks_despite_historic_oks():
+    """Newest fail streak is toxic even when lifetime ok-rate looks fine (AAL CCS)."""
+    from trader_platform.stress_family_policy import (
+        family_challenge_toxic,
+        family_hot_fail_streak_toxic,
+    )
+
+    now = datetime.now(timezone.utc).replace(microsecond=0)
+    by = {}
+    # Many older capital_path_ok keep lifetime rate healthy
+    for i in range(20):
+        by[f"hyp_dna_aal_call_credit_spread_ok{i}"] = {
+            "symbol": "AAL",
+            "structure": "call_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": "2026-07-20T12:00:00+00:00",
+        }
+    # Newest 7 fails in-window
+    for i in range(7):
+        by[f"hyp_dna_aal_call_credit_spread_hot{i}"] = {
+            "symbol": "AAL",
+            "structure": "call_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now.isoformat(),
+        }
+    rot = {"by_hyp_id": by}
+    assert family_hot_fail_streak_toxic(
+        "AAL", "call_credit_spread", rotation=rot, lookback=8, fail_min=6, max_ok_in_lookback=1
+    )
+    # Lifetime ok-rate path alone would not toxic; streak path must.
+    assert family_challenge_toxic(
+        "AAL",
+        "call_credit_spread",
+        rotation=rot,
+        toxic_fail_min=8,
+        lifetime_fail_min=20,
+        max_ok_rate=0.05,
+        streak_fail_min=6,
+        streak_lookback=8,
+    )
+    assert not family_challenge_toxic(
+        "AAL",
+        "call_credit_spread",
+        rotation=rot,
+        toxic_fail_min=8,
+        lifetime_fail_min=20,
+        max_ok_rate=0.05,
+        streak_fail_min=0,  # disable streak path
+    )
+
+
+def test_shortlist_skips_identical_risk_profile_twins(tmp_path: Path, monkeypatch):
+    """Identical dens/dd/pnl clones must not fill multiple shortlist seats."""
+    import scripts.trader_ingest_stress_rotation as ing
+
+    repo = tmp_path
+    bootstrap = repo / "reports" / "bootstrap"
+    bootstrap.mkdir(parents=True)
+    by = {
+        "hyp_aal_a": {
+            "hyp_id": "hyp_aal_a",
+            "symbol": "AAL",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "reject_reason": None,
+            "b3_hold": True,
+            "b4_cost_hold": True,
+            "dense_neg_ge3": 1,
+            "max_dd": 31.46,
+            "b4_slip5_verdict": "SHIP",
+            "b4_slip5_pnl": 100.0,
+            "full_pnl": 208.54,
+            "max_loss_usd": 80.0,
+            "source": "test",
+            "stressed_at": "2026-07-29T12:00:00+00:00",
+        },
+        "hyp_aal_b": {
+            "hyp_id": "hyp_aal_b",
+            "symbol": "AAL",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "reject_reason": None,
+            "b3_hold": True,
+            "b4_cost_hold": True,
+            "dense_neg_ge3": 1,
+            "max_dd": 31.46,
+            "b4_slip5_verdict": "SHIP",
+            "b4_slip5_pnl": 100.0,
+            "full_pnl": 208.54,
+            "max_loss_usd": 80.0,
+            "source": "test",
+            "stressed_at": "2026-07-29T12:01:00+00:00",
+        },
+        "hyp_bac": {
+            "hyp_id": "hyp_bac",
+            "symbol": "BAC",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "reject_reason": None,
+            "b3_hold": True,
+            "b4_cost_hold": True,
+            "dense_neg_ge3": 0,
+            "max_dd": 41.92,
+            "b4_slip5_verdict": "SHIP",
+            "b4_slip5_pnl": 200.0,
+            "full_pnl": 557.0,
+            "max_loss_usd": 80.0,
+            "source": "test",
+            "stressed_at": "2026-07-29T12:00:00+00:00",
+        },
+        "hyp_tsll": {
+            "hyp_id": "hyp_tsll",
+            "symbol": "TSLL",
+            "structure": "call_credit_spread",
+            "capital_path_ok": True,
+            "reject_reason": None,
+            "b3_hold": True,
+            "b4_cost_hold": True,
+            "dense_neg_ge3": 1,
+            "max_dd": 55.0,
+            "b4_slip5_verdict": "SHIP",
+            "b4_slip5_pnl": 80.0,
+            "full_pnl": 180.0,
+            "max_loss_usd": 120.0,
+            "source": "test",
+            "stressed_at": "2026-07-29T12:00:00+00:00",
+        },
+    }
+    (bootstrap / "STRESS_ROTATION.json").write_text(
+        json.dumps({"by_hyp_id": by}), encoding="utf-8"
+    )
+    (bootstrap / "QUALITY_SHORTLIST.json").write_text(
+        json.dumps({"shortlist": []}), encoding="utf-8"
+    )
+    monkeypatch.setattr(ing, "_REPO", repo)
+    monkeypatch.setattr(ing, "_LEDGER", bootstrap / "STRESS_ROTATION.json")
+    monkeypatch.setattr(ing, "_SHORTLIST", bootstrap / "QUALITY_SHORTLIST.json")
+
+    ing.refresh_shortlist_from_ledger()
+    data = json.loads((bootstrap / "QUALITY_SHORTLIST.json").read_text(encoding="utf-8"))
+    multi = [r for r in data["shortlist"] if r.get("lane") == "paper_research"]
+    aal_ids = [r["hyp_id"] for r in multi if str(r.get("symbol")).upper() == "AAL"]
+    assert len(aal_ids) == 1, multi
+    syms = {str(r.get("symbol")).upper() for r in multi}
+    assert "BAC" in syms and "TSLL" in syms, multi
