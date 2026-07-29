@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "Coach 2026-07-28T1439 fixed stress thrash: toxic max_ok_rate=0.05 (NFLX CCS ~585f/4ok now blocked), ghost hyp soft-skip, leader TTL 48h. Paper book FLAT. Next: confirm next quality cycle stress rc!=1 and NFLX absent from shortlist_hyps; then deliberate non-stub shadow rehearsal (ROBOT). RTH: scout capital-fit defined-risk OPEN_* on empty book (AAL/BAC class) — paper ≤1 if guards pass else STAND_ASIDE. No live/arm.",
+    "hint": "Coach 2026-07-28T1758: pruned hyp registry 10.7k→400 (44.7MB→1.84MB); quality_cycle skips evolve when yaml>12MB; EVOLVE_LANES=one; campaign skips learn on bloat. Worker restarted. Shadow non-stub live-scout 1/2 sessions. Next: confirm next cycle evolve rc!=124 and wall≪30m; second non-stub shadow session day; empty-book paper OPEN_* defined-risk AAL/BAC if filters else STAND_ASIDE. No live/arm.",
     "closed_this_session": [
       {
         "order_id": "paper_c80aaa1cab46",
@@ -19,20 +19,24 @@
     "open_risk_usd": 0.0,
     "working": 0,
     "coach_fix": {
-      "stamp": "2026-07-28T1439",
-      "toxic_max_ok_rate": 0.05,
-      "leader_ttl_hours": 48,
-      "ghost_soft_skip": true,
-      "nflx_ccs_toxic_live": true
+      "stamp": "2026-07-28T1758",
+      "registry_bytes_before": 44715628,
+      "registry_bytes_after": 1836637,
+      "n_hyps_before": 10789,
+      "n_hyps_after": 400,
+      "registry_max_bytes": 12000000,
+      "evolve_lanes": "one",
+      "shadow_non_stub_sessions": 1,
+      "shadow_status": "PARTIAL"
     }
   },
-  "generated_at": "2026-07-28T21:40:00+00:00",
+  "generated_at": "2026-07-29T00:58:30+00:00",
   "ken_only_for": ["gateway_up", "LIVE_PACKET_arm", "fund_3k_at_packet"],
   "ken_required": false,
   "live_authority": false,
-  "next_action": "confirm_stress_healthy_then_shadow_rehearsal_non_stub",
+  "next_action": "confirm_fast_cycle_then_second_shadow_session",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_2026-07-28T1439",
-  "stamp": "20260728T214000",
+  "source": "continuum_judgment_2026-07-28T1758",
+  "stamp": "20260729T005830",
   "trading_authority": false
 }

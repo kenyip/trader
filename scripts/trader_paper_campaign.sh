@@ -24,9 +24,12 @@ RECEIPT="$OUT_DIR/LATEST.json"
 
 # Optional: TRADER_PAPER_CAMPAIGN_EXECUTE=0 to force dry-only (default 1 = paper place allowed)
 EXECUTE="${TRADER_PAPER_CAMPAIGN_EXECUTE:-1}"
-# Optional: force learn_tick even under full book (default 0 = skip learn when manage-only)
+# Optional: force learn_tick even under full book / bloated registry (default 0 = skip)
 FORCE_LEARN="${TRADER_PAPER_CAMPAIGN_FORCE_LEARN:-0}"
 LEDGER="${TRADER_PAPER_LEDGER:-$REPO/.cache/platform/paper_ledger.json}"
+HYPS_YAML="${TRADER_HYPS_YAML:-$REPO/trader_platform/data/hypotheses.yaml}"
+# Skip learn when registry exceeds this many bytes (default 12MB — 2026-07-28 coach).
+REGISTRY_MAX_BYTES="${TRADER_PAPER_CAMPAIGN_REGISTRY_MAX_BYTES:-${TRADER_QC_REGISTRY_MAX_BYTES:-12000000}}"
 MAX_CONCURRENT="${TRADER_PAPER_CAMPAIGN_MAX_CONCURRENT:-2}"
 MAX_OPEN_RISK="${TRADER_PAPER_CAMPAIGN_MAX_OPEN_RISK:-500}"
 
@@ -72,9 +75,26 @@ PY
 )"
 fi
 
-if [[ "$BOOK_MANAGE_ONLY" == "1" && "$FORCE_LEARN" != "1" ]]; then
-  echo "trader_paper_campaign: skip learn_tick (book full / risk cap — manage path)"
-  printf '%s\n' '{"skipped":true,"reason":"book_full_manage_skip_learn"}' >"$OUT_DIR/learn_${STAMP}.json"
+# Empty-book campaigns still hung 300s on learn_tick when hyp yaml ~45MB (2026-07-28).
+REGISTRY_BLOAT=0
+HYPS_BYTES=0
+if [[ -f "$HYPS_YAML" ]]; then
+  HYPS_BYTES="$(wc -c <"$HYPS_YAML" | tr -d ' ')"
+  if [[ "${HYPS_BYTES}" =~ ^[0-9]+$ ]] && [[ "${REGISTRY_MAX_BYTES}" =~ ^[0-9]+$ ]]; then
+    if (( HYPS_BYTES > REGISTRY_MAX_BYTES )); then
+      REGISTRY_BLOAT=1
+    fi
+  fi
+fi
+
+if [[ "$FORCE_LEARN" != "1" && ( "$BOOK_MANAGE_ONLY" == "1" || "$REGISTRY_BLOAT" == "1" ) ]]; then
+  if [[ "$REGISTRY_BLOAT" == "1" ]]; then
+    echo "trader_paper_campaign: skip learn_tick (registry_bloat bytes=$HYPS_BYTES max=$REGISTRY_MAX_BYTES)"
+    printf '%s\n' "{\"skipped\":true,\"reason\":\"registry_bloat_skip_learn\",\"registry_bytes\":$HYPS_BYTES,\"registry_max_bytes\":$REGISTRY_MAX_BYTES}" >"$OUT_DIR/learn_${STAMP}.json"
+  else
+    echo "trader_paper_campaign: skip learn_tick (book full / risk cap — manage path)"
+    printf '%s\n' '{"skipped":true,"reason":"book_full_manage_skip_learn"}' >"$OUT_DIR/learn_${STAMP}.json"
+  fi
   rc_learn=0
 else
   set +e

@@ -1,3 +1,4 @@
+- [2026-07-28T1758-continuum-judgment](2026-07-28T1758-continuum-judgment.md) — coach: registry prune 45MB→1.8MB + evolve skip-on-bloat + one-lane evolve; non-stub shadow 1/2; ken_required=false
 - [2026-07-28T1439-continuum-judgment](2026-07-28T1439-continuum-judgment.md) — coach: low-ok-rate toxic + ghost B3/B4 skip + leader TTL 48h (NFLX CCS thrash / XOM missing batch abort fixed); shadow next; ken_required=false
 - [2026-07-28T1411-rth](2026-07-28T1411-rth.md) — RTH post-close: **CLOSE BAC PCS** profit_target MTM +$23.86 (~64% credit); book flat risk $0; STAND_ASIDE; ken_required=false
 - [2026-07-28T0735-rth](2026-07-28T0735-rth.md) — RTH manage: **CLOSE PLTR PCS** delta_breach+ITM MTM −$90 (~46%ml); HOLD BAC +$20 OTM $2.3; book 1/2 risk $163; STAND_ASIDE new; ken_required=false

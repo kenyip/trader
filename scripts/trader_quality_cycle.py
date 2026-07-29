@@ -13,6 +13,8 @@ Sprint knobs (env / configs/quality_worker.env):
   TRADER_QC_CAMPAIGN_EVERY=3    # campaign every N cycles when book full
   TRADER_QC_FORCE_PAPER=0       # 1=always paper+campaign this cycle
   TRADER_QC_STRESS_LIMIT=8
+  TRADER_QC_REGISTRY_MAX_BYTES=12000000  # skip evolve --apply when hyp yaml bloated
+  TRADER_QC_EVOLVE_LANES=one|both        # one=alternate DR/CSP per cycle (default one)
 
 Usage:
   .venv/bin/python scripts/trader_quality_cycle.py
@@ -37,7 +39,36 @@ _OUT = Path(os.environ.get("TRADER_QUALITY_OUT", str(_REPO / ".cache" / "platfor
 _WORKER = _REPO / ".cache" / "platform" / "quality_worker"
 _SHORTLIST = _REPO / "reports" / "bootstrap" / "QUALITY_SHORTLIST.json"
 _LEDGER = _REPO / ".cache" / "platform" / "paper_ledger.json"
+_HYPS = _REPO / "trader_platform" / "data" / "hypotheses.yaml"
 _CYCLE_N = _WORKER / "cycle_count.txt"
+
+
+def _registry_bytes() -> int:
+    try:
+        if _HYPS.is_file():
+            return int(_HYPS.stat().st_size)
+    except Exception:
+        return 0
+    return 0
+
+
+def _registry_bloat_limit() -> int:
+    try:
+        return int(os.environ.get("TRADER_QC_REGISTRY_MAX_BYTES", "12000000"))
+    except Exception:
+        return 12_000_000
+
+
+def _evolve_skip_payload(*, reason: str, lane: str, registry_bytes: int) -> dict[str, Any]:
+    return {
+        "rc": 0,
+        "seconds": 0.0,
+        "skipped": True,
+        "reason": reason,
+        "lane": lane,
+        "registry_bytes": registry_bytes,
+        "registry_max_bytes": _registry_bloat_limit(),
+    }
 
 
 def _now() -> str:
@@ -298,8 +329,15 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
     mut_dr = os.environ.get("TRADER_QC_MUT_DR", "3")
     top_csp = os.environ.get("TRADER_QC_TOP_CSP", "8")
     mut_csp = os.environ.get("TRADER_QC_MUT_CSP", "2")
-
-    # Alternate order so CSP first-live lane gets equal fresh CPU under sprint pressure
+    reg_bytes = _registry_bytes()
+    reg_limit = _registry_bloat_limit()
+    results["registry_bytes"] = reg_bytes
+    results["registry_max_bytes"] = reg_limit
+    # 2026-07-28 coach: ~45MB yaml made both evolve --apply hit 600s TIMEOUT every cycle
+    # (~20min wall waste) while stress/shortlist still worked. Skip apply until prune.
+    skip_evolve_bloat = reg_bytes > reg_limit and reg_limit > 0
+    # Default one lane/cycle (alternate DR↔CSP). both = legacy full pair.
+    evolve_lanes = (os.environ.get("TRADER_QC_EVOLVE_LANES", "one") or "one").strip().lower()
     evolve_csp_first = (cycle_n % 2) == 0
 
     def _evolve_dr() -> dict[str, Any]:
@@ -347,12 +385,36 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
             timeout=int(os.environ.get("TRADER_QC_EVOLVE_TIMEOUT", "600")),
         )
 
-    if evolve_csp_first:
-        results["phases"]["evolve_csp"] = _evolve_csp()
-        results["phases"]["evolve_defined_risk"] = _evolve_dr()
+    if skip_evolve_bloat:
+        results["phases"]["evolve_csp"] = _evolve_skip_payload(
+            reason="registry_bloat_skip_evolve", lane="csp", registry_bytes=reg_bytes
+        )
+        results["phases"]["evolve_defined_risk"] = _evolve_skip_payload(
+            reason="registry_bloat_skip_evolve", lane="defined_risk", registry_bytes=reg_bytes
+        )
+        results["evolve_note"] = (
+            f"skipped both evolves: hypotheses.yaml {reg_bytes}b > limit {reg_limit}b; "
+            "run scripts/trader_prune_hyp_registry.py off-hours"
+        )
+    elif evolve_lanes in ("both", "all", "2"):
+        if evolve_csp_first:
+            results["phases"]["evolve_csp"] = _evolve_csp()
+            results["phases"]["evolve_defined_risk"] = _evolve_dr()
+        else:
+            results["phases"]["evolve_defined_risk"] = _evolve_dr()
+            results["phases"]["evolve_csp"] = _evolve_csp()
     else:
-        results["phases"]["evolve_defined_risk"] = _evolve_dr()
-        results["phases"]["evolve_csp"] = _evolve_csp()
+        # one lane per cycle — halves apply thrash / wall under healthy registry
+        if evolve_csp_first:
+            results["phases"]["evolve_csp"] = _evolve_csp()
+            results["phases"]["evolve_defined_risk"] = _evolve_skip_payload(
+                reason="evolve_lanes_one_alternate", lane="defined_risk", registry_bytes=reg_bytes
+            )
+        else:
+            results["phases"]["evolve_defined_risk"] = _evolve_dr()
+            results["phases"]["evolve_csp"] = _evolve_skip_payload(
+                reason="evolve_lanes_one_alternate", lane="csp", registry_bytes=reg_bytes
+            )
 
     # --- phase 3: parallel prove (+ optional paper_loop) ---
     hyps = _shortlist_hyps()

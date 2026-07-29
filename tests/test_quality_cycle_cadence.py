@@ -87,6 +87,44 @@ def test_book_full_skips_learn_tick_predicate():
     assert manage_only(0, 500.0) is True
 
 
+def test_registry_bloat_skip_evolve_predicate(tmp_path, monkeypatch):
+    """Bloated hypotheses.yaml must skip evolve --apply (45MB TIMEOUT thrash)."""
+    hyps = tmp_path / "hypotheses.yaml"
+    hyps.write_bytes(b"x" * 13_000_000)
+    monkeypatch.setattr(qc, "_HYPS", hyps)
+    monkeypatch.setenv("TRADER_QC_REGISTRY_MAX_BYTES", "12000000")
+    assert qc._registry_bytes() == 13_000_000
+    assert qc._registry_bloat_limit() == 12_000_000
+    assert qc._registry_bytes() > qc._registry_bloat_limit()
+    payload = qc._evolve_skip_payload(
+        reason="registry_bloat_skip_evolve", lane="csp", registry_bytes=13_000_000
+    )
+    assert payload["rc"] == 0
+    assert payload["skipped"] is True
+    assert payload["reason"] == "registry_bloat_skip_evolve"
+
+
+def test_registry_healthy_does_not_trip_bloat(tmp_path, monkeypatch):
+    hyps = tmp_path / "hypotheses.yaml"
+    hyps.write_bytes(b"x" * 1_100_000)
+    monkeypatch.setattr(qc, "_HYPS", hyps)
+    monkeypatch.setenv("TRADER_QC_REGISTRY_MAX_BYTES", "12000000")
+    assert qc._registry_bytes() < qc._registry_bloat_limit()
+
+
+def test_registry_bloat_skip_learn_predicate():
+    """Empty book + bloated yaml still skips learn (campaign 300s hang)."""
+    def skip_learn(*, book_manage_only: bool, registry_bloat: bool, force_learn: bool = False) -> bool:
+        if force_learn:
+            return False
+        return book_manage_only or registry_bloat
+
+    assert skip_learn(book_manage_only=False, registry_bloat=True) is True
+    assert skip_learn(book_manage_only=True, registry_bloat=False) is True
+    assert skip_learn(book_manage_only=False, registry_bloat=False) is False
+    assert skip_learn(book_manage_only=True, registry_bloat=True, force_learn=True) is False
+
+
 def test_shortlist_hyps_trusts_empty_selector(tmp_path, monkeypatch):
     """Empty selector queue must NOT fall back to stress_priority leaders (AAL re-burn)."""
     import types

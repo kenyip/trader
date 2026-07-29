@@ -1,20 +1,49 @@
 {
-  "generated_at": "2026-07-26T05:03:14+00:00",
-  "mode": "shadow_rehearsal",
-  "ok": true,
-  "status": "PARTIAL",
-  "window_complete": false,
-  "session_days": 0,
-  "session_day_list": [],
-  "min_session_days_for_pass": 2,
-  "n_history_ticks": 2,
-  "n_live_scout_ticks": 0,
-  "n_stub_ticks": 2,
-  "n_shadow_log_total": 2,
   "authority_creep": false,
+  "detail": "live-scout path exercised (live_ticks=1, sessions=1/2, shadow_logs=5) \u2014 need multi-session non-stub window",
+  "generated_at": "2026-07-29T00:57:57+00:00",
+  "honesty": "Shadow only: propose\u2192risk\u2192log. No paper ledger mutate, no place_*. PASS requires multi-session *non-stub* window without authority creep. Stub ticks only prove plumbing (PARTIAL).",
   "live_authority": false,
+  "min_session_days_for_pass": 2,
+  "mode": "shadow_rehearsal",
+  "n_history_ticks": 3,
+  "n_live_scout_ticks": 1,
+  "n_risk_deny_total": 0,
+  "n_shadow_log_total": 5,
+  "n_stub_ticks": 2,
+  "ok": true,
+  "session_day_list": [
+    "2026-07-28"
+  ],
+  "session_days": 1,
+  "status": "PARTIAL",
+  "stub_used": false,
+  "this_run_ticks": [
+    {
+      "authority_creep": false,
+      "broker": "paper_rh_bridge",
+      "event": "shadow_rehearsal_1",
+      "live_authority": false,
+      "mode": "shadow",
+      "n_place_attempts": 0,
+      "n_proposals": 3,
+      "n_risk_allow": 3,
+      "n_risk_deny": 0,
+      "n_shadow_log": 3,
+      "n_stand_aside": 0,
+      "ok": true,
+      "stub": false,
+      "symbols": [
+        "SNAP",
+        "F",
+        "AAL",
+        "TSLL",
+        "BAC"
+      ],
+      "trading_authority": false,
+      "ts": "2026-07-29T00:57:57+00:00"
+    }
+  ],
   "trading_authority": false,
-  "stub_used": true,
-  "detail": "stub/plumbing path only (stub_ticks=2, live_ticks=0) \u2014 PASS requires non-stub multi-session propose\u2192risk\u2192log",
-  "honesty": "Shadow only. PASS needs non-stub multi-session window."
+  "window_complete": false
 }
