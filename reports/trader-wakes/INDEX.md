@@ -1,3 +1,4 @@
+- [2026-07-29T0631-rth](2026-07-29T0631-rth.md) — RTH open manage: HOLD AAL CCS (−$1.6 OTM $1.69) + BAC PCS (+$4.4 OTM $1.50); book 2/2 STAND_ASIDE; campaign manage fast path; ken_required=false
 - [2026-07-28T2105-continuum-judgment](2026-07-28T2105-continuum-judgment.md) — coach: thin-NEEDS create gate + ship-only max_create=2 + first-live MCP shortlist + prune 5→1.8MB; paper 2 open; ken_required=false
 - [2026-07-28T1758-continuum-judgment](2026-07-28T1758-continuum-judgment.md) — coach: registry prune 45MB→1.8MB + evolve skip-on-bloat + one-lane evolve; non-stub shadow 1/2; ken_required=false
 - [2026-07-28T1439-continuum-judgment](2026-07-28T1439-continuum-judgment.md) — coach: low-ok-rate toxic + ghost B3/B4 skip + leader TTL 48h (NFLX CCS thrash / XOM missing batch abort fixed); shadow next; ken_required=false
