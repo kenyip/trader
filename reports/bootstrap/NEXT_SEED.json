@@ -1,36 +1,39 @@
 {
   "detail": {
-    "hint": "RTH: re-mark AAL CCS + BAC PCS; CLOSE BAC if MTM>=50% credit (~$10.2); CLOSE on delta/ITM/defined_loss; stand-aside new while 2/2",
-    "marks_asof": "2026-07-29T13:33:06+00:00",
+    "hint": "RTH: mark/manage paper; CLOSE only on DNA ladder (PT 0.5 / delta 0.45 / 0.85 ml / ITM path); stand-aside new while book 2/2",
+    "marks_at": "2026-07-29T14:32:35+00:00",
+    "decisions": {
+      "paper_4712ce62fd1c": "HOLD",
+      "paper_75490f40655b": "HOLD",
+      "new_entries": "STAND_ASIDE"
+    },
     "open_orders": [
       {
-        "decision": "HOLD",
         "max_loss_usd": 184.64,
-        "mtm_usd": -1.64,
         "order_id": "paper_4712ce62fd1c",
-        "short_otm": 1.69,
         "status": "working",
         "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
         "structure": "call_credit_spread",
-        "symbol": "AAL"
+        "symbol": "AAL",
+        "mtm_usd": 0.86,
+        "short_otm": 1.39
       },
       {
-        "decision": "HOLD",
         "max_loss_usd": 79.6,
-        "mtm_usd": 4.4,
         "order_id": "paper_75490f40655b",
-        "profit_target_usd": 10.2,
-        "short_otm": 1.5,
         "status": "working",
         "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
         "structure": "put_credit_spread",
-        "symbol": "BAC"
+        "symbol": "BAC",
+        "mtm_usd": -4.6,
+        "short_otm": 0.87,
+        "note": "soft red vs open +4.40; still OTM |d|~0.33"
       }
     ],
-    "rth_decision": "HOLD_BOTH_STAND_ASIDE_NEW",
-    "wake": "2026-07-29T0631-rth"
+    "rth_ops_stamp": "20260729T143153",
+    "wake": "2026-07-29T0733-rth"
   },
-  "generated_at": "2026-07-29T13:34:30+00:00",
+  "generated_at": "2026-07-29T14:33:30+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -40,7 +43,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "rth_eval_2026-07-29T0631",
-  "stamp": "20260729T0631",
+  "source": "rth_eval_2026-07-29T0733",
+  "stamp": "20260729T0733",
   "trading_authority": false
 }

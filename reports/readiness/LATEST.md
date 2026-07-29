@@ -1,8 +1,8 @@
-# Readiness snapshot — 2026-07-28T2105 continuum coach
+# Readiness snapshot — 2026-07-29T0733 RTH mid-morning
 
 PHASE: PAPER  
-EDGE: pack-grade shortlist_dna_multi; **create-gate aligned to stress selector** (ship-only, n≥6, max_create=2); registry re-prune 5MB→1.8MB; shortlist MCP = FIRST_LIVE SNAP/AAL/SMCI fit_3k  
-ROBOT: paper open 2/2 AAL CCS + BAC PCS risk~$264 (6/3 sessions); shadow PARTIAL non-stub 1/2 (need next session day)  
+EDGE: pack-grade shortlist_dna_multi; research AAL PCS leaders; first-live SNAP CSP fit_3k  
+ROBOT: paper open **2/2** AAL CCS + BAC PCS risk~$264 (6/3 sessions); mid marks HOLD both (AAL +$0.86 OTM $1.39; BAC −$4.60 OTM $0.87); shadow PARTIAL 1/2  
 ARM: Ken only · live_armed=false · cash≈$500
 
-Coach: empty stress queue was thin NEEDS bloat, not missing edge. Toxic NFLX CCS still correctly blocked even when SHIP score&gt;0.
+RTH: STAND_ASIDE new (book full). CCL CCS / PLTR PCS dry = research_only. ken_required=false.
