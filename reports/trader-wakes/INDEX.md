@@ -1,3 +1,4 @@
+- 2026-07-30T1530-rth.md — RTH manage HOLD AAL CCS + BAC PCS; STAND_ASIDE new (book 2/2)
 - [2026-07-30T1430-rth](2026-07-30T1430-rth.md) — RTH manage: HOLD AAL CCS + BAC PCS (book 2/2); STAND_ASIDE new; scout OPEN_PCS AAL research_only
 - [2026-07-30T1030-rth](2026-07-30T1030-rth.md) — RTH afternoon manage: HOLD AAL CCS (−$5.14 OTM $1.24 |Δ|0.24) + BAC PCS (−$1.60 OTM $0.85 |Δ|0.30 improved vs midday); book 2/2 STAND_ASIDE; OPEN_PCS AAL research_only; ken_required=false
 - [2026-07-30T0932-rth](2026-07-30T0932-rth.md) — RTH midday manage: HOLD AAL CCS (−$6.64 OTM $1.26 |Δ|0.24) + BAC PCS (−$7.60 OTM $0.61 |Δ|0.36 recovered vs 08:30 near-breach); book 2/2 STAND_ASIDE; OPEN_PCS AAL research_only; ken_required=false
