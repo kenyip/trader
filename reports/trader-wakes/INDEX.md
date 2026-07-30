@@ -1,3 +1,4 @@
+- [2026-07-30T0631-rth](2026-07-30T0631-rth.md) — RTH open manage: HOLD AAL CCS (−$0.64 OTM $1.48) + BAC PCS (−$14.60 OTM $0.33 last); VIX_10y tokenize fix; scout OPEN_PCS AAL research_only; book 2/2 STAND_ASIDE; ken_required=false
 - [2026-07-29T2100-continuum-judgment](2026-07-29T2100-continuum-judgment.md) — coach: saturated-family create gate (AAL/BAC PCS stop clone thrash); empty-rot leak fix; first-live F CSP; paper 2/2 manage; ken_required=false
 - [2026-07-29T1505-continuum-judgment](2026-07-29T1505-continuum-judgment.md) — coach: registry prune 6.0MB→1.8MB unblocks evolve; open-paper force-keep; e4ad3be2 SHIP@5% secondary; paper 2/2 manage; ken_required=false
 - [2026-07-29T1230-rth](2026-07-29T1230-rth.md) — RTH late manage: HOLD AAL CCS (−$3.14 OTM $1.65 |Δ|0.21) + BAC PCS (−$10.10 OTM $0.19 |Δ|0.436 near breach); book 2/2 STAND_ASIDE; ken_required=false

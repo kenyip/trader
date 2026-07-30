@@ -1,10 +1,10 @@
-# Readiness snapshot — 2026-07-29T2100 continuum coach
+# Readiness snapshot — 2026-07-30T0631 RTH open
 
 PHASE: PAPER  
-EDGE: pack-grade shortlist_dna_multi; research AAL PCS leaders (create saturation gate on AAL/BAC PCS); first-live **F CSP** fit_3k n=99  
-ROBOT: paper open **2/2** AAL CCS + BAC PCS risk~$264 (7/3 sessions); shadow PARTIAL  
+EDGE: WIP shortlist AAL/BAC PCS; first-live **F CSP** fit_3k; worker ON (cycles~4210)  
+ROBOT: paper open **2/2** AAL CCS + BAC PCS risk~$264 (7/3 sessions) — both **HOLD** at open; shadow PARTIAL  
 ARM: blocked — Ken LIVE_PACKET only; test cash~$500; live_armed=false  
 
-C-row (coach): family_create_saturated shipped — stop dens clone thrash; worker restarted.  
+C-row (RTH): HOLD both opens (AAL OTM~$1.48 flat; BAC OTM~$0.33 mtm≈−$14.60 last); STAND_ASIDE new (book full). Fixed corrupt VIX_10y that zeroed scout.  
 ken_required: false  
-NEXT: manage_open_paper_campaign
+NEXT: manage_open_paper_campaign (re-mark BAC when BA live)
