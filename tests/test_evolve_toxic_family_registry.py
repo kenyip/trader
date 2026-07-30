@@ -286,6 +286,43 @@ def test_unsaturated_discovery_symbols_skips_toxic_and_saturated():
     assert out[0] == "SNAP"
 
 
+def test_unsaturated_discovery_skips_recent_fail_thrash_cold_names():
+    """Cold mega-caps with only recent fails must not crowd unsat inject (2026-07-30T1500)."""
+    from trader_platform.stress_family_policy import unsaturated_discovery_symbols
+
+    now = _now()
+    by = {}
+    # AMD PCS: 6 recent fails, 0 ok — thrash
+    for i in range(6):
+        by[f"amd{i}"] = {
+            "symbol": "AMD",
+            "structure": "put_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now,
+        }
+    # KO PCS: cold, never stressed — allowed
+    # SNAP PCS: 2 recent oks — proven unsaturated tier0
+    for i in range(2):
+        by[f"snap{i}"] = {
+            "symbol": "SNAP",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+    rot = {"by_hyp_id": by}
+    out = unsaturated_discovery_symbols(
+        limit=6,
+        rotation=rot,
+        universe=["AMD", "KO", "SNAP"],
+        structures=("put_credit_spread", "call_credit_spread"),
+        recent_fail_thrash_min=6,
+    )
+    assert "AMD" not in out
+    assert "SNAP" in out
+    assert out[0] == "SNAP"
+    assert "KO" in out
+
+
 def test_run_evolve_tick_force_symbols_skips_research(monkeypatch):
     import trader_platform.evolve_tick as ev
 

@@ -95,7 +95,7 @@ just trader-status → Phase SHADOW · ROBOT OK · ready≈85%
 
 ## LESSON
 
-Future Trader: (1) empty stress queue after create→stress is often **healthy drain**, not starvation — inspect `last_ingest` before unsat surgery. (2) Unsat inject must count recent fails on toxic structs too or mega-cap thrash hides behind a cold sibling structure. (3) MU/IWM vanity SHIP keeps failing SHIP@5% — do not promote dens≥6 NULL~0 over AAL/BAC dens0–1. (4) Shadow multi-session non-stub is the ROBOT gate — deliberate rehearsal closes PARTIAL.
+Future Trader: (1) empty stress queue after create→stress is often **healthy drain**, not starvation — inspect `last_ingest` + capital_path dens before unsat surgery. (2) Unsat inject must count recent fails on toxic structs too or mega-cap thrash hides behind a cold sibling structure. (3) MU/IWM vanity SHIP keeps failing SHIP@5% — do not promote dens≥6 NULL~0 over AAL/BAC dens0–1. (4) Shadow multi-session non-stub is the ROBOT gate — deliberate `trader-shadow-rehearsal` closes PARTIAL.
 
 ## NEXT SEED
 

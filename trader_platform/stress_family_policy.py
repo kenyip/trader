@@ -298,6 +298,8 @@ def unsaturated_discovery_symbols(
     exclude: set[str] | None = None,
     universe: list[str] | None = None,
     min_capital_path_ok_sat: int = 25,
+    recent_window_hours: float = 6.0,
+    recent_fail_thrash_min: int = 6,
 ) -> list[str]:
     """Symbols with ≥1 multi-leg family that is neither toxic nor create-saturated.
 
@@ -305,6 +307,11 @@ def unsaturated_discovery_symbols(
     stay off the board — then every multi-leg registry row is already stressed and the
     B3/B4 selector stays empty (2026-07-30 continuum coach). Prefer names that can still
     accept *new* creates under family policy.
+
+    2026-07-30T1500 coach: also demote *recent fail thrash* cold names (AAPL/AMD/ARM/COIN
+    with ≥6 recent fails and 0 recent oks) so unsat inject does not refill B3/B4 with the
+    same doomed mega-cap clones while F/CCL/SNAP/KO starve. Proven unsaturated (lifetime
+    capital_path_ok > 0) still ranks first even if recent stress mixed.
     """
     if limit <= 0:
         return []
@@ -333,16 +340,25 @@ def unsaturated_discovery_symbols(
                 "NFLX",
                 "SMCI",
             ]
-    # Prefer symbols with fewer lifetime capital_path_ok across ML structs (more room).
-    # But proven-unsaturated (1..sat-1 oks) beat cold mega-caps that never entered B3/B4 —
-    # otherwise AAPL/AMD flood inject while SNAP/CCL starve (2026-07-30 coach).
-    scored: list[tuple[int, int, int, str]] = []
+    # Prefer proven-unsaturated (1..sat-1 lifetime oks) over cold names; within each
+    # tier prefer recent capital_path oks and fewer recent fails (not pure ok_mass).
+    scored: list[tuple[int, int, int, int, int, str]] = []
     for raw in universe:
         sym = str(raw or "").strip().upper()
         if not sym or sym in ex:
             continue
         open_structs = 0
         ok_mass = 0
+        # Recent window across *all* candidate structs (incl. toxic/sat) so a toxic
+        # PCS thrash + cold empty CCS cannot disguise the symbol as fresh (AMD 2026-07-30).
+        recent_fail_mass = 0
+        recent_ok_mass = 0
+        for st in structs:
+            rf, ro = family_window_fail_ok(
+                sym, st, rotation=rot, window_hours=float(recent_window_hours)
+            )
+            recent_fail_mass += int(rf)
+            recent_ok_mass += int(ro)
         for st in structs:
             if family_challenge_toxic(sym, st, rotation=rot):
                 continue
@@ -355,12 +371,29 @@ def unsaturated_discovery_symbols(
             ok_mass += int(oks)
         if open_structs <= 0:
             continue
+        # Cold pure-fail thrash: skip inject (selector would B3/B4 burn again).
+        if (
+            ok_mass <= 0
+            and recent_ok_mass <= 0
+            and recent_fail_thrash_min > 0
+            and recent_fail_mass >= int(recent_fail_thrash_min)
+        ):
+            continue
         # tier0 = has some capital_path survivors but room to create; tier1 = cold
         tier = 0 if 0 < ok_mass < int(min_capital_path_ok_sat) else 1
-        scored.append((tier, -open_structs, ok_mass, sym))
+        scored.append(
+            (
+                tier,
+                -int(recent_ok_mass),
+                int(recent_fail_mass),
+                -int(open_structs),
+                int(ok_mass),
+                sym,
+            )
+        )
     scored.sort()
     out: list[str] = []
-    for _t, _a, _b, sym in scored:
+    for _t, _ro, _rf, _os, _ok, sym in scored:
         out.append(sym)
         if len(out) >= int(limit):
             break

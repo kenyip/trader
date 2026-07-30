@@ -1,22 +1,24 @@
 {
   "authority_creep": false,
-  "detail": "live-scout path exercised (live_ticks=1, sessions=1/2, shadow_logs=5) \u2014 need multi-session non-stub window",
-  "generated_at": "2026-07-29T00:57:57+00:00",
+  "detail": "multi-session live-scout shadow window: sessions=3 live_ticks=2 shadow_logs=8",
+  "generated_at": "2026-07-30T22:08:36+00:00",
   "honesty": "Shadow only: propose\u2192risk\u2192log. No paper ledger mutate, no place_*. PASS requires multi-session *non-stub* window without authority creep. Stub ticks only prove plumbing (PARTIAL).",
   "live_authority": false,
   "min_session_days_for_pass": 2,
   "mode": "shadow_rehearsal",
-  "n_history_ticks": 3,
-  "n_live_scout_ticks": 1,
+  "n_history_ticks": 4,
+  "n_live_scout_ticks": 2,
   "n_risk_deny_total": 0,
-  "n_shadow_log_total": 5,
+  "n_shadow_log_total": 8,
   "n_stub_ticks": 2,
   "ok": true,
   "session_day_list": [
-    "2026-07-28"
+    "2026-07-28",
+    "2026-07-29",
+    "2026-07-30"
   ],
-  "session_days": 1,
-  "status": "PARTIAL",
+  "session_days": 3,
+  "status": "PASS",
   "stub_used": false,
   "this_run_ticks": [
     {
@@ -36,14 +38,13 @@
       "symbols": [
         "SNAP",
         "F",
-        "AAL",
         "TSLL",
-        "BAC"
+        "AAL"
       ],
       "trading_authority": false,
-      "ts": "2026-07-29T00:57:57+00:00"
+      "ts": "2026-07-30T22:08:36+00:00"
     }
   ],
   "trading_authority": false,
-  "window_complete": false
+  "window_complete": true
 }
