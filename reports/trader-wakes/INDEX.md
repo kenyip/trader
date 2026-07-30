@@ -1,3 +1,4 @@
+- [2026-07-30T0932-rth](2026-07-30T0932-rth.md) — RTH midday manage: HOLD AAL CCS (−$6.64 OTM $1.26 |Δ|0.24) + BAC PCS (−$7.60 OTM $0.61 |Δ|0.36 recovered vs 08:30 near-breach); book 2/2 STAND_ASIDE; OPEN_PCS AAL research_only; ken_required=false
 - [2026-07-30T0908-continuum-judgment](2026-07-30T0908-continuum-judgment.md) — coach: empty stress queue root-cause (0 unstressed ML); unsat evolve inject + shortlist ≤2/sym → F/CCL seats; IWM SHIP B4-fail; ken_required=false
 - [2026-07-30T0830-rth](2026-07-30T0830-rth.md) — RTH late-morning manage: HOLD AAL CCS (−$0.64 OTM $1.26 |Δ|0.23) + BAC PCS (−$15.60 OTM $0.24 |Δ|0.436 near breach watch); book 2/2 STAND_ASIDE; OPEN_PCS AAL research_only; ken_required=false
 - [2026-07-30T0731-rth](2026-07-30T0731-rth.md) — RTH mid manage: HOLD AAL CCS (−$5.64 OTM $1.34 |Δ|0.24) + BAC PCS (−$7.60 OTM $0.51 |Δ|0.38 BA live; improved vs open last −$14.60); book 2/2 STAND_ASIDE; OPEN_PCS AAL research_only; ken_required=false
