@@ -1,3 +1,4 @@
+- [2026-07-29T2100-continuum-judgment](2026-07-29T2100-continuum-judgment.md) — coach: saturated-family create gate (AAL/BAC PCS stop clone thrash); empty-rot leak fix; first-live F CSP; paper 2/2 manage; ken_required=false
 - [2026-07-29T1505-continuum-judgment](2026-07-29T1505-continuum-judgment.md) — coach: registry prune 6.0MB→1.8MB unblocks evolve; open-paper force-keep; e4ad3be2 SHIP@5% secondary; paper 2/2 manage; ken_required=false
 - [2026-07-29T1230-rth](2026-07-29T1230-rth.md) — RTH late manage: HOLD AAL CCS (−$3.14 OTM $1.65 |Δ|0.21) + BAC PCS (−$10.10 OTM $0.19 |Δ|0.436 near breach); book 2/2 STAND_ASIDE; ken_required=false
 - [2026-07-29T1134-rth](2026-07-29T1134-rth.md) — RTH manage HOLD AAL+BAC; blocked false AAL profit_target (wide BA mid +$23); mark/adv dual-gate; STAND_ASIDE new; ken_required=false

@@ -139,3 +139,98 @@ def test_apply_skips_hot_fail_streak_family_creates(tmp_path: Path):
     assert len(created) == 1
     assert "f_" in created[0] or "put_credit_spread" in created[0]
     assert not any("aal" in c and "call_credit" in c for c in created)
+
+
+def test_apply_skips_saturated_family_creates_prefers_unsaturated(tmp_path: Path):
+    """Many capital_path_ok survivors block new clones; unsaturated family wins budget."""
+    hyps = tmp_path / "hypotheses.yaml"
+    hyps.write_text("version: 1\nhypotheses: []\n", encoding="utf-8")
+    reg = HypothesisRegistry(hyps)
+    now = _now()
+    by = {
+        f"hyp_dna_aal_put_credit_spread_ok{i:02d}": {
+            "hyp_id": f"hyp_dna_aal_put_credit_spread_ok{i:02d}",
+            "symbol": "AAL",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+        for i in range(30)  # >= default min_capital_path_ok=25
+    }
+    # High-score saturated AAL PCS clones should lose to lower-score F CCS.
+    results = [
+        _verdict("AAL", "put_credit_spread", 400.0),
+        _verdict("AAL", "put_credit_spread", 390.0),
+        _verdict("F", "call_credit_spread", 40.0),
+    ]
+    created, updated = apply_results(
+        results,
+        registry=reg,
+        max_create=2,
+        ship_only=True,
+        rotation={"by_hyp_id": by},
+        skip_toxic_families=True,
+    )
+    assert updated == []
+    assert len(created) == 1
+    assert "f_" in created[0]
+    assert "call_credit" in created[0]
+    assert not any("aal" in c for c in created)
+
+
+def test_apply_saturated_skip_does_not_consume_max_create_budget(tmp_path: Path):
+    hyps = tmp_path / "hypotheses.yaml"
+    hyps.write_text("version: 1\nhypotheses: []\n", encoding="utf-8")
+    reg = HypothesisRegistry(hyps)
+    now = _now()
+    by = {
+        f"hyp_dna_bac_put_credit_spread_ok{i:02d}": {
+            "symbol": "BAC",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+        for i in range(25)
+    }
+    results = [
+        _verdict("BAC", "put_credit_spread", 500.0),
+        _verdict("BAC", "put_credit_spread", 490.0),
+        _verdict("SNAP", "put_credit_spread", 15.0),
+        _verdict("F", "call_credit_spread", 12.0),
+    ]
+    created, _ = apply_results(
+        results,
+        registry=reg,
+        max_create=2,
+        ship_only=True,
+        rotation={"by_hyp_id": by},
+        skip_toxic_families=True,
+    )
+    assert len(created) == 2
+    joined = " ".join(created)
+    assert "snap" in joined and ("f_" in joined or "call_credit" in joined)
+    assert "bac" not in joined
+
+
+def test_family_create_saturated_threshold():
+    from trader_platform.stress_family_policy import family_create_saturated
+
+    now = _now()
+    by = {
+        f"h{i}": {
+            "symbol": "X",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+        for i in range(24)
+    }
+    rot = {"by_hyp_id": by}
+    assert not family_create_saturated("X", "put_credit_spread", rotation=rot, min_capital_path_ok=25)
+    by["h24"] = {
+        "symbol": "X",
+        "structure": "put_credit_spread",
+        "capital_path_ok": True,
+        "stressed_at": now,
+    }
+    assert family_create_saturated("X", "put_credit_spread", rotation=rot, min_capital_path_ok=25)

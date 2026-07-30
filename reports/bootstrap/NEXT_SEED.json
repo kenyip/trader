@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. Off-hours: worker evolve unblocked after 2026-07-29T1505 prune (~1.8MB registry).",
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
     "open_orders": [
       {
         "max_loss_usd": 184.64,
@@ -18,18 +18,9 @@
         "structure": "put_credit_spread",
         "symbol": "BAC"
       }
-    ],
-    "coach_20260729T1505": {
-      "registry_bytes_before": 6001614,
-      "registry_bytes_after": 1831566,
-      "n_hyps_before": 1466,
-      "n_hyps_after": 400,
-      "evolve_unblocked": true,
-      "fresh_stress_ok": "hyp_dna_aal_put_credit_spread_e4ad3be2",
-      "fresh_stress_note": "B3 hold + B4 SHIP@5% capital_path_ok dens_neg=2 secondary to dens1 AAL / dens0 BAC leaders"
-    }
+    ]
   },
-  "generated_at": "2026-07-29T22:05:50+00:00",
+  "generated_at": "2026-07-30T04:09:51+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -39,7 +30,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_20260729T1505",
-  "stamp": "20260729T1505",
+  "source": "trader_paper_campaign",
+  "stamp": "20260730T040951",
   "trading_authority": false
 }

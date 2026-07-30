@@ -49,7 +49,7 @@ def family_window_fail_ok(
     """Recent fail/ok counts for symbol×structure from rotation ledger."""
     if not symbol or not structure:
         return 0, 0
-    by = (rotation or load_rotation()).get("by_hyp_id") or {}
+    by = (rotation if rotation is not None else load_rotation()).get("by_hyp_id") or {}
     if not isinstance(by, dict):
         return 0, 0
     now = datetime.now(timezone.utc)
@@ -83,7 +83,7 @@ def family_lifetime_fail_ok(
 ) -> tuple[int, int]:
     if not symbol or not structure:
         return 0, 0
-    by = (rotation or load_rotation()).get("by_hyp_id") or {}
+    by = (rotation if rotation is not None else load_rotation()).get("by_hyp_id") or {}
     if not isinstance(by, dict):
         return 0, 0
     fails = 0
@@ -147,7 +147,7 @@ def family_recent_capital_path_outcomes(
     """
     if not symbol or not structure or lookback <= 0:
         return []
-    by = (rotation or load_rotation()).get("by_hyp_id") or {}
+    by = (rotation if rotation is not None else load_rotation()).get("by_hyp_id") or {}
     if not isinstance(by, dict):
         return []
     now = datetime.now(timezone.utc)
@@ -259,6 +259,28 @@ def family_challenge_toxic(
         ):
             return True
     return False
+
+
+def family_create_saturated(
+    symbol: str | None,
+    structure: str | None,
+    *,
+    rotation: dict[str, Any] | None = None,
+    min_capital_path_ok: int = 25,
+) -> bool:
+    """True when symbol×structure already has enough capital_path_ok survivors.
+
+    Complementary to toxic (hopeless fails): *successful* families can still thrash
+    evolve max_create with dens2 metric clones (AAL PCS ~280 ok) while unsaturated
+    multi-leg SHIPs (F CCS, SNAP PCS, …) never get a registry row. Skip *new*
+    creates once lifetime capital_path_ok ≥ min (default 25); updates allowed.
+    2026-07-29 continuum coach.
+    """
+    if not symbol or not structure or min_capital_path_ok <= 0:
+        return False
+    rot = rotation if rotation is not None else load_rotation()
+    _fails, oks = family_lifetime_fail_ok(symbol, structure, rotation=rot)
+    return int(oks) >= int(min_capital_path_ok)
 
 
 def dna_primary_symbol(dna: Any) -> str | None:

@@ -38,7 +38,13 @@ def test_apply_skips_negative_score_ship(tmp_path: Path):
         _verdict("BAC", 7.8),
         _verdict("AAL", -200.0),
     ]
-    created, updated = apply_results(results, registry=reg, max_create=5, ship_only=False)
+    created, updated = apply_results(
+        results,
+        registry=reg,
+        max_create=5,
+        ship_only=False,
+        rotation={},  # isolate vanity gates from live STRESS_ROTATION saturation
+    )
     assert updated == []
     assert len(created) == 1
     assert any("bac" in c for c in created)
@@ -54,6 +60,7 @@ def test_apply_ship_only_also_skips_vanity(tmp_path: Path):
         registry=reg,
         max_create=5,
         ship_only=True,
+        rotation={},
     )
     assert len(created) == 1
     assert "bac" in created[0]
@@ -85,7 +92,9 @@ def test_apply_skips_thin_needs_and_neg_score_creates(tmp_path: Path):
         _v("SOFI", 20.0, 14, "NEEDS_MORE_DATA"),  # dense NEEDS ok when not ship_only
         _v("BAC", 12.0, 40, "SHIP"),  # good SHIP
     ]
-    created, _ = apply_results(results, registry=reg, max_create=5, ship_only=False)
+    created, _ = apply_results(
+        results, registry=reg, max_create=5, ship_only=False, rotation={}
+    )
     joined = " ".join(created)
     assert "bac" in joined
     assert "sofi" in joined
@@ -94,6 +103,8 @@ def test_apply_skips_thin_needs_and_neg_score_creates(tmp_path: Path):
     # ship_only drops dense NEEDS too
     hyps.write_text("version: 1\nhypotheses: []\n", encoding="utf-8")
     reg2 = HypothesisRegistry(hyps)
-    created2, _ = apply_results(results, registry=reg2, max_create=5, ship_only=True)
+    created2, _ = apply_results(
+        results, registry=reg2, max_create=5, ship_only=True, rotation={}
+    )
     assert len(created2) == 1
     assert "bac" in created2[0]

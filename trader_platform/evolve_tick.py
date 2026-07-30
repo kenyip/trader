@@ -47,6 +47,7 @@ from trader_platform.stress_family_policy import (
     dna_primary_symbol,
     dna_structure,
     family_challenge_toxic,
+    family_create_saturated,
     load_rotation,
 )
 
@@ -793,6 +794,10 @@ def apply_results(
     (2026-07-27 continuum coach: evolve still minted toxic CCS while selector blocked).
     Existing rows may still update evidence.
 
+    Saturated families (many lifetime capital_path_ok, default ≥25) also skip *new*
+    creates so AAL/BAC PCS clone thrash cannot monopolize max_create while unsaturated
+    multi-leg SHIPs starve (2026-07-29 continuum coach).
+
     New creates also require score>0 and n_trades>=min_create_trades so thin
     NEEDS_MORE_DATA (n=3–5) cannot bloat the registry while never entering the
     stress queue (2026-07-28 continuum coach: 142 unstressed multi-leg, 0 selectable).
@@ -846,6 +851,22 @@ def apply_results(
         struct = dna_structure(r.dna)
         return family_challenge_toxic(sym, struct, rotation=rot)
 
+    def _is_saturated_family(r: SimVerdict) -> bool:
+        """Too many capital_path_ok survivors — stop minting dens clones."""
+        if not skip_toxic_families:
+            return False
+        sym = dna_primary_symbol(r.dna)
+        struct = dna_structure(r.dna)
+        return family_create_saturated(sym, struct, rotation=rot)
+
+    def _create_family_rank(r: SimVerdict) -> int:
+        # Prefer unsaturated non-toxic families for max_create (0 best → 2 worst).
+        if _is_toxic_family(r):
+            return 2
+        if _is_saturated_family(r):
+            return 1
+        return 0
+
     ranked = sorted(
         [
             r
@@ -872,8 +893,17 @@ def apply_results(
         ]
         ranked.sort(key=_rank_key, reverse=True)
 
-    # Budget is successful write slots; toxic new-creates skip without consuming budget
-    # so non-toxic DNA still fills max_create (2026-07-27 coach).
+    # Diversity: unsaturated families before saturated clones / toxic vanity.
+    ranked.sort(
+        key=lambda r: (
+            _create_family_rank(r),
+            -VERDICT_RANK.get(r.verdict, 0),
+            -_finite(r.score, default=-1e9),
+        )
+    )
+
+    # Budget is successful write slots; toxic/saturated new-creates skip without
+    # consuming budget so unsaturated DNA still fills max_create.
     n_written = 0
     for r in ranked:
         if n_written >= max_create:
@@ -908,8 +938,10 @@ def apply_results(
             updated.append(hid)
             n_written += 1
         else:
-            # Toxic families: do not mint new hyp rows (updates above still allowed).
+            # Toxic / saturated families: do not mint new hyp rows (updates allowed).
             if _is_toxic_family(r):
+                continue
+            if _is_saturated_family(r):
                 continue
             # New creates: score>0 + min trades + SHIP (or dense NEEDS); no thin toys.
             if not _eligible_for_new_create(r):
