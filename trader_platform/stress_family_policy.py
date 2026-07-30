@@ -283,6 +283,90 @@ def family_create_saturated(
     return int(oks) >= int(min_capital_path_ok)
 
 
+_DEFAULT_ML_STRUCTURES: tuple[str, ...] = (
+    "put_credit_spread",
+    "call_credit_spread",
+    "iron_condor",
+)
+
+
+def unsaturated_discovery_symbols(
+    *,
+    limit: int = 6,
+    rotation: dict[str, Any] | None = None,
+    structures: tuple[str, ...] | list[str] | None = None,
+    exclude: set[str] | None = None,
+    universe: list[str] | None = None,
+    min_capital_path_ok_sat: int = 25,
+) -> list[str]:
+    """Symbols with ≥1 multi-leg family that is neither toxic nor create-saturated.
+
+    Research-ranked evolve tops often tunnel into AAL/NFLX/PLTR while SNAP/CCL/PFE/KO
+    stay off the board — then every multi-leg registry row is already stressed and the
+    B3/B4 selector stays empty (2026-07-30 continuum coach). Prefer names that can still
+    accept *new* creates under family policy.
+    """
+    if limit <= 0:
+        return []
+    rot = rotation if rotation is not None else load_rotation()
+    structs = tuple(structures or _DEFAULT_ML_STRUCTURES)
+    ex = {str(s).strip().upper() for s in (exclude or set()) if s}
+    if universe is None:
+        try:
+            from trader_platform.research.universe import load_universe
+
+            universe = list(load_universe() or [])
+        except Exception:  # noqa: BLE001
+            universe = [
+                "IWM",
+                "F",
+                "SOFI",
+                "AAL",
+                "PFE",
+                "SNAP",
+                "CCL",
+                "BAC",
+                "TSLL",
+                "KO",
+                "XOM",
+                "PLTR",
+                "NFLX",
+                "SMCI",
+            ]
+    # Prefer symbols with fewer lifetime capital_path_ok across ML structs (more room).
+    # But proven-unsaturated (1..sat-1 oks) beat cold mega-caps that never entered B3/B4 —
+    # otherwise AAPL/AMD flood inject while SNAP/CCL starve (2026-07-30 coach).
+    scored: list[tuple[int, int, int, str]] = []
+    for raw in universe:
+        sym = str(raw or "").strip().upper()
+        if not sym or sym in ex:
+            continue
+        open_structs = 0
+        ok_mass = 0
+        for st in structs:
+            if family_challenge_toxic(sym, st, rotation=rot):
+                continue
+            if family_create_saturated(
+                sym, st, rotation=rot, min_capital_path_ok=min_capital_path_ok_sat
+            ):
+                continue
+            open_structs += 1
+            _f, oks = family_lifetime_fail_ok(sym, st, rotation=rot)
+            ok_mass += int(oks)
+        if open_structs <= 0:
+            continue
+        # tier0 = has some capital_path survivors but room to create; tier1 = cold
+        tier = 0 if 0 < ok_mass < int(min_capital_path_ok_sat) else 1
+        scored.append((tier, -open_structs, ok_mass, sym))
+    scored.sort()
+    out: list[str] = []
+    for _t, _a, _b, sym in scored:
+        out.append(sym)
+        if len(out) >= int(limit):
+            break
+    return out
+
+
 def dna_primary_symbol(dna: Any) -> str | None:
     """Best-effort symbol from StrategyDNA or mapping."""
     if dna is None:

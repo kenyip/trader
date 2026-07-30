@@ -1002,6 +1002,8 @@ def run_evolve_tick(
     ship_only: bool = False,
     research_db: Optional[Path | str] = None,
     registry_path: Optional[Path | str] = None,
+    force_symbols: Optional[Sequence[str]] = None,
+    unsat_extra: int = 4,
 ) -> EvolveReport:
     ts = _now()
     report = EvolveReport(
@@ -1013,11 +1015,30 @@ def run_evolve_tick(
         audit_path=str(_EVOLVE_AUDIT),
     )
 
-    rows = top_research_symbols(
-        top_n=top_symbols,
-        sleeve_usd=sleeve_usd,
-        db_path=research_db,
-    )
+    force = [str(s).strip().upper() for s in (force_symbols or []) if str(s).strip()]
+    if force:
+        families = [
+            "short_put_cautious",
+            "short_strangle_candidate",
+            "defined_risk_put_spread",
+            "premium_rich_short_dte",
+            "wheel_assignment",
+        ]
+        rows = [
+            {
+                "symbol": sym,
+                "strategy_family": families[i % len(families)],
+                "composite": 0,
+                "source": "force_symbols",
+            }
+            for i, sym in enumerate(force)
+        ]
+    else:
+        rows = top_research_symbols(
+            top_n=top_symbols,
+            sleeve_usd=sleeve_usd,
+            db_path=research_db,
+        )
     if not rows:
         # Fallback free search: sample multi-name universe — never TSLA/TSLL-only.
         try:
@@ -1048,6 +1069,38 @@ def run_evolve_tick(
             for i, sym in enumerate(chosen)
         ]
         report.errors.append("no research.db scores; using multi-symbol universe fallback")
+
+    # Inject unsaturated multi-leg discovery symbols so research tops cannot starve
+    # SNAP/CCL/PFE/KO/IWM while AAL/NFLX monopolize creates (2026-07-30 coach).
+    ml_structs = {"put_credit_spread", "call_credit_spread", "iron_condor"}
+    struct_set = {str(s) for s in (structures or [])} if structures else set(ml_structs)
+    want_unsat = int(unsat_extra or 0) > 0 and (
+        not structures or bool(struct_set & ml_structs)
+    )
+    if want_unsat and not force:
+        try:
+            from trader_platform.stress_family_policy import unsaturated_discovery_symbols
+
+            have = {str(r.get("symbol") or "").strip().upper() for r in rows}
+            extra = unsaturated_discovery_symbols(
+                limit=int(unsat_extra),
+                exclude=have,
+                structures=tuple(struct_set & ml_structs) or None,
+            )
+            for i, sym in enumerate(extra):
+                if sym in have:
+                    continue
+                rows.append(
+                    {
+                        "symbol": sym,
+                        "strategy_family": "defined_risk_put_spread",
+                        "composite": 0,
+                        "source": "unsaturated_discovery",
+                    }
+                )
+                have.add(sym)
+        except Exception as exc:  # noqa: BLE001
+            report.errors.append(f"unsaturated_discovery_inject: {exc}")
 
     report.symbols = [str(r["symbol"]) for r in rows]
     pop = build_population(
@@ -1129,6 +1182,18 @@ def main(argv: Optional[list[str]] = None) -> int:
     p.add_argument("--once", action="store_true", help="run one evolve pass (default)")
     p.add_argument("--apply", action="store_true", help="write SHIP/strong DNA hyps as candidates")
     p.add_argument("--top-symbols", type=int, default=8)
+    p.add_argument(
+        "--symbols",
+        nargs="*",
+        default=None,
+        help="Optional explicit symbol list (skips research top-N; still can set unsat-extra=0).",
+    )
+    p.add_argument(
+        "--unsat-extra",
+        type=int,
+        default=4,
+        help="Append this many unsaturated multi-leg discovery symbols (0=off). Default 4.",
+    )
     p.add_argument("--mutants", type=int, default=2, help="mutants per structure seed")
     p.add_argument("--max-population", type=int, default=48)
     p.add_argument("--max-create", type=int, default=8)
@@ -1157,6 +1222,8 @@ def main(argv: Optional[list[str]] = None) -> int:
         max_population=args.max_population,
         max_create=args.max_create,
         ship_only=args.ship_only,
+        force_symbols=args.symbols,
+        unsat_extra=int(args.unsat_extra),
     )
     if args.json:
         print(json.dumps(report.to_dict(), indent=2, default=str))

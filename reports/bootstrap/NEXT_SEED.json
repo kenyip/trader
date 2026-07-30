@@ -1,51 +1,34 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; CLOSE only DNA ladder; BAC elevated |Δ|~0.436 OTM~$0.24 — re-mark next tick; stand-aside if no new capital-fit OPEN_* headroom",
-    "closed_this_session": [],
+    "hint": "RTH: mark/manage open paper (AAL CCS + BAC PCS). Search: worker now injects unsaturated multi-leg symbols; shortlist has F+CCL seats. Do not densify.",
+    "coach": {
+      "stamp": "20260730T0908",
+      "fix": "unstressed_ml_starvation",
+      "unsat_inject": true,
+      "shortlist_max_per_symbol": 2,
+      "iwm_forced_b4": "reject_not_ship_at_5pct",
+      "shortlist_symbols_multi": ["AAL", "BAC", "F", "CCL"]
+    },
     "open_orders": [
       {
-        "order_id": "paper_4712ce62fd1c",
-        "symbol": "AAL",
-        "structure": "call_credit_spread",
-        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
-        "status": "working",
         "max_loss_usd": 184.64,
-        "spot": 15.24,
-        "short_strike": 16.5,
-        "otm": 1.26,
-        "short_delta_abs": 0.235,
-        "mtm_usd": -0.64,
-        "mtm_adverse_usd": -5.64,
-        "ml_used_frac": 0.031,
-        "decision": "HOLD",
-        "reasons": ["short_OTM", "delta_under_breach", "ml_within_budget", "not_profit_target"]
+        "order_id": "paper_4712ce62fd1c",
+        "status": "working",
+        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
+        "structure": "call_credit_spread",
+        "symbol": "AAL"
       },
       {
-        "order_id": "paper_75490f40655b",
-        "symbol": "BAC",
-        "structure": "put_credit_spread",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
-        "status": "working",
         "max_loss_usd": 79.6,
-        "spot": 61.24,
-        "short_strike": 61.0,
-        "otm": 0.24,
-        "short_delta_abs": 0.436,
-        "mtm_usd": -15.6,
-        "mtm_adverse_usd": -21.6,
-        "ml_used_frac": 0.271,
-        "decision": "HOLD",
-        "watch": "near_delta_breach_0.45",
-        "reasons": ["short_still_OTM", "delta_0.436_lt_0.45", "ml_27pct_lt_85pct", "not_profit_target", "path_worse_vs_0731_but_ladder_hold"]
+        "order_id": "paper_75490f40655b",
+        "status": "working",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
+        "structure": "put_credit_spread",
+        "symbol": "BAC"
       }
-    ],
-    "book_full": true,
-    "open_risk_usd": 264.24,
-    "stand_aside_new": true,
-    "scout_stamp": "20260730T153040",
-    "scout_note": "4x OPEN_PCS AAL research_only; no paper place under 2/2"
+    ]
   },
-  "generated_at": "2026-07-30T15:35:00+00:00",
+  "generated_at": "2026-07-30T16:08:30+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -55,8 +38,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "rth_eval_2026-07-30T0830",
-  "stamp": "20260730T153500",
-  "trading_authority": false,
-  "wake": "2026-07-30T0830-rth"
+  "source": "continuum_judgment_20260730T0908",
+  "stamp": "20260730T0908",
+  "trading_authority": false
 }

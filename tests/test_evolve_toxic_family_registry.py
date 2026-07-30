@@ -234,3 +234,105 @@ def test_family_create_saturated_threshold():
         "stressed_at": now,
     }
     assert family_create_saturated("X", "put_credit_spread", rotation=rot, min_capital_path_ok=25)
+
+
+def test_unsaturated_discovery_symbols_skips_toxic_and_saturated():
+    from trader_platform.stress_family_policy import unsaturated_discovery_symbols
+
+    now = _now()
+    by = {}
+    # AAL PCS saturated (25 oks)
+    for i in range(25):
+        by[f"aal{i}"] = {
+            "symbol": "AAL",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+    # AAL CCS also saturated so AAL has no open ML struct
+    for i in range(25):
+        by[f"aal_c{i}"] = {
+            "symbol": "AAL",
+            "structure": "call_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+    # NFLX CCS toxic: many fails, 0 ok
+    for i in range(25):
+        by[f"nflx{i}"] = {
+            "symbol": "NFLX",
+            "structure": "call_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now,
+        }
+    # SNAP PCS unsaturated (3 oks)
+    for i in range(3):
+        by[f"snap{i}"] = {
+            "symbol": "SNAP",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+    rot = {"by_hyp_id": by}
+    out = unsaturated_discovery_symbols(
+        limit=6,
+        rotation=rot,
+        universe=["AAL", "NFLX", "SNAP", "ZZZ"],
+        structures=("put_credit_spread", "call_credit_spread"),
+    )
+    assert "SNAP" in out
+    assert "AAL" not in out
+    # SNAP has proven oks → tier0; cold ZZZ/NFLX PCS → tier1
+    assert out[0] == "SNAP"
+
+
+def test_run_evolve_tick_force_symbols_skips_research(monkeypatch):
+    import trader_platform.evolve_tick as ev
+
+    calls = {}
+
+    def fake_top(**kwargs):
+        calls["top"] = True
+        return [{"symbol": "NFLX", "strategy_family": "x", "composite": 99}]
+
+    def fake_build(rows, **kwargs):
+        calls["syms"] = [r["symbol"] for r in rows]
+        return []
+
+    monkeypatch.setattr(ev, "top_research_symbols", fake_top)
+    monkeypatch.setattr(ev, "build_population", fake_build)
+    monkeypatch.setattr(ev, "sim_dna", lambda *a, **k: None)
+    rep = ev.run_evolve_tick(
+        apply=False,
+        force_symbols=["SNAP", "CCL"],
+        unsat_extra=0,
+        max_population=4,
+    )
+    assert "top" not in calls
+    assert calls["syms"] == ["SNAP", "CCL"]
+    assert rep.symbols == ["SNAP", "CCL"]
+
+
+def test_run_evolve_tick_injects_unsaturated(monkeypatch):
+    import trader_platform.evolve_tick as ev
+
+    monkeypatch.setattr(
+        ev,
+        "top_research_symbols",
+        lambda **k: [{"symbol": "AAL", "strategy_family": "x", "composite": 1}],
+    )
+    monkeypatch.setattr(
+        "trader_platform.stress_family_policy.unsaturated_discovery_symbols",
+        lambda **k: ["SNAP", "CCL"],
+    )
+    captured = {}
+
+    def fake_build(rows, **kwargs):
+        captured["syms"] = [r["symbol"] for r in rows]
+        return []
+
+    monkeypatch.setattr(ev, "build_population", fake_build)
+    rep = ev.run_evolve_tick(apply=False, top_symbols=1, unsat_extra=2, max_population=4)
+    assert "AAL" in captured["syms"]
+    assert "SNAP" in captured["syms"] and "CCL" in captured["syms"]
+    assert "SNAP" in rep.symbols

@@ -384,7 +384,9 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
     # dens0 TSLL PCS + CCL CCS never appeared — shortlist looked like monoculture.
     # 2026-07-29 coach: also skip metric twins (same dens/dd/pnl/verdict profile) so
     # three AAL PCS clones with identical risk numbers cannot occupy 3 slots.
-    max_per_symbol = 3
+    # 2026-07-30 coach: max_per_symbol 3→2 — AAL dens1 + BAC dens0 still filled all
+    # 6 multi-leg seats (3+3) while TSLL/CCL/F capital_path SHIP never appeared.
+    max_per_symbol = 2
     multi_cap = 6
     per_sym: dict[str, int] = {}
     multi_added = 0
@@ -485,7 +487,7 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
             "Stress rotation ledger drives shortlist; quality_cycle mixes leaders+fresh. "
             "Capital-path rejects: soft NULL@~0, soft-loss/neg@5%, non-pos full PnL. "
             "Rank dens_bucket(0-1 tied) → slip verdict (SHIP>NEEDS>NULL) → dd → raw dens → slip pnl. "
-            "Multi-leg shortlist caps ≤3 per symbol; skip identical dens/dd/pnl risk twins."
+            "Multi-leg shortlist caps ≤2 per symbol; skip identical dens/dd/pnl risk twins."
         ),
         "agentic": prev.get("agentic")
         or {
