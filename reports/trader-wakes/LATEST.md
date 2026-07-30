@@ -72,7 +72,9 @@ just trader-first-live-lane → F CSP leader n=99
 
 ## INTEGRATION
 
-(see commit receipt)
+- commit `0d74365` on `main` → pushed `origin/main` (HEAD==origin/main)
+- selective stage only: code/tests/wake/NEXT_SEED/FIRST_LIVE/readiness — left worker `hypotheses.yaml` + residual bootstrap dirt unstaged
+- verification re-run post-push: 9 passed (toxic+vanity suite)
 
 ## LESSON
 
