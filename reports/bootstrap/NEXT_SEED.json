@@ -16,6 +16,7 @@
         "short_strike": 16.5,
         "spot": 15.255,
         "status": "working",
+        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
         "structure": "call_credit_spread",
         "symbol": "AAL"
       },
@@ -32,6 +33,7 @@
         "short_strike": 61.0,
         "spot": 61.85,
         "status": "working",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
         "structure": "put_credit_spread",
         "symbol": "BAC"
       }
@@ -47,7 +49,7 @@
     "stand_aside_new": true,
     "wake": "2026-07-30T1030-rth"
   },
-  "generated_at": "2026-07-30T17:32:00+00:00",
+  "generated_at": "2026-07-30T17:34:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
