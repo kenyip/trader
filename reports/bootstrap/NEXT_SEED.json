@@ -1,49 +1,51 @@
 {
   "detail": {
+    "hint": "RTH: mark/manage paper; CLOSE only DNA ladder; BAC elevated |Δ|~0.436 OTM~$0.24 — re-mark next tick; stand-aside if no new capital-fit OPEN_* headroom",
     "closed_this_session": [],
-    "hint": "RTH: mark/manage paper; CLOSE only on DNA ladder; stand-aside new while book 2/2",
     "open_orders": [
       {
-        "decision": "HOLD",
-        "max_loss_usd": 184.64,
-        "ml_used_frac": 0.074,
-        "mtm_usd": -5.64,
         "order_id": "paper_4712ce62fd1c",
-        "otm": 1.34,
-        "short_delta_abs": 0.24,
-        "short_strike": 16.5,
-        "spot": 15.16,
-        "status": "working",
-        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
+        "symbol": "AAL",
         "structure": "call_credit_spread",
-        "symbol": "AAL"
+        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
+        "status": "working",
+        "max_loss_usd": 184.64,
+        "spot": 15.24,
+        "short_strike": 16.5,
+        "otm": 1.26,
+        "short_delta_abs": 0.235,
+        "mtm_usd": -0.64,
+        "mtm_adverse_usd": -5.64,
+        "ml_used_frac": 0.031,
+        "decision": "HOLD",
+        "reasons": ["short_OTM", "delta_under_breach", "ml_within_budget", "not_profit_target"]
       },
       {
-        "decision": "HOLD",
-        "max_loss_usd": 79.6,
-        "ml_used_frac": 0.146,
-        "mtm_usd": -7.6,
         "order_id": "paper_75490f40655b",
-        "otm": 0.51,
-        "short_delta_abs": 0.38,
-        "short_strike": 61.0,
-        "spot": 61.51,
-        "status": "working",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
+        "symbol": "BAC",
         "structure": "put_credit_spread",
-        "symbol": "BAC"
+        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
+        "status": "working",
+        "max_loss_usd": 79.6,
+        "spot": 61.24,
+        "short_strike": 61.0,
+        "otm": 0.24,
+        "short_delta_abs": 0.436,
+        "mtm_usd": -15.6,
+        "mtm_adverse_usd": -21.6,
+        "ml_used_frac": 0.271,
+        "decision": "HOLD",
+        "watch": "near_delta_breach_0.45",
+        "reasons": ["short_still_OTM", "delta_0.436_lt_0.45", "ml_27pct_lt_85pct", "not_profit_target", "path_worse_vs_0731_but_ladder_hold"]
       }
     ],
-    "new_entries": "STAND_ASIDE",
-    "reason_new": "book_full_2_2_plus_research_only_autonomy",
-    "scout": {
-      "stamp": "20260730T143148",
-      "n_intents": 4,
-      "note": "OPEN_PCS AAL x4 research_only"
-    },
-    "wake": "2026-07-30T0731-rth"
+    "book_full": true,
+    "open_risk_usd": 264.24,
+    "stand_aside_new": true,
+    "scout_stamp": "20260730T153040",
+    "scout_note": "4x OPEN_PCS AAL research_only; no paper place under 2/2"
   },
-  "generated_at": "2026-07-30T14:34:00+00:00",
+  "generated_at": "2026-07-30T15:35:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -53,7 +55,8 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "rth_eval_2026-07-30T0731",
-  "stamp": "20260730T143400",
-  "trading_authority": false
+  "source": "rth_eval_2026-07-30T0830",
+  "stamp": "20260730T153500",
+  "trading_authority": false,
+  "wake": "2026-07-30T0830-rth"
 }
