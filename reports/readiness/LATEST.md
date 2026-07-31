@@ -9,6 +9,11 @@ Coach: registry bloat 6.0MB froze both evolves under green cycles → pruned 400
 ken_required: false  
 NEXT: manage_open_paper_campaign
 
+## C-row RTH 2026-07-31T1132
+- paper manage: HOLD AAL CCS (−$2.64) + BAC PCS (+$3.90 recovered); book 2/2 risk $264
+- new entries STAND_ASIDE; scout OPEN_PCS research_only; shadow PASS; live_armed=false
+- updated: 2026-07-31T15:33:00+00:00
+
 ## C-row RTH 2026-07-31T0931
 - paper manage: HOLD AAL CCS + BAC PCS (book 2/2, risk $264)
 - new entries STAND_ASIDE; scout OPEN_PCS research_only
