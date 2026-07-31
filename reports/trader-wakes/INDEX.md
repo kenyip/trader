@@ -1,3 +1,4 @@
+- 2026-07-31T1430-rth.md — RTH mid-afternoon HOLD AAL CCS (+$2.36 OTM $1.18 |Δ|0.21 soft-green vs 13:30 −$0.14) + BAC PCS (+$3.40 OTM $1.04 |Δ|0.24); book 2/2 STAND_ASIDE; OPEN_PCS AAL/BAC research_only; ken_required=false
 - 2026-07-31T1330-rth.md — RTH afternoon HOLD AAL CCS (−$0.14 OTM $1.22 |Δ|0.23 soft-flat vs midday +$0.86) + BAC PCS (+$3.90 OTM $1.17 |Δ|0.23); book 2/2 STAND_ASIDE; OPEN_PCS AAL/BAC research_only; ken_required=false
 - 2026-07-31T1230-rth.md — RTH midday HOLD AAL CCS (+$0.86 OTM $1.20 |Δ|0.23) + BAC PCS (+$3.90 OTM $1.15 |Δ|0.23 stable green); book 2/2 STAND_ASIDE; OPEN_PCS AAL/BAC research_only; ken_required=false
 - 2026-07-31T0908-continuum-judgment.md — coach: family-level unsat inject unblocks multi-leg mint; IWM PCS soft NULL@0 + KO PCS B4 fragile reject; paper 2/2 manage residual; ken_required=false

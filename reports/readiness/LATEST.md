@@ -9,6 +9,11 @@ Coach 0908: empty stress queue was create-starve (toxic/sat SHIPs); family unsat
 ken_required: false  
 NEXT: manage_open_paper_campaign
 
+## C-row RTH 2026-07-31T1430
+- paper manage: HOLD AAL CCS (+$2.36 soft-green) + BAC PCS (+$3.40); book 2/2 risk $264
+- new entries STAND_ASIDE; scout OPEN_PCS research_only; shadow PASS; live_armed=false
+- updated: 2026-07-31T18:32:55+00:00
+
 ## C-row RTH 2026-07-31T1330
 - paper manage: HOLD AAL CCS (−$0.14 soft-flat) + BAC PCS (+$3.90); book 2/2 risk $264
 - new entries STAND_ASIDE; scout OPEN_PCS research_only; shadow PASS; live_armed=false
