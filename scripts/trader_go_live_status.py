@@ -43,6 +43,8 @@ _LIMITS = _REPO / "configs" / "risk_limits.yaml"
 _LEDGER = _CACHE / "paper_ledger.json"
 _AUDIT = _CACHE / "autonomy_audit.jsonl"
 _SHADOW_LATEST = _CACHE / "shadow" / "LATEST.json"
+_CYCLE_LATEST = _CACHE / "quality_worker" / "cycle_LATEST.json"
+_HYPS_YAML = _REPO / "trader_platform" / "data" / "hypotheses.yaml"
 
 
 def _now() -> str:
@@ -54,6 +56,73 @@ def _load_json(path: Path) -> Any:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return None
+
+
+def edge_search_health(cycle: Optional[dict] = None, *, registry_bytes: Optional[int] = None) -> dict[str, Any]:
+    """Classify quality-cycle EDGE muscle health.
+
+    Green cycle rc=0 can still freeze search when both evolves skip on registry bloat
+    (2026-07-28/30/31 coach). Surface that so status cannot look SEARCHING while dead.
+    """
+    cycle = cycle or {}
+    phases = cycle.get("phases") if isinstance(cycle.get("phases"), dict) else {}
+    note = str(cycle.get("evolve_note") or "")
+    bloat_reasons: list[str] = []
+    evolve_skipped = 0
+    evolve_ran = 0
+    for lane in ("evolve_csp", "evolve_defined_risk"):
+        ph = phases.get(lane) if isinstance(phases.get(lane), dict) else {}
+        reason = str(ph.get("reason") or "")
+        if ph.get("skipped"):
+            evolve_skipped += 1
+        elif ph.get("cmd") or (ph.get("seconds") or 0) > 0:
+            evolve_ran += 1
+        if "registry_bloat" in reason or "bloat" in reason.lower():
+            bloat_reasons.append(f"{lane}:{reason or 'bloat'}")
+    if "registry_bloat" in note or "bloat" in note.lower():
+        if note and note not in bloat_reasons:
+            bloat_reasons.append(note)
+    reg_b = registry_bytes
+    if reg_b is None:
+        try:
+            reg_b = int(cycle.get("registry_bytes"))  # type: ignore[arg-type]
+        except Exception:
+            reg_b = None
+    if reg_b is None and _HYPS_YAML.is_file():
+        try:
+            reg_b = int(_HYPS_YAML.stat().st_size)
+        except Exception:
+            reg_b = None
+    try:
+        reg_max = int(cycle.get("registry_max_bytes") or 0) or None
+    except Exception:
+        reg_max = None
+    bloated = bool(bloat_reasons)
+    if bloated:
+        state = "BLOATED_SKIP"
+        summary = "EDGE evolves skipped — registry bloat (prune off-hours)"
+    elif evolve_ran >= 1:
+        state = "OK"
+        summary = "EDGE evolve ran"
+    elif evolve_skipped >= 1 and not bloated:
+        # alternate-lane skip is healthy when the other lane ran, or book-only cycle
+        state = "OK_PARTIAL"
+        summary = "EDGE evolve alternate/skip (non-bloat)"
+    else:
+        state = "UNKNOWN"
+        summary = "no evolve phase detail"
+    return {
+        "state": state,
+        "summary": summary,
+        "registry_bloated_skip": bloated,
+        "registry_bytes": reg_b,
+        "registry_max_bytes": reg_max,
+        "evolve_note": note or None,
+        "bloat_reasons": bloat_reasons,
+        "evolve_ran": evolve_ran,
+        "evolve_skipped": evolve_skipped,
+        "cycle_stamp": cycle.get("stamp"),
+    }
 
 
 def _age_hours(iso: Optional[str]) -> Optional[float]:
@@ -660,6 +729,13 @@ def collect() -> Funnel:
     handoff_status = handoff.get("status") or "MISSING"
     worker_hb = _load_json(_CACHE / "quality_worker" / "HEARTBEAT.json") or {}
     worker_status = _load_json(_CACHE / "quality_worker" / "STATUS.json") or {}
+    worker_cycle = _load_json(_CYCLE_LATEST) or {}
+    if not isinstance(worker_cycle, dict):
+        worker_cycle = {}
+    # Prefer freshest cycle detail: heartbeat is thin; cycle_LATEST has evolve phases.
+    if not worker_cycle and isinstance(worker_hb, dict):
+        worker_cycle = worker_hb
+    edge_search = edge_search_health(worker_cycle if isinstance(worker_cycle, dict) else {})
     worker_pid_path = _CACHE / "quality_worker" / "worker.pid"
     worker_running = False
     if worker_pid_path.is_file():
@@ -686,8 +762,13 @@ def collect() -> Funnel:
     act += min(10.0, real_orders * 2.0)
     act += 5.0 if working >= 1 else 0.0
     act += 5.0 if edge_ok else 0.0
+    # Bloat-skip freezes DNA minting — do not report SEARCHING vanity from cycle count alone.
+    if edge_search.get("registry_bloated_skip"):
+        act = min(act, 35.0)
     activity_pct = round(min(100.0, act), 1)
-    if activity_pct >= 70:
+    if edge_search.get("registry_bloated_skip"):
+        activity_label = "EDGE_FROZEN_BLOAT"
+    elif activity_pct >= 70:
         activity_label = "SEARCHING"
     elif activity_pct >= 40:
         activity_label = "ACTIVE"
@@ -705,7 +786,8 @@ def collect() -> Funnel:
         "paper_hold_hours_oldest": round(hold_h, 2),
         "paper_real_orders": real_orders,
         "paper_working": working,
-        "note": "Search activity (cycles). Not the same as ready-to-trade.",
+        "edge_search": edge_search,
+        "note": "Search activity (cycles). Not the same as ready-to-trade. EDGE_FROZEN_BLOAT = evolve skipped on hyp yaml size.",
     }
 
     # --- 3 layers (primary) ---
@@ -944,8 +1026,11 @@ def collect() -> Funnel:
             "quality_worker_hb_age_h": round(
                 _age_hours(worker_hb.get("generated_at")) or -1, 2
             ),
-            "quality_worker_stamp": worker_hb.get("stamp"),
+            "quality_worker_stamp": worker_hb.get("stamp") or worker_cycle.get("stamp"),
             "quality_cycles_completed": cycle_n,
+            "edge_search": edge_search,
+            "registry_bytes": edge_search.get("registry_bytes"),
+            "registry_bloated_skip": bool(edge_search.get("registry_bloated_skip")),
         },
         paper=paper,
         activity=activity,
@@ -1046,11 +1131,24 @@ def format_text(f: Funnel) -> str:
 
     c = f.continuum
     wr = "ON" if c.get("quality_worker_running") else "off"
+    es = c.get("edge_search") if isinstance(c.get("edge_search"), dict) else {}
+    es_state = es.get("state") or ("BLOATED_SKIP" if c.get("registry_bloated_skip") else "?")
+    reg_b = c.get("registry_bytes") if c.get("registry_bytes") is not None else es.get("registry_bytes")
+    reg_bit = (
+        f"  registry≈{int(reg_b / 1e6 * 10) / 10}MB"
+        if isinstance(reg_b, (int, float)) and reg_b
+        else ""
+    )
     lines.append("BACKGROUND")
     lines.append(
         f"   worker={wr}  cycles={c.get('quality_cycles_completed')}  "
-        f"hb_age_h={c.get('quality_worker_hb_age_h')}"
+        f"hb_age_h={c.get('quality_worker_hb_age_h')}  edge_search={es_state}{reg_bit}"
     )
+    if c.get("registry_bloated_skip") or es.get("registry_bloated_skip"):
+        lines.append(
+            "   ⚠ EDGE frozen: both evolves skipped on hypotheses.yaml bloat — "
+            "off-hours `scripts/trader_prune_hyp_registry.py --max-keep 400`"
+        )
     lines.append(
         f"   ready-bar {_bar(f.overall_pct)}  "
         f"(evidence gates — can stay flat while search is hot)"

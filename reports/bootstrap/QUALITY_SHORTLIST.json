@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-30T22:09:44+00:00",
+  "generated_at": "2026-07-31T04:08:19+00:00",
   "phase": "BUILD_PAPER_SEARCH",
   "authority": "research_paper_only",
   "honesty": "Proxy BS sims + B3/B4 only. Not TOP_HYP. Multi-leg not MCP-live. Stress rotation ledger drives shortlist; quality_cycle mixes leaders+fresh. Capital-path rejects: soft NULL@~0, soft-loss/neg@5%, non-pos full PnL. Rank dens_bucket(0-1 tied) \u2192 slip verdict (SHIP>NEEDS>NULL) \u2192 dd \u2192 raw dens \u2192 slip pnl. Multi-leg shortlist caps \u22642 per symbol; skip identical dens/dd/pnl risk twins.",
@@ -126,16 +126,29 @@
       "stressed_at": "2026-07-27T23:54:51+00:00"
     },
     {
-      "hyp_id": "hyp_dna_aal_short_put_credit_dna_72c7",
+      "hyp_id": "hyp_dna_aal_short_put_credit_dna_f8b3",
       "structure": "short_put_credit",
       "symbol": "AAL",
       "lane": "mcp_native_live_candidate_path",
       "stress_priority": false,
-      "ship_score": 42.67661405236653,
-      "n_trades": 77,
-      "csp_bp_proxy": 1437.35,
+      "ship_score": 82.71156183362125,
+      "n_trades": 76,
+      "csp_bp_proxy": 1465.85,
       "capital_fit": "fit_3k",
-      "why": "single-leg short_put_credit on AAL; fits $3k CSP BP; sim SHIP n=77",
+      "why": "single-leg short_put_credit on AAL; fits $3k CSP BP; sim SHIP n=76",
+      "caveat": "Proxy sim + spot BP only. Not pack-grade multi-symbol edge. RH MCP single-leg place still requires Ken arm for live."
+    },
+    {
+      "hyp_id": "hyp_dna_f_cash_secured_put_dna_7b84",
+      "structure": "cash_secured_put",
+      "symbol": "F",
+      "lane": "mcp_native_live_candidate_path",
+      "stress_priority": false,
+      "ship_score": 310.85971593768943,
+      "n_trades": 71,
+      "csp_bp_proxy": 1411.7,
+      "capital_fit": "fit_3k",
+      "why": "single-leg cash_secured_put on F; fits $3k CSP BP; sim SHIP n=71",
       "caveat": "Proxy sim + spot BP only. Not pack-grade multi-symbol edge. RH MCP single-leg place still requires Ken arm for live."
     },
     {
@@ -146,22 +159,9 @@
       "stress_priority": false,
       "ship_score": 40.19918987181473,
       "n_trades": 62,
-      "csp_bp_proxy": 656.47,
+      "csp_bp_proxy": 684.95,
       "capital_fit": "fit_3k",
       "why": "single-leg cash_secured_put on TSLL; fits $3k CSP BP; sim SHIP n=62",
-      "caveat": "Proxy sim + spot BP only. Not pack-grade multi-symbol edge. RH MCP single-leg place still requires Ken arm for live."
-    },
-    {
-      "hyp_id": "hyp_dna_sofi_cash_secured_put_dna_768b",
-      "structure": "cash_secured_put",
-      "symbol": "SOFI",
-      "lane": "mcp_native_live_candidate_path",
-      "stress_priority": false,
-      "ship_score": 123.53287642061572,
-      "n_trades": 49,
-      "csp_bp_proxy": 1451.6,
-      "capital_fit": "fit_3k",
-      "why": "single-leg cash_secured_put on SOFI; fits $3k CSP BP; sim SHIP n=49",
       "caveat": "Proxy sim + spot BP only. Not pack-grade multi-symbol edge. RH MCP single-leg place still requires Ken arm for live."
     }
   ],

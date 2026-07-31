@@ -1,3 +1,4 @@
+- 2026-07-30T2100-continuum-judgment.md — coach: registry bloat 6.0→1.8MB unblocks EDGE; status edge_search=BLOATED_SKIP|OK; PFE PCS B4 REJECT; first-live F CSP #2; ken_required=false
 - 2026-07-30T1509-continuum-judgment.md — coach: unsat recent-fail thrash demotion; MU/IWM B4 NULL~0; shadow PASS 3 sessions; first-live AAL short_put; ken_required=false
 - 2026-07-30T1530-rth.md — RTH manage HOLD AAL CCS + BAC PCS; STAND_ASIDE new (book 2/2)
 - [2026-07-30T1430-rth](2026-07-30T1430-rth.md) — RTH manage: HOLD AAL CCS + BAC PCS (book 2/2); STAND_ASIDE new; scout OPEN_PCS AAL research_only

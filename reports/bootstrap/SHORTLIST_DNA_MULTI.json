@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-30T22:09:44+00:00",
+  "generated_at": "2026-07-31T04:07:11+00:00",
   "honesty": "Shortlist capital_path_ok multi-leg DNA re-run on peer symbols via pcs_sim proxy (L0). quality_pass requires origin + \u2265min_peer_pass peers with n_trades\u2265min and positive total_pnl_per_contract. Not densify-seed multi; not live edge; not MCP first-live.",
   "live_authority": false,
   "min_peer_pass": 2,
@@ -41,12 +41,11 @@
         "max_dd": 31.46
       },
       "multi_symbol_ok": true,
-      "n_peer_pass": 3,
+      "n_peer_pass": 2,
       "ok": true,
       "origin_ok": true,
       "peer_pass_symbols": [
         "BAC",
-        "F",
         "XOM"
       ],
       "peers_tested": [
@@ -54,27 +53,27 @@
         "F",
         "CCL",
         "TSLL",
-        "SOFI",
-        "XOM"
+        "XOM",
+        "SNAP"
       ],
       "per_symbol": [
         {
           "is_origin": true,
-          "max_dd_per_contract": 23.513008092589995,
-          "max_loss_usd": 39.832541090895425,
-          "n_trades": 26,
+          "max_dd_per_contract": 23.513008092589953,
+          "max_loss_usd": 39.828618621483855,
+          "n_trades": 25,
           "ok": true,
           "origin_pass": true,
           "peer_pass": false,
           "reason": "ok",
           "skipped": false,
           "symbol": "AAL",
-          "total_pnl_per_contract": 25.837616142416692
+          "total_pnl_per_contract": 25.837616142416685
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 125.93136498961297,
-          "max_loss_usd": 80.33622752585805,
+          "max_dd_per_contract": 125.93136498961653,
+          "max_loss_usd": 80.38427639160098,
           "n_trades": 27,
           "ok": true,
           "origin_pass": false,
@@ -82,25 +81,25 @@
           "reason": "ok",
           "skipped": false,
           "symbol": "BAC",
-          "total_pnl_per_contract": 65.02357226495619
+          "total_pnl_per_contract": 65.02357226495135
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 55.112435304770436,
-          "max_loss_usd": 39.80274438471647,
-          "n_trades": 25,
+          "max_dd_per_contract": 55.11243530477023,
+          "max_loss_usd": 39.776690961087716,
+          "n_trades": 24,
           "ok": true,
           "origin_pass": false,
-          "peer_pass": true,
+          "peer_pass": false,
           "reason": "ok",
           "skipped": false,
           "symbol": "F",
-          "total_pnl_per_contract": 8.058182350965621
+          "total_pnl_per_contract": -2.2036532234096864
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 77.44856453961373,
-          "max_loss_usd": 79.38850743825051,
+          "max_dd_per_contract": 77.44856453961454,
+          "max_loss_usd": 79.3885074382506,
           "n_trades": 17,
           "ok": true,
           "origin_pass": false,
@@ -108,46 +107,46 @@
           "reason": "ok",
           "skipped": false,
           "symbol": "CCL",
-          "total_pnl_per_contract": -91.27651716336818
+          "total_pnl_per_contract": -91.27651716336963
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 76.73754984225627,
-          "max_loss_usd": 38.318375634281786,
-          "n_trades": 22,
+          "max_dd_per_contract": 77.41260773893816,
+          "max_loss_usd": 38.22192419385334,
+          "n_trades": 21,
           "ok": true,
           "origin_pass": false,
           "peer_pass": false,
           "reason": "ok",
           "skipped": false,
           "symbol": "TSLL",
-          "total_pnl_per_contract": -56.79527884697121
+          "total_pnl_per_contract": -33.8622535482446
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 114.75540812770035,
-          "max_loss_usd": 63.449256461093,
-          "n_trades": 20,
-          "ok": true,
-          "origin_pass": false,
-          "peer_pass": false,
-          "reason": "ok",
-          "skipped": false,
-          "symbol": "SOFI",
-          "total_pnl_per_contract": -100.35853288073928
-        },
-        {
-          "is_origin": false,
-          "max_dd_per_contract": 431.1931282195442,
-          "max_loss_usd": 200.58399944931674,
-          "n_trades": 34,
+          "max_dd_per_contract": 431.19312821954304,
+          "max_loss_usd": 200.54711394256947,
+          "n_trades": 33,
           "ok": true,
           "origin_pass": false,
           "peer_pass": true,
           "reason": "ok",
           "skipped": false,
           "symbol": "XOM",
-          "total_pnl_per_contract": 48.66384756982941
+          "total_pnl_per_contract": 39.08979288077623
+        },
+        {
+          "is_origin": false,
+          "max_dd_per_contract": 34.7674564892688,
+          "max_loss_usd": 39.625183365977264,
+          "n_trades": 15,
+          "ok": true,
+          "origin_pass": false,
+          "peer_pass": false,
+          "reason": "ok",
+          "skipped": false,
+          "symbol": "SNAP",
+          "total_pnl_per_contract": -37.26018514133594
         }
       ],
       "structure": "put_credit_spread",
@@ -196,14 +195,14 @@
         "F",
         "CCL",
         "TSLL",
-        "SOFI",
-        "XOM"
+        "XOM",
+        "SNAP"
       ],
       "per_symbol": [
         {
           "is_origin": true,
           "max_dd_per_contract": 41.91744387101419,
-          "max_loss_usd": 80.2398949110151,
+          "max_loss_usd": 80.23989491101499,
           "n_trades": 22,
           "ok": true,
           "origin_pass": true,
@@ -211,12 +210,12 @@
           "reason": "ok",
           "skipped": false,
           "symbol": "BAC",
-          "total_pnl_per_contract": 118.95260698794775
+          "total_pnl_per_contract": 118.9526069879491
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 26.966526248504152,
-          "max_loss_usd": 39.83205614885195,
+          "max_dd_per_contract": 26.966526248504085,
+          "max_loss_usd": 39.83205614885194,
           "n_trades": 21,
           "ok": true,
           "origin_pass": false,
@@ -224,12 +223,12 @@
           "reason": "ok",
           "skipped": false,
           "symbol": "AAL",
-          "total_pnl_per_contract": 13.396575762759895
+          "total_pnl_per_contract": 13.396575762760364
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 55.23760080399122,
-          "max_loss_usd": 40.03956191778473,
+          "max_dd_per_contract": 55.237600803991654,
+          "max_loss_usd": 40.03956191778474,
           "n_trades": 22,
           "ok": true,
           "origin_pass": false,
@@ -237,25 +236,25 @@
           "reason": "ok",
           "skipped": false,
           "symbol": "F",
-          "total_pnl_per_contract": -28.692568540787445
+          "total_pnl_per_contract": -39.435717202689666
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 75.93769084185739,
-          "max_loss_usd": 80.20089534285962,
-          "n_trades": 20,
+          "max_dd_per_contract": 75.93769084185695,
+          "max_loss_usd": 80.13193724651407,
+          "n_trades": 21,
           "ok": true,
           "origin_pass": false,
           "peer_pass": false,
           "reason": "ok",
           "skipped": false,
           "symbol": "CCL",
-          "total_pnl_per_contract": -28.348675956862508
+          "total_pnl_per_contract": -28.34867595686341
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 54.28618921504165,
-          "max_loss_usd": 39.34393024526995,
+          "max_dd_per_contract": 54.28618921504221,
+          "max_loss_usd": 39.34393024526999,
           "n_trades": 27,
           "ok": true,
           "origin_pass": false,
@@ -263,25 +262,12 @@
           "reason": "ok",
           "skipped": false,
           "symbol": "TSLL",
-          "total_pnl_per_contract": 39.1734064165989
+          "total_pnl_per_contract": 39.17340641659843
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 140.04569652242446,
-          "max_loss_usd": 61.50314456508445,
-          "n_trades": 20,
-          "ok": true,
-          "origin_pass": false,
-          "peer_pass": false,
-          "reason": "ok",
-          "skipped": false,
-          "symbol": "SOFI",
-          "total_pnl_per_contract": -77.69571219978705
-        },
-        {
-          "is_origin": false,
-          "max_dd_per_contract": 210.75463883708744,
-          "max_loss_usd": 200.02497246930912,
+          "max_dd_per_contract": 210.7546388370842,
+          "max_loss_usd": 200.02497246930895,
           "n_trades": 24,
           "ok": true,
           "origin_pass": false,
@@ -289,7 +275,20 @@
           "reason": "ok",
           "skipped": false,
           "symbol": "XOM",
-          "total_pnl_per_contract": 97.32381705617541
+          "total_pnl_per_contract": 97.32381705618582
+        },
+        {
+          "is_origin": false,
+          "max_dd_per_contract": 13.817366195581997,
+          "max_loss_usd": 40.03690533892036,
+          "n_trades": 14,
+          "ok": true,
+          "origin_pass": false,
+          "peer_pass": false,
+          "reason": "ok",
+          "skipped": false,
+          "symbol": "SNAP",
+          "total_pnl_per_contract": 47.55612031720716
         }
       ],
       "structure": "put_credit_spread",
@@ -326,27 +325,26 @@
         "max_dd": 48.98
       },
       "multi_symbol_ok": true,
-      "n_peer_pass": 3,
+      "n_peer_pass": 2,
       "ok": true,
       "origin_ok": true,
       "peer_pass_symbols": [
         "CCL",
-        "TSLL",
-        "SOFI"
+        "TSLL"
       ],
       "peers_tested": [
         "BAC",
         "F",
         "CCL",
         "TSLL",
-        "SOFI",
-        "XOM"
+        "XOM",
+        "SNAP"
       ],
       "per_symbol": [
         {
           "is_origin": true,
-          "max_dd_per_contract": 48.97591095293016,
-          "max_loss_usd": 185.5601326999968,
+          "max_dd_per_contract": 48.975910952930164,
+          "max_loss_usd": 185.56013269999676,
           "n_trades": 21,
           "ok": true,
           "origin_pass": true,
@@ -354,25 +352,25 @@
           "reason": "ok",
           "skipped": false,
           "symbol": "AAL",
-          "total_pnl_per_contract": 65.24110297039668
+          "total_pnl_per_contract": 58.05931505034752
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 143.48610074828423,
-          "max_loss_usd": 180.66558277574148,
-          "n_trades": 38,
+          "max_dd_per_contract": 143.4861007482853,
+          "max_loss_usd": 180.4637767549812,
+          "n_trades": 37,
           "ok": true,
           "origin_pass": false,
           "peer_pass": false,
           "reason": "ok",
           "skipped": false,
           "symbol": "BAC",
-          "total_pnl_per_contract": -10.817056388306135
+          "total_pnl_per_contract": -18.85744564097644
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 45.72735692072727,
-          "max_loss_usd": 185.00052953123273,
+          "max_dd_per_contract": 45.72735692072716,
+          "max_loss_usd": 185.0005295312327,
           "n_trades": 8,
           "ok": true,
           "origin_pass": false,
@@ -380,12 +378,12 @@
           "reason": "ok",
           "skipped": false,
           "symbol": "F",
-          "total_pnl_per_contract": 29.755832080622113
+          "total_pnl_per_contract": 29.75583208062217
         },
         {
           "is_origin": false,
           "max_dd_per_contract": 164.64293163505596,
-          "max_loss_usd": 181.42649092541592,
+          "max_loss_usd": 181.42649092541595,
           "n_trades": 47,
           "ok": true,
           "origin_pass": false,
@@ -393,12 +391,12 @@
           "reason": "ok",
           "skipped": false,
           "symbol": "CCL",
-          "total_pnl_per_contract": 244.10950643137707
+          "total_pnl_per_contract": 239.95001348225142
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 141.79800497058693,
-          "max_loss_usd": 183.72969252757284,
+          "max_dd_per_contract": 141.79800497058733,
+          "max_loss_usd": 183.72969252757292,
           "n_trades": 36,
           "ok": true,
           "origin_pass": false,
@@ -406,25 +404,12 @@
           "reason": "ok",
           "skipped": false,
           "symbol": "TSLL",
-          "total_pnl_per_contract": 128.9349012416719
+          "total_pnl_per_contract": 128.93490124166908
         },
         {
           "is_origin": false,
-          "max_dd_per_contract": 68.61699730508504,
-          "max_loss_usd": 183.42461754368398,
-          "n_trades": 39,
-          "ok": true,
-          "origin_pass": false,
-          "peer_pass": true,
-          "reason": "ok",
-          "skipped": false,
-          "symbol": "SOFI",
-          "total_pnl_per_contract": 121.23007280511779
-        },
-        {
-          "is_origin": false,
-          "max_dd_per_contract": 731.4606296118533,
-          "max_loss_usd": 219.56720720959817,
+          "max_dd_per_contract": 731.4606296118459,
+          "max_loss_usd": 219.56720720959768,
           "n_trades": 46,
           "ok": true,
           "origin_pass": false,
@@ -432,7 +417,20 @@
           "reason": "ok",
           "skipped": false,
           "symbol": "XOM",
-          "total_pnl_per_contract": -524.6633386026875
+          "total_pnl_per_contract": -538.0488750945955
+        },
+        {
+          "is_origin": false,
+          "max_dd_per_contract": null,
+          "max_loss_usd": null,
+          "n_trades": 0,
+          "ok": true,
+          "origin_pass": false,
+          "peer_pass": false,
+          "reason": "ok",
+          "skipped": false,
+          "symbol": "SNAP",
+          "total_pnl_per_contract": null
         }
       ],
       "structure": "call_credit_spread",

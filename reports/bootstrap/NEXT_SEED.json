@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "Next RTH: mark/manage paper; stand-aside if no new capital-fit OPEN_*. Off-hours: worker unsat thrash-aware; prune registry if ≥6MB (stop worker first).",
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. Off-hours EDGE unblocked after registry prune 6.0→1.8MB.",
     "open_orders": [
       {
         "max_loss_usd": 184.64,
@@ -19,14 +19,14 @@
         "symbol": "BAC"
       }
     ],
-    "coach_20260730T1509": {
-      "shadow": "PASS",
-      "unsat_thrash_demotion": true,
-      "mu_iwm_b4": "NULL_soft_reject",
-      "first_live_leader": "AAL short_put_credit"
+    "coach_2100": {
+      "edge_search": "OK",
+      "registry_bytes": 1860497,
+      "prune": "1504→400 hyps / 6.0→1.8MB",
+      "pfe_pcs_b3fa2cf6": "capital_path_ok=false B4 REJECT"
     }
   },
-  "generated_at": "2026-07-30T22:09:30+00:00",
+  "generated_at": "2026-07-31T04:08:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -36,7 +36,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_2026-07-30T1509",
-  "stamp": "20260730T1509",
+  "source": "continuum_coach_20260730T2100",
+  "stamp": "20260731T040800",
   "trading_authority": false
 }

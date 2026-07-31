@@ -114,3 +114,117 @@ def test_same_day_single_session():
     end = start + timedelta(hours=3)
     days = market_session_days_spanned(start, end)
     assert len(days) == 1
+
+
+def test_edge_search_health_detects_registry_bloat_skip():
+    from scripts.trader_go_live_status import edge_search_health
+
+    bloated = edge_search_health(
+        {
+            "stamp": "20260731T040026",
+            "evolve_note": "skipped both evolves: hypotheses.yaml 6002931b > limit 6000000b",
+            "registry_bytes": 6_002_931,
+            "registry_max_bytes": 6_000_000,
+            "phases": {
+                "evolve_csp": {
+                    "skipped": True,
+                    "reason": "registry_bloat_skip_evolve",
+                    "registry_bytes": 6_002_931,
+                },
+                "evolve_defined_risk": {
+                    "skipped": True,
+                    "reason": "registry_bloat_skip_evolve",
+                },
+            },
+        }
+    )
+    assert bloated["registry_bloated_skip"] is True
+    assert bloated["state"] == "BLOATED_SKIP"
+    assert bloated["evolve_ran"] == 0
+
+    ok = edge_search_health(
+        {
+            "stamp": "20260731T040441",
+            "registry_bytes": 1_848_575,
+            "registry_max_bytes": 6_000_000,
+            "phases": {
+                "evolve_csp": {
+                    "cmd": ["python", "-m", "trader_platform.evolve_tick"],
+                    "rc": 0,
+                    "seconds": 28.7,
+                },
+                "evolve_defined_risk": {
+                    "skipped": True,
+                    "reason": "evolve_lanes_one_alternate",
+                },
+            },
+        }
+    )
+    assert ok["registry_bloated_skip"] is False
+    assert ok["state"] == "OK"
+    assert ok["evolve_ran"] >= 1
+
+
+def test_format_text_surfaces_edge_search_bloat():
+    from scripts.trader_go_live_status import Funnel, format_text
+
+    f = Funnel(
+        generated_at="2026-07-31T04:00:00+00:00",
+        phase="SHADOW",
+        sleeve_plan_usd=3000,
+        sleeve_cash_usd=500.0,
+        option_level="option_level_2",
+        agentic_enabled=False,
+        overall_pct=85.0,
+        overall_label="NEAR_PACKET",
+        activity_pct=35.0,
+        activity_label="EDGE_FROZEN_BLOAT",
+        next_action="manage_open_paper_campaign",
+        ken_required=False,
+        layers={
+            "edge": {
+                "status": "PASS",
+                "summary": "pack-grade",
+                "paper_research_leader": "hyp_x",
+                "first_live_candidate": "AAL short_put_credit",
+            },
+            "robot": {
+                "status": "PASS",
+                "summary": "paper=ok; shadow=ok",
+                "paper_sessions": 8,
+                "paper_sessions_target": 3,
+                "shadow": "PASS",
+                "live_disarmed": True,
+            },
+            "arm": {"status": "BLOCKED", "summary": "Ken only"},
+        },
+        paper={"real_orders": 2, "working": 2, "open_risk_usd": 264.0, "open": []},
+        continuum={
+            "quality_worker_running": True,
+            "quality_cycles_completed": 5900,
+            "quality_worker_hb_age_h": 0.0,
+            "registry_bloated_skip": True,
+            "registry_bytes": 6_002_931,
+            "edge_search": {
+                "state": "BLOATED_SKIP",
+                "registry_bloated_skip": True,
+                "registry_bytes": 6_002_931,
+            },
+        },
+        shortlist_top=[],
+        blockers=["Real money blocked until Ken LIVE_PACKET arm"],
+        path_to_live=["1. EDGE"],
+        simple_next="Manage open paper.",
+        glossary={
+            "EDGE": "sims",
+            "ROBOT": "paper+shadow",
+            "ARM": "Ken",
+            "paper": "fake money",
+            "shadow": "log only",
+        },
+        why_overall_stuck="remaining: arm",
+    )
+    text = format_text(f)
+    assert "edge_search=BLOATED_SKIP" in text
+    assert "EDGE frozen" in text
+    assert "trader_prune_hyp_registry" in text
