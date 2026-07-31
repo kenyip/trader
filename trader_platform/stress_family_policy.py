@@ -400,6 +400,122 @@ def unsaturated_discovery_symbols(
     return out
 
 
+def unsaturated_discovery_families(
+    *,
+    limit: int = 8,
+    rotation: dict[str, Any] | None = None,
+    structures: tuple[str, ...] | list[str] | None = None,
+    exclude_symbols: set[str] | None = None,
+    universe: list[str] | None = None,
+    min_capital_path_ok_sat: int = 25,
+    recent_window_hours: float = 6.0,
+    recent_fail_thrash_min: int = 6,
+) -> list[dict[str, Any]]:
+    """Open (symbol, structure) pairs that may still accept *new* creates.
+
+    Symbol-only ``unsaturated_discovery_symbols`` can inject F while F PCS is toxic
+    and only F CCS is open — DR then wastes the pop on doomed F PCS / NFLX CCS SHIPs
+    and max_create stays 0 because every positive SHIP is toxic/saturated (2026-07-31
+    continuum coach: unstressed multi-leg registry count=0, stress queue empty).
+    """
+    if limit <= 0:
+        return []
+    rot = rotation if rotation is not None else load_rotation()
+    structs = tuple(structures or _DEFAULT_ML_STRUCTURES)
+    ex = {str(s).strip().upper() for s in (exclude_symbols or set()) if s}
+    if universe is None:
+        try:
+            from trader_platform.research.universe import load_universe
+
+            universe = list(load_universe() or [])
+        except Exception:  # noqa: BLE001
+            universe = [
+                "IWM",
+                "F",
+                "SOFI",
+                "AAL",
+                "PFE",
+                "SNAP",
+                "CCL",
+                "BAC",
+                "TSLL",
+                "KO",
+                "XOM",
+                "PLTR",
+                "NFLX",
+                "SMCI",
+            ]
+
+    scored: list[tuple[int, int, int, int, str, str]] = []
+    for raw in universe:
+        sym = str(raw or "").strip().upper()
+        if not sym or sym in ex:
+            continue
+        # Symbol-level recent thrash (all structs) — same guard as symbol inject.
+        recent_fail_mass = 0
+        recent_ok_mass = 0
+        for st in structs:
+            rf, ro = family_window_fail_ok(
+                sym, st, rotation=rot, window_hours=float(recent_window_hours)
+            )
+            recent_fail_mass += int(rf)
+            recent_ok_mass += int(ro)
+        for st in structs:
+            if family_challenge_toxic(sym, st, rotation=rot):
+                continue
+            if family_create_saturated(
+                sym, st, rotation=rot, min_capital_path_ok=min_capital_path_ok_sat
+            ):
+                continue
+            _f, oks = family_lifetime_fail_ok(sym, st, rotation=rot)
+            ok_i = int(oks)
+            # Skip cold pure-fail thrash at symbol level when this family also has 0 oks.
+            if (
+                ok_i <= 0
+                and recent_ok_mass <= 0
+                and recent_fail_thrash_min > 0
+                and recent_fail_mass >= int(recent_fail_thrash_min)
+            ):
+                continue
+            tier = 0 if 0 < ok_i < int(min_capital_path_ok_sat) else 1
+            # Prefer proven-open families, then recent ok mass, fewer fails, more lifetime ok.
+            scored.append(
+                (
+                    tier,
+                    -int(recent_ok_mass),
+                    int(recent_fail_mass),
+                    -ok_i,
+                    sym,
+                    str(st),
+                )
+            )
+    scored.sort()
+    out: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+    per_sym: dict[str, int] = {}
+    for tier, _ro, _rf, neg_ok, sym, st in scored:
+        key = (sym, st)
+        if key in seen:
+            continue
+        # Cap 2 open structures per symbol so one name cannot fill the whole inject.
+        if per_sym.get(sym, 0) >= 2:
+            continue
+        seen.add(key)
+        per_sym[sym] = per_sym.get(sym, 0) + 1
+        out.append(
+            {
+                "symbol": sym,
+                "structure": st,
+                "tier": int(tier),
+                "lifetime_ok": int(-neg_ok),
+                "source": "unsaturated_discovery_family",
+            }
+        )
+        if len(out) >= int(limit):
+            break
+    return out
+
+
 def dna_primary_symbol(dna: Any) -> str | None:
     """Best-effort symbol from StrategyDNA or mapping."""
     if dna is None:

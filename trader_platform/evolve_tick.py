@@ -727,22 +727,31 @@ def build_population(
         sym = str(row.get("symbol") or "").upper()
         if not sym:
             continue
-        if include_family_seed:
+        # Family-level unsat inject: only seed the open structure (skip toxic twin).
+        force_st = str(row.get("force_structure") or row.get("structure") or "").strip().lower()
+        if force_st and (
+            str(row.get("source") or "").startswith("unsaturated_discovery")
+            or row.get("force_structure")
+        ):
+            if structures and force_st not in set(structures):
+                continue
+            ordered = [force_st]
+        elif include_family_seed:
             fam = str(row.get("strategy_family") or "")
             st = family_to_structure(fam)
             if st not in structs:
                 structs_local = [st] + structs
             else:
                 structs_local = structs
+            # unique preserve order
+            seen: set[str] = set()
+            ordered = []
+            for s in structs_local:
+                if s not in seen:
+                    seen.add(s)
+                    ordered.append(s)
         else:
-            structs_local = structs
-        # unique preserve order
-        seen: set[str] = set()
-        ordered = []
-        for s in structs_local:
-            if s not in seen:
-                seen.add(s)
-                ordered.append(s)
+            ordered = list(structs)
         pop.extend(
             seed_population(
                 [sym],
@@ -1070,37 +1079,46 @@ def run_evolve_tick(
         ]
         report.errors.append("no research.db scores; using multi-symbol universe fallback")
 
-    # Inject unsaturated multi-leg discovery symbols so research tops cannot starve
-    # SNAP/CCL/PFE/KO/IWM while AAL/NFLX monopolize creates (2026-07-30 coach).
+    # Inject unsaturated multi-leg discovery at *family* grain so research tops cannot
+    # starve SNAP PCS / CCL PCS / F CCS while AAL/NFLX monopolize creates — and so
+    # symbol-only inject does not seed toxic twins (F PCS) of open families (F CCS).
+    # 2026-07-30 coach (symbols) + 2026-07-31 coach (families).
     ml_structs = {"put_credit_spread", "call_credit_spread", "iron_condor"}
     struct_set = {str(s) for s in (structures or [])} if structures else set(ml_structs)
     want_unsat = int(unsat_extra or 0) > 0 and (
         not structures or bool(struct_set & ml_structs)
     )
+    open_fams: list[dict[str, Any]] = []
     if want_unsat and not force:
         try:
-            from trader_platform.stress_family_policy import unsaturated_discovery_symbols
+            from trader_platform.stress_family_policy import unsaturated_discovery_families
 
-            have = {str(r.get("symbol") or "").strip().upper() for r in rows}
-            extra = unsaturated_discovery_symbols(
-                limit=int(unsat_extra),
-                exclude=have,
+            open_fams = unsaturated_discovery_families(
+                limit=max(int(unsat_extra) * 2, 6),
                 structures=tuple(struct_set & ml_structs) or None,
             )
-            for i, sym in enumerate(extra):
-                if sym in have:
+            # Always append structure-focused rows (even if symbol already in research tops).
+            for fam in open_fams:
+                sym = str(fam.get("symbol") or "").strip().upper()
+                st = str(fam.get("structure") or "").strip().lower()
+                if not sym or not st:
                     continue
                 rows.append(
                     {
                         "symbol": sym,
-                        "strategy_family": "defined_risk_put_spread",
+                        "force_structure": st,
+                        "structure": st,
+                        "strategy_family": (
+                            "defined_risk_put_spread"
+                            if "put" in st
+                            else "defined_risk_call_spread"
+                        ),
                         "composite": 0,
-                        "source": "unsaturated_discovery",
+                        "source": "unsaturated_discovery_family",
                     }
                 )
-                have.add(sym)
         except Exception as exc:  # noqa: BLE001
-            report.errors.append(f"unsaturated_discovery_inject: {exc}")
+            report.errors.append(f"unsaturated_discovery_family_inject: {exc}")
 
     report.symbols = [str(r["symbol"]) for r in rows]
     pop = build_population(
@@ -1111,7 +1129,39 @@ def run_evolve_tick(
     )
     if len(pop) > max_population:
         rng = random.Random(seed)
-        pop = rng.sample(pop, max_population)
+        # Protect open-family DNA so random cap cannot drop the only create-eligible sims.
+        open_keys = {
+            (
+                str(f.get("symbol") or "").strip().upper(),
+                str(f.get("structure") or "").strip().lower(),
+            )
+            for f in open_fams
+            if f.get("symbol") and f.get("structure")
+        }
+        reserved: list[Any] = []
+        other: list[Any] = []
+        per_open: dict[tuple[str, str], int] = {}
+        reserve_per = max(2, int(mutants_per_seed) + 1)
+        for dna in pop:
+            sym = ""
+            try:
+                sym = str((dna.symbols or [""])[0] or "").strip().upper()
+            except Exception:  # noqa: BLE001
+                sym = ""
+            st = str(getattr(dna, "structure", "") or "").strip().lower()
+            key = (sym, st)
+            if key in open_keys and per_open.get(key, 0) < reserve_per:
+                reserved.append(dna)
+                per_open[key] = per_open.get(key, 0) + 1
+            else:
+                other.append(dna)
+        room = max(0, int(max_population) - len(reserved))
+        if room > 0:
+            if len(other) > room:
+                other = rng.sample(other, room)
+            pop = reserved + other
+        else:
+            pop = reserved[: int(max_population)]
     report.n_population = len(pop)
 
     for dna in pop:

@@ -359,12 +359,17 @@ def test_run_evolve_tick_injects_unsaturated(monkeypatch):
         lambda **k: [{"symbol": "AAL", "strategy_family": "x", "composite": 1}],
     )
     monkeypatch.setattr(
-        "trader_platform.stress_family_policy.unsaturated_discovery_symbols",
-        lambda **k: ["SNAP", "CCL"],
+        "trader_platform.stress_family_policy.unsaturated_discovery_families",
+        lambda **k: [
+            {"symbol": "SNAP", "structure": "put_credit_spread", "tier": 0, "lifetime_ok": 3},
+            {"symbol": "CCL", "structure": "put_credit_spread", "tier": 0, "lifetime_ok": 2},
+            {"symbol": "F", "structure": "call_credit_spread", "tier": 0, "lifetime_ok": 5},
+        ],
     )
     captured = {}
 
     def fake_build(rows, **kwargs):
+        captured["rows"] = list(rows)
         captured["syms"] = [r["symbol"] for r in rows]
         return []
 
@@ -373,3 +378,51 @@ def test_run_evolve_tick_injects_unsaturated(monkeypatch):
     assert "AAL" in captured["syms"]
     assert "SNAP" in captured["syms"] and "CCL" in captured["syms"]
     assert "SNAP" in rep.symbols
+    # Family inject carries force_structure (not toxic twin of open family).
+    forced = {
+        (r.get("symbol"), r.get("force_structure") or r.get("structure"))
+        for r in captured["rows"]
+        if str(r.get("source") or "").startswith("unsaturated_discovery")
+    }
+    assert ("SNAP", "put_credit_spread") in forced
+    assert ("F", "call_credit_spread") in forced
+
+
+def test_unsaturated_discovery_families_open_structure_only():
+    """F PCS toxic + F CCS open → families list CCS only (2026-07-31 coach)."""
+    from trader_platform.stress_family_policy import unsaturated_discovery_families
+
+    now = _now()
+    by = {}
+    for i in range(25):
+        by[f"fpcs{i}"] = {
+            "symbol": "F",
+            "structure": "put_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now,
+        }
+    for i in range(5):
+        by[f"fccs{i}"] = {
+            "symbol": "F",
+            "structure": "call_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+    for i in range(3):
+        by[f"snap{i}"] = {
+            "symbol": "SNAP",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+    rot = {"by_hyp_id": by}
+    out = unsaturated_discovery_families(
+        limit=8,
+        rotation=rot,
+        universe=["F", "SNAP", "NFLX"],
+        structures=("put_credit_spread", "call_credit_spread"),
+    )
+    pairs = {(r["symbol"], r["structure"]) for r in out}
+    assert ("F", "call_credit_spread") in pairs
+    assert ("F", "put_credit_spread") not in pairs
+    assert ("SNAP", "put_credit_spread") in pairs

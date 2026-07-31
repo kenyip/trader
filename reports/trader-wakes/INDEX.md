@@ -1,3 +1,4 @@
+- 2026-07-31T0908-continuum-judgment.md — coach: family-level unsat inject unblocks multi-leg mint; IWM PCS soft NULL@0 + KO PCS B4 fragile reject; paper 2/2 manage residual; ken_required=false
 - 2026-07-31T1132-rth.md — RTH mid-late HOLD AAL CCS (−$2.64 OTM $1.27 |Δ|0.23) + BAC PCS (+$3.90 OTM $1.14 |Δ|0.24 recovered vs mid −$4.10); book 2/2 STAND_ASIDE; OPEN_PCS AAL/BAC research_only; ken_required=false
 - 2026-07-31T1031-rth.md — RTH mid HOLD AAL CCS (−$2.14 OTM $1.15 |Δ|0.26) + BAC PCS (−$4.10 OTM $0.89 |Δ|0.31 soft-red vs open); book 2/2 STAND_ASIDE; OPEN_PCS AAL/BAC research_only; ken_required=false
 - 2026-07-31T0931-rth.md — RTH open HOLD AAL CCS (−$3.64 OTM $1.04) + BAC PCS (−$2.60 OTM $1.10); book 2/2 STAND_ASIDE; OPEN_PCS AAL/BAC research_only; ken_required=false
