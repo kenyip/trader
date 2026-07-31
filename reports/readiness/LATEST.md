@@ -8,3 +8,9 @@ ARM: blocked — Ken LIVE_PACKET only; test cash~$500; live_armed=false
 Coach: registry bloat 6.0MB froze both evolves under green cycles → pruned 400/1.8MB; status `edge_search=BLOATED_SKIP|OK`; PFE PCS B4 REJECT.  
 ken_required: false  
 NEXT: manage_open_paper_campaign
+
+## C-row RTH 2026-07-31T0931
+- paper manage: HOLD AAL CCS + BAC PCS (book 2/2, risk $264)
+- new entries STAND_ASIDE; scout OPEN_PCS research_only
+- shadow PASS; live_armed=false; ken_required=false
+- updated: 2026-07-31T13:33:22+00:00
