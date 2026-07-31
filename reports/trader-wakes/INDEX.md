@@ -1,3 +1,4 @@
+- 2026-07-31T1031-rth.md — RTH mid HOLD AAL CCS (−$2.14 OTM $1.15 |Δ|0.26) + BAC PCS (−$4.10 OTM $0.89 |Δ|0.31 soft-red vs open); book 2/2 STAND_ASIDE; OPEN_PCS AAL/BAC research_only; ken_required=false
 - 2026-07-31T0931-rth.md — RTH open HOLD AAL CCS (−$3.64 OTM $1.04) + BAC PCS (−$2.60 OTM $1.10); book 2/2 STAND_ASIDE; OPEN_PCS AAL/BAC research_only; ken_required=false
 - 2026-07-30T2100-continuum-judgment.md — coach: registry bloat 6.0→1.8MB unblocks EDGE; status edge_search=BLOATED_SKIP|OK; PFE PCS B4 REJECT; first-live F CSP #2; ken_required=false
 - 2026-07-30T1509-continuum-judgment.md — coach: unsat recent-fail thrash demotion; MU/IWM B4 NULL~0; shadow PASS 3 sessions; first-live AAL short_put; ken_required=false
