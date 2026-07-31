@@ -1,118 +1,38 @@
 {
+  "generated_at": "2026-07-31T22:10:49+00:00",
+  "ken_required": false,
+  "live_authority": false,
+  "trading_authority": false,
+  "next_action": "manage_open_paper_campaign",
+  "paper_campaign_execute": true,
+  "source": "continuum_judgment_20260731T1510",
+  "stamp": "20260731T1510",
   "detail": {
-    "hint": "RTH/next open: mark/manage paper; learn_tick off-hours OK; stand-aside if no new capital-fit OPEN_* and book full",
+    "hint": "RTH: mark/manage paper; off-hours EDGE uses loose_entry+registry seeds. Reject B4 soft_loss (e.g. SNAP dc0d6d6e dens7).",
+    "coach": "unblocked zero-trade unsat seeds; stress queue can refill",
     "open_orders": [
       {
         "order_id": "paper_4712ce62fd1c",
-        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
         "symbol": "AAL",
+        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
         "structure": "call_credit_spread",
-        "status": "working",
         "max_loss_usd": 184.64,
-        "decision": "HOLD",
-        "mtm_usd": 3.3612,
-        "mtm_adverse_usd": 15.3612,
-        "spot": 15.229999542236328,
-        "chg_pct": -1.2962,
-        "short_strike": 16.5,
-        "long_strike": 18.5,
-        "short_otm": 1.27,
-        "short_itm": false,
-        "ml_used_frac": 0.0,
-        "short_delta_abs": 0.1976416352146101,
-        "exp": "2026-08-14",
-        "entry_credit": 0.15361246514783317,
-        "quote_short_src": "bid_ask",
-        "quote_long_src": "repaired_ask_via_last_or_bid",
-        "quote_flags": [
-          "inverted_vertical_mid",
-          "long_mark_repaired"
-        ],
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ],
-        "ladder": {
-          "profit_target": 0.5,
-          "delta_breach": 0.45,
-          "defined_loss_exit_frac": 0.85,
-          "dte_stop": 3,
-          "ladder_raw": [
-            "profit_target",
-            "max_defined_loss",
-            "delta_breach",
-            "dte_stop",
-            "regime_flip"
-          ]
-        }
+        "status": "working"
       },
       {
         "order_id": "paper_75490f40655b",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
         "symbol": "BAC",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
         "structure": "put_credit_spread",
-        "status": "working",
         "max_loss_usd": 79.6,
-        "decision": "HOLD",
-        "mtm_usd": 4.4032,
-        "mtm_adverse_usd": 3.4032,
-        "spot": 62.084999084472656,
-        "chg_pct": 0.5751,
-        "short_strike": 61.0,
-        "long_strike": 60.0,
-        "short_otm": 1.085,
-        "short_itm": false,
-        "ml_used_frac": 0.0,
-        "short_delta_abs": 0.22759365451081326,
-        "exp": "2026-08-07",
-        "entry_credit": 0.2040317702904515,
-        "quote_short_src": "bid_ask",
-        "quote_long_src": "bid_ask",
-        "quote_flags": [],
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ],
-        "ladder": {
-          "profit_target": 0.5,
-          "delta_breach": 0.45,
-          "defined_loss_exit_frac": 0.85,
-          "dte_stop": 3,
-          "ladder_raw": [
-            "profit_target",
-            "max_defined_loss",
-            "delta_breach",
-            "dte_stop",
-            "regime_flip"
-          ]
-        }
+        "status": "working"
       }
     ],
-    "new_entries": "STAND_ASIDE",
-    "closed_this_session": [],
-    "book_full": true,
-    "open_risk_usd": 264.24,
-    "marks_at": "2026-07-31T19:31:01.940625+00:00",
-    "scout_stamp": "20260731T193107",
-    "session_et": "late-afternoon ~15:30 ET near close",
-    "equities": {
-      "AAL": 15.234999656677246,
-      "BAC": 62.084999084472656,
-      "SNAP": 4.695000171661377,
-      "SPY": 747.0999755859375,
-      "QQQ": 689.1900024414062,
-      "PLTR": 122.68000030517578
-    }
+    "search_fix": "loose_entry + registry_family_seeds + cold_cap"
   },
-  "generated_at": "2026-07-31T19:33:49.480095+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
     "fund_3k_at_packet"
-  ],
-  "ken_required": false,
-  "live_authority": false,
-  "next_action": "manage_open_paper_campaign",
-  "paper_campaign_execute": true,
-  "source": "rth_eval_20260731T1530",
-  "stamp": "20260731T1530",
-  "trading_authority": false
+  ]
 }

@@ -1,13 +1,19 @@
-# Readiness snapshot — 2026-07-31T0908 continuum coach
+# Readiness snapshot — 2026-07-31T1510 continuum coach
 
 PHASE: **SHADOW** (NEAR_PACKET)  
-EDGE: pack-grade shortlist_dna_multi; research AAL PCS dens1 dd≈31; multi-leg AAL/BAC/F/CCL; first-live **AAL short_put** + **F CSP** fit_3k; **family-level unsat inject** live (F CCS/SNAP PCS/CCL/…)  
+EDGE: pack-grade shortlist_dna_multi; research AAL PCS dens1 dd≈31; multi-leg AAL/BAC/F/CCL; first-live **AAL wheel/short_put** fit_3k; **loose_entry + registry DNA seeds** unblocks F/SNAP CCS/PCS sims  
 ROBOT: paper open **2/2** AAL CCS + BAC PCS risk~$264 (8/3 sessions) — manage RTH; **shadow PASS**  
 ARM: blocked — Ken LIVE_PACKET only; test cash~$500; live_armed=false  
 
-Coach 0908: empty stress queue was create-starve (toxic/sat SHIPs); family unsat inject + force DR; IWM PCS soft NULL@0 + KO PCS B4 fragile → capital_path reject.  
+Coach 1510: empty stress queue was **zero-trade catalog seeds** on cheap names (not exhausted edge). SNAP PCS create→B4 soft_loss dens7 reject.  
 ken_required: false  
 NEXT: manage_open_paper_campaign
+
+## C-row coach 2026-07-31T1510
+- EDGE muscle: loose_entry PCS/CCS seeds + registry_family_seeds + cold unsat cap; 14 tests pass
+- Live cycle: F CCS SHIP n≈26–38; SNAP PCS created then B4 capital_path_ok=false
+- paper book 2/2 unchanged; worker restarted; live_armed=false
+- updated: 2026-07-31T22:10:00+00:00
 
 ## C-row RTH 2026-07-31T1430
 - paper manage: HOLD AAL CCS (+$2.36 soft-green) + BAC PCS (+$3.40); book 2/2 risk $264

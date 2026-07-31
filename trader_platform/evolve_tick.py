@@ -719,6 +719,7 @@ def build_population(
     mutants_per_seed: int = 2,
     seed: Optional[int] = None,
     include_family_seed: bool = True,
+    registry_seed_limit: int = 2,
 ) -> list[StrategyDNA]:
     rng = random.Random(seed)
     structs = list(structures) if structures else list(STRUCTURE_CATALOG.keys())
@@ -736,6 +737,19 @@ def build_population(
             if structures and force_st not in set(structures):
                 continue
             ordered = [force_st]
+            # Prefer mutate-from-living registry DNA when family already has rows —
+            # catalog defaults on cheap names often zero-trade while survivors exist
+            # (F CCS 2026-07-31 coach).
+            if registry_seed_limit > 0:
+                pop.extend(
+                    _registry_family_dna_seeds(
+                        sym,
+                        force_st,
+                        limit=int(registry_seed_limit),
+                        mutants_per_seed=mutants_per_seed,
+                        rng=rng,
+                    )
+                )
         elif include_family_seed:
             fam = str(row.get("strategy_family") or "")
             st = family_to_structure(fam)
@@ -769,6 +783,74 @@ def build_population(
         allowed = set(structures)
         population = [dna for dna in population if dna.structure in allowed]
     return population
+
+
+def _registry_family_dna_seeds(
+    symbol: str,
+    structure: str,
+    *,
+    limit: int = 2,
+    mutants_per_seed: int = 1,
+    rng: Optional[random.Random] = None,
+) -> list[StrategyDNA]:
+    """Clone up to ``limit`` living registry DNA rows for symbol×structure + mutants."""
+    if limit <= 0 or not symbol or not structure:
+        return []
+    r = rng or random.Random()
+    out: list[StrategyDNA] = []
+    try:
+        reg = HypothesisRegistry()
+        hyps = list(reg.list() or [])
+    except Exception:  # noqa: BLE001
+        return []
+    sym_u = str(symbol).strip().upper()
+    st_l = str(structure).strip().lower()
+    matched: list[StrategyDNA] = []
+    for h in hyps:
+        try:
+            dna_raw = getattr(h, "dna", None)
+            if dna_raw is None and isinstance(h, dict):
+                dna_raw = h.get("dna")
+            if isinstance(dna_raw, StrategyDNA):
+                dna = dna_raw
+            elif isinstance(dna_raw, dict):
+                dna = StrategyDNA.from_dict(dna_raw)
+            else:
+                continue
+            if dna is None:
+                continue
+            dsym = ""
+            try:
+                dsym = str((dna.symbols or [""])[0] or "").strip().upper()
+            except Exception:  # noqa: BLE001
+                dsym = ""
+            if dsym != sym_u:
+                continue
+            if str(dna.structure or "").strip().lower() != st_l:
+                continue
+            matched.append(dna)
+        except Exception:  # noqa: BLE001
+            continue
+    if not matched:
+        return []
+    r.shuffle(matched)
+    for base in matched[: int(limit)]:
+        try:
+            child = StrategyDNA.from_dict(base.to_dict())
+            if child is None:
+                continue
+            child.parent_id = child.dna_id or child.ensure_id()
+            child.generation = int(child.generation or 0)
+            child.dna_id = ""
+            child.last_sim = {}
+            child.notes = (child.notes or "") + " [registry_family_seed]"
+            child.ensure_id()
+            out.append(child)
+            for _ in range(max(0, int(mutants_per_seed))):
+                out.append(mutate_dna(child, rng=r))
+        except Exception:  # noqa: BLE001
+            continue
+    return out
 
 
 def hyp_id_for_dna(dna: StrategyDNA) -> str:

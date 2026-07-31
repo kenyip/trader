@@ -493,15 +493,24 @@ def unsaturated_discovery_families(
     out: list[dict[str, Any]] = []
     seen: set[tuple[str, str]] = set()
     per_sym: dict[str, int] = {}
+    # Fill tier-0 (proven unsaturated) first; cap cold tier-1 so AVGO/DIA/GOOGL
+    # empty-oks cannot crowd the inject after proven F/CCL/SNAP/TSLL (2026-07-31 coach).
+    cold_cap = max(2, int(limit) // 3)
+    n_cold = 0
     for tier, _ro, _rf, neg_ok, sym, st in scored:
         key = (sym, st)
         if key in seen:
             continue
+        if int(tier) >= 1:
+            if n_cold >= cold_cap:
+                continue
         # Cap 2 open structures per symbol so one name cannot fill the whole inject.
         if per_sym.get(sym, 0) >= 2:
             continue
         seen.add(key)
         per_sym[sym] = per_sym.get(sym, 0) + 1
+        if int(tier) >= 1:
+            n_cold += 1
         out.append(
             {
                 "symbol": sym,

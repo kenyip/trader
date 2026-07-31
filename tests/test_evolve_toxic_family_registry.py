@@ -426,3 +426,115 @@ def test_unsaturated_discovery_families_open_structure_only():
     assert ("F", "call_credit_spread") in pairs
     assert ("F", "put_credit_spread") not in pairs
     assert ("SNAP", "put_credit_spread") in pairs
+
+
+def test_seed_population_includes_loose_entry_for_credit_spreads():
+    """Catalog 0.18×$2 defaults zero-trade on F; loose base must also be seeded."""
+    import random
+
+    from trader_platform.strategy_dna import seed_population
+
+    pop = seed_population(
+        ["F"],
+        structures=["call_credit_spread"],
+        mutants_per_seed=0,
+        rng=random.Random(0),
+    )
+    assert len(pop) == 2
+    widths = sorted(float(d.config.get("spread_width") or 0) for d in pop)
+    credits = sorted(float(d.config.get("min_credit_pct") or 0) for d in pop)
+    assert min(widths) <= 1.0 + 1e-9
+    assert min(credits) <= 0.10 + 1e-9
+    assert any(bool(d.config.get("call_in_bull_ok", False)) for d in pop)
+    assert any("loose_entry_seed" in (d.notes or "") for d in pop)
+
+
+def test_unsaturated_discovery_families_caps_cold_tier():
+    """Cold tier-1 must not crowd inject after proven tier-0 (2026-07-31 coach)."""
+    from trader_platform.stress_family_policy import unsaturated_discovery_families
+
+    now = _now()
+    by = {
+        "f0": {
+            "symbol": "F",
+            "structure": "call_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        },
+        "c0": {
+            "symbol": "CCL",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        },
+    }
+    # Many cold names with zero oks — without cap they fill the whole limit.
+    for sym in ("AVGO", "DIA", "GOOGL", "JPM", "META", "NVDA"):
+        by[f"{sym}_c"] = {
+            "symbol": sym,
+            "structure": "call_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now,
+        }
+        by[f"{sym}_p"] = {
+            "symbol": sym,
+            "structure": "put_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now,
+        }
+    out = unsaturated_discovery_families(
+        limit=8,
+        rotation={"by_hyp_id": by},
+        universe=["F", "CCL", "AVGO", "DIA", "GOOGL", "JPM", "META", "NVDA"],
+        structures=("put_credit_spread", "call_credit_spread"),
+        # no recent thrash filter noise
+        recent_fail_thrash_min=99,
+    )
+    pairs = [(r["symbol"], r["structure"], r["tier"]) for r in out]
+    assert any(p[0] == "F" and p[2] == 0 for p in pairs)
+    assert any(p[0] == "CCL" and p[2] == 0 for p in pairs)
+    n_cold = sum(1 for p in pairs if p[2] >= 1)
+    assert n_cold <= max(2, 8 // 3)
+    assert len(out) <= 8
+
+
+def test_build_population_registry_family_seeds(monkeypatch, tmp_path):
+    """Unsat force_structure rows should pull living registry DNA when present."""
+    import trader_platform.evolve_tick as ev
+    from trader_platform.hypothesis_registry import HypothesisRegistry
+    from trader_platform.strategy_dna import dna_from_structure
+
+    reg_path = tmp_path / "hyps.yaml"
+    reg = HypothesisRegistry(reg_path)
+    reg.ensure_seeded()
+    base = dna_from_structure(
+        "call_credit_spread",
+        ["F"],
+        config_overrides={"spread_width": 0.5, "min_credit_pct": 0.18, "call_in_bull_ok": True},
+    )
+    reg.add(
+        name="F CCS test",
+        thesis="test",
+        sleeve="tactical",
+        instruments=["F"],
+        status="candidate",
+        hypothesis_id="hyp_dna_f_call_credit_spread_testseed",
+        dna=base.to_dict(),
+    )
+    monkeypatch.setattr(ev, "HypothesisRegistry", lambda *a, **k: HypothesisRegistry(reg_path))
+    pop = ev.build_population(
+        [
+            {
+                "symbol": "F",
+                "force_structure": "call_credit_spread",
+                "structure": "call_credit_spread",
+                "source": "unsaturated_discovery_family",
+            }
+        ],
+        structures=["call_credit_spread"],
+        mutants_per_seed=0,
+        seed=1,
+        registry_seed_limit=2,
+    )
+    assert any("registry_family_seed" in (d.notes or "") for d in pop)
+    assert any(abs(float(d.config.get("spread_width") or 0) - 0.5) < 1e-9 for d in pop)

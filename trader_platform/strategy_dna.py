@@ -271,7 +271,10 @@ STRUCTURE_CATALOG: dict[str, dict[str, Any]] = {
             "iv_rank_min": 0.0,
             "max_loss_budget_usd": 250.0,
             "bear_dte": 0,
-            "call_in_bull_ok": False,
+            # Discovery default True: pure-bear CCS (False) yields systematic zero_trades on
+            # multi-year bull-heavy samples while F/SNAP-class CCS capital_path survivors
+            # need entries in neutral/bull. Mutate can still flip False (2026-07-31 coach).
+            "call_in_bull_ok": True,
             "regime_flip_exit_enabled": True,
             "wheel_enabled": False,
             "roll_on_max_loss": False,
@@ -1029,9 +1032,31 @@ def mutate_dna(
         child.config["regime_flip_exit_enabled"] = not bool(
             child.config.get("regime_flip_exit_enabled", True)
         )
+    # CCS regime policy is a boolean gate (not in BOUNDS) — must flip or bull-only /
+    # bear-only stays locked across an entire mutant line (2026-07-31 coach).
+    if child.structure == "call_credit_spread" and r.random() < 0.20:
+        child.config["call_in_bull_ok"] = not bool(child.config.get("call_in_bull_ok", True))
     child.ensure_id()
     child.notes = f"mutate from {child.parent_id} knobs={pick}"
     return child
+
+
+# Cheap-name PCS/CCS catalog seeds with min_credit_pct=0.18 × width=2 often admit
+# zero synthetic trades (F/SNAP). A second "loose entry" base keeps unsat inject from
+# burning the whole reserved population on vacuous DNA (2026-07-31 continuum coach).
+_LOOSE_ENTRY_OVERRIDES: dict[str, dict[str, Any]] = {
+    "put_credit_spread": {
+        "min_credit_pct": 0.10,
+        "spread_width": 1.0,
+        "long_target_delta": 0.22,
+    },
+    "call_credit_spread": {
+        "min_credit_pct": 0.10,
+        "spread_width": 1.0,
+        "long_target_delta": 0.22,
+        "call_in_bull_ok": True,
+    },
+}
 
 
 def seed_population(
@@ -1040,17 +1065,30 @@ def seed_population(
     structures: Optional[list[str]] = None,
     rng: Optional[random.Random] = None,
     mutants_per_seed: int = 2,
+    include_loose_entry: bool = True,
 ) -> list[StrategyDNA]:
-    """Build a free search population: catalog seeds × symbols + mutations."""
+    """Build a free search population: catalog seeds × symbols + mutations.
+
+    For put/call credit spreads, also seeds a looser entry base (lower min_credit /
+    narrower width) so cheap underlyings are not systematically zero-trade under the
+    catalog 0.18×$2 default (2026-07-31 coach).
+    """
     r = rng or random.Random()
     structs = structures or list(STRUCTURE_CATALOG.keys())
     out: list[StrategyDNA] = []
     for sym in symbols:
         for st in structs:
-            base = dna_from_structure(st, [sym])
-            out.append(base)
-            for _ in range(mutants_per_seed):
-                out.append(mutate_dna(base, rng=r))
+            bases = [dna_from_structure(st, [sym])]
+            if include_loose_entry and st in _LOOSE_ENTRY_OVERRIDES:
+                loose = dna_from_structure(
+                    st, [sym], config_overrides=dict(_LOOSE_ENTRY_OVERRIDES[st])
+                )
+                loose.notes = (loose.notes or "") + " [loose_entry_seed]"
+                bases.append(loose)
+            for base in bases:
+                out.append(base)
+                for _ in range(mutants_per_seed):
+                    out.append(mutate_dna(base, rng=r))
     return out
 
 
