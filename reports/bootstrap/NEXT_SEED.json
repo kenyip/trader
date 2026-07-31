@@ -1,36 +1,137 @@
 {
-  "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
-    "open_orders": [
-      {
-        "max_loss_usd": 184.64,
-        "order_id": "paper_4712ce62fd1c",
-        "status": "working",
-        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
-        "structure": "call_credit_spread",
-        "symbol": "AAL"
-      },
-      {
-        "max_loss_usd": 79.6,
-        "order_id": "paper_75490f40655b",
-        "status": "working",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
-        "structure": "put_credit_spread",
-        "symbol": "BAC"
-      }
-    ]
-  },
-  "generated_at": "2026-07-31T16:09:23+00:00",
+  "generated_at": "2026-07-31T16:32:30+00:00",
+  "stamp": "20260731T1230",
+  "source": "rth_eval_2026-07-31T1230",
+  "ken_required": false,
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
     "fund_3k_at_packet"
   ],
-  "ken_required": false,
   "live_authority": false,
+  "trading_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "trader_paper_campaign",
-  "stamp": "20260731T160923",
-  "trading_authority": false
+  "detail": {
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
+    "session_et": "2026-07-31 ~12:30 ET midday",
+    "book_full": true,
+    "working": 2,
+    "open_risk_usd": 264.24,
+    "max_concurrent": 2,
+    "max_open_risk": 500.0,
+    "new_entries": "STAND_ASIDE",
+    "new_entry_reasons": [
+      "book_full_2_of_2",
+      "open_risk_264_of_500",
+      "one_open_per_symbol_AAL_BAC",
+      "autonomy_research_only_on_OPEN_PCS_AAL_BAC"
+    ],
+    "closed_this_session": [],
+    "scout": {
+      "stamp": "20260731T163101",
+      "regime_date": "2026-07-31",
+      "n_intents": 8,
+      "n_stand_asides": 5,
+      "n_candidates": 13,
+      "open_actions": [
+        "OPEN_PCS AAL x4 (w0.5 ml~38, w2.0 ml~176)",
+        "OPEN_PCS BAC x4 (w2.0 dte14 ml~163, w2.0 dte7 ml~177)"
+      ],
+      "autonomy": "5 proposals all research_only risk.allowed defined_risk",
+      "regimes": {
+        "AAL": "neutral ivr~79.8 high_iv",
+        "BAC": "neutral ivr~34.1"
+      }
+    },
+    "equities": {
+      "AAL": 15.295000076293945,
+      "BAC": 62.14870071411133,
+      "SNAP": 4.625,
+      "SPY": 744.4375,
+      "QQQ": 686.885009765625,
+      "PLTR": 122.3499984741211
+    },
+    "open_orders": [
+      {
+        "order_id": "paper_4712ce62fd1c",
+        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
+        "symbol": "AAL",
+        "structure": "call_credit_spread",
+        "status": "working",
+        "max_loss_usd": 184.64,
+        "decision": "HOLD",
+        "mtm_usd": 0.86,
+        "mtm_adverse_usd": 15.36,
+        "spot": 15.295,
+        "chg_pct": -0.875,
+        "short_strike": 16.5,
+        "long_strike": 18.5,
+        "short_otm": 1.205,
+        "short_itm": false,
+        "ml_used_frac": 0.0,
+        "short_delta_abs": 0.227,
+        "exp": "2026-08-14",
+        "entry_credit": 0.15361246514783317,
+        "quote_short_src": "bid_ask",
+        "quote_long_src": "repaired_ask_via_last_or_bid",
+        "quote_flags": [
+          "inverted_vertical_mid",
+          "long_mark_repaired"
+        ],
+        "reasons": [
+          "short_OTM_or_quiet_path; mtm within budget"
+        ],
+        "ladder": {
+          "profit_target": 0.5,
+          "delta_breach": 0.45,
+          "defined_loss_exit_frac": 0.85,
+          "dte_stop": 3
+        }
+      },
+      {
+        "order_id": "paper_75490f40655b",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
+        "symbol": "BAC",
+        "structure": "put_credit_spread",
+        "status": "working",
+        "max_loss_usd": 79.6,
+        "decision": "HOLD",
+        "mtm_usd": 3.9,
+        "mtm_adverse_usd": 2.4,
+        "spot": 62.1487,
+        "chg_pct": 0.678,
+        "short_strike": 61.0,
+        "long_strike": 60.0,
+        "short_otm": 1.149,
+        "short_itm": false,
+        "ml_used_frac": 0.0,
+        "short_delta_abs": 0.231,
+        "exp": "2026-08-07",
+        "entry_credit": 0.2040317702904515,
+        "quote_short_src": "bid_ask",
+        "quote_long_src": "bid_ask",
+        "quote_flags": [],
+        "reasons": [
+          "short_OTM_or_quiet_path; mtm within budget"
+        ],
+        "ladder": {
+          "profit_target": 0.5,
+          "delta_breach": 0.45,
+          "defined_loss_exit_frac": 0.85,
+          "dte_stop": 3
+        }
+      }
+    ],
+    "path_note": {
+      "AAL": "midday ~flat/+0.86 mark MTM; inverted far-long BA repaired \u2014 do not use adverse MTM for PT",
+      "BAC": "stable green +3.90 (spot +0.7%); still < profit_target $10.20"
+    },
+    "worker": {
+      "edge_search": "OK",
+      "registry_mb": 3.6,
+      "cycle_n_hb": 6654,
+      "status_cycles": 6929
+    }
+  }
 }

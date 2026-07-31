@@ -15,6 +15,11 @@ NEXT: manage_open_paper_campaign
 - paper book 2/2 unchanged; live_armed=false
 - updated: 2026-07-31T16:08:30+00:00
 
+## C-row RTH 2026-07-31T1230
+- paper manage: HOLD AAL CCS (+$0.86) + BAC PCS (+$3.90); book 2/2 risk $264
+- new entries STAND_ASIDE; scout OPEN_PCS research_only; shadow PASS; live_armed=false
+- updated: 2026-07-31T16:32:31+00:00
+
 ## C-row RTH 2026-07-31T1132
 - paper manage: HOLD AAL CCS (−$2.64) + BAC PCS (+$3.90 recovered); book 2/2 risk $264
 - new entries STAND_ASIDE; scout OPEN_PCS research_only; shadow PASS; live_armed=false
