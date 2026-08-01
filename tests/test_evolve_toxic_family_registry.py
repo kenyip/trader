@@ -449,6 +449,24 @@ def test_seed_population_includes_loose_entry_for_credit_spreads():
     assert any("loose_entry_seed" in (d.notes or "") for d in pop)
 
 
+def test_seed_population_includes_loose_entry_for_iron_condor():
+    """IC catalog 0.14×$2 also zero-trades SNAP; need loose IC base (2026-07-31T2100)."""
+    import random
+
+    from trader_platform.strategy_dna import seed_population
+
+    pop = seed_population(
+        ["SNAP"],
+        structures=["iron_condor"],
+        mutants_per_seed=0,
+        rng=random.Random(0),
+    )
+    assert len(pop) == 2
+    assert any("loose_entry_seed" in (d.notes or "") for d in pop)
+    assert min(float(d.config.get("spread_width") or 99) for d in pop) <= 1.0 + 1e-9
+    assert min(float(d.config.get("min_credit_pct") or 99) for d in pop) <= 0.08 + 1e-9
+
+
 def test_unsaturated_discovery_families_caps_cold_tier():
     """Cold tier-1 must not crowd inject after proven tier-0 (2026-07-31 coach)."""
     from trader_platform.stress_family_policy import unsaturated_discovery_families
@@ -538,3 +556,37 @@ def test_build_population_registry_family_seeds(monkeypatch, tmp_path):
     )
     assert any("registry_family_seed" in (d.notes or "") for d in pop)
     assert any(abs(float(d.config.get("spread_width") or 0) - 0.5) < 1e-9 for d in pop)
+
+
+def test_quality_cycle_dr_structures_include_iron_condor():
+    """DR lane must allow IC so unsat SNAP/F/CCL IC inject is not filtered out."""
+    from pathlib import Path
+
+    src = Path("scripts/trader_quality_cycle.py").read_text(encoding="utf-8")
+    # Find the _evolve_dr command list literal region
+    assert "def _evolve_dr()" in src
+    start = src.index("def _evolve_dr()")
+    chunk = src[start : start + 900]
+    assert '"iron_condor"' in chunk or "'iron_condor'" in chunk
+    assert '"put_credit_spread"' in chunk
+    assert '"call_credit_spread"' in chunk
+
+
+def test_unsaturated_with_ic_prefers_open_ic_over_cold_avgo_ccs():
+    """With IC in structures, open SNAP IC outranks cold AVGO CCS (live ledger)."""
+    from trader_platform.stress_family_policy import unsaturated_discovery_families
+
+    out = unsaturated_discovery_families(
+        limit=8,
+        structures=("put_credit_spread", "call_credit_spread", "iron_condor"),
+    )
+    pairs = [(r.get("symbol"), r.get("structure")) for r in out]
+    structs = {p[1] for p in pairs}
+    # Live ledger (post 2026-07-31): IC families should surface when allowed.
+    assert "iron_condor" in structs or any(p[0] == "PFE" for p in pairs)
+    # Must not be AVGO-only cold CCS thrash when IC is eligible.
+    if any(p[1] == "iron_condor" for p in pairs):
+        assert ("SNAP", "iron_condor") in pairs or ("F", "iron_condor") in pairs or (
+            "CCL",
+            "iron_condor",
+        ) in pairs

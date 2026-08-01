@@ -1,13 +1,19 @@
-# Readiness snapshot — 2026-07-31T1510 continuum coach
+# Readiness snapshot — 2026-07-31T2105 continuum coach
 
 PHASE: **SHADOW** (NEAR_PACKET)  
-EDGE: pack-grade shortlist_dna_multi; research AAL PCS dens1 dd≈31; multi-leg AAL/BAC/F/CCL; first-live **AAL wheel/short_put** fit_3k; **loose_entry + registry DNA seeds** unblocks F/SNAP CCS/PCS sims  
+EDGE: pack-grade shortlist_dna_multi; research AAL PCS dens1; multi-leg AAL/BAC/F/CCL; first-live **AAL short_put** fit_3k; **EDGE unfrozen** registry≈1.8MB SEARCHING; DR+=iron_condor + loose IC seeds  
 ROBOT: paper open **2/2** AAL CCS + BAC PCS risk~$264 (8/3 sessions) — manage RTH; **shadow PASS**  
 ARM: blocked — Ken LIVE_PACKET only; test cash~$500; live_armed=false  
 
-Coach 1510: empty stress queue was **zero-trade catalog seeds** on cheap names (not exhausted edge). SNAP PCS create→B4 soft_loss dens7 reject.  
+Coach 2105: BLOATED_SKIP at 6.0MB pruned (1493→400); SNAP/CCL IC create→B4 soft_loss reject; stress queue refilled (SOFI IC).  
 ken_required: false  
 NEXT: manage_open_paper_campaign
+
+## C-row coach 2026-07-31T2105
+- EDGE muscle: prune 6.0→1.8MB; DR+=iron_condor; loose IC seeds; 17 tests pass
+- SNAP/CCL IC B4 capital_path_ok=false; worker stress queue non-empty post-restart
+- paper book 2/2 unchanged; live_armed=false
+- updated: 2026-08-01T04:10:30+00:00
 
 ## C-row coach 2026-07-31T1510
 - EDGE muscle: loose_entry PCS/CCS seeds + registry_family_seeds + cold unsat cap; 14 tests pass

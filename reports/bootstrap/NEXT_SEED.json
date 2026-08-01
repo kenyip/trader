@@ -1,38 +1,42 @@
 {
-  "generated_at": "2026-07-31T22:10:49+00:00",
-  "ken_required": false,
-  "live_authority": false,
-  "trading_authority": false,
-  "next_action": "manage_open_paper_campaign",
-  "paper_campaign_execute": true,
-  "source": "continuum_judgment_20260731T1510",
-  "stamp": "20260731T1510",
+  "coach": {
+    "did": "prune_bloat + DR_iron_condor + loose_IC; SNAP/CCL IC B4 reject; stress queue refilled",
+    "edge_search": "OK",
+    "ken_required": false,
+    "registry_mb": 1.8
+  },
   "detail": {
-    "hint": "RTH: mark/manage paper; off-hours EDGE uses loose_entry+registry seeds. Reject B4 soft_loss (e.g. SNAP dc0d6d6e dens7).",
-    "coach": "unblocked zero-trade unsat seeds; stress queue can refill",
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. Off-hours EDGE searching post-prune.",
     "open_orders": [
       {
+        "max_loss_usd": 184.64,
         "order_id": "paper_4712ce62fd1c",
-        "symbol": "AAL",
+        "status": "working",
         "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
         "structure": "call_credit_spread",
-        "max_loss_usd": 184.64,
-        "status": "working"
+        "symbol": "AAL"
       },
       {
+        "max_loss_usd": 79.6,
         "order_id": "paper_75490f40655b",
-        "symbol": "BAC",
+        "status": "working",
         "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
         "structure": "put_credit_spread",
-        "max_loss_usd": 79.6,
-        "status": "working"
+        "symbol": "BAC"
       }
-    ],
-    "search_fix": "loose_entry + registry_family_seeds + cold_cap"
+    ]
   },
+  "generated_at": "2026-08-01T04:10:30+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
     "fund_3k_at_packet"
-  ]
+  ],
+  "ken_required": false,
+  "live_authority": false,
+  "next_action": "manage_open_paper_campaign",
+  "paper_campaign_execute": true,
+  "source": "continuum_judgment_20260731T2105",
+  "stamp": "20260731T2105",
+  "trading_authority": false
 }

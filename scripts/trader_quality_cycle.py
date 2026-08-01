@@ -352,6 +352,9 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
     )
 
     def _evolve_dr() -> dict[str, Any]:
+        # Include iron_condor: unsaturated discovery prefers open IC families
+        # (SNAP/CCL/F) once PCS/CCS are saturated/toxic. PCS+CCS-only DR starved
+        # those injects into AVGO zero-trade cold CCS (2026-07-31T2100 coach).
         cmd = [
             py,
             "-m",
@@ -360,6 +363,7 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
             "--structures",
             "put_credit_spread",
             "call_credit_spread",
+            "iron_condor",
             "--top-symbols",
             top_dr,
             "--mutants",

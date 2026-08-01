@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-31T22:10:58+00:00",
+  "generated_at": "2026-08-01T04:10:24+00:00",
   "phase": "BUILD_PAPER_SEARCH",
   "authority": "research_paper_only",
   "honesty": "Proxy BS sims + B3/B4 only. Not TOP_HYP. Multi-leg not MCP-live. Stress rotation ledger drives shortlist; quality_cycle mixes leaders+fresh. Capital-path rejects: soft NULL@~0, soft-loss/neg@5%, non-pos full PnL. Rank dens_bucket(0-1 tied) \u2192 slip verdict (SHIP>NEEDS>NULL) \u2192 dd \u2192 raw dens \u2192 slip pnl. Multi-leg shortlist caps \u22642 per symbol; skip identical dens/dd/pnl risk twins.",
@@ -31,7 +31,7 @@
       "stressed_at": "2026-07-31T17:32:56+00:00"
     },
     {
-      "hyp_id": "hyp_dna_aal_put_credit_spread_5c55c29f",
+      "hyp_id": "hyp_dna_aal_put_credit_spread_3486155f",
       "structure": "put_credit_spread",
       "symbol": "AAL",
       "status": "testing",
@@ -39,15 +39,15 @@
       "stress_priority": true,
       "b3_hold": true,
       "dense_neg_ge3": 1,
-      "full_pnl": 208.54,
+      "full_pnl": 202.7,
       "max_dd": 31.46,
       "max_loss_usd_approx": 39.84,
       "b4_cost_hold": true,
-      "b4_note": "SHIP@5pct pnl~61.18 survives_5pct_slip",
+      "b4_note": "SHIP@5pct pnl~58.52 survives_5pct_slip",
       "why": "Rotated stress survivor; secondary to tighter-DD leader",
       "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
-      "stress_source": "quality_cycle_20260730T015712",
-      "stressed_at": "2026-07-30T01:57:35+00:00"
+      "stress_source": "quality_cycle_20260801T020042",
+      "stressed_at": "2026-08-01T02:01:20+00:00"
     },
     {
       "hyp_id": "hyp_dna_bac_put_credit_spread_631f9804",
@@ -88,6 +88,25 @@
       "stressed_at": "2026-07-24T22:03:12+00:00"
     },
     {
+      "hyp_id": "hyp_dna_ccl_put_credit_spread_1620535a",
+      "structure": "put_credit_spread",
+      "symbol": "CCL",
+      "status": "candidate",
+      "lane": "paper_research",
+      "stress_priority": false,
+      "b3_hold": true,
+      "dense_neg_ge3": 1,
+      "full_pnl": 207.01,
+      "max_dd": 44.75,
+      "max_loss_usd_approx": 185.55,
+      "b4_cost_hold": true,
+      "b4_note": "SHIP@5pct pnl~38.92 survives_5pct_slip",
+      "why": "Rotated stress survivor; secondary to tighter-DD leader",
+      "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
+      "stress_source": "quality_cycle_20260801T013534",
+      "stressed_at": "2026-08-01T01:36:28+00:00"
+    },
+    {
       "hyp_id": "hyp_dna_f_put_credit_spread_ab4a95b6",
       "structure": "put_credit_spread",
       "symbol": "F",
@@ -105,25 +124,6 @@
       "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
       "stress_source": "quality_cycle_20260723T155931",
       "stressed_at": "2026-07-23T16:04:04+00:00"
-    },
-    {
-      "hyp_id": "hyp_dna_ccl_put_credit_spread_aa7226d4",
-      "structure": "put_credit_spread",
-      "symbol": "CCL",
-      "status": "candidate",
-      "lane": "paper_research",
-      "stress_priority": false,
-      "b3_hold": true,
-      "dense_neg_ge3": 1,
-      "full_pnl": 230.96,
-      "max_dd": 62.85,
-      "max_loss_usd_approx": 179.73,
-      "b4_cost_hold": true,
-      "b4_note": "SHIP@5pct pnl~160.84 survives_5pct_slip",
-      "why": "Rotated stress survivor; secondary to tighter-DD leader",
-      "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
-      "stress_source": "quality_cycle_20260727T234033",
-      "stressed_at": "2026-07-27T23:54:51+00:00"
     },
     {
       "hyp_id": "hyp_dna_aal_short_put_credit_dna_31dc",

@@ -1041,9 +1041,10 @@ def mutate_dna(
     return child
 
 
-# Cheap-name PCS/CCS catalog seeds with min_credit_pct=0.18 × width=2 often admit
-# zero synthetic trades (F/SNAP). A second "loose entry" base keeps unsat inject from
-# burning the whole reserved population on vacuous DNA (2026-07-31 continuum coach).
+# Cheap-name PCS/CCS/IC catalog seeds with high min_credit × wide width often admit
+# zero synthetic trades (F/SNAP/CCL). A second "loose entry" base keeps unsat inject
+# from burning the whole reserved population on vacuous DNA (2026-07-31 continuum coach;
+# IC added 2026-07-31T2100 when DR lane finally included iron_condor).
 _LOOSE_ENTRY_OVERRIDES: dict[str, dict[str, Any]] = {
     "put_credit_spread": {
         "min_credit_pct": 0.10,
@@ -1055,6 +1056,12 @@ _LOOSE_ENTRY_OVERRIDES: dict[str, dict[str, Any]] = {
         "spread_width": 1.0,
         "long_target_delta": 0.22,
         "call_in_bull_ok": True,
+    },
+    "iron_condor": {
+        "min_credit_pct": 0.08,
+        "spread_width": 1.0,
+        "long_target_delta": 0.18,
+        "short_delta": 0.16,
     },
 }
 
@@ -1069,9 +1076,9 @@ def seed_population(
 ) -> list[StrategyDNA]:
     """Build a free search population: catalog seeds × symbols + mutations.
 
-    For put/call credit spreads, also seeds a looser entry base (lower min_credit /
-    narrower width) so cheap underlyings are not systematically zero-trade under the
-    catalog 0.18×$2 default (2026-07-31 coach).
+    For put/call credit spreads and iron condors, also seeds a looser entry base
+    (lower min_credit / narrower width) so cheap underlyings are not systematically
+    zero-trade under catalog defaults (2026-07-31 coach; IC 2026-07-31T2100).
     """
     r = rng or random.Random()
     structs = structures or list(STRUCTURE_CATALOG.keys())

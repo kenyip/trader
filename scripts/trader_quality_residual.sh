@@ -36,8 +36,10 @@ rc_research=$?
 set -e
 
 set +e
+# iron_condor required so unsat open families (SNAP/F/CCL IC) are not filtered
+# out when PCS/CCS are saturated/toxic (2026-07-31T2100 coach).
 "$PY" -m trader_platform.evolve_tick --once \
-  --structures put_credit_spread call_credit_spread \
+  --structures put_credit_spread call_credit_spread iron_condor \
   --top-symbols 8 --mutants 3 --sleeve-usd 3000 --apply
 rc_evolve_dr=$?
 set -e
