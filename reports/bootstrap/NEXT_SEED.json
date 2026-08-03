@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-08-03T16:32:45+00:00",
-  "stamp": "20260803T1230",
-  "source": "rth_eval_2026-08-03T1230",
+  "generated_at": "2026-08-03T17:32:28+00:00",
+  "stamp": "20260803T1330",
+  "source": "rth_eval_2026-08-03T1330",
   "ken_required": false,
   "ken_only_for": [
     "gateway_up",
@@ -13,12 +13,45 @@
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
   "detail": {
-    "hint": "RTH: mark/manage paper; DNA ladder (PT mid+adverse, \u03b4, defined_loss, dte_stop); STAND_ASIDE new while book_full 2/2; BAC exp 2026-08-07 watch dte_stop busdays\u21923",
-    "session_et": "2026-08-03 ~12:30 ET mid (Mon)",
-    "decisions": {
-      "BAC_PCS": "HOLD",
-      "AAL_PCS": "HOLD",
-      "new_entries": "STAND_ASIDE_book_full"
+    "hint": "RTH: mark/manage paper; HOLD while ladder clear; STAND_ASIDE new while book full; watch BAC dte_stop near 2026-08-07 (busdays=4>3) and PT +$10.20",
+    "session_et": "2026-08-03 ~13:30 ET mid-afternoon (Mon)",
+    "book_full": true,
+    "working": 2,
+    "open_risk_usd": 118.71,
+    "max_concurrent": 2,
+    "max_open_risk": 500.0,
+    "new_entries": "STAND_ASIDE",
+    "new_entry_reasons": [
+      "book_full_2_of_2",
+      "open_risk_118.71_of_500",
+      "one_open_per_symbol_AAL_BAC",
+      "autonomy_research_only_on_OPEN_PCS_AAL_BAC"
+    ],
+    "closed_this_session": [],
+    "scout": {
+      "stamp": "20260803T173058",
+      "regime_date": "2026-08-03",
+      "n_intents": 8,
+      "n_stand_asides": 1,
+      "n_candidates": 15,
+      "open_actions": [
+        "OPEN_PCS AAL x6 (w0.5 ml~39, w2.0 ml~176)",
+        "OPEN_PCS BAC x2 + SKIP max_intents (w1.0 ml~80, w2.0 ml~160-171)",
+        "STAND_ASIDE AAL CCS filters"
+      ],
+      "autonomy": "5 proposals all research_only risk.allowed defined_risk",
+      "regimes": {
+        "AAL": "neutral ivr~77.4 high_iv",
+        "BAC": "neutral ivr~32.5"
+      }
+    },
+    "equities": {
+      "AAL": 15.944899559020996,
+      "BAC": 61.8650016784668,
+      "SNAP": 4.980000019073486,
+      "SPY": 757.1300048828125,
+      "QQQ": 699.760009765625,
+      "PLTR": 125.80000305175781
     },
     "open_orders": [
       {
@@ -29,16 +62,16 @@
         "status": "working",
         "max_loss_usd": 79.6,
         "decision": "HOLD",
-        "mtm_usd": 6.4,
-        "mtm_adverse_usd": 4.4,
-        "spot": 61.96,
-        "chg_pct": 0.016,
+        "mtm_usd": 2.9,
+        "mtm_adverse_usd": 1.4,
+        "spot": 61.865,
+        "chg_pct": -0.137,
         "short_strike": 61.0,
         "long_strike": 60.0,
-        "short_otm": 0.96,
+        "short_otm": 0.865,
         "short_itm": false,
         "ml_used_frac": 0.0,
-        "short_delta_abs": 0.198,
+        "short_delta_abs": 0.239,
         "exp": "2026-08-07",
         "entry_credit": 0.2040317702904515,
         "quote_short_src": "bid_ask",
@@ -52,9 +85,9 @@
           "delta_breach": 0.45,
           "defined_loss_exit_frac": 0.85,
           "dte_stop": 3,
-          "pt_usd": 10.2,
-          "busdays_to_exp": 4
-        }
+          "pt_usd": 10.2
+        },
+        "busdays_to_exp": 4
       },
       {
         "order_id": "paper_1a2c9349e94b",
@@ -64,16 +97,16 @@
         "status": "working",
         "max_loss_usd": 39.11,
         "decision": "HOLD",
-        "mtm_usd": 3.39,
-        "mtm_adverse_usd": 0.89,
-        "spot": 16.025,
-        "chg_pct": 4.944,
+        "mtm_usd": 3.89,
+        "mtm_adverse_usd": 1.89,
+        "spot": 15.9449,
+        "chg_pct": 4.42,
         "short_strike": 14.5,
         "long_strike": 14.0,
-        "short_otm": 1.525,
+        "short_otm": 1.445,
         "short_itm": false,
         "ml_used_frac": 0.0,
-        "short_delta_abs": 0.162,
+        "short_delta_abs": 0.169,
         "exp": "2026-08-21",
         "entry_credit": 0.10887025898766245,
         "quote_short_src": "bid_ask",
@@ -87,34 +120,26 @@
           "delta_breach": 0.45,
           "defined_loss_exit_frac": 0.753171882607278,
           "dte_stop": 3,
-          "pt_usd": 6.05,
-          "busdays_to_exp": 14
-        }
+          "pt_usd": 6.05
+        },
+        "busdays_to_exp": 14
       }
     ],
-    "open_risk_usd": 118.71,
-    "working": 2,
-    "book_full": true,
-    "closed_this_session": [],
-    "scout": {
-      "stamp": "20260803T163119",
-      "n_intents": 8,
-      "n_candidates": 15,
-      "n_stand_asides": 1,
-      "autonomy": "5x research_only OPEN_PCS AAL/BAC",
-      "regimes": {
-        "AAL": "neutral ivr\u224877.4 high_iv",
-        "BAC": "neutral ivr\u224832.5"
-      }
+    "path_note": {
+      "BAC": "13:30 MTM +$2.90 / adverse +$1.40 vs PT +$10.20; OTM $0.87; |\u0394|~0.24; 0% ml; softer vs 12:30 +$6.40 \u2014 same-session drift HOLD; exp 2026-08-07 busdays=4 > dte_stop=3",
+      "AAL": "13:30 MTM +$3.89 / adverse +$1.89 vs PT +$6.05; OTM $1.44; |\u0394|~0.17; spot +4.4% day; 0% ml; exp 2026-08-21 busdays=14"
     },
-    "equities": {
-      "AAL": 16.024999618530273,
-      "BAC": 61.970001220703125,
-      "SNAP": 4.980000019073486,
-      "SPY": 756.510009765625,
-      "QQQ": 698.5,
-      "PLTR": 125.70999908447266
+    "worker": {
+      "on": true,
+      "edge_search": "OK",
+      "registry_mb": 2.5,
+      "hb_age_h": 0.01,
+      "cycles": 11454
     },
-    "edge_note": "worker ON edge_search=OK registry\u22482.1MB post morning prune; cycles~11k"
+    "decisions": {
+      "BAC": "HOLD",
+      "AAL": "HOLD",
+      "new": "STAND_ASIDE"
+    }
   }
 }
