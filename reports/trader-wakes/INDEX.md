@@ -1,3 +1,4 @@
+- 2026-08-03T0905-continuum-judgment.md — coach: prune 6.0→1.8MB unfreezes EDGE; SNAP CCS 6da84330 capital_path dens10 secondary; AAL leaders hold; paper 2/2 manage; ken_required=false
 - 2026-08-03T1130-rth.md — RTH mid HOLD BAC PCS (+4.90 OTM 1.02) + AAL PCS (+4.89 OTM 1.53); book 2/2 STAND_ASIDE; EDGE BLOATED_SKIP; ken_required=false
 - 2026-08-03T1030-rth.md — RTH Mon mid CLOSE AAL CCS delta_breach (mtm≈−$25.6 |Δ|0.47) + HOLD BAC near PT; campaign race AAL PCS canceled cool-off; open 1 risk $79.6 STAND_ASIDE; ken_required=false
 - 2026-08-03T0931-rth.md — RTH Mon open HOLD AAL CCS (+$3.36 OTM $0.56 cushion watch on +4.4% day) + BAC PCS (+$3.40 OTM $1.34); book 2/2 STAND_ASIDE; OPEN_PCS research_only; EDGE BLOATED_SKIP note; ken_required=false

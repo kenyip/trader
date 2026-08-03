@@ -1,3 +1,21 @@
+# Readiness snapshot — 2026-08-03T0905 continuum judgment
+
+PHASE: **SHADOW** (NEAR_PACKET)  
+EDGE: **OK** (unfrozen) registry~1.8MB after coach prune 6.0->1.8MB; pack-grade shortlist_dna_multi; research AAL PCS dens1 leaders hold; new capital_path SNAP CCS 6da84330 dens10/dd137 secondary research-only  
+ROBOT: paper open **2/2** BAC PCS + AAL PCS risk~$118.71 (sessions 9/3); **shadow PASS**  
+ARM: blocked — Ken LIVE_PACKET only; test cash~$500; live_armed=false  
+
+Coach: stop worker -> prune --max-keep 400 (paper DNA forced) -> unsat evolve+B3/B4 -> restart; edge_search=OK; cycles stress again.  
+ken_required: false  
+NEXT: manage_open_paper_campaign (RTH ladder) · worker EDGE continues off-manage
+
+## C-row coach 2026-08-03T0905
+- EDGE unfreeze: hypotheses.yaml 6.0MB/1444 -> 1.8MB/400; backup under .cache/platform/registry_prune/
+- capital_path: SNAP CCS 6da84330 SHIP@5pct dens10 dd137 (not leader vs AAL dens1 dd31)
+- rejects: AMD PCS/IC B4 fragile; IWM multi-leg B4 REJECT/NULL; SNAP CCS twin soft_loss
+- paper 2/2 intact post-prune; worker ON edge_search=OK
+- updated: 2026-08-03T16:06:19+00:00
+
 # Readiness snapshot — 2026-08-03T1130 RTH mid
 
 PHASE: **SHADOW** (NEAR_PACKET)  

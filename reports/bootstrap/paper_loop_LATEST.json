@@ -1,16 +1,22 @@
 {
   "doctrine": "docs/TRADER_BUILD.md",
   "execute_paper": false,
-  "generated_at": "2026-07-28T03:49:30+00:00",
+  "generated_at": "2026-08-03T16:05:59+00:00",
   "handoff": {
-    "intent_max_loss_usd": null,
-    "intent_structure": null,
-    "intent_symbol": null,
-    "paper_action": "none",
+    "intent_max_loss_usd": 89.92076126239414,
+    "intent_structure": "call_credit_spread",
+    "intent_symbol": "INTC",
+    "paper_action": "dry_run_only",
     "paper_order_id": "",
-    "reason": "pick_structure_entry returned None (filters/credit/max-loss)",
-    "risk": {},
-    "status": "NO_SETUP",
+    "reason": "intent built and risk-allowed; dry-run (no paper ledger mutate)",
+    "risk": {
+      "allowed": true,
+      "reasons": [
+        "defined_risk max_loss_usd=89.92 (premium_notional=10.08)"
+      ],
+      "risk_amount": 89.92076126239414
+    },
+    "status": "PAPER_INTENT_READY",
     "watch_status": "PAPER_PACKET_READY"
   },
   "handoff_doc": "reports/bootstrap/ENGINE_PROVE_HANDOFF.md",
@@ -94,18 +100,18 @@
   "watch": {
     "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
     "desk": "B_agentic",
-    "generated_at": "2026-07-28T03:49:25+00:00",
+    "generated_at": "2026-08-03T16:05:56+00:00",
     "live_authority": false,
     "living_watchable_count": 819,
     "packet": {
-      "bar_time": "2026-07-27 00:00:00",
+      "bar_time": "2026-08-03 00:00:00",
       "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
       "confidence_stage": "f2_holdout",
       "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
       "forecast": "ingested from spine evaluate_proxy F2 survivor",
       "funnel_stage": "F2_UNTOUCHED_HOLDOUT",
       "invalidation": "regime flip, credit/max-loss filters fail, or risk governor deny",
-      "iv_rank": 76.98412698412699,
+      "iv_rank": 61.50793650793651,
       "legs": [],
       "live_authority": false,
       "management": {
@@ -125,7 +131,7 @@
         "sleeve_usd": 3000.0
       },
       "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2_INTC",
-      "spot": 91.86000061035156,
+      "spot": 88.29000091552734,
       "structure": "call_credit_spread",
       "symbol": "INTC",
       "trading_authority": false,
