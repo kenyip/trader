@@ -323,6 +323,40 @@ def test_unsaturated_discovery_skips_recent_fail_thrash_cold_names():
     assert "KO" in out
 
 
+def test_unsaturated_cold_prefers_liquid_over_alphabetical_mega():
+    """When tier-0 empty, cold inject must not alphabetical-AMD/AVGO starve F/KO/IWM (2026-08-03)."""
+    from trader_platform.stress_family_policy import (
+        unsaturated_discovery_families,
+        unsaturated_discovery_symbols,
+    )
+
+    # Empty rotation: every name is cold tier-1 open.
+    rot = {"by_hyp_id": {}}
+    universe = ["AMD", "AVGO", "GOOGL", "F", "KO", "IWM", "META"]
+    syms = unsaturated_discovery_symbols(
+        limit=4,
+        rotation=rot,
+        universe=universe,
+        structures=("put_credit_spread", "call_credit_spread", "iron_condor"),
+    )
+    assert syms[0] in {"F", "KO", "IWM"}
+    assert "AMD" not in syms[:3]
+    assert "AVGO" not in syms[:3]
+    fams = unsaturated_discovery_families(
+        limit=6,
+        rotation=rot,
+        universe=universe,
+        structures=("put_credit_spread", "call_credit_spread", "iron_condor"),
+    )
+    fam_syms = [f["symbol"] for f in fams]
+    assert fam_syms
+    assert fam_syms[0] in {"F", "KO", "IWM"}
+    assert "AMD" not in fam_syms[:4]
+    assert "AVGO" not in fam_syms[:4]
+    # Preferred cold can fill beyond old cold_cap=2 when tier0 empty.
+    assert len(fams) >= 4
+
+
 def test_run_evolve_tick_force_symbols_skips_research(monkeypatch):
     import trader_platform.evolve_tick as ev
 
@@ -468,7 +502,7 @@ def test_seed_population_includes_loose_entry_for_iron_condor():
 
 
 def test_unsaturated_discovery_families_caps_cold_tier():
-    """Cold tier-1 must not crowd inject after proven tier-0 (2026-07-31 coach)."""
+    """Cold mega-caps must not crowd inject after proven tier-0 (2026-07-31/08-03)."""
     from trader_platform.stress_family_policy import unsaturated_discovery_families
 
     now = _now()
@@ -486,7 +520,7 @@ def test_unsaturated_discovery_families_caps_cold_tier():
             "stressed_at": now,
         },
     }
-    # Many cold names with zero oks — without cap they fill the whole limit.
+    # Many cold mega names with zero oks — without demote they fill the whole limit.
     for sym in ("AVGO", "DIA", "GOOGL", "JPM", "META", "NVDA"):
         by[f"{sym}_c"] = {
             "symbol": sym,
@@ -511,9 +545,13 @@ def test_unsaturated_discovery_families_caps_cold_tier():
     pairs = [(r["symbol"], r["structure"], r["tier"]) for r in out]
     assert any(p[0] == "F" and p[2] == 0 for p in pairs)
     assert any(p[0] == "CCL" and p[2] == 0 for p in pairs)
-    n_cold = sum(1 for p in pairs if p[2] >= 1)
-    assert n_cold <= max(2, 8 // 3)
+    mega = {"AVGO", "DIA", "GOOGL", "JPM", "META", "NVDA"}
+    n_mega_cold = sum(1 for p in pairs if p[2] >= 1 and p[0] in mega)
+    # Non-preferred cold still capped; preferred cold (F/CCL open twins) may add.
+    assert n_mega_cold <= max(2, 8 // 3)
     assert len(out) <= 8
+    # Tier-0 leaders stay ahead of mega cold.
+    assert pairs[0][2] == 0
 
 
 def test_build_population_registry_family_seeds(monkeypatch, tmp_path):

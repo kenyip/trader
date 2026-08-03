@@ -289,6 +289,65 @@ _DEFAULT_ML_STRUCTURES: tuple[str, ...] = (
     "iron_condor",
 )
 
+# Cheap/liquid $3k-sleeve discovery names preferred when tier-0 proven-open is empty.
+# Without this, cold inject sorts alphabetically through universe and burns cycles on
+# AVGO/AMD/GOOGL zero-trade SHIPs while F IC / KO PCS / IWM PCS stay uncreated
+# (2026-08-03 continuum coach: unsat_fams → AMD+AVGO only; stress queue empty).
+_PREFERRED_COLD_DISCOVERY: tuple[str, ...] = (
+    "F",
+    "KO",
+    "IWM",
+    "SOFI",
+    "PFE",
+    "SNAP",
+    "CCL",
+    "TSLL",
+    "BAC",
+    "AAL",
+    "SMCI",
+    "XOM",
+    "PLTR",
+    "NFLX",
+    "INTC",
+    "MU",
+)
+_PREFERRED_COLD_RANK: dict[str, int] = {
+    s: i for i, s in enumerate(_PREFERRED_COLD_DISCOVERY)
+}
+_MEGA_CAP_COLD_DEMOTE: frozenset[str] = frozenset(
+    {
+        "AVGO",
+        "GOOGL",
+        "GOOG",
+        "META",
+        "MSFT",
+        "NVDA",
+        "AMD",
+        "AMZN",
+        "AAPL",
+        "DIA",
+        "QQQ",
+        "SPY",
+        "JPM",
+        "NIO",
+        "COIN",
+        "ARM",
+        "TSM",
+        "QCOM",
+        "CRM",
+    }
+)
+
+
+def _cold_symbol_rank(sym: str) -> tuple[int, int, int]:
+    """Lower is better: preferred bucket, preferred index, mega demote."""
+    s = str(sym or "").strip().upper()
+    pref = _PREFERRED_COLD_RANK.get(s)
+    preferred_bucket = 0 if pref is not None else 1
+    pref_idx = int(pref) if pref is not None else 999
+    mega = 1 if s in _MEGA_CAP_COLD_DEMOTE else 0
+    return preferred_bucket, pref_idx, mega
+
 
 def unsaturated_discovery_symbols(
     *,
@@ -381,11 +440,16 @@ def unsaturated_discovery_symbols(
             continue
         # tier0 = has some capital_path survivors but room to create; tier1 = cold
         tier = 0 if 0 < ok_mass < int(min_capital_path_ok_sat) else 1
+        pref_b, pref_i, mega = _cold_symbol_rank(sym)
         scored.append(
             (
                 tier,
                 -int(recent_ok_mass),
                 int(recent_fail_mass),
+                # Cold: preferred liquid before alphabetical mega-caps (2026-08-03).
+                pref_b if tier >= 1 else 0,
+                pref_i if tier >= 1 else 0,
+                mega if tier >= 1 else 0,
                 -int(open_structs),
                 int(ok_mass),
                 sym,
@@ -393,7 +457,8 @@ def unsaturated_discovery_symbols(
         )
     scored.sort()
     out: list[str] = []
-    for _t, _ro, _rf, _os, _ok, sym in scored:
+    for row in scored:
+        sym = row[-1]
         out.append(sym)
         if len(out) >= int(limit):
             break
@@ -478,12 +543,17 @@ def unsaturated_discovery_families(
             ):
                 continue
             tier = 0 if 0 < ok_i < int(min_capital_path_ok_sat) else 1
+            pref_b, pref_i, mega = _cold_symbol_rank(sym)
             # Prefer proven-open families, then recent ok mass, fewer fails, more lifetime ok.
+            # Cold tier: preferred liquid $3k names before alphabetical mega-caps.
             scored.append(
                 (
                     tier,
                     -int(recent_ok_mass),
                     int(recent_fail_mass),
+                    pref_b if tier >= 1 else 0,
+                    pref_i if tier >= 1 else 0,
+                    mega if tier >= 1 else 0,
                     -ok_i,
                     sym,
                     str(st),
@@ -493,29 +563,47 @@ def unsaturated_discovery_families(
     out: list[dict[str, Any]] = []
     seen: set[tuple[str, str]] = set()
     per_sym: dict[str, int] = {}
-    # Fill tier-0 (proven unsaturated) first; cap cold tier-1 so AVGO/DIA/GOOGL
-    # empty-oks cannot crowd the inject after proven F/CCL/SNAP/TSLL (2026-07-31 coach).
-    cold_cap = max(2, int(limit) // 3)
-    n_cold = 0
-    for tier, _ro, _rf, neg_ok, sym, st in scored:
+    # Fill tier-0 (proven unsaturated) first. Cap *non-preferred* cold mega-caps so
+    # AVGO/DIA/GOOGL cannot crowd inject (2026-07-31). When tier-0 is empty (all
+    # proven families toxic-hot or saturated), allow full limit of preferred cold
+    # opens (F IC, KO PCS, IWM PCS, …) — 2026-08-03 coach.
+    n_tier0 = sum(1 for row in scored if int(row[0]) == 0)
+    cold_cap_nonpreferred = max(2, int(limit) // 3)
+    cold_cap_preferred = int(limit) if n_tier0 == 0 else max(cold_cap_nonpreferred, int(limit) // 2)
+    n_cold_pref = 0
+    n_cold_other = 0
+    for row in scored:
+        tier = int(row[0])
+        neg_ok = int(row[6])
+        sym = str(row[7])
+        st = str(row[8])
         key = (sym, st)
         if key in seen:
             continue
-        if int(tier) >= 1:
-            if n_cold >= cold_cap:
-                continue
+        if tier >= 1:
+            pref_b, _pref_i, _mega = _cold_symbol_rank(sym)
+            if pref_b == 0:
+                if n_cold_pref >= cold_cap_preferred:
+                    continue
+            else:
+                if n_cold_other >= cold_cap_nonpreferred:
+                    continue
         # Cap 2 open structures per symbol so one name cannot fill the whole inject.
         if per_sym.get(sym, 0) >= 2:
             continue
         seen.add(key)
         per_sym[sym] = per_sym.get(sym, 0) + 1
-        if int(tier) >= 1:
-            n_cold += 1
+        if tier >= 1:
+            pref_b, _pi, _mg = _cold_symbol_rank(sym)
+            if pref_b == 0:
+                n_cold_pref += 1
+            else:
+                n_cold_other += 1
         out.append(
             {
                 "symbol": sym,
                 "structure": st,
-                "tier": int(tier),
+                "tier": tier,
                 "lifetime_ok": int(-neg_ok),
                 "source": "unsaturated_discovery_family",
             }

@@ -1,3 +1,21 @@
+# Readiness snapshot — 2026-08-03T1508 continuum judgment
+
+PHASE: **SHADOW** (NEAR_PACKET)  
+EDGE: OK SEARCHING registry≈3.8MB; pack-grade shortlist_dna_multi; research AAL PCS; first-live AAL short_put n=85 fit_3k (refreshed); **cold unsat inject repaired** (preferred liquid F/IWM/KO vs AMD/AVGO thrash)  
+ROBOT: paper open **2/2** AAL PCS + BAC PCS risk~$119.27 (sessions 9/3); **shadow PASS**  
+ARM: blocked — Ken LIVE_PACKET only; test cash~$500; live_armed=false  
+
+Coach 1508: empty stress queue was cold mega-cap inject failure. KO PCS `a3d2bfca` capital_path dens5/dd76 SHIP@5% secondary (does not outrank AAL dens1/dd31). IWM multi-leg B4-killed.  
+ken_required: false  
+NEXT: manage_open_paper_campaign (AAL+BAC paper; worker EDGE continues)
+
+## C-row continuum 2026-08-03T1508
+- search repair: preferred cold discovery + KO PCS capital_path secondary; shortlist tops unchanged AAL/BAC/CCL/F
+- first-live refreshed 2026-08-03 (was 2026-07-31)
+- paper 2/2 manage residual; shadow PASS; live_armed=false
+- EDGE OK registry≈3.8MB worker ON post-restart
+- updated: 2026-08-03T22:08:50+00:00
+
 # Readiness snapshot — 2026-08-03T1530 RTH late afternoon
 
 PHASE: **SHADOW** (NEAR_PACKET)  
