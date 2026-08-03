@@ -1,3 +1,4 @@
+- 2026-08-03T1230-rth.md — RTH mid manage: HOLD BAC PCS +$6.40 + AAL PCS +$3.39; STAND_ASIDE new book_full; EDGE OK post-prune
 - 2026-08-03T0905-continuum-judgment.md — coach: prune 6.0→1.8MB unfreezes EDGE; SNAP CCS 6da84330 capital_path dens10 secondary; AAL leaders hold; paper 2/2 manage; ken_required=false
 - 2026-08-03T1130-rth.md — RTH mid HOLD BAC PCS (+4.90 OTM 1.02) + AAL PCS (+4.89 OTM 1.53); book 2/2 STAND_ASIDE; EDGE BLOATED_SKIP; ken_required=false
 - 2026-08-03T1030-rth.md — RTH Mon mid CLOSE AAL CCS delta_breach (mtm≈−$25.6 |Δ|0.47) + HOLD BAC near PT; campaign race AAL PCS canceled cool-off; open 1 risk $79.6 STAND_ASIDE; ken_required=false

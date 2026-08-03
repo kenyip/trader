@@ -1,37 +1,120 @@
 {
-  "generated_at": "2026-08-03T16:06:19+00:00",
+  "generated_at": "2026-08-03T16:32:45+00:00",
+  "stamp": "20260803T1230",
+  "source": "rth_eval_2026-08-03T1230",
   "ken_required": false,
-  "live_authority": false,
-  "trading_authority": false,
-  "next_action": "manage_open_paper_campaign",
-  "paper_campaign_execute": true,
-  "source": "continuum_judgment_20260803T0905",
-  "stamp": "20260803T160700",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
     "fund_3k_at_packet"
   ],
+  "live_authority": false,
+  "trading_authority": false,
+  "next_action": "manage_open_paper_campaign",
+  "paper_campaign_execute": true,
   "detail": {
-    "hint": "RTH: mark/manage paper DNA ladder on BAC+AAL; STAND_ASIDE new while book full. EDGE unfrozen after coach prune \u2014 worker continues search.",
-    "coach_edge": "OK registry~1.8MB after prune 6.0MB; SNAP CCS 6da84330 capital_path secondary dens10",
+    "hint": "RTH: mark/manage paper; DNA ladder (PT mid+adverse, \u03b4, defined_loss, dte_stop); STAND_ASIDE new while book_full 2/2; BAC exp 2026-08-07 watch dte_stop busdays\u21923",
+    "session_et": "2026-08-03 ~12:30 ET mid (Mon)",
+    "decisions": {
+      "BAC_PCS": "HOLD",
+      "AAL_PCS": "HOLD",
+      "new_entries": "STAND_ASIDE_book_full"
+    },
     "open_orders": [
       {
         "order_id": "paper_75490f40655b",
         "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
         "symbol": "BAC",
         "structure": "put_credit_spread",
+        "status": "working",
         "max_loss_usd": 79.6,
-        "status": "working"
+        "decision": "HOLD",
+        "mtm_usd": 6.4,
+        "mtm_adverse_usd": 4.4,
+        "spot": 61.96,
+        "chg_pct": 0.016,
+        "short_strike": 61.0,
+        "long_strike": 60.0,
+        "short_otm": 0.96,
+        "short_itm": false,
+        "ml_used_frac": 0.0,
+        "short_delta_abs": 0.198,
+        "exp": "2026-08-07",
+        "entry_credit": 0.2040317702904515,
+        "quote_short_src": "bid_ask",
+        "quote_long_src": "bid_ask",
+        "quote_flags": [],
+        "reasons": [
+          "short_OTM_or_quiet_path; mtm within budget"
+        ],
+        "ladder": {
+          "profit_target": 0.5,
+          "delta_breach": 0.45,
+          "defined_loss_exit_frac": 0.85,
+          "dte_stop": 3,
+          "pt_usd": 10.2,
+          "busdays_to_exp": 4
+        }
       },
       {
         "order_id": "paper_1a2c9349e94b",
         "strategy_id": "hyp_dna_aal_put_credit_spread_3486155f",
         "symbol": "AAL",
         "structure": "put_credit_spread",
+        "status": "working",
         "max_loss_usd": 39.11,
-        "status": "working"
+        "decision": "HOLD",
+        "mtm_usd": 3.39,
+        "mtm_adverse_usd": 0.89,
+        "spot": 16.025,
+        "chg_pct": 4.944,
+        "short_strike": 14.5,
+        "long_strike": 14.0,
+        "short_otm": 1.525,
+        "short_itm": false,
+        "ml_used_frac": 0.0,
+        "short_delta_abs": 0.162,
+        "exp": "2026-08-21",
+        "entry_credit": 0.10887025898766245,
+        "quote_short_src": "bid_ask",
+        "quote_long_src": "bid_ask",
+        "quote_flags": [],
+        "reasons": [
+          "short_OTM_or_quiet_path; mtm within budget"
+        ],
+        "ladder": {
+          "profit_target": 0.5555465179774001,
+          "delta_breach": 0.45,
+          "defined_loss_exit_frac": 0.753171882607278,
+          "dte_stop": 3,
+          "pt_usd": 6.05,
+          "busdays_to_exp": 14
+        }
       }
-    ]
+    ],
+    "open_risk_usd": 118.71,
+    "working": 2,
+    "book_full": true,
+    "closed_this_session": [],
+    "scout": {
+      "stamp": "20260803T163119",
+      "n_intents": 8,
+      "n_candidates": 15,
+      "n_stand_asides": 1,
+      "autonomy": "5x research_only OPEN_PCS AAL/BAC",
+      "regimes": {
+        "AAL": "neutral ivr\u224877.4 high_iv",
+        "BAC": "neutral ivr\u224832.5"
+      }
+    },
+    "equities": {
+      "AAL": 16.024999618530273,
+      "BAC": 61.970001220703125,
+      "SNAP": 4.980000019073486,
+      "SPY": 756.510009765625,
+      "QQQ": 698.5,
+      "PLTR": 125.70999908447266
+    },
+    "edge_note": "worker ON edge_search=OK registry\u22482.1MB post morning prune; cycles~11k"
   }
 }
