@@ -1,136 +1,36 @@
 {
-  "generated_at": "2026-08-03T13:34:28+00:00",
-  "stamp": "20260803T0931",
-  "source": "rth_eval_2026-08-03T0931",
-  "ken_required": false,
+  "detail": {
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
+    "open_orders": [
+      {
+        "max_loss_usd": 79.6,
+        "order_id": "paper_75490f40655b",
+        "status": "working",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
+        "structure": "put_credit_spread",
+        "symbol": "BAC"
+      },
+      {
+        "max_loss_usd": 39.11,
+        "order_id": "paper_08ebde214299",
+        "status": "working",
+        "strategy_id": "hyp_dna_aal_put_credit_spread_3486155f",
+        "structure": "put_credit_spread",
+        "symbol": "AAL"
+      }
+    ]
+  },
+  "generated_at": "2026-08-03T14:33:05+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
     "fund_3k_at_packet"
   ],
+  "ken_required": false,
   "live_authority": false,
-  "trading_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*; watch AAL CCS OTM cushion on green day",
-    "session_et": "2026-08-03 ~09:31 ET open (Mon)",
-    "book_full": true,
-    "working": 2,
-    "open_risk_usd": 264.24,
-    "max_concurrent": 2,
-    "max_open_risk": 500.0,
-    "new_entries": "STAND_ASIDE",
-    "new_entry_reasons": [
-      "book_full_2_of_2",
-      "open_risk_264_of_500",
-      "one_open_per_symbol_AAL_BAC",
-      "autonomy_research_only_on_OPEN_PCS_AAL_BAC"
-    ],
-    "closed_this_session": [],
-    "scout": {
-      "stamp": "20260803T133149",
-      "regime_date": "2026-08-03",
-      "n_intents": 8,
-      "n_stand_asides": 1,
-      "n_candidates": 13,
-      "open_actions": [
-        "OPEN_PCS AAL x4 (w0.5 ml~39, w2.0 ml~176)",
-        "OPEN_PCS BAC x4 (w1.0 ml~80, w2.0 ml~160-171)",
-        "STAND_ASIDE AAL CCS filters"
-      ],
-      "autonomy": "5 proposals all research_only risk.allowed defined_risk",
-      "regimes": {
-        "AAL": "neutral ivr~77.4 high_iv",
-        "BAC": "neutral ivr~32.5"
-      }
-    },
-    "equities": {
-      "AAL": 15.942299842834473,
-      "BAC": 62.34000015258789,
-      "SNAP": 4.8420000076293945,
-      "SPY": 749.75,
-      "QQQ": 686.5850219726562,
-      "PLTR": 125.41000366210938
-    },
-    "open_orders": [
-      {
-        "order_id": "paper_4712ce62fd1c",
-        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
-        "symbol": "AAL",
-        "structure": "call_credit_spread",
-        "status": "working",
-        "max_loss_usd": 184.64,
-        "decision": "HOLD",
-        "mtm_usd": 3.36,
-        "mtm_adverse_usd": 3.36,
-        "spot": 15.935,
-        "chg_pct": 4.355,
-        "short_strike": 16.5,
-        "long_strike": 18.5,
-        "short_otm": 0.565,
-        "short_itm": false,
-        "ml_used_frac": 0.0,
-        "short_delta_abs": 0.001,
-        "exp": "2026-08-14",
-        "entry_credit": 0.15361246514783317,
-        "quote_short_src": "last",
-        "quote_long_src": "last",
-        "quote_flags": [],
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ],
-        "ladder": {
-          "profit_target": 0.5,
-          "delta_breach": 0.45,
-          "defined_loss_exit_frac": 0.85,
-          "dte_stop": 3
-        }
-      },
-      {
-        "order_id": "paper_75490f40655b",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
-        "symbol": "BAC",
-        "structure": "put_credit_spread",
-        "status": "working",
-        "max_loss_usd": 79.6,
-        "decision": "HOLD",
-        "mtm_usd": 3.4,
-        "mtm_adverse_usd": 3.4,
-        "spot": 62.34,
-        "chg_pct": 0.63,
-        "short_strike": 61.0,
-        "long_strike": 60.0,
-        "short_otm": 1.34,
-        "short_itm": false,
-        "ml_used_frac": 0.0,
-        "short_delta_abs": 0.0,
-        "exp": "2026-08-07",
-        "entry_credit": 0.2040317702904515,
-        "quote_short_src": "last",
-        "quote_long_src": "last",
-        "quote_flags": [],
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ],
-        "ladder": {
-          "profit_target": 0.5,
-          "delta_breach": 0.45,
-          "defined_loss_exit_frac": 0.85,
-          "dte_stop": 3
-        }
-      }
-    ],
-    "path_note": {
-      "AAL": "Mon open +4.35% day; OTM cushion $1.27 Fri\u2192~$0.56 under 16.5c short; MTM +$3.36 still < PT +$7.68; last-print \u0394 vacuous \u2014 HOLD, re-mark if spot \u219216.5",
-      "BAC": "soft green +$3.40 OTM~$1.34; < PT +$10.20; exp 2026-08-07 (~4d) dte_stop=3 not yet; last-print \u0394 vacuous"
-    },
-    "worker": {
-      "edge_search": "BLOATED_SKIP",
-      "registry_mb": 6.0,
-      "cycle_n": 10623,
-      "book_full_cadence_skip": true,
-      "note": "off-hours prune \u2014 do not restore yaml mid-RTH"
-    }
-  }
+  "source": "trader_paper_campaign",
+  "stamp": "20260803T143305",
+  "trading_authority": false
 }
