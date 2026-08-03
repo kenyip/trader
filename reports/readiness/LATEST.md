@@ -1,3 +1,21 @@
+# Readiness snapshot — 2026-08-03T1530 RTH late afternoon
+
+PHASE: **SHADOW** (NEAR_PACKET)  
+EDGE: OK SEARCHING registry≈3.2MB; pack-grade shortlist_dna_multi; research AAL PCS; first-live AAL short_put fit_3k  
+ROBOT: paper open **1** AAL PCS risk~$39.11 (sessions 9/3) after **CLOSE BAC PCS profit_target**; **shadow PASS**  
+ARM: blocked — Ken LIVE_PACKET only; test cash~$500; live_armed=false  
+
+RTH 1530 Mon late-afternoon: **CLOSE** BAC PCS MTM +$11.40 / adv +$10.40 ≥ PT +$10.20 (OTM $1.33 |Δ|~0.13); **HOLD** AAL PCS MTM +$3.89 (vs PT +$6.05; OTM $1.49 |Δ|~0.16); STAND_ASIDE new post-forced-close.  
+ken_required: false  
+NEXT: manage_open_paper_campaign (remaining AAL PCS; no chase after BAC PT)
+
+## C-row RTH 2026-08-03T1530
+- paper manage: **CLOSE** BAC PCS dual PT (+$11.40 / adv +$10.40 ≥ +$10.20) + **HOLD** AAL PCS (+$3.89 OTM $1.49 |Δ|0.16); open_risk $39.11 (was $118.71)
+- new entries STAND_ASIDE post-close same-tick; scout OPEN_PCS research_only; shadow PASS; live_armed=false
+- BAC path 13:30 +$2.90 → 14:30 +$7.90 → 15:30 PT — ladder-only exits validated
+- EDGE OK registry≈3.2MB worker ON
+- updated: 2026-08-03T19:35:00+00:00
+
 # Readiness snapshot — 2026-08-03T1430 RTH mid-afternoon
 
 PHASE: **SHADOW** (NEAR_PACKET)  

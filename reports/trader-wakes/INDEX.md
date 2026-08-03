@@ -1,3 +1,4 @@
+| 2026-08-03T1530 | rth | CLOSE BAC PCS PT dual (+11.40/adv+10.40≥10.20) + HOLD AAL PCS +3.89; STAND_ASIDE new post-close; open 1 risk $39 | manage_open_paper_campaign |
 | 2026-08-03T1430 | rth | HOLD BAC PCS +7.90 (→PT 10.20) + AAL PCS +3.89; STAND_ASIDE new book_full; BAC rebound vs 13:30 | manage_open_paper_campaign |
 | 2026-08-03T1330 | rth | HOLD BAC PCS +.90 + AAL PCS +.89; STAND_ASIDE new book_full; softer BAC vs 12:30 | manage_open_paper_campaign |
 - 2026-08-03T1230-rth.md — RTH mid manage: HOLD BAC PCS +$6.40 + AAL PCS +$3.39; STAND_ASIDE new book_full; EDGE OK post-prune
