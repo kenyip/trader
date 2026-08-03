@@ -11,9 +11,10 @@ NEXT: manage_open_paper_campaign (BAC only; watch profit_target)
 
 ## C-row RTH 2026-08-03T1030
 - paper manage: **CLOSE** AAL CCS delta_breach (mtm≈−$25.64 |Δ|0.47); **HOLD** BAC PCS (+$9.40 near PT); open_risk $79.6
+- campaign race AAL PCS same-tick **canceled** cool-off; NEXT_SEED restored post-thin
 - new entries STAND_ASIDE; scout OPEN_PCS research_only; shadow PASS; live_armed=false
 - EDGE BLOATED_SKIP registry≈6.0MB — prune off-hours only
-- updated: 2026-08-03T14:35:00+00:00
+- updated: 2026-08-03T14:36:30+00:00
 
 ## C-row RTH 2026-08-03T0931
 - paper manage: HOLD AAL CCS (+$3.36 OTM $0.56 watch) + BAC PCS (+$3.40 OTM $1.34); book 2/2 risk $264

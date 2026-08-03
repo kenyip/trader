@@ -34,9 +34,10 @@ NO-ADVANCE STREAK: n/a (RTH ops)
 4. **CLOSED** `paper_4712ce62fd1c` AAL CCS — reason **`delta_breach`** (|Δ|≈0.473 ≥ 0.45); paper ledger annotate only (never live)  
 5. **HOLD** BAC PCS — MTM +$9.40 vs PT need +$10.20; OTM $1.29; |Δ|≈0.15  
 6. `just trader-rth-ops` rc=0 stamp `20260803T143200` — scout n_intents=8 OPEN_PCS AAL+BAC; closed AAL CCS DNA STAND_ASIDE filters; autonomy 5× `research_only`  
-7. **No new paper** — forced-close same tick + research_only + BAC one-open/symbol + no chase AAL call-side rally into PCS  
-8. Wrote wake + NEXT_SEED with mark snapshot + closed_this_session + day rth_eval append  
-9. Noted EDGE freeze (registry≈6.0MB) for **off-hours prune only** — no mid-RTH yaml restore
+7. **No new paper (final)** — forced-close same tick + research_only + BAC one-open/symbol  
+8. **Campaign race:** ~80s after AAL CCS close, `paper_campaign` placed `paper_08ebde214299` AAL PCS (14.5/14.0 ml=$39.11, hyp `3486155f`) and thinned NEXT_SEED → **canceled** cool-off (`same_tick_stand_aside_after_forced_close`); restored rich NEXT_SEED  
+9. Wrote wake + NEXT_SEED with mark snapshot + closed_this_session + canceled_this_session + day rth_eval append  
+10. Noted EDGE freeze (registry≈6.0MB) for **off-hours prune only** — no mid-RTH yaml restore
 
 ## Marks (2026-08-03T14:30Z / ~10:30 ET mid)
 
@@ -68,7 +69,8 @@ AAL equity continued rally open→mid (+4.4% → +7.1%) **compressed call short 
 
 - Open: **BAC only** `paper_75490f40655b` risk **$79.60** (was $264.24)  
 - Concurrent headroom 1/2; risk headroom ~$420/$500  
-- Still **STAND_ASIDE new this tick** (skill: after forced close prefer stand-aside; autonomy research_only; do not flip AAL into PCS on same heat)
+- Still **STAND_ASIDE new this tick** (skill: after forced close prefer stand-aside; autonomy research_only; do not flip AAL into PCS on same heat)  
+- Campaign race residue: AAL PCS `paper_08ebde214299` **canceled** (never intended ROBOT sample) — status `canceled` + cancel_meta
 
 ## Condition scan
 
@@ -102,14 +104,16 @@ AAL equity continued rally open→mid (+4.4% → +7.1%) **compressed call short 
 - Mid-session BA restore makes Δ decision-grade — do not keep open-print “vacuous Δ skip” after liquidity fills (skill 2026-07-29 mid).  
 - AAL call credit on strong green day: cushion compression + delta_breach can fire while MTM still ≪ defined_loss — same PLTR lesson, call-side.  
 - BAC at ~92% of profit_target dollars (+9.40 / +10.20) — next RTH must check PT first before HOLD inertia.  
-- No skill patch required beyond existing ladder doctrine; wake residue is the durable path record.
+- **Campaign race after agent DNA close:** when open_risk drops mid-RTH, quality_worker/`paper_campaign` can place same-symbol new paper within ~1m and thin NEXT_SEED. RTH closeout must (1) re-read ledger+NEXT_SEED after campaign, (2) cool-off cancel same-tick re-entries after forced close, (3) restore mark-rich NEXT_SEED. Off-hours coach: consider symbol cool-down after managed close.
 
 ## VERIFICATION
 
-- PaperBroker before: working AAL+BAC risk 264.24 → after: open=[BAC] risk **79.6**  
-- AAL exit.reason=delta_breach mtm_usd≈−25.64 short_delta≈0.473 threshold=0.45  
+- PaperBroker path: AAL+BAC 264.24 → close AAL → campaign race AAL PCS → cancel race → open=[BAC] risk **79.6**  
+- AAL CCS exit.reason=delta_breach mtm_usd≈−25.64 short_delta≈0.473 threshold=0.45  
+- AAL PCS race canceled cool-off (paper_08ebde214299)  
 - BAC HOLD mtm≈+9.40 pt_need≈+10.20  
 - rth-ops rc scout=0 autonomy_dry=0; 5× research_only  
+- NEXT_SEED source=rth_eval_2026-08-03T1030 after restore (post-campaign thin)  
 - No live/MCP place_*; live_armed=false unchanged  
 
 ## INTEGRATION
@@ -119,7 +123,7 @@ AAL equity continued rally open→mid (+4.4% → +7.1%) **compressed call short 
 
 ## LESSON
 
-Future RTH: when AAL (or any short call credit) gaps/rallies into K, re-mark with BA as soon as quotes exist; delta_breach overrides “still barely OTM + sub-defined-loss MTM.” Do not wait for 85% ml on strike-approach paths.
+Future RTH: when AAL (or any short call credit) gaps/rallies into K, re-mark with BA as soon as quotes exist; delta_breach overrides “still barely OTM + sub-defined-loss MTM.” Do not wait for 85% ml on strike-approach paths. After any agent paper close, re-check ledger before final NEXT_SEED — campaign may refill headroom within the same minute.
 
 ## NEXT SEED
 

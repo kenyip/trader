@@ -1,36 +1,105 @@
 {
-  "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
-    "open_orders": [
-      {
-        "max_loss_usd": 79.6,
-        "order_id": "paper_75490f40655b",
-        "status": "working",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
-        "structure": "put_credit_spread",
-        "symbol": "BAC"
-      },
-      {
-        "max_loss_usd": 39.11,
-        "order_id": "paper_08ebde214299",
-        "status": "working",
-        "strategy_id": "hyp_dna_aal_put_credit_spread_3486155f",
-        "structure": "put_credit_spread",
-        "symbol": "AAL"
-      }
-    ]
-  },
-  "generated_at": "2026-08-03T14:33:05+00:00",
+  "next_action": "manage_open_paper_campaign",
+  "ken_required": false,
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
     "fund_3k_at_packet"
   ],
-  "ken_required": false,
   "live_authority": false,
-  "next_action": "manage_open_paper_campaign",
+  "trading_authority": false,
   "paper_campaign_execute": true,
-  "source": "trader_paper_campaign",
-  "stamp": "20260803T143305",
-  "trading_authority": false
+  "source": "rth_eval_2026-08-03T1030",
+  "stamp": "20260803T1030",
+  "generated_at": "2026-08-03T14:35:48.121150+00:00",
+  "detail": {
+    "hint": "RTH: mark/manage remaining BAC PCS; watch profit_target (~+$10.20). AAL CCS closed delta_breach; same-tick AAL PCS campaign place canceled (cool-off). Next hour may re-scout non-AAL or AAL only if cool-off ok + non-research_only. Off-hours: registry prune (EDGE BLOATED_SKIP ~6MB).",
+    "session_et": "2026-08-03 ~10:30 ET",
+    "book": {
+      "working": 1,
+      "open_risk_usd": 79.6,
+      "max_concurrent": 2,
+      "open_risk_cap_usd": 500
+    },
+    "open_orders": [
+      {
+        "order_id": "paper_75490f40655b",
+        "symbol": "BAC",
+        "structure": "put_credit_spread",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_c7d09885",
+        "status": "working",
+        "max_loss_usd": 79.6,
+        "spot": 62.29499816894531,
+        "chg_pct": 0.5568965322955144,
+        "short_strike": 61.0,
+        "long_strike": 60.0,
+        "exp": "2026-08-07",
+        "entry_credit": 0.2040317702904515,
+        "mtm_usd": 9.403177029045152,
+        "mtm_adverse_usd": 8.40317702904515,
+        "short_otm": 1.2949981689453125,
+        "short_itm": false,
+        "short_delta_approx": -0.15077453541252084,
+        "ml_used_frac": 0.0,
+        "profit_target_usd": 10.2016,
+        "decision": "HOLD",
+        "reasons": [
+          "short_OTM_or_quiet_path; mtm within budget"
+        ],
+        "knobs": {
+          "profit_target": 0.5,
+          "delta_breach": 0.45,
+          "defined_loss_exit_frac": 0.85,
+          "dte_stop": 3
+        }
+      }
+    ],
+    "closed_this_session": [
+      {
+        "order_id": "paper_4712ce62fd1c",
+        "symbol": "AAL",
+        "structure": "call_credit_spread",
+        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
+        "reason": "delta_breach",
+        "mtm_usd": -25.638753485216686,
+        "spot": 16.348600387573242,
+        "short_strike": 16.5,
+        "short_otm": 0.1513996124267578,
+        "short_delta_approx": 0.47286358743100315,
+        "delta_breach_threshold": 0.45,
+        "ml_used_frac": 0.1496899560507836,
+        "max_loss_usd": 184.64
+      }
+    ],
+    "canceled_this_session": [
+      {
+        "order_id": "paper_08ebde214299",
+        "symbol": "AAL",
+        "structure": "put_credit_spread",
+        "strategy_id": "hyp_dna_aal_put_credit_spread_3486155f",
+        "reason": "same_tick_stand_aside_after_forced_close",
+        "max_loss_usd": 39.11,
+        "note": "campaign raced ~80s after CCS close; cool-off cancel"
+      }
+    ],
+    "new_entries": "STAND_ASIDE",
+    "new_entry_reasons": [
+      "forced_close_same_tick_prefer_stand_aside",
+      "canceled_campaign_race_aal_pcs_after_ccs_close",
+      "autonomy_research_only_at_scout",
+      "one_open_per_symbol_BAC_working"
+    ],
+    "rth_ops_stamp": "20260803T143200",
+    "marks_generated_at": "2026-08-03T14:30:52.833405+00:00",
+    "campaign_race_note": "paper_campaign placed paper_08ebde214299 AAL PCS ~80s after agent CCS close and rewrote NEXT_SEED thin; agent restored seed + cool-off cancel",
+    "edge_note": "EDGE BLOATED_SKIP registry\u22486.0MB \u2014 off-hours prune only",
+    "equities": {
+      "AAL": 16.350000381469727,
+      "BAC": 62.29499816894531,
+      "SNAP": 4.911099910736084,
+      "SPY": 754.4000244140625,
+      "QQQ": 694.219970703125,
+      "PLTR": 125.1449966430664
+    }
+  }
 }
