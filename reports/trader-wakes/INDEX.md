@@ -1,3 +1,4 @@
+- 2026-08-03T0931-rth.md — RTH Mon open HOLD AAL CCS (+$3.36 OTM $0.56 cushion watch on +4.4% day) + BAC PCS (+$3.40 OTM $1.34); book 2/2 STAND_ASIDE; OPEN_PCS research_only; EDGE BLOATED_SKIP note; ken_required=false
 - 2026-07-31T2105-continuum-judgment.md — coach: prune 6MB→1.8MB unblocks EDGE; DR+=iron_condor + loose IC seeds; SNAP/CCL IC create→B4 soft_loss; stress queue refilled SOFI IC; paper 2/2 manage; ken_required=false
 - 2026-07-31T1510-continuum-judgment.md — coach: PCS/CCS loose_entry + registry DNA seeds + cold unsat cap unblocks F/SNAP SHIPs; SNAP create B4 soft_loss reject; paper 2/2 manage; ken_required=false
 - 2026-07-31T1530-rth.md — RTH late-afternoon HOLD AAL CCS (+3.36 OTM $1.27 |Δ|0.20 green vs 14:30 +$2.36) + BAC PCS (+4.40 OTM $1.08 |Δ|0.23); book 2/2 STAND_ASIDE; OPEN_PCS AAL/BAC research_only; ken_required=false
