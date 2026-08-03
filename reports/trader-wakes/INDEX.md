@@ -1,3 +1,4 @@
+| 2026-08-03T1430 | rth | HOLD BAC PCS +7.90 (→PT 10.20) + AAL PCS +3.89; STAND_ASIDE new book_full; BAC rebound vs 13:30 | manage_open_paper_campaign |
 | 2026-08-03T1330 | rth | HOLD BAC PCS +.90 + AAL PCS +.89; STAND_ASIDE new book_full; softer BAC vs 12:30 | manage_open_paper_campaign |
 - 2026-08-03T1230-rth.md — RTH mid manage: HOLD BAC PCS +$6.40 + AAL PCS +$3.39; STAND_ASIDE new book_full; EDGE OK post-prune
 - 2026-08-03T0905-continuum-judgment.md — coach: prune 6.0→1.8MB unfreezes EDGE; SNAP CCS 6da84330 capital_path dens10 secondary; AAL leaders hold; paper 2/2 manage; ken_required=false

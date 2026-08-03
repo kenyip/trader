@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-08-03T17:32:28+00:00",
-  "stamp": "20260803T1330",
-  "source": "rth_eval_2026-08-03T1330",
+  "generated_at": "2026-08-03T18:32:56+00:00",
+  "stamp": "20260803T1430",
+  "source": "rth_eval_2026-08-03T1430",
   "ken_required": false,
   "ken_only_for": [
     "gateway_up",
@@ -13,8 +13,8 @@
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
   "detail": {
-    "hint": "RTH: mark/manage paper; HOLD while ladder clear; STAND_ASIDE new while book full; watch BAC dte_stop near 2026-08-07 (busdays=4>3) and PT +$10.20",
-    "session_et": "2026-08-03 ~13:30 ET mid-afternoon (Mon)",
+    "hint": "RTH: mark/manage paper; HOLD while ladder clear; STAND_ASIDE new while book full; watch BAC PT +$10.20 (now mid +$7.90 / adv +$6.40) and exp 2026-08-07 busdays=4>dte_stop=3",
+    "session_et": "2026-08-03 ~14:30 ET mid-afternoon (Mon)",
     "book_full": true,
     "working": 2,
     "open_risk_usd": 118.71,
@@ -29,7 +29,7 @@
     ],
     "closed_this_session": [],
     "scout": {
-      "stamp": "20260803T173058",
+      "stamp": "20260803T183110",
       "regime_date": "2026-08-03",
       "n_intents": 8,
       "n_stand_asides": 1,
@@ -46,12 +46,12 @@
       }
     },
     "equities": {
-      "AAL": 15.944899559020996,
-      "BAC": 61.8650016784668,
-      "SNAP": 4.980000019073486,
-      "SPY": 757.1300048828125,
-      "QQQ": 699.760009765625,
-      "PLTR": 125.80000305175781
+      "AAL": 15.989999771118164,
+      "BAC": 62.224998474121094,
+      "SNAP": 4.985000133514404,
+      "SPY": 757.5894775390625,
+      "QQQ": 699.9000244140625,
+      "PLTR": 125.88500213623047
     },
     "open_orders": [
       {
@@ -62,16 +62,16 @@
         "status": "working",
         "max_loss_usd": 79.6,
         "decision": "HOLD",
-        "mtm_usd": 2.9,
-        "mtm_adverse_usd": 1.4,
-        "spot": 61.865,
-        "chg_pct": -0.137,
+        "mtm_usd": 7.9,
+        "mtm_adverse_usd": 6.4,
+        "spot": 62.225,
+        "chg_pct": 0.444,
         "short_strike": 61.0,
         "long_strike": 60.0,
-        "short_otm": 0.865,
+        "short_otm": 1.225,
         "short_itm": false,
         "ml_used_frac": 0.0,
-        "short_delta_abs": 0.239,
+        "short_delta_abs": 0.16,
         "exp": "2026-08-07",
         "entry_credit": 0.2040317702904515,
         "quote_short_src": "bid_ask",
@@ -99,14 +99,14 @@
         "decision": "HOLD",
         "mtm_usd": 3.89,
         "mtm_adverse_usd": 1.89,
-        "spot": 15.9449,
-        "chg_pct": 4.42,
+        "spot": 15.99,
+        "chg_pct": 4.715,
         "short_strike": 14.5,
         "long_strike": 14.0,
-        "short_otm": 1.445,
+        "short_otm": 1.49,
         "short_itm": false,
         "ml_used_frac": 0.0,
-        "short_delta_abs": 0.169,
+        "short_delta_abs": 0.165,
         "exp": "2026-08-21",
         "entry_credit": 0.10887025898766245,
         "quote_short_src": "bid_ask",
@@ -126,15 +126,15 @@
       }
     ],
     "path_note": {
-      "BAC": "13:30 MTM +$2.90 / adverse +$1.40 vs PT +$10.20; OTM $0.87; |\u0394|~0.24; 0% ml; softer vs 12:30 +$6.40 \u2014 same-session drift HOLD; exp 2026-08-07 busdays=4 > dte_stop=3",
-      "AAL": "13:30 MTM +$3.89 / adverse +$1.89 vs PT +$6.05; OTM $1.44; |\u0394|~0.17; spot +4.4% day; 0% ml; exp 2026-08-21 busdays=14"
+      "BAC": "14:30 MTM +$7.90 / adverse +$6.40 vs PT +$10.20; OTM $1.23; |\u0394|~0.16; 0% ml; improved vs 13:30 +$2.90 \u2014 still below dual PT gate; exp 2026-08-07 busdays=4 > dte_stop=3",
+      "AAL": "14:30 MTM +$3.89 / adverse +$1.89 vs PT +$6.05; OTM $1.49; |\u0394|~0.17; spot +4.7% day; 0% ml; flat vs 13:30; exp 2026-08-21 busdays=14"
     },
     "worker": {
       "on": true,
       "edge_search": "OK",
-      "registry_mb": 2.5,
+      "registry_mb": 2.9,
       "hb_age_h": 0.01,
-      "cycles": 11454
+      "cycles": 11571
     },
     "decisions": {
       "BAC": "HOLD",
