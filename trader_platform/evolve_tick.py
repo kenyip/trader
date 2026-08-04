@@ -860,7 +860,9 @@ def hyp_id_for_dna(dna: StrategyDNA) -> str:
 
 # Min trades for *new* registry rows. Stress selector defaults min_fresh_trades=6;
 # thinner NEEDS/SHIP clones filled yaml and left B3/B4 queue empty (2026-07-28 coach).
-MIN_CREATE_TRADES = 6
+# 2026-08-04 off-hours tuning (create-driven re-bloat root fix): floor 6->10 so
+# thin clones cannot re-bloat a freshly pruned registry; one lever per window.
+MIN_CREATE_TRADES = 10
 
 
 def apply_results(

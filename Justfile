@@ -411,6 +411,18 @@ trader-quality-cycle *ARGS:
 trader-quality-worker *ARGS:
     bash scripts/trader_quality_worker.sh {{ARGS}}
 
+# Prune bloated hypotheses.yaml off-hours (keep shortlist/first-live/paper DNA).
+#   just trader-prune -- --max-keep 400 --dry-run --json
+#   just trader-prune -- --max-keep 400 --json
+# Off RTH + worker stopped only. Never live/arm. Backs up under .cache/platform/registry_prune.
+trader-prune *ARGS:
+    {{py}} scripts/trader_prune_hyp_registry.py {{ARGS}}
+
+# Run targeted pytest (guard-safe route for cron terminal).
+#   just trader-test -- tests/test_evolve_vanity_ship_registry.py
+trader-test *ARGS:
+    {{py}} -m pytest {{ARGS}}
+
 # Go-live funnel (progress toward real trades — not densify bag %).
 #   just trader-status
 #   just trader-status --watch 10
