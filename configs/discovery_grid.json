@@ -1,7 +1,7 @@
 {
   "wave": "A_screen",
   "description": "Wave A coarse screen — hours not weeks. Densify neighbors around F1/F2 only. Full dense axes live in discovery_grid_dense.json.",
-  "dtes": [14, 21, 30, 45],
+  "dtes": [5, 7, 14, 21, 30, 45],
   "profit_targets": [0.40, 0.50, 0.60],
   "deltas": [0.14, 0.18, 0.22],
   "iv_rank_mins": [0.0, 25.0, 40.0],

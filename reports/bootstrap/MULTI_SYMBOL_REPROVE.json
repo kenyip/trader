@@ -5,7 +5,7 @@
     "CCL",
     "F",
     "TSLL",
-    "SOFI",
+    "SMCI",
     "KO",
     "IWM",
     "AMZN",
@@ -14,7 +14,7 @@
     "INTC"
   ],
   "from_quality_shortlist": true,
-  "generated_at": "2026-08-03T16:06:00+00:00",
+  "generated_at": "2026-08-05T05:47:35+00:00",
   "honesty": "Multi-symbol densify DNA stress \u2014 single-name F2 alone is not pack-grade. Quality-shortlist symbols expand the book so research leaders (AAL/BAC/\u2026) are included in the re-prove, not only default core names.",
   "include_seed_specs": false,
   "live_authority": false,
@@ -28,7 +28,7 @@
     "CCL",
     "F",
     "TSLL",
-    "SOFI"
+    "SMCI"
   ],
   "results": [
     {
@@ -37,7 +37,7 @@
         "AMZN"
       ],
       "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0",
-      "generated_at": "2026-08-03T16:05:58+00:00",
+      "generated_at": "2026-08-05T05:47:28+00:00",
       "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
       "live_authority": false,
       "min_symbols_with_f2": 2,
@@ -51,7 +51,7 @@
           "decision": "STRATEGY_ADVANCED_F2",
           "f2": true,
           "n_holdout_pass": 1,
-          "n_trades_holdout_worst_axis": 9,
+          "n_trades_holdout_worst_axis": 10,
           "n_train_pass": 1,
           "symbol": "AMZN",
           "thick_enough": false
@@ -107,7 +107,7 @@
           "n_holdout_pass": 0,
           "n_trades_holdout_worst_axis": null,
           "n_train_pass": 0,
-          "symbol": "SOFI",
+          "symbol": "SMCI",
           "thick_enough": false
         },
         {
@@ -165,7 +165,7 @@
         "CCL",
         "F",
         "TSLL",
-        "SOFI",
+        "SMCI",
         "KO",
         "IWM",
         "AAPL",
@@ -181,7 +181,7 @@
         "IWM"
       ],
       "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4",
-      "generated_at": "2026-08-03T16:06:00+00:00",
+      "generated_at": "2026-08-05T05:47:35+00:00",
       "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
       "live_authority": false,
       "min_symbols_with_f2": 2,
@@ -246,12 +246,12 @@
           "thick_enough": false
         },
         {
-          "decision": "FAMILY_CLOSED",
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
           "f2": false,
           "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": null,
-          "n_train_pass": 0,
-          "symbol": "SOFI",
+          "n_trades_holdout_worst_axis": 3,
+          "n_train_pass": 1,
+          "symbol": "SMCI",
           "thick_enough": false
         },
         {
@@ -309,7 +309,7 @@
         "CCL",
         "F",
         "TSLL",
-        "SOFI",
+        "SMCI",
         "KO",
         "AMZN",
         "AAPL",

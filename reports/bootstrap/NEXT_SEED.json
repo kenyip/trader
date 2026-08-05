@@ -1,7 +1,6 @@
 {
   "detail": {
-    "coach_note": "2026-08-03T1508 fixed cold unsat mega-cap thrash; KO PCS a3d2bfca capital_path dens5 secondary; AAL leaders hold",
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. Off-hours: worker EDGE with preferred cold inject (F IC/IWM/KO class).",
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
     "open_orders": [
       {
         "max_loss_usd": 39.11,
@@ -19,13 +18,9 @@
         "structure": "put_credit_spread",
         "symbol": "BAC"
       }
-    ],
-    "search_repair": {
-      "ko_pcs_capital_path": "hyp_dna_ko_put_credit_spread_a3d2bfca",
-      "policy": "preferred_cold_discovery_2026-08-03"
-    }
+    ]
   },
-  "generated_at": "2026-08-03T22:09:15+00:00",
+  "generated_at": "2026-08-05T05:46:27+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -35,7 +30,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_2026-08-03T1508",
-  "stamp": "20260803T1508",
+  "source": "trader_paper_campaign",
+  "stamp": "20260805T054627",
   "trading_authority": false
 }
