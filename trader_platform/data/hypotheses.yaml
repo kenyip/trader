@@ -53382,7 +53382,7 @@ hypotheses:
     40.165564802870875, "avg_loss_per'
   null_results: []
   created: '2026-08-04T20:39:18+00:00'
-  updated: '2026-08-05T05:47:15+00:00'
+  updated: '2026-08-05T05:52:53+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -57489,7 +57489,7 @@ hypotheses:
     19.50053404150997, "avg_loss_per_'
   null_results: []
   created: '2026-08-04T20:52:52+00:00'
-  updated: '2026-08-05T04:28:53+00:00'
+  updated: '2026-08-05T05:55:23+00:00'
   notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true
   dna:
     structure: short_put_credit
@@ -119840,6 +119840,479 @@ hypotheses:
       win_rate: 0.8235294117647058
       max_dd_per_contract: 112.80009907308647
       profit_factor: 4.630312877694641
+      ship_bar:
+        min_trades_ship: 15
+        min_trades_signal: 8
+        pf_cap: 10.0
+      sim_engine: single_leg
+      capital: {}
+- id: hyp_dna_tsll_wheel_assignment_bfc23fd3
+  name: DNA:wheel_assignment TSLL g1
+  thesis: "Structure=wheel_assignment. Symbols=TSLL. Entry: side_policy=prefer_put,\
+    \ legs=[{'action': 'sell', 'right': 'put', 'qty': 1}, {'action': 'sell', 'right':\
+    \ 'call', 'qty': 1, 'when': 'assigned'}], dte=14, delta=0.22, min_credit_pct=0.01,\
+    \ Exit ladder=['profit_target', 'max_loss_mult', 'wheel_cycle']; management=['wheel'];\
+    \ profit_target=None, max_loss_mult=3.3430864417540738, delta_breach=None. PAPER/SIM\
+    \ ONLY \u2014 never auto-live."
+  sleeve: premium
+  instruments:
+  - TSLL
+  entry_logic_ref: strategies.pick_entry+dna:dna_1f5fbfc23fd3
+  exit_logic_ref: strategies.check_exits+dna:dna_1f5fbfc23fd3
+  status: candidate
+  evidence_links:
+  - evolve_sim:dna_1f5fbfc23fd3:verdict=SHIP:score=358.33:trades=20
+  - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/TSLL_research_trades.csv
+  - 'metrics:{"n_trades": 20.0, "win_rate_pct": 85.0, "total_pnl_per_contract": 470.4558663174584,
+    "avg_pnl_per_contract": 23.52279331587292, "avg_win_per_contract": 41.23471664384198,
+    "avg_loss_per_contract": -76'
+  null_results: []
+  created: '2026-08-05T05:50:31+00:00'
+  updated: '2026-08-05T05:50:31+00:00'
+  notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
+  dna:
+    structure: wheel_assignment
+    symbols:
+    - TSLL
+    entry_plan:
+      side_policy: prefer_put
+      legs:
+      - action: sell
+        right: put
+        qty: 1
+      - action: sell
+        right: call
+        qty: 1
+        when: assigned
+      filters:
+      - min_credit_pct
+    exit_plan:
+      ladder:
+      - profit_target
+      - max_loss_mult
+      - wheel_cycle
+      management:
+      - wheel
+    config:
+      long_dte: 14
+      long_target_delta: 0.22
+      min_credit_pct: 0.01
+      max_loss_mult: 3.3430864417540738
+      wheel_enabled: true
+      wheel_put_dte: 14
+      wheel_put_max_loss_mult: 3.5314581672676937
+      wheel_skip_regime_flip: true
+      cc_dte: 13
+      cc_target_delta: 0.3
+      cc_strike_mode: basis
+      bear_dte: 0
+      roll_on_max_loss: false
+      regime_flip_exit_enabled: false
+    parent_id: dna_43cdf1b48c10
+    generation: 1
+    dna_id: dna_1f5fbfc23fd3
+    notes: mutate from dna_43cdf1b48c10 knobs=['wheel_put_max_loss_mult', 'max_loss_mult',
+      'cc_dte']
+    last_sim:
+      ok: true
+      skipped: false
+      reason: positive_sim
+      n_trades: 20
+      metrics:
+        n_trades: 20.0
+        win_rate_pct: 85.0
+        total_pnl_per_contract: 470.4558663174584
+        avg_pnl_per_contract: 23.52279331587292
+        avg_win_per_contract: 41.23471664384198
+        avg_loss_per_contract: -76.84477220928508
+        profit_factor: 3.040719460768617
+        max_dd_per_contract: 195.4414069180375
+        avg_days_held: 9.0
+        exit_reasons:
+          daily_capture: 10
+          expired: 5
+          profit_target: 1
+          assigned: 1
+          assigned_away: 1
+          wheel_close: 1
+          max_loss: 1
+        n_groups: 18.0
+        group_win_rate_pct: 94.44444444444444
+        avg_group_pnl_per_contract: 26.13643701763658
+        worst_group_pnl_per_contract: -195.4414069180375
+        best_group_pnl_per_contract: 113.05919721463474
+        avg_positions_per_group: 1.1111111111111112
+        max_positions_per_group: 2.0
+        capital_days_per_contract: 318750.0
+        pnl_per_capital_year_pct: 53.87180900576386
+        trade_density_per_year: 24.333333333333332
+      verdict: SHIP
+      score: 358.32884861479323
+      period: 2y
+      pnl_per_contract: 470.4558663174584
+      win_rate: 0.85
+      max_dd_per_contract: 195.4414069180375
+      profit_factor: 3.040719460768617
+      ship_bar:
+        min_trades_ship: 15
+        min_trades_signal: 8
+        pf_cap: 10.0
+      sim_engine: single_leg
+      capital: {}
+- id: hyp_dna_bac_wheel_assignment_ed804e2b
+  name: DNA:wheel_assignment BAC g1
+  thesis: "Structure=wheel_assignment. Symbols=BAC. Entry: side_policy=prefer_put,\
+    \ legs=[{'action': 'sell', 'right': 'put', 'qty': 1}, {'action': 'sell', 'right':\
+    \ 'call', 'qty': 1, 'when': 'assigned'}], dte=14, delta=0.22, min_credit_pct=0.01,\
+    \ Exit ladder=['profit_target', 'max_loss_mult', 'wheel_cycle']; management=['wheel'];\
+    \ profit_target=None, max_loss_mult=1.7168298531180772, delta_breach=None. PAPER/SIM\
+    \ ONLY \u2014 never auto-live."
+  sleeve: premium
+  instruments:
+  - BAC
+  entry_logic_ref: strategies.pick_entry+dna:dna_8e01ed804e2b
+  exit_logic_ref: strategies.check_exits+dna:dna_8e01ed804e2b
+  status: candidate
+  evidence_links:
+  - evolve_sim:dna_8e01ed804e2b:verdict=SHIP:score=200.52:trades=19
+  - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/BAC_research_trades.csv
+  - 'metrics:{"n_trades": 19.0, "win_rate_pct": 89.47368421052632, "total_pnl_per_contract":
+    362.5021105141736, "avg_pnl_per_contract": 19.0790584481144, "avg_win_per_contract":
+    35.28120995053932, "avg_loss_per_co'
+  null_results: []
+  created: '2026-08-05T05:52:45+00:00'
+  updated: '2026-08-05T05:52:45+00:00'
+  notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
+  dna:
+    structure: wheel_assignment
+    symbols:
+    - BAC
+    entry_plan:
+      side_policy: prefer_put
+      legs:
+      - action: sell
+        right: put
+        qty: 1
+      - action: sell
+        right: call
+        qty: 1
+        when: assigned
+      filters:
+      - min_credit_pct
+    exit_plan:
+      ladder:
+      - profit_target
+      - max_loss_mult
+      - wheel_cycle
+      management:
+      - wheel
+    config:
+      long_dte: 14
+      long_target_delta: 0.22
+      min_credit_pct: 0.01
+      max_loss_mult: 1.7168298531180772
+      wheel_enabled: true
+      wheel_put_dte: 14
+      wheel_put_max_loss_mult: 5.310352428909936
+      wheel_skip_regime_flip: true
+      cc_dte: 14
+      cc_target_delta: 0.3
+      cc_strike_mode: basis
+      bear_dte: 0
+      roll_on_max_loss: false
+      regime_flip_exit_enabled: false
+    parent_id: dna_0396e61978fa
+    generation: 1
+    dna_id: dna_8e01ed804e2b
+    notes: mutate from dna_0396e61978fa knobs=['max_loss_mult', 'wheel_put_max_loss_mult',
+      'bear_dte']
+    last_sim:
+      ok: true
+      skipped: false
+      reason: positive_sim
+      n_trades: 19
+      metrics:
+        n_trades: 19.0
+        win_rate_pct: 89.47368421052632
+        total_pnl_per_contract: 362.5021105141736
+        avg_pnl_per_contract: 19.0790584481144
+        avg_win_per_contract: 35.28120995053932
+        avg_loss_per_contract: -118.63922932249747
+        profit_factor: 2.5277497695504354
+        max_dd_per_contract: 237.27845864499494
+        avg_days_held: 12.105263157894736
+        exit_reasons:
+          daily_capture: 13
+          profit_target: 3
+          assigned: 1
+          assigned_away: 1
+          wheel_close: 1
+        n_groups: 17.0
+        group_win_rate_pct: 94.11764705882352
+        avg_group_pnl_per_contract: 21.32365355965727
+        worst_group_pnl_per_contract: -203.8536089841575
+        best_group_pnl_per_contract: 71.25204570441248
+        avg_positions_per_group: 1.1176470588235294
+        max_positions_per_group: 2.0
+        capital_days_per_contract: 1263500.0
+        pnl_per_capital_year_pct: 10.471964411371061
+        trade_density_per_year: 22.320143884892087
+      verdict: SHIP
+      score: 200.5154893654505
+      period: 2y
+      pnl_per_contract: 362.5021105141736
+      win_rate: 0.8947368421052632
+      max_dd_per_contract: 237.27845864499494
+      profit_factor: 2.5277497695504354
+      ship_bar:
+        min_trades_ship: 15
+        min_trades_signal: 8
+        pf_cap: 10.0
+      sim_engine: single_leg
+      capital: {}
+- id: hyp_dna_xom_iron_condor_2b3db704
+  name: DNA:iron_condor XOM g3
+  thesis: "Structure=iron_condor. Symbols=XOM. Entry: side_policy=range_bound, legs=[{'action':\
+    \ 'sell', 'right': 'put', 'qty': 1, 'role': 'short_put'}, {'action': 'buy', 'right':\
+    \ 'put', 'qty': 1, 'role': 'long_put'}, {'action': 'sell', 'right': 'call', 'qty':\
+    \ 1, 'role': 'short_call'}, {'action': 'buy', 'right': 'call', 'qty': 1, 'role':\
+    \ 'long_call'}], dte=3, delta=0.22112651978402525, min_credit_pct=0.07670069214383099,\
+    \ width=2.0, max_loss_budget_usd=250.0, Exit ladder=['profit_target', 'max_defined_loss',\
+    \ 'delta_breach', 'dte_stop']; management=[]; profit_target=0.5, max_loss_mult=1.2,\
+    \ delta_breach=0.5275261537184855. PAPER/SIM ONLY \u2014 never auto-live."
+  sleeve: premium
+  instruments:
+  - XOM
+  entry_logic_ref: strategies.pick_entry+dna:dna_01bc2b3db704
+  exit_logic_ref: strategies.check_exits+dna:dna_01bc2b3db704
+  status: candidate
+  evidence_links:
+  - evolve_sim:dna_01bc2b3db704:verdict=SHIP:score=88.90:trades=61
+  - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/XOM_pcs_trades.json
+  - 'metrics:{"n_trades": 61, "win_rate_pct": 62.295081967213115, "total_pnl_per_contract":
+    200.95294883961537, "avg_pnl_per_contract": 3.2943106367150063, "avg_win_per_contract":
+    32.944045588422064, "avg_loss_per'
+  null_results: []
+  created: '2026-08-05T05:54:03+00:00'
+  updated: '2026-08-05T05:54:03+00:00'
+  notes: source=evolve_tick; structure=iron_condor; never_auto_live=true
+  dna:
+    structure: iron_condor
+    symbols:
+    - XOM
+    entry_plan:
+      side_policy: range_bound
+      legs:
+      - action: sell
+        right: put
+        qty: 1
+        role: short_put
+      - action: buy
+        right: put
+        qty: 1
+        role: long_put
+      - action: sell
+        right: call
+        qty: 1
+        role: short_call
+      - action: buy
+        right: call
+        qty: 1
+        role: long_call
+      filters:
+      - iv_rank_min
+      - min_credit_pct_of_width
+      - max_loss_budget_usd
+    exit_plan:
+      ladder:
+      - profit_target
+      - max_defined_loss
+      - delta_breach
+      - dte_stop
+      management: []
+    config:
+      long_dte: 3
+      long_target_delta: 0.22112651978402525
+      spread_width: 2.0
+      min_credit_pct: 0.07670069214383099
+      profit_target: 0.5
+      defined_loss_exit_frac: 0.7411467606945721
+      max_loss_mult: 1.2
+      delta_breach: 0.5275261537184855
+      dte_stop: 3
+      iv_rank_min: 0.0
+      max_loss_budget_usd: 250.0
+      bear_dte: 0
+      regime_flip_exit_enabled: true
+      wheel_enabled: false
+      roll_on_max_loss: false
+      call_in_bull_ok: true
+    parent_id: dna_688e33946d5d
+    generation: 3
+    dna_id: dna_01bc2b3db704
+    notes: mutate from dna_688e33946d5d knobs=['max_loss_mult', 'long_dte', 'dte_stop']
+    last_sim:
+      ok: true
+      skipped: false
+      reason: positive_sim
+      n_trades: 61
+      metrics:
+        n_trades: 61
+        win_rate_pct: 62.295081967213115
+        total_pnl_per_contract: 200.95294883961537
+        avg_pnl_per_contract: 3.2943106367150063
+        avg_win_per_contract: 32.944045588422064
+        avg_loss_per_contract: -45.69220797914883
+        profit_factor: 1.1912160764072566
+        max_dd_per_contract: 147.02574060626245
+        avg_days_held: 3.7704918032786887
+        exit_reasons:
+          dte_stop: 21
+          delta_breach: 18
+          profit_target: 20
+          regime_flip: 2
+        n_groups: 61
+        group_win_rate_pct: 62.295081967213115
+        avg_group_pnl_per_contract: 3.2943106367150063
+        worst_group_pnl_per_contract: -125.66541812917637
+        best_group_pnl_per_contract: 64.79267927125387
+        avg_positions_per_group: 1.0
+        max_positions_per_group: 1.0
+        avg_max_loss_usd: 173.4352128940682
+        p95_max_loss_usd: 194.69536289587205
+        worst_max_loss_usd: 196.68199633251965
+        avg_width: 2.5
+        avg_net_credit: 0.7656478710593178
+        structure: iron_condor
+        contract_grid_mode: synthetic
+      verdict: SHIP
+      score: 88.89907074510462
+      period: 2y
+      pnl_per_contract: 200.95294883961537
+      win_rate: 0.6229508196721312
+      max_dd_per_contract: 147.02574060626245
+      profit_factor: 1.1912160764072566
+      ship_bar:
+        min_trades_ship: 15
+        min_trades_signal: 8
+        pf_cap: 10.0
+      sim_engine: pcs_sim:iron_condor
+      capital:
+        structure: iron_condor
+        capital_fit_usd: 173.31
+        max_loss_usd: 173.31
+        max_lots: 3
+        capital_fit: fit_3k
+        fits_open_risk_budget: true
+        fits_max_loss_budget: true
+        open_risk_budget_usd: 750.0
+        max_loss_budget_usd: 250.0
+        sleeve_usd: 3000.0
+        note: defined_risk_bp_proxy=max_loss_usd (not cash CSP)
+        median_max_loss_usd: 173.31
+        p95_max_loss_usd: 194.7
+- id: hyp_dna_bac_wheel_assignment_424eeb13
+  name: DNA:wheel_assignment BAC g1
+  thesis: "Structure=wheel_assignment. Symbols=BAC. Entry: side_policy=prefer_put,\
+    \ legs=[{'action': 'sell', 'right': 'put', 'qty': 1}, {'action': 'sell', 'right':\
+    \ 'call', 'qty': 1, 'when': 'assigned'}], dte=14, delta=0.2357429643278566, min_credit_pct=0.01,\
+    \ Exit ladder=['profit_target', 'max_loss_mult', 'wheel_cycle']; management=['wheel'];\
+    \ profit_target=None, max_loss_mult=1.2, delta_breach=None. PAPER/SIM ONLY \u2014\
+    \ never auto-live."
+  sleeve: premium
+  instruments:
+  - BAC
+  entry_logic_ref: strategies.pick_entry+dna:dna_a994424eeb13
+  exit_logic_ref: strategies.check_exits+dna:dna_a994424eeb13
+  status: candidate
+  evidence_links:
+  - evolve_sim:dna_a994424eeb13:verdict=SHIP:score=170.03:trades=28
+  - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/BAC_research_trades.csv
+  - 'metrics:{"n_trades": 28.0, "win_rate_pct": 64.28571428571429, "total_pnl_per_contract":
+    199.05155750516298, "avg_pnl_per_contract": 7.108984196612964, "avg_win_per_contract":
+    22.408135531377983, "avg_loss_per'
+  null_results: []
+  created: '2026-08-05T05:55:13+00:00'
+  updated: '2026-08-05T05:55:13+00:00'
+  notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
+  dna:
+    structure: wheel_assignment
+    symbols:
+    - BAC
+    entry_plan:
+      side_policy: prefer_put
+      legs:
+      - action: sell
+        right: put
+        qty: 1
+      - action: sell
+        right: call
+        qty: 1
+        when: assigned
+      filters:
+      - min_credit_pct
+    exit_plan:
+      ladder:
+      - profit_target
+      - max_loss_mult
+      - wheel_cycle
+      management:
+      - wheel
+    config:
+      long_dte: 14
+      long_target_delta: 0.2357429643278566
+      min_credit_pct: 0.01
+      max_loss_mult: 1.2
+      wheel_enabled: false
+      wheel_put_dte: 14
+      wheel_put_max_loss_mult: 3.0
+      wheel_skip_regime_flip: true
+      cc_dte: 13
+      cc_target_delta: 0.3
+      cc_strike_mode: basis
+      bear_dte: 0
+      roll_on_max_loss: true
+      regime_flip_exit_enabled: false
+    parent_id: dna_0396e61978fa
+    generation: 1
+    dna_id: dna_a994424eeb13
+    notes: mutate from dna_0396e61978fa knobs=['cc_dte', 'long_target_delta', 'max_loss_mult']
+    last_sim:
+      ok: true
+      skipped: false
+      reason: positive_sim
+      n_trades: 28
+      metrics:
+        n_trades: 28.0
+        win_rate_pct: 64.28571428571429
+        total_pnl_per_contract: 199.05155750516298
+        avg_pnl_per_contract: 7.108984196612964
+        avg_win_per_contract: 22.408135531377983
+        avg_loss_per_contract: -20.429488205964077
+        profit_factor: 1.974334528101653
+        max_dd_per_contract: 80.65210587363545
+        avg_days_held: 1.4642857142857142
+        exit_reasons:
+          daily_capture: 15
+          delta_breach: 12
+          end_of_data: 1
+        n_groups: 28.0
+        group_win_rate_pct: 67.85714285714286
+        avg_group_pnl_per_contract: 7.108984196612964
+        worst_group_pnl_per_contract: -45.37150508028631
+        best_group_pnl_per_contract: 45.38327969547602
+        avg_positions_per_group: 1.0
+        max_positions_per_group: 1.0
+        capital_days_per_contract: 227250.0
+        pnl_per_capital_year_pct: 31.97087722305148
+        trade_density_per_year: 35.0
+      verdict: SHIP
+      score: 170.02899933641774
+      period: 2y
+      pnl_per_contract: 199.05155750516298
+      win_rate: 0.6428571428571429
+      max_dd_per_contract: 80.65210587363545
+      profit_factor: 1.974334528101653
       ship_bar:
         min_trades_ship: 15
         min_trades_signal: 8
