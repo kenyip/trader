@@ -2,11 +2,15 @@ from __future__ import annotations
 
 import unittest
 from argparse import Namespace
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 import pandas as pd
+import yaml
 
 from scripts.pcs_time_bias_grid import _hyp_ids, _weekday_slices
+import scripts.pcs_time_variant_stress as time_stress
 from scripts.pcs_time_variant_stress import _load_variant
 from trader_platform.research import pcs_sim
 
@@ -22,7 +26,23 @@ class PcsTimeBiasGridTest(unittest.TestCase):
             spread_width=0.5,
         )
 
-        variant = _load_variant(args)
+        fixture = {
+            "hypotheses": [
+                {
+                    "id": args.hyp,
+                    "dna": {
+                        "structure": "put_credit_spread",
+                        "symbols": ["BAC"],
+                        "config": {"spread_width": 1.0},
+                    },
+                }
+            ]
+        }
+        with TemporaryDirectory() as tmp:
+            fixture_path = Path(tmp) / "hypotheses.yaml"
+            fixture_path.write_text(yaml.safe_dump(fixture), encoding="utf-8")
+            with patch.object(time_stress, "HYPS_PATH", fixture_path):
+                variant = _load_variant(args)
 
         self.assertEqual(variant["dna"]["config"]["spread_width"], 0.5)
         self.assertTrue(variant["id"].endswith("_w0.5"))

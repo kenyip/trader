@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from unittest.mock import patch
 
 from scripts.spy_index_theta_carry_lab import (
     candidate_config,
@@ -273,7 +274,8 @@ def test_features_use_strictly_prior_vix_for_option_marks():
     )
     vix = pd.Series(np.linspace(15.0, 30.0, len(index)), index=index, name="vix")
 
-    features = build_features(spy, vix)
+    with patch("data.load_vix", return_value=vix):
+        features = build_features(spy, vix)
 
     first_date = pd.Timestamp(features.index[0])
     first_position = int(index.get_loc(first_date))
@@ -298,13 +300,14 @@ def test_run_lab_keeps_chronological_holdout_option_outcomes_unread():
     )
     vix = pd.Series(35.0, index=index, name="vix")
 
-    result = run_lab(
-        spy,
-        vix,
-        spy_provenance={"path": "spy.csv", "sha256": "spy-hash"},
-        vix_provenance={"path": "vix.csv", "sha256": "vix-hash"},
-        train_fraction=0.60,
-    )
+    with patch("data.load_vix", return_value=vix):
+        result = run_lab(
+            spy,
+            vix,
+            spy_provenance={"path": "spy.csv", "sha256": "spy-hash"},
+            vix_provenance={"path": "vix.csv", "sha256": "vix-hash"},
+            train_fraction=0.60,
+        )
 
     assert result["partition"]["train_end"] < result["holdout_identity"]["start"]
     assert result["holdout_identity"]["sealed"] is True
