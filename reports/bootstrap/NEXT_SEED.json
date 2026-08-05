@@ -20,7 +20,7 @@
       }
     ]
   },
-  "generated_at": "2026-08-05T06:04:59+00:00",
+  "generated_at": "2026-08-05T06:13:19+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -31,6 +31,6 @@
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
   "source": "trader_paper_campaign",
-  "stamp": "20260805T060459",
+  "stamp": "20260805T061319",
   "trading_authority": false
 }

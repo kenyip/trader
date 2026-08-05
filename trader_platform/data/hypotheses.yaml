@@ -53382,7 +53382,7 @@ hypotheses:
     40.165564802870875, "avg_loss_per'
   null_results: []
   created: '2026-08-04T20:39:18+00:00'
-  updated: '2026-08-05T06:07:50+00:00'
+  updated: '2026-08-05T06:11:51+00:00'
   notes: source=evolve_tick; structure=wheel_assignment; never_auto_live=true
   dna:
     structure: wheel_assignment
@@ -120769,6 +120769,105 @@ hypotheses:
       win_rate: 0.7777777777777779
       max_dd_per_contract: 219.95128225726495
       profit_factor: 2.337438632537628
+      ship_bar:
+        min_trades_ship: 15
+        min_trades_signal: 8
+        pf_cap: 10.0
+      sim_engine: single_leg
+      capital: {}
+- id: hyp_dna_nflx_short_put_credit_55e725c3
+  name: DNA:short_put_credit NFLX g1
+  thesis: "Structure=short_put_credit. Symbols=NFLX. Entry: side_policy=prefer_put,\
+    \ legs=[{'action': 'sell', 'right': 'put', 'qty': 1}], dte=22, delta=0.18, min_credit_pct=0.012,\
+    \ Exit ladder=['profit_target', 'max_loss_mult', 'delta_breach', 'dte_stop'];\
+    \ management=[]; profit_target=0.5, max_loss_mult=2.0, delta_breach=0.43593003196737734.\
+    \ PAPER/SIM ONLY \u2014 never auto-live."
+  sleeve: premium
+  instruments:
+  - NFLX
+  entry_logic_ref: strategies.pick_entry+dna:dna_b91955e725c3
+  exit_logic_ref: strategies.check_exits+dna:dna_b91955e725c3
+  status: candidate
+  evidence_links:
+  - evolve_sim:dna_b91955e725c3:verdict=SHIP:score=382.31:trades=19
+  - /Users/jarvis/dev/trader/.cache/platform/evolve_backtests/NFLX_research_trades.csv
+  - 'metrics:{"n_trades": 19.0, "win_rate_pct": 73.68421052631578, "total_pnl_per_contract":
+    354.41025287260044, "avg_pnl_per_contract": 18.653171203821074, "avg_win_per_contract":
+    34.477105439370206, "avg_loss_pe'
+  null_results: []
+  created: '2026-08-05T06:11:44+00:00'
+  updated: '2026-08-05T06:11:44+00:00'
+  notes: source=evolve_tick; structure=short_put_credit; never_auto_live=true
+  dna:
+    structure: short_put_credit
+    symbols:
+    - NFLX
+    entry_plan:
+      side_policy: prefer_put
+      legs:
+      - action: sell
+        right: put
+        qty: 1
+      filters:
+      - iv_rank_min
+      - min_credit_pct
+    exit_plan:
+      ladder:
+      - profit_target
+      - max_loss_mult
+      - delta_breach
+      - dte_stop
+      management: []
+    config:
+      long_dte: 22
+      long_target_delta: 0.18
+      min_credit_pct: 0.012
+      delta_breach: 0.43593003196737734
+      profit_target: 0.5
+      max_loss_mult: 2.0
+      bear_dte: 0
+      regime_flip_exit_enabled: true
+      wheel_enabled: false
+      roll_on_max_loss: false
+    parent_id: dna_5b905070a402
+    generation: 1
+    dna_id: dna_b91955e725c3
+    notes: mutate from dna_5b905070a402 knobs=['long_dte', 'delta_breach', 'bear_dte']
+    last_sim:
+      ok: true
+      skipped: false
+      reason: positive_sim
+      n_trades: 19
+      metrics:
+        n_trades: 19.0
+        win_rate_pct: 73.68421052631578
+        total_pnl_per_contract: 354.41025287260044
+        avg_pnl_per_contract: 18.653171203821074
+        avg_win_per_contract: 34.477105439370206
+        avg_loss_per_contract: -25.65384465571647
+        profit_factor: 3.7630186245290678
+        max_dd_per_contract: 64.20435082303086
+        avg_days_held: 1.4736842105263157
+        exit_reasons:
+          dte_stop: 7
+          daily_capture: 12
+        n_groups: 19.0
+        group_win_rate_pct: 73.68421052631578
+        avg_group_pnl_per_contract: 18.653171203821074
+        worst_group_pnl_per_contract: -59.269292139035024
+        best_group_pnl_per_contract: 118.92915313744234
+        avg_positions_per_group: 1.0
+        max_positions_per_group: 1.0
+        capital_days_per_contract: 243000.0
+        pnl_per_capital_year_pct: 53.23446185123423
+        trade_density_per_year: 210.15151515151516
+      verdict: SHIP
+      score: 382.3083798033088
+      period: 2y
+      pnl_per_contract: 354.41025287260044
+      win_rate: 0.7368421052631579
+      max_dd_per_contract: 64.20435082303086
+      profit_factor: 3.7630186245290678
       ship_bar:
         min_trades_ship: 15
         min_trades_signal: 8
