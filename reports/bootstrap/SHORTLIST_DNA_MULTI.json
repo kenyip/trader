@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-05T05:57:06+00:00",
+  "generated_at": "2026-08-05T06:07:07+00:00",
   "honesty": "Shortlist capital_path_ok multi-leg DNA re-run on peer symbols via pcs_sim proxy (L0). quality_pass requires origin + \u2265min_peer_pass peers with n_trades\u2265min and positive total_pnl_per_contract. Not densify-seed multi; not live edge; not MCP first-live.",
   "live_authority": false,
   "min_peer_pass": 2,
