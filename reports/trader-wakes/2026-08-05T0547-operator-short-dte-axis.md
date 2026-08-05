@@ -6,7 +6,7 @@
 - **Packet used:** Director cycle-2 (2026-08-05T05:38:40Z) + Critic cycle-2 disposition **PASS_WITH_CONDITIONS** (05:45Z)
 - **Approved action:** `configs/discovery_grid.json` `"dtes": [14, 21, 30, 45]` → `[5, 7, 14, 21, 30, 45]` — one lever only, at the ≥20:00Z clean window.
 - **Pre-mutation base:** `0bcd664` (2026-08-04T20:38:28Z coach prune)
-- **Run commit:** `5af11d5` coach(2026-08-05): discovery grid add short-DTE weekly axis (0-7d)
+- **Run commits:** `54e8e9c` coach(2026-08-05): discovery grid add short-DTE weekly axis (0-7d) + `98cc0e9` residual bootstrap state capture
 
 ## Evidence (raw truth at execution time)
 
@@ -19,7 +19,7 @@
 | Shadow | historical PASS 07-30 only (stale; relabeled) | 07-30 |
 | Discovery grid | streak ≥56 zero campaigns, last `progressed=true` 2026-07-19 | 05:16:16Z |
 | Worker | pid 42575 alive at start → **stopped + confirmed dead** (`pgrep` empty) | 05:47:55Z |
-| Git | main synced with origin/main; 7 worker-owned dirty paths (6 bootstrap JSONs + hypotheses.yaml) | 05:47Z |
+| Git | main synced with origin/main at base; 7 worker-owned dirty paths (6 bootstrap JSONs + hypotheses.yaml) | 05:47Z |
 
 ## Action executed (one lever)
 
@@ -27,26 +27,34 @@
 2. Edited **only** `configs/discovery_grid.json` `dtes` → `[5, 7, 14, 21, 30, 45]`. No other axis, no `discovery_grid_dense.json`, no capital-seat patch, no registry lever, no engine change.
 3. Scoped coach-commit: config + worker-owned tracked set (6 bootstrap JSONs + `hypotheses.yaml`) only. No stash, no `reset --hard`, no `git add -A`.
 4. Commit message records corrected evidence framing: DTE-sensitivity is a **cross-structure soft prior** from call-debit momentum routes (AMD/NVDA/PLTR/SMCI/TSLA): base 10d hit 0.5227/tail −0.187; time5 hit 0.5451/tail −0.1389; stop6 hit 0.4280/tail −0.0816 — NOT direct PCS evidence. Axis stands on search-space expansion (1296 new 5D/7D cells).
-5. `git status --porcelain` empty (incl. untracked; no orphaned `.tmp` present).
-6. Preflight gate attempted — correctly failed on HEAD≠origin (expected pre-push for direct-main wake); postflight with `--report` is the deterministic gate for this path per AGENTS.md.
-7. Push → postflight receipt (below).
+5. `git status --porcelain` empty after commit (incl. untracked; no orphaned `.tmp` present).
+6. A scheduled re-reprove tick regenerated 3 identical-content bootstrap JSONs (timestamp churn only) between commit and push → captured coherently in `98cc0e9` so the completion gate sees clean synchronized main.
+7. Push → postflight gate (below).
 
-## Expected claim-bearing artifact / metric delta (predeclared by Director/Critic)
+## VERIFICATION
 
-- **Success:** first fresh post-deploy `discovery_campaign_<TS>.json` shows `n_evaluated ≥ 1` AND `progressed=true` AND `n_grid_scan_skipped < 1309` (≈1296 new cells enter evaluated set). Product 1296 → 1944 cells/seed.
-- **Falsified:** across 3–5 fresh campaigns (timestamps strictly after config commit `5af11d5`), every generation `n_evaluated=0` AND `progressed=false` AND `grid_cursor_next=0` AND `n_grid_scan_skipped=1309` → grid axis falsified (not "short-DTE generally") → Ken pause proposal for `trader-desk-b-loop` + next Director = search-design reassessment/new epoch.
-- **Post-deploy hygiene:** re-measure `stat -f%z` / `grep -c '^- id:'` on `hypotheses.yaml` next 1–2 compounding ticks (monitor only) to catch create-driven batch growth.
+- Config target: `grep -n '"dtes"' configs/discovery_grid.json` → `[5, 7, 14, 21, 30, 45]` (verified post-edit; re-verify after worker restart).
+- Worker stopped and confirmed dead before staging (`pgrep -f trader_quality_worker` empty at 05:47:55Z).
+- `git status --porcelain` empty before push; main pushed and synchronized with origin/main (`## main...origin/main`, clean).
+- Postflight receipt written under `.cache/platform/completion/` by `scripts/trader_run_completion_gate.py postflight` with `--base-head 0bcd664 --run-head 98cc0e9 --report reports/trader-wakes/2026-08-05T0547-operator-short-dte-axis.md`.
+- **Acceptance pending (predeclared by Director/Critic):** first fresh post-deploy `discovery_campaign_<TS>.json` (TS strictly after config commit `54e8e9c`) shows `n_evaluated ≥ 1` AND `progressed=true` AND `n_grid_scan_skipped < 1309` (≈1296 new cells enter evaluated set; product 1296 → 1944 cells/seed).
 
-## Verification
+## DURABLE
 
-- Config: `grep -n '"dtes"' configs/discovery_grid.json` → `[5, 7, 14, 21, 30, 45]` (verify after restart).
-- Manual campaign run to prove pickup (fresh process per tick).
-- Postflight receipt under `.cache/platform/completion/`.
+- One research lever deployed: short-DTE weekly (0–7d) grid axis added to `configs/discovery_grid.json` `dtes`. `discovery_loop.py:140` reads this file; `_combinatorial_mutants` embeds DTE in the mutant suffix (`g_d{int(dte)}...`) → new candidate_ids → novel vs registry `known_ids` → will be evaluated, not skipped. Process-local `_GRID_MUTANTS` cache means a fresh desk-b tick picks up the new config.
+- Falsifier (restated): across 3–5 fresh campaigns, every generation `n_evaluated=0` AND `progressed=false` AND `grid_cursor_next=0` AND `n_grid_scan_skipped=1309` → grid axis falsified (not "short-DTE generally") → Ken pause proposal for `trader-desk-b-loop` + next Director = search-design reassessment/new epoch.
+- Post-deploy hygiene: re-measure `stat -f%z` / `grep -c '^- id:'` on `hypotheses.yaml` next 1–2 compounding ticks (monitor only) to catch create-driven batch growth from newly evaluated cells.
 
-## NEXT seed
+## LESSON
+
+- Direct-main infra wakes need the tracked wake report under `reports/trader-wakes/` with exactly the headings `## VERIFICATION`, `## DURABLE`, `## LESSON`, `## NEXT` (exactly one `## NEXT`) for `postflight --report`; the completion gate validates structure, tracking, and that the report changed after the run base.
+- Preflight fails on HEAD≠origin before push by design; for direct-main wakes the deterministic gate is postflight after push with base/run heads + tracked report.
+- Scheduled script ticks can regenerate identical-content bootstrap JSONs between a stop-time snapshot and push; capture them coherently (timestamp churn only) rather than treating them as writer-dirt or forcing a second window.
+
+## NEXT
 
 `Run trader-desk-b-loop` ticks; first 3–5 fresh campaigns determine axis success vs falsification. If success → let grid walk produce F1/F2 → feed MULTI_SYMBOL_REPROVE. If falsified → Ken pause proposal + epoch reassessment. Pivot if cells evaluate but no F1/F2 within ~3–5 cycles → engine route-level filter variant (experiment #2, concrete filter spec first).
 
 ## Authority confirmation
 
-No broker/login/order/fund/arm; no credentials; no risk/evidence-gate weakening; no destructive cleanup; no service restart beyond the approved quality-worker stop/start for the window; no public action. `live_authority=false` preserved. Evidence gates (min_symbols=2, holdout sealing, tail thresholds, $300 bar) unchanged or strengthened.
+No broker/login/order/fund/arm; no credentials; no risk/evidence-gate weakening; no destructive cleanup; no service restart beyond the approved quality-worker stop for the window; no public action. `live_authority=false` preserved. Evidence gates (min_symbols=2, holdout sealing, tail thresholds, $300 bar) unchanged or strengthened.
