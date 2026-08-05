@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-05T06:13:19+00:00",
+  "generated_at": "2026-08-05T06:20:04+00:00",
   "phase": "BUILD_PAPER_SEARCH",
   "authority": "research_paper_only",
   "honesty": "Proxy BS sims + B3/B4 only. Not TOP_HYP. Multi-leg not MCP-live. Stress rotation ledger drives shortlist; quality_cycle mixes leaders+fresh. Capital-path rejects: soft NULL@~0, soft-loss/neg@5%, non-pos full PnL. Rank dens_bucket(0-1 tied) \u2192 slip verdict (SHIP>NEEDS>NULL) \u2192 dd \u2192 raw dens \u2192 slip pnl. Multi-leg shortlist caps \u22642 per symbol; skip identical dens/dd/pnl risk twins.",

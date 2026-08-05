@@ -1,7 +1,7 @@
 {
   "doctrine": "docs/TRADER_BUILD.md",
   "execute_paper": false,
-  "generated_at": "2026-08-05T06:13:06+00:00",
+  "generated_at": "2026-08-05T06:18:45+00:00",
   "handoff": {
     "intent_max_loss_usd": 195.62967519664838,
     "intent_structure": "put_credit_spread",
@@ -100,7 +100,7 @@
   "watch": {
     "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0",
     "desk": "B_agentic",
-    "generated_at": "2026-08-05T06:13:02+00:00",
+    "generated_at": "2026-08-05T06:18:42+00:00",
     "live_authority": false,
     "living_watchable_count": 908,
     "packet": {
