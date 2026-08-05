@@ -415,21 +415,30 @@ def _load_first_live_lane() -> dict[str, Any]:
     data = _load_json(_FIRST_LIVE) or {}
     if not data:
         return {"leader": None, "shortlist": [], "n_eligible": 0}
-    leader = data.get("leader")
-    # Reject oversized leaders that slipped through older artifacts
-    if leader:
-        bp = leader.get("csp_bp_proxy")
+
+    max_loss_budget = float(data.get("max_loss_budget_usd") or 300.0)
+
+    def strict_budget_ok(row: Any) -> bool:
+        if not isinstance(row, dict) or row.get("eligible") is False:
+            return False
+        ml = row.get("max_loss_usd_proxy")
+        if ml is None:
+            # Older short-premium artifacts may only carry collateral BP.
+            ml = row.get("csp_bp_proxy")
         try:
-            if bp is not None and float(bp) > 3000:
-                leader = None
+            return ml is not None and 0 < float(ml) <= max_loss_budget
         except (TypeError, ValueError):
-            pass
-        if leader and leader.get("eligible") is False:
-            leader = None
+            return False
+
+    raw_shortlist = list(data.get("shortlist") or [])
+    strict_shortlist = [row for row in raw_shortlist if strict_budget_ok(row)]
+    leader = data.get("leader") if strict_budget_ok(data.get("leader")) else None
     return {
         "leader": leader,
-        "shortlist": list(data.get("shortlist") or [])[:8],
-        "n_eligible": int(data.get("n_eligible") or 0),
+        "shortlist": strict_shortlist[:8],
+        "n_eligible": len(strict_shortlist),
+        "raw_n_eligible": int(data.get("n_eligible") or 0),
+        "max_loss_budget_usd": max_loss_budget,
         "generated_at": data.get("generated_at"),
         "honesty": data.get("honesty"),
     }
@@ -566,22 +575,6 @@ def collect() -> Funnel:
     for r in rows:
         struct = str(r.get("structure") or "")
         lane = str(r.get("lane") or "")
-        if first_live is None and (
-            "mcp" in lane.lower()
-            or "first_live" in lane.lower()
-            or _classify_structure(struct) == "single_leg"
-        ):
-            # Only accept single-leg rows that look capital-fit (no NFLX-scale toys)
-            ml = r.get("max_loss_usd_approx") or r.get("max_loss_usd")
-            try:
-                ml_f = float(ml) if ml is not None else None
-            except (TypeError, ValueError):
-                ml_f = None
-            # CSP collateral proxy not on shortlist; reject multi-leg as first-live
-            if _classify_structure(struct) == "single_leg":
-                first_live = r
-            elif ml_f is not None and ml_f > 3000:
-                pass
         if leader is None and (
             r.get("stress_priority")
             or r.get("b3_hold") is True
@@ -819,7 +812,7 @@ def collect() -> Funnel:
                 edge_first += f" — {caveat}"
     else:
         edge_first = (
-            "no capital-fit single-leg seat yet "
+            "no strict-loss-fit single-leg seat yet "
             f"(run just trader-first-live-lane; eligible={first_live_lane.get('n_eligible', 0)})"
         )
 
@@ -920,7 +913,7 @@ def collect() -> Funnel:
         blockers.append("No pack-grade edge yet (sims still filtering)")
     if first_live is None:
         blockers.append(
-            "No capital-fit single-leg first-live seat "
+            "No strict-loss-fit single-leg first-live seat "
             "(just trader-first-live-lane)"
         )
     elif first_live is not None:
@@ -1150,8 +1143,8 @@ def format_text(f: Funnel) -> str:
             "off-hours `scripts/trader_prune_hyp_registry.py --max-keep 400`"
         )
     lines.append(
-        f"   ready-bar {_bar(f.overall_pct)}  "
-        f"(evidence gates — can stay flat while search is hot)"
+        "   layered readiness: "
+        f"EDGE={edge.get('status')} · ROBOT={robot.get('status')} · ARM={arm.get('status')}"
     )
     if f.why_overall_stuck:
         lines.append(f"   note: {f.why_overall_stuck}")
@@ -1167,7 +1160,7 @@ def format_text(f: Funnel) -> str:
             f"  {sp} {r.get('symbol')} {r.get('structure')}  "
             f"[{r.get('lane') or '?'} · {place}]"
         )
-    lines.append("FIRST-LIVE SEATS (single-leg capital-fit)")
+    lines.append("FIRST-LIVE SEATS (single-leg, strict one-lot loss fit)")
     fl_seats = (f.first_live_lane or {}).get("shortlist") or []
     if not fl_seats:
         lines.append("   (none — just trader-first-live-lane)")

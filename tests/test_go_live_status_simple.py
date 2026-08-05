@@ -4,6 +4,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 
 from scripts.trader_go_live_status import (
+    _load_first_live_lane,
     format_text,
     market_session_days_spanned,
 )
@@ -27,6 +28,32 @@ def test_market_session_days_skips_weekend():
     assert "2026-07-25" not in days  # Sat
     assert "2026-07-26" not in days  # Sun
     assert len(days) == 2
+
+
+def test_first_live_loader_rejects_legacy_sleeve_only_seat(monkeypatch):
+    legacy = {
+        "max_loss_budget_usd": 300.0,
+        "n_eligible": 901,
+        "leader": {
+            "eligible": True,
+            "symbol": "AAL",
+            "max_loss_usd_proxy": 1494.82,
+            "csp_bp_proxy": 1494.82,
+        },
+        "shortlist": [
+            {
+                "eligible": True,
+                "symbol": "AAL",
+                "max_loss_usd_proxy": 1494.82,
+            }
+        ],
+    }
+    monkeypatch.setattr("scripts.trader_go_live_status._load_json", lambda _path: legacy)
+    loaded = _load_first_live_lane()
+    assert loaded["leader"] is None
+    assert loaded["shortlist"] == []
+    assert loaded["n_eligible"] == 0
+    assert loaded["raw_n_eligible"] == 901
 
 
 def test_format_text_uses_three_layers_not_alphabet_soup():
@@ -106,6 +133,8 @@ def test_format_text_uses_three_layers_not_alphabet_soup():
     # Primary view should not dump A1/B6 checklist
     assert "A · PLATFORM" not in text
     assert "B6 multi-session" not in text
+    assert "ready-bar" not in text
+    assert "layered readiness: EDGE=PARTIAL · ROBOT=PARTIAL · ARM=BLOCKED" in text
     assert "Keep paper open/managed" in text
 
 

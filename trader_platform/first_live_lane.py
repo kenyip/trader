@@ -298,7 +298,13 @@ def rank_first_live_seats(
                 reasons.append(f"csp_bp={short_bp:.0f}>sleeve={sleeve_usd:.0f}")
             elif require_fit_3k_short and fit_short != "fit_3k":
                 reasons.append(f"capital_fit={fit_short}")
-            # CSP max loss is large by nature; gate on BP fit, not $300 defined risk
+            # Sleeve fit is necessary but not sufficient. First-live is a strict
+            # one-lot contract-fit screen: worst-case loss must also stay within
+            # 10% of the initial $3k sleeve ($300 by default).
+            if ml <= 0:
+                reasons.append("max_loss_unknown")
+            elif ml > max_loss_budget_usd:
+                reasons.append(f"max_loss={ml:.0f}>{max_loss_budget_usd:.0f}")
         else:
             # long debit path: max loss should be bounded
             if ml <= 0:
@@ -310,7 +316,10 @@ def rank_first_live_seats(
 
         placeable = True
         capital_ok = not any(
-            r.startswith("csp_bp=") or r.startswith("capital_fit=") or r.startswith("max_loss=")
+            r.startswith("csp_bp=")
+            or r.startswith("capital_fit=")
+            or r.startswith("max_loss=")
+            or r in ("max_loss_unknown", "no_spot_bp")
             for r in reasons
         )
         sim_ok = not any(r.startswith("thin_n") or r.startswith("verdict=") for r in reasons)
@@ -338,7 +347,7 @@ def rank_first_live_seats(
             "eligible": capital_ok and sim_ok and placeable,
             "why": (
                 f"single-leg {structure} on {symbol}; "
-                f"{'fits $3k CSP BP' if capital_ok and is_short else 'capital check'}; "
+                f"{'fits $3k sleeve + strict loss bar' if capital_ok and is_short else 'capital check'}; "
                 f"sim {verdict} n={n_trades}"
             ),
             "caveat": (
@@ -411,9 +420,10 @@ def rank_first_live_seats(
         "shortlist": top,
         "near_miss_oversized": near,
         "honesty": (
-            "First-live lane ranks RH-placeable single-leg DNA with capital-fit "
-            "CSP BP (or bounded long debit). Multi-leg PCS research leaders are "
-            "intentionally excluded. Proxy sim + spot BP — not live edge."
+            "First-live lane ranks RH-placeable single-leg DNA that fits the sleeve "
+            "and the strict one-lot max-loss bar (10% of the initial $3k sleeve by "
+            "default). Multi-leg PCS research leaders are intentionally excluded. "
+            "Proxy sim + spot BP — not live edge or target trade risk."
         ),
     }
 
