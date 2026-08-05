@@ -95251,6 +95251,29 @@
       "symbol": "XOM",
       "worst_window_pnl": -154.45
     },
+    "hyp_dna_xom_iron_condor_2b3db704": {
+      "b3_hold": true,
+      "b4_cost_hold": false,
+      "b4_note": "fragile_at_5pct_slip",
+      "b4_slip5_pnl": -2098.24,
+      "b4_slip5_verdict": "REJECT",
+      "capital_path_ok": false,
+      "cost_path": "/Users/jarvis/dev/trader/.cache/platform/quality_residual/cost_20260805T055322.json",
+      "dense_neg_ge3": 7,
+      "full_n": 264,
+      "full_pnl": 816.11,
+      "full_verdict": "SHIP",
+      "hyp_id": "hyp_dna_xom_iron_condor_2b3db704",
+      "max_dd": 384.24,
+      "max_loss_usd": 174.16,
+      "regime_path": "/Users/jarvis/dev/trader/.cache/platform/quality_residual/regime_20260805T055322.json",
+      "reject_reason": "B4 cost_hold=false slip5=REJECT pnl=-2098.24",
+      "source": "quality_cycle_20260805T055322",
+      "stressed_at": "2026-08-05T05:54:34+00:00",
+      "structure": "iron_condor",
+      "symbol": "XOM",
+      "worst_window_pnl": -222.4
+    },
     "hyp_dna_xom_iron_condor_33946d5d": {
       "b3_hold": false,
       "b4_cost_hold": false,
@@ -96803,13 +96826,13 @@
       "worst_window_pnl": -114.74
     }
   },
-  "generated_at": "2026-08-05T05:46:27+00:00",
+  "generated_at": "2026-08-05T05:54:34+00:00",
   "last_ingest": {
-    "cost_path": "/Users/jarvis/dev/trader/.cache/platform/quality_residual/cost_20260805T054513.json",
+    "cost_path": "/Users/jarvis/dev/trader/.cache/platform/quality_residual/cost_20260805T055322.json",
     "n": 1,
-    "regime_path": "/Users/jarvis/dev/trader/.cache/platform/quality_residual/regime_20260805T054513.json",
-    "source": "quality_cycle_20260805T054513",
-    "stamp": "regime_20260805T054513"
+    "regime_path": "/Users/jarvis/dev/trader/.cache/platform/quality_residual/regime_20260805T055322.json",
+    "source": "quality_cycle_20260805T055322",
+    "stamp": "regime_20260805T055322"
   },
   "note": "Rotation ledger for quality-cycle B3/B4 \u2014 prevents re-stress thrash; not TOP_HYP.",
   "schema_version": 1
