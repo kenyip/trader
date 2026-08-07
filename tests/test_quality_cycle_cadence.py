@@ -114,15 +114,73 @@ def test_registry_healthy_does_not_trip_bloat(tmp_path, monkeypatch):
 
 def test_registry_bloat_skip_learn_predicate():
     """Empty book + bloated yaml still skips learn (campaign 300s hang)."""
-    def skip_learn(*, book_manage_only: bool, registry_bloat: bool, force_learn: bool = False) -> bool:
+
+    def skip_learn(
+        *,
+        book_manage_only: bool,
+        registry_bloat: bool,
+        learn_bloat: bool = False,
+        force_learn: bool = False,
+    ) -> bool:
         if force_learn:
             return False
-        return book_manage_only or registry_bloat
+        return book_manage_only or registry_bloat or learn_bloat
 
     assert skip_learn(book_manage_only=False, registry_bloat=True) is True
     assert skip_learn(book_manage_only=True, registry_bloat=False) is True
     assert skip_learn(book_manage_only=False, registry_bloat=False) is False
     assert skip_learn(book_manage_only=True, registry_bloat=True, force_learn=True) is False
+    # 2026-08-07: learn ceiling below evolve bloat — 5.5MB hangs past campaign timeout
+    assert skip_learn(book_manage_only=False, registry_bloat=False, learn_bloat=True) is True
+    assert skip_learn(
+        book_manage_only=False, registry_bloat=False, learn_bloat=True, force_learn=True
+    ) is False
+
+
+def test_learn_bloat_threshold_below_evolve_ceiling():
+    """Learn skip must trip before evolve bloat when yaml is mid-size (~5.5MB)."""
+    hyps_bytes = 5_567_565
+    evolve_max = 6_000_000
+    learn_max = 4_000_000
+    assert hyps_bytes < evolve_max  # evolve still allowed
+    assert hyps_bytes > learn_max  # learn must skip
+    assert (hyps_bytes > learn_max) and not (hyps_bytes > evolve_max)
+
+
+def test_stress_markers_ignore_dna_hash_b3_suffix():
+    """Bare b3:/b4: must not mark evolve DNA hashes as already B3/B4-stressed."""
+    import importlib.util
+    from pathlib import Path
+    from types import SimpleNamespace
+
+    sel_path = Path(__file__).resolve().parents[1] / "scripts" / "trader_select_stress_hyps.py"
+    spec = importlib.util.spec_from_file_location("trader_select_stress_hyps", sel_path)
+    mod = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(mod)
+
+    # Real false-positive shape from 2026-08-07 coach (hash ends with b3 before :verdict)
+    h_false = SimpleNamespace(
+        evidence_links=[
+            "evolve_sim:dna_e9c4e51389b3:verdict=SHIP:score=122.08:trades=34",
+            "/Users/jarvis/dev/trader/.cache/platform/evolve_backtests/F_pcs_trades.json",
+        ],
+        notes="source=evolve_tick; structure=iron_condor; never_auto_live=true",
+    )
+    assert mod._is_stressed(h_false) is False
+
+    h_true = SimpleNamespace(
+        evidence_links=["pcs_regime_stress:b3_hold=true:dense_neg=1"],
+        notes="ingested stress_rotation",
+    )
+    assert mod._is_stressed(h_true) is True
+
+    # b4 hash suffix must not trip either
+    h_b4 = SimpleNamespace(
+        evidence_links=["evolve_sim:dna_abc123b4:verdict=SHIP:score=10:trades=20"],
+        notes="",
+    )
+    assert mod._is_stressed(h_b4) is False
 
 
 def test_shortlist_hyps_trusts_empty_selector(tmp_path, monkeypatch):

@@ -1,95 +1,38 @@
-# WAKE — 2026-08-07T1215 RTH midday manage (Fri)
+# WAKE — 2026-08-07T0945 continuum judgment / coach (Fri)
 
-WAKE: 2026-08-07 ~09:15–09:20 PDT / 12:15–12:20 ET  
-PHASE: **SHADOW** (ops: PAPER manage residual)  
+WAKE: 2026-08-07 ~09:23–09:45 PDT / 12:23–12:45 ET  
+PHASE: **SHADOW** (ops) + **BUILD** coach (search system)  
 SLEEVE: 3000 plan · test cash≈500 · live_armed=false  
-CHOSE: **Mark/manage open paper campaign** — DNA ladder on post-open AAL PCS refill; STAND_ASIDE new  
-OUTCOME: n/a (ops residual — no strategy funnel advance claimed)  
-STRATEGY ADVANCEMENT: false  
-SEARCH INFORMATION: false (manage-only HOLD reconfirm)  
-NO-ADVANCE STREAK: n/a (RTH ops)
+CHOSE: **Fix empty stress queue false-positive + campaign 300s hang** (search throughput)  
+OUTCOME: **BLOCKER_REMOVED_AND_RETESTED** (selector + campaign) + CCL IC capital_path advance  
+STRATEGY ADVANCEMENT: true — `hyp_dna_ccl_iron_condor_dfe031b3` stressed capital_path_ok (secondary vs tighter-DD CCL IC leaders)  
+SEARCH INFORMATION: true — `b3:` marker starvation; learn ceiling gap; scout/place unbounded  
+NO-ADVANCE STREAK: reset on capital_path ingest (ops separate)
 
 ## Orient
 
-- EDGE: pack-grade shortlist_dna_multi quality_pass; research leader CCL IC; first-live AAL wheel_assignment SHIP n=29 fit_3k csp_bp≈$1523; worker **ON** hb fresh **edge_search=OK** registry≈5.5MB cycles~18k
-- ROBOT: paper **1 open** AAL PCS `paper_537129ebd52d` risk=$40.3 · sessions 13/3; shadow **PASS**
-- ARM: WAIT — Ken LIVE_PACKET only
-- NEXT was: `manage_open_paper_campaign` (campaign thin seed after midday residual)
-- Session: **RTH midday Fri 2026-08-07 ~12:15 ET**; SPY≈773 QQQ≈722; AAL≈15.98 (−0.3%) BAC≈62.94
-- Prior same day 0930: dual PT CLOSE AAL+BAC → book 0; campaign later placed **new** AAL PCS `paper_537129ebd52d` @ ~11:46 ET (created 15:46Z) — legitimate residual, **not** same-tick cool-off cancel
-- Jarvis guidance: critic context only (stale BUILD burst-stop note); not an RTH order
-
-## Decision charter (ops)
-
-- ECONOMIC MECHANISM: n/a — live-clock paper dress rehearsal management  
-- CANDIDATE/FAMILY SCOPE: open `paper_537129ebd52d` AAL PCS hyp `3486155f`  
-- FUNNEL: F4 observed paper manage (not edge search)  
-- PREDECLARED FALSIFIER: DNA ladder — profit_target (mid **and** adverse) · defined_loss · delta_breach 0.45 · dte_stop 3  
-- Decision: CLOSE if ladder fires; else HOLD; STAND_ASIDE new unless capital-fit non-open-symbol OPEN_* + headroom + not research_only
+- EDGE: pack-grade shortlist_dna_multi; research CCL IC leaders; first-live AAL wheel; worker ON edge_search=OK registry≈5.5MB  
+- ROBOT: paper open=1 AAL PCS `paper_537129ebd52d` risk=$40.3 sessions 13/3; shadow PASS  
+- ARM: WAIT  
+- Worker pathology fixed this wake: campaign was rc=124 @300s every cycle; stress queue starved by `b3:` DNA-hash false positive  
 
 ## DID
 
-1. `just trader-status` — EDGE OK SEARCHING / ROBOT paper open=1 risk=$40.3 + shadow PASS / ARM WAIT  
-2. Fresh marks via `.cache/platform/rth_mark_open.py` → `rth_eval_marks_latest.json` (16:15Z) — **bid/ask both legs**  
-3. DNA ladder from registry: pt≈0.556 · δ_breach=0.45 · defined_loss_frac≈0.75 · dte_stop=3  
-4. **HOLD** AAL PCS `paper_537129ebd52d` — short OTM $0.98; |Δ|≈0.22 < 0.45; MTM mid +$1.20 / adverse −$2.30 vs PT +$5.39; ml_used≈6% ≪ defined_loss; dte to 2026-08-21 ≫ 3  
-5. `just trader-rth-ops` rc=0 stamp `20260807T161604` — scout n_intents=8; session date **2026-08-07**; OPEN_PCS/CCS **AAL only**; BAC PCS **STAND_ASIDE** filters (credit/width/budget); autonomy 5× `research_only` (risk.allowed defined-risk)  
-6. **STAND_ASIDE new** — one-open-per-symbol AAL; no non-AAL capital-fit OPEN clearing filters; research_only ≠ paper probe; book headroom 1/2 unused by design  
-7. Wrote rich NEXT_SEED + day rth_eval append stamp `20260807T1215`
-
-## Marks (package)
-
-| order | symbol | struct | spot | short/long | OTM | \|Δ\| | MTM mid | MTM adv | PT $ | decision |
-|---|---|---|---|---|---|---|---|---|---|---|
-| paper_537129ebd52d | AAL | PCS | 15.985 | 15.0/14.5p | $0.98 | 0.22 | +$1.20 | −$2.30 | +$5.39 | **HOLD** |
-
-Quote source: bid/ask both legs mid-session. Entry credit ≈$0.097; exp 2026-08-21; hold ≈0.5h (fresh campaign refill). No inverted-vertical / mtm>max_credit flags.
-
-## Scout / autonomy
-
-- Scout date **2026-08-07** (fresh) · n_intents=8 · OPEN_PCS AAL (w=0.5 ml≈$40 and w=2 ml≈$180) · OPEN_CCS AAL · BAC PCS filters STAND_ASIDE · AAL CCS some STAND_ASIDE  
-- Regimes: AAL neutral ivr~68 high_iv; BAC neutral ivr~29  
-- Autonomy dry: 5× `research_only` with risk.allowed — **not** paper probes this tick  
-- Campaign earlier residual: already_open / symbol_already_open on AAL leaders; dry_ready_n=0  
-- Note: quality cycle paper_campaign timeout rc=124 earlier under worker — agent-side mark/manage still valid
+1. Fixed `_is_stressed` markers (`b3:` matched `…89b3:verdict`) → unlocked unstressed IC DNA  
+2. B3/B4: CCL IC `dfe031b3` capital_path_ok dens0/dd36.6 SHIP@5%; F IC soft_loss@5% reject  
+3. Campaign: learn_max 4MB + learn/scout/place timeouts; completes rc=0 ~100s  
+4. Tests 12 passed; quality_worker.env knobs; skill ref updated  
+5. No hyp yaml commit; no live/arm  
 
 ## EVIDENCE
 
-- `.cache/platform/rth_eval_marks_latest.json` (2026-08-07T16:15:50Z)  
-- `.cache/platform/rth_ops/scout_20260807T161604.json` + `autonomy_20260807T161604.json`  
-- `.cache/platform/rth_eval_2026-08-07.json` evals[] stamp `20260807T1215`  
-- `reports/bootstrap/NEXT_SEED.json` source=`rth_eval_2026-08-07T1215`  
-- `.cache/platform/paper_ledger.json` working=`paper_537129ebd52d`  
-- `just trader-status` open=1 risk=$40.3
-
-## DURABLE
-
-- Ops residual only — post-PT same-day campaign refill is **DNA-manage**, not cool-off cancel (checklist §10)  
-- Soft green mid << PT with adverse still red → **HOLD** (dual PT gate)  
-- Headroom 1/2 without non-AAL filter-clear OPEN → STAND_ASIDE new is success  
-- No LIVE_PACKET draft — first-live still AAL wheel single-leg lane; multi-leg paper research continues
-
-## VERIFICATION
-
-- Mark script decision=HOLD; manual: PT 1.20 < 5.39; |Δ| 0.22 < 0.45; OTM; ml_used 0.06 < 0.75  
-- rth-ops rc=0 scout date 2026-08-07  
-- Ledger still working=1 open_risk=$40.3  
-- No live/place_*/arm
-
-## INTEGRATION
-
-- Selective commit: wake stamp + LATEST + INDEX + NEXT_SEED + readiness C-row  
-- Leave worker dirt unstaged: `hypotheses.yaml`, bootstrap shortlist/multi/stress/paper_loop, tmp yaml  
-- ken_required=false
-
-## LESSON
-
-- Midday RTH after morning dual-PT book clear can show a **fresh 1-lot AAL PCS** from campaign; manage ladder only — do not re-cancel for “we stood aside at 0930.”
+- `reports/bootstrap/STRESS_ROTATION.json` (dfe031b3 ok / e51389b3 reject)  
+- `.cache/platform/quality_residual/*_coach_20260807T163126.json`  
+- `tests/test_quality_cycle_cadence.py` 12 passed  
+- campaign `run_20260807T164059.log` learn_bloat skip + done  
 
 ## NEXT SEED
 
-`manage_open_paper_campaign` — re-mark AAL PCS each RTH hour; CLOSE on dual PT / δ / defined_loss / dte_stop; STAND_ASIDE new while AAL open or BAC filters fail; ken_required=false.
+`manage_open_paper_campaign` (RTH HOLD AAL PCS on DNA ladder). Off-hours EDGE: unsaturated DR inject quality (AAPL/MU/TSLA zero-trade waste) + watch campaign rc≠124.
 
-## GATES
-
-none (Ken only: gateway / LIVE_PACKET arm / $3k at packet)
+GATES: none

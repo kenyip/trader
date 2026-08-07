@@ -28,8 +28,15 @@ EXECUTE="${TRADER_PAPER_CAMPAIGN_EXECUTE:-1}"
 FORCE_LEARN="${TRADER_PAPER_CAMPAIGN_FORCE_LEARN:-0}"
 LEDGER="${TRADER_PAPER_LEDGER:-$REPO/.cache/platform/paper_ledger.json}"
 HYPS_YAML="${TRADER_HYPS_YAML:-$REPO/trader_platform/data/hypotheses.yaml}"
-# Skip learn when registry exceeds this many bytes (default 12MB — 2026-07-28 coach).
+# Skip learn when registry exceeds this many bytes.
+# Evolve bloat ceiling may sit at 6MB while learn_tick already hangs past the
+# quality_cycle 300s campaign timeout at ~5.5MB (0-byte learn_*.json, rc=124
+# every cycle with 1/2 book open — 2026-08-07 continuum coach). Learn has its
+# own lower ceiling so campaign can still manage/place while EDGE searches.
 REGISTRY_MAX_BYTES="${TRADER_PAPER_CAMPAIGN_REGISTRY_MAX_BYTES:-${TRADER_QC_REGISTRY_MAX_BYTES:-12000000}}"
+LEARN_MAX_BYTES="${TRADER_PAPER_CAMPAIGN_LEARN_MAX_BYTES:-4000000}"
+# Hard cap learn_tick wall time even under LEARN_MAX (seconds).
+LEARN_TIMEOUT_SEC="${TRADER_PAPER_CAMPAIGN_LEARN_TIMEOUT_SEC:-45}"
 MAX_CONCURRENT="${TRADER_PAPER_CAMPAIGN_MAX_CONCURRENT:-2}"
 MAX_OPEN_RISK="${TRADER_PAPER_CAMPAIGN_MAX_OPEN_RISK:-500}"
 
@@ -76,7 +83,9 @@ PY
 fi
 
 # Empty-book campaigns still hung 300s on learn_tick when hyp yaml ~45MB (2026-07-28).
+# Mid-size ~5.5MB also hangs past campaign timeout with seats free (2026-08-07).
 REGISTRY_BLOAT=0
+LEARN_BLOAT=0
 HYPS_BYTES=0
 if [[ -f "$HYPS_YAML" ]]; then
   HYPS_BYTES="$(wc -c <"$HYPS_YAML" | tr -d ' ')"
@@ -85,12 +94,20 @@ if [[ -f "$HYPS_YAML" ]]; then
       REGISTRY_BLOAT=1
     fi
   fi
+  if [[ "${HYPS_BYTES}" =~ ^[0-9]+$ ]] && [[ "${LEARN_MAX_BYTES}" =~ ^[0-9]+$ ]]; then
+    if (( HYPS_BYTES > LEARN_MAX_BYTES )); then
+      LEARN_BLOAT=1
+    fi
+  fi
 fi
 
-if [[ "$FORCE_LEARN" != "1" && ( "$BOOK_MANAGE_ONLY" == "1" || "$REGISTRY_BLOAT" == "1" ) ]]; then
+if [[ "$FORCE_LEARN" != "1" && ( "$BOOK_MANAGE_ONLY" == "1" || "$REGISTRY_BLOAT" == "1" || "$LEARN_BLOAT" == "1" ) ]]; then
   if [[ "$REGISTRY_BLOAT" == "1" ]]; then
     echo "trader_paper_campaign: skip learn_tick (registry_bloat bytes=$HYPS_BYTES max=$REGISTRY_MAX_BYTES)"
     printf '%s\n' "{\"skipped\":true,\"reason\":\"registry_bloat_skip_learn\",\"registry_bytes\":$HYPS_BYTES,\"registry_max_bytes\":$REGISTRY_MAX_BYTES}" >"$OUT_DIR/learn_${STAMP}.json"
+  elif [[ "$LEARN_BLOAT" == "1" ]]; then
+    echo "trader_paper_campaign: skip learn_tick (learn_bloat bytes=$HYPS_BYTES learn_max=$LEARN_MAX_BYTES — manage/place path)"
+    printf '%s\n' "{\"skipped\":true,\"reason\":\"learn_bloat_skip_learn\",\"registry_bytes\":$HYPS_BYTES,\"learn_max_bytes\":$LEARN_MAX_BYTES}" >"$OUT_DIR/learn_${STAMP}.json"
   else
     echo "trader_paper_campaign: skip learn_tick (book full / risk cap — manage path)"
     printf '%s\n' '{"skipped":true,"reason":"book_full_manage_skip_learn"}' >"$OUT_DIR/learn_${STAMP}.json"
@@ -98,7 +115,34 @@ if [[ "$FORCE_LEARN" != "1" && ( "$BOOK_MANAGE_ONLY" == "1" || "$REGISTRY_BLOAT"
   rc_learn=0
 else
   set +e
-  "$PY" -m trader_platform.learn_tick --once --apply --json >"$OUT_DIR/learn_${STAMP}.json"
+  # Hard wall so a slow learn cannot burn the whole quality_cycle campaign budget.
+  "$PY" - "$LEARN_TIMEOUT_SEC" "$OUT_DIR/learn_${STAMP}.json" <<'PY'
+import subprocess, sys
+from pathlib import Path
+timeout_s = float(sys.argv[1])
+out = Path(sys.argv[2])
+try:
+    r = subprocess.run(
+        [sys.executable, "-m", "trader_platform.learn_tick", "--once", "--apply", "--json"],
+        capture_output=True,
+        text=True,
+        timeout=timeout_s,
+    )
+    out.write_text(r.stdout or "", encoding="utf-8")
+    if r.returncode != 0 and r.stderr:
+        # keep stderr breadcrumb beside empty/partial stdout
+        side = out.with_suffix(".err")
+        side.write_text(r.stderr[:8000], encoding="utf-8")
+    raise SystemExit(r.returncode)
+except subprocess.TimeoutExpired as exc:
+    partial = (exc.stdout or "") if isinstance(exc.stdout, str) else ""
+    out.write_text(
+        '{"skipped":true,"reason":"learn_timeout","timeout_sec":%s,"partial_len":%d}'
+        % (sys.argv[1], len(partial)),
+        encoding="utf-8",
+    )
+    raise SystemExit(0)
+PY
   rc_learn=$?
   set -e
 fi
@@ -288,38 +332,106 @@ can_place = (
 new_count = 0
 if can_place:
     # Scout only when we might place — avoids multi-minute hangs under full book.
+    # 2026-08-07 coach: without timeout, premium_scout + 5.5MB registry burned the
+    # entire quality_cycle 300s budget after learn skip (scout_*.json truncated 500k).
+    # Only scout symbols that still have headroom (not already open in book).
+    open_syms = {str(o.get("symbol") or "").upper() for o in real_open}
+    place_symbols = [s for s in symbols if s and s.upper() not in open_syms][:8]
+    if not place_symbols:
+        scout_summary = {
+            "skipped": True,
+            "reason": "all_leader_symbols_already_open",
+            "n_intents": 0,
+            "open_symbols": sorted(open_syms),
+        }
+        actions.append(
+            {
+                "action": "skip_scout_all_leader_symbols_open",
+                "open_symbols": sorted(open_syms),
+            }
+        )
+        (out_dir / f"scout_{stamp}.json").write_text(
+            json.dumps(scout_summary, indent=2) + "\n", encoding="utf-8"
+        )
     try:
         import subprocess
 
         scout_path = out_dir / f"scout_{stamp}.json"
+        scout_timeout = float(os.environ.get("TRADER_PAPER_CAMPAIGN_SCOUT_TIMEOUT_SEC", "75"))
         cmd = [
             sys.executable,
             "-m",
             "trader_platform.premium_scout",
             "--symbols",
-            *symbols[:10],
+            *place_symbols,
             "--json",
             "--max-intents",
             "8",
             "--event",
             "paper_campaign",
         ]
-        proc = subprocess.run(cmd, cwd=str(Path.cwd()), capture_output=True, text=True)
-        scout_raw = proc.stdout
+        if not place_symbols:
+            raise RuntimeError("no_place_symbols")
         try:
-            scout_summary = json.loads(scout_raw[scout_raw.find("{") :])
-        except Exception:
+            proc = subprocess.run(
+                cmd,
+                cwd=str(Path.cwd()),
+                capture_output=True,
+                text=True,
+                timeout=scout_timeout,
+            )
+            scout_raw = proc.stdout or ""
+            try:
+                scout_summary = json.loads(scout_raw[scout_raw.find("{") :])
+            except Exception:
+                scout_summary = {
+                    "raw_tail": scout_raw[-2000:],
+                    "rc": proc.returncode,
+                    "err": (proc.stderr or "")[-1000:],
+                }
+        except subprocess.TimeoutExpired as exc:
+            partial = exc.stdout if isinstance(exc.stdout, str) else ""
             scout_summary = {
-                "raw_tail": scout_raw[-2000:],
-                "rc": proc.returncode,
-                "err": proc.stderr[-1000:],
+                "skipped": True,
+                "error": "scout_timeout",
+                "timeout_sec": scout_timeout,
+                "partial_len": len(partial or ""),
+                "n_intents": 0,
             }
+            actions.append(
+                {
+                    "action": "scout_timeout_stand_aside_new",
+                    "timeout_sec": scout_timeout,
+                    "hint": "manage open book; do not block EDGE cycle on scout hang",
+                }
+            )
         scout_path.write_text(json.dumps(scout_summary, indent=2)[:500000], encoding="utf-8")
     except Exception as e:
-        scout_summary = {"error": str(e)}
+        if str(e) != "no_place_symbols":
+            scout_summary = {"error": str(e)}
 
     # Prefer leader hyps not already open — one symbol attempt, one place max
-    for r in leaders:
+    # If scout timed out / skipped, do not enter slow run_tick place loop.
+    _scout_ok = not (
+        isinstance(scout_summary, dict)
+        and (
+            scout_summary.get("skipped")
+            or scout_summary.get("error") in ("scout_timeout",)
+            or str(scout_summary.get("error") or "").startswith("no_place")
+        )
+    )
+    if not _scout_ok:
+        actions.append(
+            {
+                "action": "skip_place_after_scout_fail",
+                "scout": {
+                    k: scout_summary.get(k)
+                    for k in ("error", "skipped", "timeout_sec", "n_intents")
+                    if isinstance(scout_summary, dict)
+                },
+            }
+        )
+    for r in leaders if _scout_ok else []:
         if new_count >= MAX_NEW or len(real_open) + new_count >= MAX_CONCURRENT:
             break
         if open_risk >= MAX_OPEN_RISK:
@@ -335,22 +447,46 @@ if can_place:
         if any(o.get("symbol") == sym for o in real_open):
             actions.append({"hyp_id": hid, "action": "symbol_already_open", "symbol": sym})
             continue
+        place_timeout = float(os.environ.get("TRADER_PAPER_CAMPAIGN_PLACE_TIMEOUT_SEC", "45"))
+
+        def _place_once() -> dict[str, Any]:
+            try:
+                return run_tick(
+                    mode=Mode.PAPER,
+                    event="paper_campaign",
+                    dry_run=False,
+                    symbols=[sym],
+                    max_intents=1,
+                )
+            except TypeError:
+                return run_tick(
+                    mode="paper",
+                    event="paper_campaign",
+                    dry_run=False,
+                    symbols=[sym],
+                    max_intents=1,
+                )
+
         try:
-            summary = run_tick(
-                mode=Mode.PAPER,
-                event="paper_campaign",
-                dry_run=False,
-                symbols=[sym],
-                max_intents=1,
+            from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutTimeout
+
+            with ThreadPoolExecutor(max_workers=1) as pool:
+                fut = pool.submit(_place_once)
+                summary = fut.result(timeout=place_timeout)
+        except FutTimeout:
+            actions.append(
+                {
+                    "hyp_id": hid,
+                    "action": "place_timeout",
+                    "symbol": sym,
+                    "timeout_sec": place_timeout,
+                    "hint": "run_tick hung under registry thrash — stand aside new this cycle",
+                }
             )
-        except TypeError:
-            summary = run_tick(
-                mode="paper",
-                event="paper_campaign",
-                dry_run=False,
-                symbols=[sym],
-                max_intents=1,
-            )
+            break
+        except Exception as e:
+            actions.append({"hyp_id": hid, "action": "place_error", "error": str(e)[:240]})
+            break
         placed_this = False
         for entry in summary.get("results") or []:
             intent = entry.get("intent") or {}

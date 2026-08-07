@@ -33,20 +33,24 @@ _HYPS = _REPO / "trader_platform" / "data" / "hypotheses.yaml"
 _EVOLVE_LOG_DIR = _REPO / ".cache" / "platform" / "quality_residual"
 _ROTATION = _REPO / "reports" / "bootstrap" / "STRESS_ROTATION.json"
 _ML = frozenset({"put_credit_spread", "call_credit_spread", "iron_condor"})
+# Markers must NOT false-match evolve DNA hashes. Bare "b3:" / "b4:" matched
+# hex suffixes like "...89b3:verdict=SHIP" and starved the unstressed queue
+# (only F/CCL IC left outside rotation but both ended in b3 — 2026-08-07 coach).
+# Loose "regime_" / "cost_" also over-match paths; keep explicit stress tokens.
 _STRESS_MARKERS = (
     "regime_stress",
     "cost_stress",
     "pcs_regime",
     "pcs_cost",
-    "b3:",
-    "b4:",
     "stress_regime",
     "stress_cost",
-    "regime_",
-    "cost_",
     "dense_neg",
     "b3_hold",
     "b4_cost",
+    "b4_slip",
+    "capital_path_ok",
+    "window_max_dd",
+    "stress_rotation",
 )
 
 
