@@ -1,3 +1,4 @@
+| 2026-08-07T1530 | rth | HOLD AAL PCS +4.20 (OTM 1.05 |Δ|0.186 vs PT 5.39; adv -0.30 dual clear); STAND_ASIDE new (AAL open / BAC filters); mtm 1430+1.20→1530+4.20 | manage_open_paper_campaign |
 | 2026-08-07T1430 | rth | HOLD AAL PCS +1.20 (OTM 0.97 |Δ|0.211 vs PT 5.39); STAND_ASIDE new (AAL open / BAC filters); mtm grind 1330+3.20→1430+1.20 | manage_open_paper_campaign |
 | 2026-08-07T1330 | rth | HOLD AAL PCS +3.20 (OTM 1.01 |Δ|0.202 vs PT 5.39); STAND_ASIDE new (AAL open / BAC filters); mtm↑ vs 1250 | manage_open_paper_campaign |
 | 2026-08-07T1250 | rth | HOLD AAL PCS +2.70 (OTM 0.985 |Δ|0.209 vs PT 5.39); STAND_ASIDE new (AAL open / BAC filters); mtm↑ vs 1215 | manage_open_paper_campaign |

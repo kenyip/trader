@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-08-07T18:33:20+00:00",
-  "stamp": "20260807T1430",
-  "source": "rth_eval_2026-08-07T1430",
+  "generated_at": "2026-08-07T19:33:40+00:00",
+  "stamp": "20260807T1530",
+  "source": "rth_eval_2026-08-07T1530",
   "ken_required": false,
   "ken_only_for": [
     "gateway_up",
@@ -13,8 +13,8 @@
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
   "detail": {
-    "hint": "RTH: mark/manage paper; HOLD AAL PCS while ladder clear (mid +$1.20/adv $-1.30 vs PT $5.39; OTM $0.96 |\u0394|0.211); STAND_ASIDE new \u2014 AAL one-open + BAC filters; mtm grind 1330 +3.20\u21921430 +1.20 still under dual PT",
-    "session_et": "2026-08-07 ~14:30 ET mid-afternoon (Fri)",
+    "hint": "RTH: mark/manage paper; HOLD AAL PCS while ladder clear (mid +$4.20/adv $-0.30 vs PT $5.39; OTM $1.05 |\u0394|0.186); STAND_ASIDE new \u2014 AAL one-open + BAC filters; mtm path 1430 +1.20\u21921530 +4.20 still under dual PT (adv not green)",
+    "session_et": "2026-08-07 ~15:31 ET late-afternoon (Fri)",
     "book_full": false,
     "working": 1,
     "open_risk_usd": 40.3,
@@ -38,20 +38,20 @@
         "status": "working",
         "max_loss_usd": 40.3,
         "decision": "HOLD",
-        "mtm_usd": 1.2,
-        "mtm_adverse_usd": -1.3,
-        "spot": 15.965,
-        "chg_pct": -0.405,
+        "mtm_usd": 4.2,
+        "mtm_adverse_usd": -0.3,
+        "spot": 16.05,
+        "chg_pct": 0.125,
         "short_strike": 15.0,
         "long_strike": 14.5,
-        "short_otm": 0.965,
+        "short_otm": 1.05,
         "short_itm": false,
-        "ml_used_frac": 0.0323,
-        "short_delta_abs": 0.211,
+        "ml_used_frac": 0.0075,
+        "short_delta_abs": 0.186,
         "exp": "2026-08-21",
         "entry_credit": 0.09697079476663362,
-        "close_debit": 0.085,
-        "close_debit_adverse": 0.11000000000000001,
+        "close_debit": 0.05500000000000001,
+        "close_debit_adverse": 0.1,
         "quote_short_src": "bid_ask",
         "quote_long_src": "bid_ask",
         "quote_flags": [],
@@ -66,15 +66,15 @@
           "pt_usd": 5.39
         },
         "busdays_to_exp": 10,
-        "hold_hours_approx": 2.75
+        "hold_hours_approx": 3.75
       }
     ],
     "scout": {
-      "stamp": "20260807T183112",
+      "stamp": "20260807T193144",
       "n_intents": 6,
       "n_candidates": 15,
       "n_stand_asides": 9,
-      "path": ".cache/platform/rth_ops/scout_20260807T183112.json",
+      "path": ".cache/platform/rth_ops/scout_20260807T193144.json",
       "aal_regime": "neutral",
       "aal_iv_rank": 67.9,
       "bac_regime": "neutral",
@@ -83,30 +83,31 @@
       "aal_open_pcs": "same-symbol already working paper_537129ebd52d"
     },
     "autonomy": {
-      "stamp": "20260807T183112",
+      "stamp": "20260807T193144",
       "n_proposals": 5,
       "dispositions": "research_only_x5",
-      "path": ".cache/platform/rth_ops/autonomy_20260807T183112.json"
+      "path": ".cache/platform/rth_ops/autonomy_20260807T193144.json"
     },
-    "marks_generated_at": "2026-08-07T18:31:07.640570+00:00",
+    "marks_generated_at": "2026-08-07T19:31:43.384307+00:00",
     "equities": {
-      "AAL": 15.96500015258789,
-      "BAC": 63.05500030517578,
-      "SNAP": 5.335000038146973,
-      "SPY": 771.3900146484375,
-      "QQQ": 719.8400268554688,
-      "PLTR": 170.85719299316406
+      "AAL": 16.049999237060547,
+      "BAC": 63.185001373291016,
+      "SNAP": 5.34499979019165,
+      "SPY": 772.8599243164062,
+      "QQQ": 721.97998046875,
+      "PLTR": 170.89999389648438
     },
     "worker": {
       "on": true,
       "edge_search": "OK",
-      "note": "cycles green; campaign rc=0; registry\u22484.4MB"
+      "note": "cycles green; campaign rc=0; registry\u22484.6MB; stress_queue_empty"
     },
     "prior_same_day": {
       "0930": "closed AAL+BAC dual PT",
       "1215": "HOLD AAL +1.20 STAND_ASIDE new",
       "1250": "HOLD AAL +2.70 STAND_ASIDE new",
-      "1330": "HOLD AAL +3.20 STAND_ASIDE new"
+      "1330": "HOLD AAL +3.20 STAND_ASIDE new",
+      "1430": "HOLD AAL +1.20 STAND_ASIDE new"
     }
   }
 }
