@@ -349,6 +349,51 @@ def _cold_symbol_rank(sym: str) -> tuple[int, int, int]:
     return preferred_bucket, pref_idx, mega
 
 
+def _default_research_universe() -> list[str]:
+    try:
+        from trader_platform.research.universe import load_universe
+
+        return list(load_universe() or [])
+    except Exception:  # noqa: BLE001
+        return [
+            "IWM",
+            "F",
+            "SOFI",
+            "AAL",
+            "PFE",
+            "SNAP",
+            "CCL",
+            "BAC",
+            "TSLL",
+            "KO",
+            "INTC",
+            "XOM",
+            "PLTR",
+            "NFLX",
+            "SMCI",
+        ]
+
+
+def _effective_discovery_universe(universe: list[str] | None) -> list[str]:
+    """Research universe ∪ preferred cold discovery names (order preserved).
+
+    2026-08-07 continuum coach: preferred cold listed KO/INTC but ``universe.yaml``
+    omitted them, so unsat inject never saw tier-0 KO PCS and burned DR slots on
+    MU/TSLA/AAPL zero-trade thrash while stress queue stayed empty. Always union
+    preferred names so a stale research universe cannot starve EDGE inject.
+    """
+    base = list(universe) if universe is not None else _default_research_universe()
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in list(base) + list(_PREFERRED_COLD_DISCOVERY):
+        s = str(raw or "").strip().upper()
+        if not s or s in seen:
+            continue
+        seen.add(s)
+        out.append(s)
+    return out
+
+
 def unsaturated_discovery_symbols(
     *,
     limit: int = 6,
@@ -371,34 +416,20 @@ def unsaturated_discovery_symbols(
     with ≥6 recent fails and 0 recent oks) so unsat inject does not refill B3/B4 with the
     same doomed mega-cap clones while F/CCL/SNAP/KO starve. Proven unsaturated (lifetime
     capital_path_ok > 0) still ranks first even if recent stress mixed.
+
+    2026-08-07 coach: effective universe always unions preferred cold discovery so
+    KO/INTC cannot disappear when research universe drifts.
     """
     if limit <= 0:
         return []
     rot = rotation if rotation is not None else load_rotation()
     structs = tuple(structures or _DEFAULT_ML_STRUCTURES)
     ex = {str(s).strip().upper() for s in (exclude or set()) if s}
+    # Default path: research universe ∪ preferred cold. Explicit universe= keeps caller control (tests).
     if universe is None:
-        try:
-            from trader_platform.research.universe import load_universe
-
-            universe = list(load_universe() or [])
-        except Exception:  # noqa: BLE001
-            universe = [
-                "IWM",
-                "F",
-                "SOFI",
-                "AAL",
-                "PFE",
-                "SNAP",
-                "CCL",
-                "BAC",
-                "TSLL",
-                "KO",
-                "XOM",
-                "PLTR",
-                "NFLX",
-                "SMCI",
-            ]
+        universe = _effective_discovery_universe(None)
+    else:
+        universe = [str(s or "").strip().upper() for s in universe if str(s or "").strip()]
     # Prefer proven-unsaturated (1..sat-1 lifetime oks) over cold names; within each
     # tier prefer recent capital_path oks and fewer recent fails (not pure ok_mass).
     scored: list[tuple[int, int, int, int, int, str]] = []
@@ -488,28 +519,11 @@ def unsaturated_discovery_families(
     rot = rotation if rotation is not None else load_rotation()
     structs = tuple(structures or _DEFAULT_ML_STRUCTURES)
     ex = {str(s).strip().upper() for s in (exclude_symbols or set()) if s}
+    # Default path unions preferred cold (KO/INTC…). Explicit universe= keeps tests pure.
     if universe is None:
-        try:
-            from trader_platform.research.universe import load_universe
-
-            universe = list(load_universe() or [])
-        except Exception:  # noqa: BLE001
-            universe = [
-                "IWM",
-                "F",
-                "SOFI",
-                "AAL",
-                "PFE",
-                "SNAP",
-                "CCL",
-                "BAC",
-                "TSLL",
-                "KO",
-                "XOM",
-                "PLTR",
-                "NFLX",
-                "SMCI",
-            ]
+        universe = _effective_discovery_universe(None)
+    else:
+        universe = [str(s or "").strip().upper() for s in universe if str(s or "").strip()]
 
     scored: list[tuple[int, int, int, int, str, str]] = []
     for raw in universe:

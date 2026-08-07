@@ -357,6 +357,63 @@ def test_unsaturated_cold_prefers_liquid_over_alphabetical_mega():
     assert len(fams) >= 4
 
 
+def test_effective_discovery_universe_unions_preferred_cold():
+    """Default unsat path must see preferred KO/INTC even if research list omits them (2026-08-07)."""
+    from trader_platform.stress_family_policy import (
+        _PREFERRED_COLD_DISCOVERY,
+        _effective_discovery_universe,
+        unsaturated_discovery_families,
+        unsaturated_discovery_symbols,
+    )
+
+    # Research-like list missing KO/INTC (pre-fix universe.yaml pathology).
+    base = ["MU", "TSLA", "AAPL", "AMD", "SPY"]
+    eff = _effective_discovery_universe(base)
+    assert "KO" in eff and "INTC" in eff
+    assert eff.index("MU") < eff.index("KO")  # base order preserved, preferred appended
+    for s in _PREFERRED_COLD_DISCOVERY:
+        assert s in eff
+
+    # Live rotation: KO PCS is the only tier-0 open preferred; mega cold must not lead.
+    now = _now()
+    by = {
+        "ko_ok": {
+            "symbol": "KO",
+            "structure": "put_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        },
+        "ko_fail": {
+            "symbol": "KO",
+            "structure": "put_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now,
+        },
+    }
+    rot = {"by_hyp_id": by}
+    # Explicit universe without KO — still need default-path union for production.
+    # Simulate default path by passing universe=None with monkeypatched loader via rotation-only:
+    # Use _effective_discovery_universe + families on merged list.
+    merged = _effective_discovery_universe(base)
+    fams = unsaturated_discovery_families(
+        limit=6,
+        rotation=rot,
+        universe=merged,
+        structures=("put_credit_spread", "call_credit_spread", "iron_condor"),
+    )
+    assert fams
+    assert fams[0]["symbol"] == "KO"
+    assert fams[0]["structure"] == "put_credit_spread"
+    assert fams[0]["tier"] == 0
+    syms = unsaturated_discovery_symbols(
+        limit=4,
+        rotation=rot,
+        universe=merged,
+        structures=("put_credit_spread", "call_credit_spread", "iron_condor"),
+    )
+    assert syms[0] == "KO"
+
+
 def test_run_evolve_tick_force_symbols_skips_research(monkeypatch):
     import trader_platform.evolve_tick as ev
 

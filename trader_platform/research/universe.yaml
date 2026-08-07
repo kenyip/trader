@@ -39,6 +39,12 @@ symbols:
   - XOM
   - BAC
 
+  # Defensive / defined-risk income names used by multi-symbol book + preferred cold discovery.
+  # Missing these starved unsat inject of tier-0 KO PCS while MU/TSLA zero-trade thrash filled
+  # the board (2026-08-07 continuum coach: preferred cold had KO/INTC but universe did not).
+  - KO
+  - INTC
+
   # Sub-$30 liquid optionables — collared covered-call capital_fit (spot*100 ≤ 3000)
   # Non-levered only; TSLL remains research-only for other structures, not collar share-hold default.
   - F
@@ -55,4 +61,5 @@ groups:
   mega_cap: [AAPL, MSFT, NVDA, AMZN, META, GOOGL, AMD, NFLX]
   high_beta: [TSLA, TSLL, COIN, PLTR, ARM, SMCI, AVGO, MU]
   financials_energy: [JPM, XOM, BAC]
+  defensive_income: [KO, INTC]
   collar_sub_30: [F, SOFI, AAL, PFE, SNAP, NIO, CCL, SMCI]

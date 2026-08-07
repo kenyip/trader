@@ -61,3 +61,6 @@ def test_legacy_research_universe_still_loads() -> None:
     names = load_universe()
     assert len(names) >= 2
     assert default_universe_path().name == "universe.yaml"
+    # Preferred cold defensive names must stay research-visible (2026-08-07 coach).
+    assert "KO" in names
+    assert "INTC" in names

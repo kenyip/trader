@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-08-07T19:33:40+00:00",
-  "stamp": "20260807T1530",
-  "source": "rth_eval_2026-08-07T1530",
+  "generated_at": "2026-08-07T22:12:00+00:00",
+  "stamp": "20260807T1500",
+  "source": "continuum_judgment_2026-08-07T1500",
   "ken_required": false,
   "ken_only_for": [
     "gateway_up",
@@ -13,21 +13,14 @@
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
   "detail": {
-    "hint": "RTH: mark/manage paper; HOLD AAL PCS while ladder clear (mid +$4.20/adv $-0.30 vs PT $5.39; OTM $1.05 |\u0394|0.186); STAND_ASIDE new \u2014 AAL one-open + BAC filters; mtm path 1430 +1.20\u21921530 +4.20 still under dual PT (adv not green)",
-    "session_et": "2026-08-07 ~15:31 ET late-afternoon (Fri)",
+    "hint": "Post-close Fri: HOLD open AAL PCS overnight unless DNA ladder; next RTH re-mark dual PT. EDGE: KO/INTC now in universe + unsat default union preferred cold — worker continues create→B3/B4. First-live n_eligible=0 (ghost AAL wheel gone; CSP ml bar tight) — residual CSP/wheel fit_3k evolve.",
+    "session_et": "2026-08-07 post-close coach",
     "book_full": false,
     "working": 1,
     "open_risk_usd": 40.3,
     "max_concurrent": 2,
     "max_open_risk": 500.0,
-    "new_entries": "STAND_ASIDE",
-    "new_entry_reasons": [
-      "one_open_per_symbol_AAL",
-      "bac_pcs_filters_blocked",
-      "open_pcs_all_aal_same_geometry_or_research_only",
-      "autonomy_research_only_x5",
-      "no_non_aal_capital_fit_OPEN"
-    ],
+    "new_entries": "STAND_ASIDE_off_hours",
     "closed_this_session": [],
     "open_orders": [
       {
@@ -37,77 +30,24 @@
         "structure": "put_credit_spread",
         "status": "working",
         "max_loss_usd": 40.3,
-        "decision": "HOLD",
-        "mtm_usd": 4.2,
-        "mtm_adverse_usd": -0.3,
-        "spot": 16.05,
-        "chg_pct": 0.125,
-        "short_strike": 15.0,
-        "long_strike": 14.5,
-        "short_otm": 1.05,
-        "short_itm": false,
-        "ml_used_frac": 0.0075,
-        "short_delta_abs": 0.186,
-        "exp": "2026-08-21",
-        "entry_credit": 0.09697079476663362,
-        "close_debit": 0.05500000000000001,
-        "close_debit_adverse": 0.1,
-        "quote_short_src": "bid_ask",
-        "quote_long_src": "bid_ask",
-        "quote_flags": [],
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ],
-        "ladder": {
-          "profit_target": 0.5555465179774001,
-          "delta_breach": 0.45,
-          "defined_loss_exit_frac": 0.753171882607278,
-          "dte_stop": 3,
-          "pt_usd": 5.39
-        },
-        "busdays_to_exp": 10,
-        "hold_hours_approx": 3.75
+        "decision": "HOLD_overnight",
+        "note": "last RTH 1530 mid +4.20/adv -0.30 vs PT 5.39; dual PT not hit"
       }
     ],
-    "scout": {
-      "stamp": "20260807T193144",
-      "n_intents": 6,
-      "n_candidates": 15,
-      "n_stand_asides": 9,
-      "path": ".cache/platform/rth_ops/scout_20260807T193144.json",
-      "aal_regime": "neutral",
-      "aal_iv_rank": 67.9,
-      "bac_regime": "neutral",
-      "bac_iv_rank": 29.0,
-      "bac": "STAND_ASIDE filters blocked",
-      "aal_open_pcs": "same-symbol already working paper_537129ebd52d"
-    },
-    "autonomy": {
-      "stamp": "20260807T193144",
-      "n_proposals": 5,
-      "dispositions": "research_only_x5",
-      "path": ".cache/platform/rth_ops/autonomy_20260807T193144.json"
-    },
-    "marks_generated_at": "2026-08-07T19:31:43.384307+00:00",
-    "equities": {
-      "AAL": 16.049999237060547,
-      "BAC": 63.185001373291016,
-      "SNAP": 5.34499979019165,
-      "SPY": 772.8599243164062,
-      "QQQ": 721.97998046875,
-      "PLTR": 170.89999389648438
+    "coach": {
+      "fix": "universe_preferred_cold_ko_intc",
+      "capital_path_ok": ["hyp_dna_ko_put_credit_spread_a6cc58ff"],
+      "rejected": [
+        "hyp_dna_intc_put_credit_spread_8ff4ba29",
+        "hyp_dna_intc_put_credit_spread_5b6bef72",
+        "hyp_dna_ko_put_credit_spread_57742b09"
+      ],
+      "first_live_n_eligible": 0
     },
     "worker": {
       "on": true,
       "edge_search": "OK",
-      "note": "cycles green; campaign rc=0; registry\u22484.6MB; stress_queue_empty"
-    },
-    "prior_same_day": {
-      "0930": "closed AAL+BAC dual PT",
-      "1215": "HOLD AAL +1.20 STAND_ASIDE new",
-      "1250": "HOLD AAL +2.70 STAND_ASIDE new",
-      "1330": "HOLD AAL +3.20 STAND_ASIDE new",
-      "1430": "HOLD AAL +1.20 STAND_ASIDE new"
+      "note": "unsat now leads KO/INTC; do not thrash densify"
     }
   }
 }
