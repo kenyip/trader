@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. EDGE unblocked after VIX cache repair — worker should mint/stress again.",
     "open_orders": [
       {
         "max_loss_usd": 39.11,
@@ -18,9 +18,19 @@
         "structure": "put_credit_spread",
         "symbol": "BAC"
       }
-    ]
+    ],
+    "coach_20260806T2105": {
+      "blocker_removed": "corrupt_.cache/VIX_10y.csv_glued_row",
+      "first_live": "AAL wheel_assignment dna_4afc n=29 fit_3k csp_bp≈1523",
+      "research_leader": "hyp_dna_aal_put_credit_spread_5fa0eac8 dens1 dd31 SHIP@5%",
+      "rejected_tonight": [
+        "AAL IC b82d92ea B4 fragile NULL@-146",
+        "IWM CCS b697ee8b B4 REJECT@-1431",
+        "IWM PCS 57fcf3b0 dens5/dd186 capital_path but not shortlist lead vs AAL dens1"
+      ]
+    }
   },
-  "generated_at": "2026-08-05T06:18:58+00:00",
+  "generated_at": "2026-08-07T04:05:30+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -30,7 +40,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "trader_paper_campaign",
-  "stamp": "20260805T061858",
+  "source": "continuum_judgment_20260806T2105",
+  "stamp": "20260806T2105",
   "trading_authority": false
 }

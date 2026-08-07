@@ -80,25 +80,36 @@ def load_history(ticker: str, period: str = "10y", use_cache: bool = True) -> pd
 
 def load_vix(period: str = "10y", use_cache: bool = True) -> pd.Series:
     """v1.12 — fetch ^VIX close series for macro-vol context. Cached to disk.
-    Returns an empty Series on failure so feature pipeline degrades gracefully."""
+    Returns an empty Series on failure so feature pipeline degrades gracefully.
+
+    Corrupt on-disk caches (glued rows / wrong field counts) are discarded and
+    re-fetched — a bad VIX CSV must not kill every evolve/B3/B4/research path.
+    """
     CACHE_DIR.mkdir(exist_ok=True)
     cache_path = CACHE_DIR / f"VIX_{period}.csv"
     if use_cache and cache_path.exists():
-        s = pd.read_csv(cache_path, index_col=0, parse_dates=True).iloc[:, 0]
-        s.name = 'vix'
-        if not _should_refresh_cache(_cache_last_date(s.index)):
-            return s
+        try:
+            s = pd.read_csv(cache_path, index_col=0, parse_dates=True).iloc[:, 0]
+            s.name = "vix"
+            if len(s) > 0 and not _should_refresh_cache(_cache_last_date(s.index)):
+                return s
+        except (pd.errors.ParserError, pd.errors.EmptyDataError, ValueError, IndexError, OSError):
+            # Glued-row / truncated caches (e.g. "10.202017-09-14,...") — drop and refetch.
+            try:
+                cache_path.unlink(missing_ok=True)
+            except OSError:
+                pass
     try:
-        df = yf.download('^VIX', period=period, auto_adjust=False, progress=False)
+        df = yf.download("^VIX", period=period, auto_adjust=False, progress=False)
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = df.columns.get_level_values(0)
-        s = df['Close'].copy()
+        s = df["Close"].copy()
         s.index = pd.to_datetime(s.index)
-        s.name = 'vix'
+        s.name = "vix"
         s.to_csv(cache_path)
         return s
     except Exception:
-        return pd.Series(dtype=float, name='vix')
+        return pd.Series(dtype=float, name="vix")
 
 
 def _third_friday(year: int, month: int) -> pd.Timestamp:

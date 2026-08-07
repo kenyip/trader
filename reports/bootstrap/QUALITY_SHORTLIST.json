@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-05T06:21:08+00:00",
+  "generated_at": "2026-08-07T04:05:42+00:00",
   "phase": "BUILD_PAPER_SEARCH",
   "authority": "research_paper_only",
   "honesty": "Proxy BS sims + B3/B4 only. Not TOP_HYP. Multi-leg not MCP-live. Stress rotation ledger drives shortlist; quality_cycle mixes leaders+fresh. Capital-path rejects: soft NULL@~0, soft-loss/neg@5%, non-pos full PnL. Rank dens_bucket(0-1 tied) \u2192 slip verdict (SHIP>NEEDS>NULL) \u2192 dd \u2192 raw dens \u2192 slip pnl. Multi-leg shortlist caps \u22642 per symbol; skip identical dens/dd/pnl risk twins.",
@@ -20,18 +20,18 @@
       "stress_priority": true,
       "b3_hold": true,
       "dense_neg_ge3": 1,
-      "full_pnl": 198.84,
+      "full_pnl": 196.59,
       "max_dd": 31.46,
       "max_loss_usd_approx": 39.84,
       "b4_cost_hold": true,
-      "b4_note": "SHIP@5pct pnl~62.67 survives_5pct_slip",
+      "b4_note": "SHIP@5pct pnl~60.11 survives_5pct_slip",
       "why": "Best risk profile among rotated B3/B4",
       "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
-      "stress_source": "quality_cycle_20260804T173537",
-      "stressed_at": "2026-08-04T17:35:58+00:00"
+      "stress_source": "coach",
+      "stressed_at": "2026-08-07T04:03:37+00:00"
     },
     {
-      "hyp_id": "hyp_dna_aal_put_credit_spread_3486155f",
+      "hyp_id": "hyp_dna_aal_put_credit_spread_94fd849b",
       "structure": "put_credit_spread",
       "symbol": "AAL",
       "status": "testing",
@@ -39,15 +39,15 @@
       "stress_priority": true,
       "b3_hold": true,
       "dense_neg_ge3": 1,
-      "full_pnl": 202.7,
+      "full_pnl": 188.1,
       "max_dd": 31.46,
-      "max_loss_usd_approx": 39.84,
+      "max_loss_usd_approx": 39.87,
       "b4_cost_hold": true,
-      "b4_note": "SHIP@5pct pnl~58.52 survives_5pct_slip",
+      "b4_note": "SHIP@5pct pnl~57.42 survives_5pct_slip",
       "why": "Rotated stress survivor; secondary to tighter-DD leader",
       "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
-      "stress_source": "quality_cycle_20260805T020205",
-      "stressed_at": "2026-08-05T02:02:33+00:00"
+      "stress_source": "quality_cycle_20260729T203720",
+      "stressed_at": "2026-07-29T20:37:58+00:00"
     },
     {
       "hyp_id": "hyp_dna_bac_put_credit_spread_631f9804",
@@ -69,7 +69,7 @@
       "stressed_at": "2026-07-25T15:21:20+00:00"
     },
     {
-      "hyp_id": "hyp_dna_bac_put_credit_spread_c7d09885",
+      "hyp_id": "hyp_dna_bac_put_credit_spread_8fb71749",
       "structure": "put_credit_spread",
       "symbol": "BAC",
       "status": "candidate",
@@ -77,15 +77,15 @@
       "stress_priority": false,
       "b3_hold": true,
       "dense_neg_ge3": 0,
-      "full_pnl": 557.67,
+      "full_pnl": 562.0,
       "max_dd": 41.92,
-      "max_loss_usd_approx": 80.39,
+      "max_loss_usd_approx": 80.38,
       "b4_cost_hold": true,
-      "b4_note": "SHIP@5pct pnl~195.14 survives_5pct_slip",
+      "b4_note": "SHIP@5pct pnl~190.58 survives_5pct_slip",
       "why": "Rotated stress survivor; secondary to tighter-DD leader",
       "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
-      "stress_source": "quality_cycle_20260724T215712",
-      "stressed_at": "2026-07-24T22:03:12+00:00"
+      "stress_source": "quality_cycle_20260729T034816",
+      "stressed_at": "2026-07-29T03:48:54+00:00"
     },
     {
       "hyp_id": "hyp_dna_ccl_put_credit_spread_1620535a",
@@ -126,42 +126,16 @@
       "stressed_at": "2026-07-23T16:04:04+00:00"
     },
     {
-      "hyp_id": "hyp_dna_aal_short_put_credit_dna_7144",
-      "structure": "short_put_credit",
+      "hyp_id": "hyp_dna_aal_wheel_assignment_dna_4afc",
+      "structure": "wheel_assignment",
       "symbol": "AAL",
       "lane": "mcp_native_live_candidate_path",
       "stress_priority": false,
-      "ship_score": 13.050790627306476,
-      "n_trades": 85,
-      "csp_bp_proxy": 1494.82,
+      "ship_score": 203.51523135057312,
+      "n_trades": 29,
+      "csp_bp_proxy": 1522.85,
       "capital_fit": "fit_3k",
-      "why": "single-leg short_put_credit on AAL; fits $3k CSP BP; sim SHIP n=85",
-      "caveat": "Proxy sim + spot BP only. Not pack-grade multi-symbol edge. RH MCP single-leg place still requires Ken arm for live."
-    },
-    {
-      "hyp_id": "hyp_dna_tsll_cash_secured_put_dna_0e7b",
-      "structure": "cash_secured_put",
-      "symbol": "TSLL",
-      "lane": "mcp_native_live_candidate_path",
-      "stress_priority": false,
-      "ship_score": 211.8582445710449,
-      "n_trades": 50,
-      "csp_bp_proxy": 692.55,
-      "capital_fit": "fit_3k",
-      "why": "single-leg cash_secured_put on TSLL; fits $3k CSP BP; sim SHIP n=50",
-      "caveat": "Proxy sim + spot BP only. Not pack-grade multi-symbol edge. RH MCP single-leg place still requires Ken arm for live."
-    },
-    {
-      "hyp_id": "hyp_dna_smci_short_put_credit_dna_a64f",
-      "structure": "short_put_credit",
-      "symbol": "SMCI",
-      "lane": "mcp_native_live_candidate_path",
-      "stress_priority": false,
-      "ship_score": 558.1267222469191,
-      "n_trades": 15,
-      "csp_bp_proxy": 2667.6,
-      "capital_fit": "fit_3k",
-      "why": "single-leg short_put_credit on SMCI; fits $3k CSP BP; sim SHIP n=15",
+      "why": "single-leg wheel_assignment on AAL; fits $3k sleeve + strict loss bar; sim SHIP n=29",
       "caveat": "Proxy sim + spot BP only. Not pack-grade multi-symbol edge. RH MCP single-leg place still requires Ken arm for live."
     }
   ],
