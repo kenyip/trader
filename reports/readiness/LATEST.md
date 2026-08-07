@@ -1,18 +1,18 @@
-# Readiness snapshot — 2026-08-07T0930 RTH open
+# Readiness snapshot — 2026-08-07T1215 RTH midday
 
 PHASE: **SHADOW** (ops residual)  
 EDGE: **PASS** SEARCHING — pack-grade shortlist_dna_multi; research CCL IC; first-live **AAL wheel_assignment** n=29 fit_3k  
-ROBOT: paper **0 open** after dual PT close (AAL PCS +$6.89, BAC PCS +$13.84; was 2/2 risk~$119); sessions 13/3; **shadow PASS**  
+ROBOT: paper **1 open** AAL PCS `paper_537129ebd52d` risk=$40.3 (post-0930 dual PT close + campaign refill); sessions 13/3; **shadow PASS**  
 ARM: blocked — Ken LIVE_PACKET only; test cash~$500; live_armed=false  
 
-RTH 0930: DNA profit_target dual gate closed both open PCS on last marks (open BA thin; mtm≤max credit). STAND_ASIDE new same-tick. Scout fresh 2026-08-07 OPEN_PCS AAL / BAC filters aside / autonomy research_only.  
+RTH 1215: DNA ladder **HOLD** AAL PCS (OTM $0.98 |Δ|0.22 mtm +$1.20 / adv −$2.30 vs PT +$5.39; ml~6%). STAND_ASIDE new — AAL already open; BAC PCS filters blocked; autonomy research_only×5. Scout fresh 2026-08-07.  
 ken_required: false  
-NEXT: manage_open_paper_campaign (empty book; cool-off; campaign may refill later under guards)
+NEXT: manage_open_paper_campaign (1 working; mark/manage)
 
-## C-row RTH 2026-08-07T0930
-- closed paper_1a2c9349e94b AAL PCS PT +$6.89
-- closed paper_7c98866a3057 BAC PCS PT +$13.84
-- open_risk 119.27→0; working 2→0
-- rth-ops rc=0 stamp 20260807T133205 n_intents=6
-- worker ON edge_search=OK registry≈5.4MB
-- updated: 2026-08-07T13:35:00+00:00
+## C-row RTH 2026-08-07T1215
+- HOLD paper_537129ebd52d AAL PCS 15/14.5p exp 2026-08-21 ml=$40.3
+- open_risk $40.3; working 1/2
+- rth-ops rc=0 stamp 20260807T161604 n_intents=8
+- worker ON edge_search=OK registry≈5.5MB
+- prior same-day 0930: closed AAL+BAC on PT (book 2→0) before refill
+- updated: 2026-08-07T16:20:00+00:00

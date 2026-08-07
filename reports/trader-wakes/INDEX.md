@@ -1,3 +1,4 @@
+| 2026-08-07T1215 | rth | HOLD AAL PCS +1.20 (OTM 0.98 |Δ|0.22 vs PT 5.39); STAND_ASIDE new (AAL open / BAC filters); campaign refill after 0930 PT | manage_open_paper_campaign |
 | 2026-08-07T0930 | rth | CLOSE AAL PCS PT +6.89 + BAC PCS PT +13.84 (dual gate); book 2→0 risk 0; STAND_ASIDE new post-close | manage_open_paper_campaign |
 | 2026-08-06T2105 | continuum | VIX corrupt cache repair+harden; EDGE unblocked; first-live AAL wheel n=29; AAL dens1 hold; IWM dens5 secondary/B4 kill | manage_open_paper_campaign |
 | 2026-08-03T1508 | continuum | cold unsat preferred-liquid fix; KO PCS a3d2bfca capital_path dens5 secondary; AAL leaders hold; first-live refreshed | manage_open_paper_campaign |
