@@ -1,3 +1,4 @@
+| 2026-08-07T0930 | rth | CLOSE AAL PCS PT +6.89 + BAC PCS PT +13.84 (dual gate); book 2→0 risk 0; STAND_ASIDE new post-close | manage_open_paper_campaign |
 | 2026-08-06T2105 | continuum | VIX corrupt cache repair+harden; EDGE unblocked; first-live AAL wheel n=29; AAL dens1 hold; IWM dens5 secondary/B4 kill | manage_open_paper_campaign |
 | 2026-08-03T1508 | continuum | cold unsat preferred-liquid fix; KO PCS a3d2bfca capital_path dens5 secondary; AAL leaders hold; first-live refreshed | manage_open_paper_campaign |
 | 2026-08-03T1530 | rth | CLOSE BAC PCS PT dual (+11.40/adv+10.40≥10.20) + HOLD AAL PCS +3.89; STAND_ASIDE new post-close; open 1 risk $39 | manage_open_paper_campaign |
