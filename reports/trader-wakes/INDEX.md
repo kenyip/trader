@@ -1,3 +1,4 @@
+| 2026-08-07T1330 | rth | HOLD AAL PCS +3.20 (OTM 1.01 |Δ|0.202 vs PT 5.39); STAND_ASIDE new (AAL open / BAC filters); mtm↑ vs 1250 | manage_open_paper_campaign |
 | 2026-08-07T1250 | rth | HOLD AAL PCS +2.70 (OTM 0.985 |Δ|0.209 vs PT 5.39); STAND_ASIDE new (AAL open / BAC filters); mtm↑ vs 1215 | manage_open_paper_campaign |
 - 2026-08-07T0945 continuum-judgment — campaign 300s+stress b3: false-positive fixed; CCL IC dfe031b3 capital_path_ok; F IC B4 reject
 | 2026-08-07T1215 | rth | HOLD AAL PCS +1.20 (OTM 0.98 |Δ|0.22 vs PT 5.39); STAND_ASIDE new (AAL open / BAC filters); campaign refill after 0930 PT | manage_open_paper_campaign |
