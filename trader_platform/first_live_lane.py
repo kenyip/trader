@@ -238,9 +238,15 @@ def load_single_leg_sim_rows(
     return list(best.values())
 
 
-def _max_loss_proxy(row: Mapping[str, Any], capital: Mapping[str, Any] | None) -> float:
+def _explicit_path_max_loss(row: Mapping[str, Any]) -> float | None:
+    """Path/stop max-loss only — never collateral or drawdown stand-ins.
+
+    CSP/wheel structural risk is cash collateral (gated via spot BP + fit_3k).
+    Using short BP or window DD as a $300 \"max loss\" emptied the MCP first-live
+    board for every SNAP/TSLL/F CSP (2026-08-07 coach: n_eligible=0 forever).
+    """
     metrics = row.get("metrics") or {}
-    for k in ("max_loss_usd", "max_loss", "max_dd", "window_max_dd"):
+    for k in ("max_loss_usd", "max_loss"):
         if metrics.get(k) is not None:
             v = _finite(metrics.get(k), default=-1.0)
             if v >= 0:
@@ -248,7 +254,21 @@ def _max_loss_proxy(row: Mapping[str, Any], capital: Mapping[str, Any] | None) -
     cfg = row.get("config") or {}
     if cfg.get("max_loss_budget_usd") is not None:
         return _finite(cfg.get("max_loss_budget_usd"), 300.0)
-    # CSP worst case is collateral; use short BP as upper bound for sizing honesty
+    return None
+
+
+def _max_loss_proxy(row: Mapping[str, Any], capital: Mapping[str, Any] | None) -> float:
+    """Display/honesty max-loss proxy (may include collateral for short premium)."""
+    explicit = _explicit_path_max_loss(row)
+    if explicit is not None:
+        return float(explicit)
+    metrics = row.get("metrics") or {}
+    for k in ("max_dd", "window_max_dd"):
+        if metrics.get(k) is not None:
+            v = _finite(metrics.get(k), default=-1.0)
+            if v >= 0:
+                return v
+    # CSP worst case is collateral; keep for reporting only
     if capital and capital.get("short_premium_bp_proxy"):
         return float(capital["short_premium_bp_proxy"])
     return 0.0
@@ -263,6 +283,7 @@ def rank_first_live_seats(
     min_trades: int = 15,
     top_n: int = 12,
     require_fit_3k_short: bool = True,
+    test_cash_usd: float = 500.0,
 ) -> dict[str, Any]:
     """Rank single-leg sim seats that are capital-fit for first live on RH MCP."""
     sims = list(sim_rows) if sim_rows is not None else load_single_leg_sim_rows(min_trades=8)
@@ -281,6 +302,7 @@ def rank_first_live_seats(
         verdict = str(row.get("verdict") or "")
         score = _finite(row.get("score"), -1e9)
         ml = _max_loss_proxy(row, cap)
+        path_ml = _explicit_path_max_loss(row)
         short_bp = float(cap.get("short_premium_bp_proxy") or 0.0)
         fit_short = str(cap.get("capital_fit") or "unknown")
         fit_long = str(cap.get("capital_fit_long") or "unknown")
@@ -298,19 +320,20 @@ def rank_first_live_seats(
                 reasons.append(f"csp_bp={short_bp:.0f}>sleeve={sleeve_usd:.0f}")
             elif require_fit_3k_short and fit_short != "fit_3k":
                 reasons.append(f"capital_fit={fit_short}")
-            # Sleeve fit is necessary but not sufficient. First-live is a strict
-            # one-lot contract-fit screen: worst-case loss must also stay within
-            # 10% of the initial $3k sleeve ($300 by default).
-            if ml <= 0:
-                reasons.append("max_loss_unknown")
-            elif ml > max_loss_budget_usd:
-                reasons.append(f"max_loss={ml:.0f}>{max_loss_budget_usd:.0f}")
+            # CSP/wheel: sleeve collateral + fit_3k is the capital gate. Apply the
+            # $300 path-loss bar only when DNA/metrics declare an explicit stop
+            # max_loss — never treat full cash-secured BP as that bar.
+            if path_ml is not None and path_ml > max_loss_budget_usd:
+                reasons.append(f"max_loss={path_ml:.0f}>{max_loss_budget_usd:.0f}")
         else:
-            # long debit path: max loss should be bounded
-            if ml <= 0:
-                reasons.append("max_loss_unknown")
-            elif ml > max_loss_budget_usd:
-                reasons.append(f"max_loss={ml:.0f}>{max_loss_budget_usd:.0f}")
+            # long debit path: max loss should be bounded (debit / explicit stop)
+            if path_ml is None or path_ml <= 0:
+                if ml <= 0:
+                    reasons.append("max_loss_unknown")
+                elif ml > max_loss_budget_usd:
+                    reasons.append(f"max_loss={ml:.0f}>{max_loss_budget_usd:.0f}")
+            elif path_ml > max_loss_budget_usd:
+                reasons.append(f"max_loss={path_ml:.0f}>{max_loss_budget_usd:.0f}")
             if fit_long not in ("fit_3k", "fit_5k") and short_bp > sleeve_usd:
                 reasons.append(f"long_fit={fit_long}")
 
@@ -323,6 +346,9 @@ def rank_first_live_seats(
             for r in reasons
         )
         sim_ok = not any(r.startswith("thin_n") or r.startswith("verdict=") for r in reasons)
+        fits_test_cash = bool(
+            short_bp > 0 and short_bp <= float(test_cash_usd) * 1.05 + 1.0
+        )
 
         seat = {
             "hyp_id": row.get("hyp_id") or f"dna:{row.get('dna_id')}",
@@ -335,9 +361,11 @@ def rank_first_live_seats(
             "score": score if math.isfinite(score) else None,
             "n_trades": n_trades,
             "max_loss_usd_proxy": round(ml, 2) if ml else None,
+            "path_max_loss_usd": round(path_ml, 2) if path_ml is not None else None,
             "csp_bp_proxy": round(short_bp, 2) if short_bp else None,
             "capital_fit": fit_short,
             "capital_fit_long": fit_long,
+            "fits_test_cash_500": fits_test_cash if is_short else None,
             "spot": cap.get("spot"),
             "lane": "first_live_single_leg",
             "status_hint": "testing",
@@ -347,12 +375,13 @@ def rank_first_live_seats(
             "eligible": capital_ok and sim_ok and placeable,
             "why": (
                 f"single-leg {structure} on {symbol}; "
-                f"{'fits $3k sleeve + strict loss bar' if capital_ok and is_short else 'capital check'}; "
+                f"{'fits $3k sleeve collateral (CSP/wheel)' if capital_ok and is_short else 'capital check'}; "
                 f"sim {verdict} n={n_trades}"
             ),
             "caveat": (
                 "Proxy sim + spot BP only. Not pack-grade multi-symbol edge. "
-                "RH MCP single-leg place still requires Ken arm for live."
+                "RH MCP single-leg place still requires Ken arm for live. "
+                "CSP collateral is gated by sleeve fit_3k, not the $300 defined-risk bar."
             ),
         }
 
@@ -420,11 +449,13 @@ def rank_first_live_seats(
         "shortlist": top,
         "near_miss_oversized": near,
         "honesty": (
-            "First-live lane ranks RH-placeable single-leg DNA that fits the sleeve "
-            "and the strict one-lot max-loss bar (10% of the initial $3k sleeve by "
-            "default). Multi-leg PCS research leaders are intentionally excluded. "
-            "Proxy sim + spot BP — not live edge or target trade risk."
+            "First-live lane ranks RH-placeable single-leg DNA. CSP/wheel seats need "
+            "fit_3k short-premium collateral within the $3k sleeve; long-debit seats "
+            "still use the ~10% sleeve path max-loss bar ($300 default). Multi-leg PCS "
+            "research leaders are intentionally excluded. Proxy sim + spot BP — not "
+            "live edge or target trade risk."
         ),
+        "test_cash_usd": test_cash_usd,
     }
 
 

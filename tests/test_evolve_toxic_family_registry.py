@@ -414,6 +414,43 @@ def test_effective_discovery_universe_unions_preferred_cold():
     assert syms[0] == "KO"
 
 
+def test_unsaturated_families_keep_open_sibling_when_other_structure_toxic():
+    """INTC PCS toxic thrash must not hide open INTC IC from family inject (2026-08-08)."""
+    from trader_platform.stress_family_policy import unsaturated_discovery_families
+
+    now = _now()
+    by = {}
+    # INTC PCS: recent fail thrash (toxic via hot streak / fail mass)
+    for i in range(8):
+        by[f"intc_pcs{i}"] = {
+            "symbol": "INTC",
+            "structure": "put_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now,
+        }
+    # INTC IC: only 3 fails — still open, not family-thrashed
+    for i in range(3):
+        by[f"intc_ic{i}"] = {
+            "symbol": "INTC",
+            "structure": "iron_condor",
+            "capital_path_ok": False,
+            "stressed_at": now,
+        }
+    # MU cold open — mega demote should not beat preferred INTC IC
+    rot = {"by_hyp_id": by}
+    fams = unsaturated_discovery_families(
+        limit=6,
+        rotation=rot,
+        universe=["MU", "TSLA", "INTC", "AMD"],
+        structures=("put_credit_spread", "call_credit_spread", "iron_condor"),
+        recent_fail_thrash_min=6,
+    )
+    assert fams
+    pairs = {(f["symbol"], f["structure"]) for f in fams}
+    assert ("INTC", "iron_condor") in pairs
+    assert ("INTC", "put_credit_spread") not in pairs  # toxic / thrash
+
+
 def test_run_evolve_tick_force_symbols_skips_research(monkeypatch):
     import trader_platform.evolve_tick as ev
 

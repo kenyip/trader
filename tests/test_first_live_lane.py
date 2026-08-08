@@ -16,7 +16,12 @@ class FirstLiveLaneTest(unittest.TestCase):
         self.assertEqual(classify_place_shape("put_credit_spread"), "multi_leg")
         self.assertEqual(classify_place_shape("short_put_credit"), "single_leg")
 
-    def test_rank_requires_strict_loss_fit_not_only_sleeve_fit(self):
+    def test_csp_sleeve_fit_not_collateral_as_300_bar(self):
+        """CSP collateral is the capital gate; $300 bar is for explicit path stops / longs.
+
+        2026-08-08 coach: treating short BP as max_loss emptied the board (SNAP CSP
+        ml≈500>300 forever) while doctrine prefers SNAP/TSLL CSP first-arm DNA.
+        """
         sims = [
             {
                 "dna_id": "dna_nflx",
@@ -39,6 +44,17 @@ class FirstLiveLaneTest(unittest.TestCase):
                 "metrics": {},
                 "config": {},
                 "hyp_id": "hyp_tsll",
+            },
+            {
+                "dna_id": "dna_snap",
+                "structure": "cash_secured_put",
+                "symbol": "SNAP",
+                "verdict": "SHIP",
+                "score": 80.0,
+                "n_trades": 100,
+                "metrics": {},
+                "config": {},
+                "hyp_id": "hyp_snap",
             },
             {
                 "dna_id": "dna_f_long",
@@ -65,6 +81,12 @@ class FirstLiveLaneTest(unittest.TestCase):
                 "capital_fit": "fit_3k",
                 "capital_fit_long": "fit_3k",
             },
+            "SNAP": {
+                "spot": 5.0,
+                "short_premium_bp_proxy": 500.0,
+                "capital_fit": "fit_3k",
+                "capital_fit_long": "fit_3k",
+            },
             "F": {
                 "spot": 12.0,
                 "short_premium_bp_proxy": 1140.0,
@@ -78,14 +100,53 @@ class FirstLiveLaneTest(unittest.TestCase):
             min_trades=15,
             top_n=5,
         )
-        self.assertEqual(report["n_eligible"], 1)
-        self.assertEqual(report["leader"]["symbol"], "F")
-        self.assertTrue(report["leader"]["eligible"])
+        # SNAP + TSLL CSP fit_3k collateral + F long debit under $300 bar
+        self.assertGreaterEqual(report["n_eligible"], 3)
+        elig_syms = {s["symbol"] for s in report["shortlist"] if s.get("eligible")}
+        self.assertIn("SNAP", elig_syms)
+        self.assertIn("TSLL", elig_syms)
+        self.assertIn("F", elig_syms)
         self.assertFalse(report["live_authority"])
+        snap = next(s for s in report["shortlist"] if s["symbol"] == "SNAP")
+        self.assertTrue(snap.get("fits_test_cash_500"))
+        tsll = next(s for s in report["shortlist"] if s["symbol"] == "TSLL")
+        self.assertFalse(tsll.get("fits_test_cash_500"))
         near = report["near_miss_oversized"]
         self.assertTrue(any(r["symbol"] == "NFLX" for r in near))
-        tsll = next(r for r in near if r["symbol"] == "TSLL")
-        self.assertIn("max_loss=760>300", tsll["reject_reasons"])
+        nflx = next(r for r in near if r["symbol"] == "NFLX")
+        self.assertTrue(
+            any(x.startswith("csp_bp=") or x.startswith("capital_fit=") for x in nflx["reject_reasons"])
+        )
+
+    def test_csp_explicit_path_stop_still_honors_300_bar(self):
+        sims = [
+            {
+                "dna_id": "dna_tsll_stop",
+                "structure": "cash_secured_put",
+                "symbol": "TSLL",
+                "verdict": "SHIP",
+                "score": 50.0,
+                "n_trades": 40,
+                "metrics": {"max_loss_usd": 450.0},
+                "config": {},
+                "hyp_id": "hyp_tsll_stop",
+            }
+        ]
+        capital = {
+            "TSLL": {
+                "spot": 8.0,
+                "short_premium_bp_proxy": 760.0,
+                "capital_fit": "fit_3k",
+                "capital_fit_long": "fit_3k",
+            }
+        }
+        report = rank_first_live_seats(
+            sim_rows=sims,
+            capital_by_symbol=capital,
+            min_trades=15,
+        )
+        self.assertEqual(report["n_eligible"], 0)
+        self.assertIn("max_loss=450>300", report["near_miss_oversized"][0]["reject_reasons"])
 
     def test_rejects_thin_sim(self):
         sims = [

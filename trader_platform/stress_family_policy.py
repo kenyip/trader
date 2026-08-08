@@ -309,7 +309,8 @@ _PREFERRED_COLD_DISCOVERY: tuple[str, ...] = (
     "PLTR",
     "NFLX",
     "INTC",
-    "MU",
+    # MU removed from preferred 2026-08-08 coach: cold MU CCS/IC zero_trades thrash
+    # led unsat inject every cycle once F/KO/SNAP families were toxic/saturated.
 )
 _PREFERRED_COLD_RANK: dict[str, int] = {
     s: i for i, s in enumerate(_PREFERRED_COLD_DISCOVERY)
@@ -335,6 +336,8 @@ _MEGA_CAP_COLD_DEMOTE: frozenset[str] = frozenset(
         "TSM",
         "QCOM",
         "CRM",
+        "TSLA",  # 2026-08-08: zero-trade cold twin with MU on DR inject
+        "MU",  # expensive; zero synthetic multi-leg trades in residual evolve
     }
 )
 
@@ -461,7 +464,8 @@ def unsaturated_discovery_symbols(
             ok_mass += int(oks)
         if open_structs <= 0:
             continue
-        # Cold pure-fail thrash: skip inject (selector would B3/B4 burn again).
+        # Cold pure-fail thrash: skip whole-symbol inject (selector would B3/B4 burn).
+        # Family-level inject uses a sibling-safe thrash rule separately.
         if (
             ok_mass <= 0
             and recent_ok_mass <= 0
@@ -548,14 +552,21 @@ def unsaturated_discovery_families(
                 continue
             _f, oks = family_lifetime_fail_ok(sym, st, rotation=rot)
             ok_i = int(oks)
-            # Skip cold pure-fail thrash at symbol level when this family also has 0 oks.
+            fam_rf, fam_ro = family_window_fail_ok(
+                sym, st, rotation=rot, window_hours=float(recent_window_hours)
+            )
+            # Family-scoped thrash only. Symbol-level fail mass used to zero out the
+            # last open preferred family (INTC IC) while sibling PCS was toxic
+            # (2026-08-08 coach: unsat → MU/TSLA zero_trades; stress queue empty).
             if (
                 ok_i <= 0
-                and recent_ok_mass <= 0
+                and int(fam_ro) <= 0
                 and recent_fail_thrash_min > 0
-                and recent_fail_mass >= int(recent_fail_thrash_min)
+                and int(fam_rf) >= int(recent_fail_thrash_min)
             ):
                 continue
+            # Still demote families on symbols with pure symbol thrash via score —
+            # do not hard-skip an open sibling structure.
             tier = 0 if 0 < ok_i < int(min_capital_path_ok_sat) else 1
             pref_b, pref_i, mega = _cold_symbol_rank(sym)
             # Prefer proven-open families, then recent ok mass, fewer fails, more lifetime ok.
@@ -564,7 +575,7 @@ def unsaturated_discovery_families(
                 (
                     tier,
                     -int(recent_ok_mass),
-                    int(recent_fail_mass),
+                    int(fam_rf),  # family fails, not whole-symbol burn
                     pref_b if tier >= 1 else 0,
                     pref_i if tier >= 1 else 0,
                     mega if tier >= 1 else 0,

@@ -1,3 +1,4 @@
+| 2026-08-07T2100 | continuum | first-live CSP bar fix (SNAP leader); family thrash sibling-safe; MU/TSLA demote; INTC IC+IWM CCS B4 reject | manage_open_paper_campaign |
 | 2026-08-07T1500 | continuum | KO/INTC universe+unsat preferred-union; KO PCS a6cc58ff capital_path dens9 secondary; INTC B4 reject; first-live n_elig=0 | manage_open_paper_campaign |
 | 2026-08-07T1530 | rth | HOLD AAL PCS +4.20 (OTM 1.05 |Δ|0.186 vs PT 5.39; adv -0.30 dual clear); STAND_ASIDE new (AAL open / BAC filters); mtm 1430+1.20→1530+4.20 | manage_open_paper_campaign |
 | 2026-08-07T1430 | rth | HOLD AAL PCS +1.20 (OTM 0.97 |Δ|0.211 vs PT 5.39); STAND_ASIDE new (AAL open / BAC filters); mtm grind 1330+3.20→1430+1.20 | manage_open_paper_campaign |

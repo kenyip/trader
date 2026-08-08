@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-08-07T22:12:00+00:00",
-  "stamp": "20260807T1500",
-  "source": "continuum_judgment_2026-08-07T1500",
+  "generated_at": "2026-08-08T04:10:00+00:00",
+  "stamp": "20260807T2100",
+  "source": "continuum_judgment_2026-08-07T2100",
   "ken_required": false,
   "ken_only_for": [
     "gateway_up",
@@ -13,8 +13,8 @@
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
   "detail": {
-    "hint": "Post-close Fri: HOLD open AAL PCS overnight unless DNA ladder; next RTH re-mark dual PT. EDGE: KO/INTC now in universe + unsat default union preferred cold — worker continues create→B3/B4. First-live n_eligible=0 (ghost AAL wheel gone; CSP ml bar tight) — residual CSP/wheel fit_3k evolve.",
-    "session_et": "2026-08-07 post-close coach",
+    "hint": "Overnight HOLD open AAL PCS; next RTH dual-PT re-mark. First-live board restored (SNAP CSP leader fit_3k bp≈506). Multi-leg: INTC IC + IWM CCS B4 fragile reject. Worker continues with family-scoped unsat + CSP sleeve gate. ken_required=false.",
+    "session_et": "2026-08-07 evening coach",
     "book_full": false,
     "working": 1,
     "open_risk_usd": 40.3,
@@ -35,19 +35,19 @@
       }
     ],
     "coach": {
-      "fix": "universe_preferred_cold_ko_intc",
-      "capital_path_ok": ["hyp_dna_ko_put_credit_spread_a6cc58ff"],
-      "rejected": [
-        "hyp_dna_intc_put_credit_spread_8ff4ba29",
-        "hyp_dna_intc_put_credit_spread_5b6bef72",
-        "hyp_dna_ko_put_credit_spread_57742b09"
+      "fix": "first_live_csp_bar_plus_family_thrash",
+      "first_live_leader": "hyp_dna_snap_cash_secured_put_dna_be83",
+      "first_live_n_eligible": 1143,
+      "rejected_b4": [
+        "hyp_dna_intc_iron_condor_665d6c9a",
+        "hyp_dna_iwm_call_credit_spread_b697ee8b"
       ],
-      "first_live_n_eligible": 0
+      "tests_passed": 25
     },
     "worker": {
       "on": true,
       "edge_search": "OK",
-      "note": "unsat now leads KO/INTC; do not thrash densify"
+      "note": "do not thrash densify; multi-leg preferred families mostly toxic/sat — CSP first-live is the ARM path now"
     }
   }
 }
