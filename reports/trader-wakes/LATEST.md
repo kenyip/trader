@@ -69,7 +69,9 @@ NO-ADVANCE STREAK: multi-leg capital_path no new ok (ops separate)
 
 ## INTEGRATION
 
-(see commit)  
+- commit `c90568d` on `main` pushed to `origin/main`
+- clean of intended paths; left unstaged: worker `hypotheses.yaml` thrash + residual multi/paper_loop caches
+- verification: pytest 25 passed (first_live + toxic family)  
 
 ## LESSON
 
