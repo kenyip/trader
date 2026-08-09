@@ -540,6 +540,13 @@ trader-multi-symbol-reprove *ARGS:
 trader-ingest-discovery-f2 *ARGS:
     {{py}} scripts/trader_ingest_discovery_f2.py {{ARGS}}
 
+# Clean window: pause quality worker for engine/framework commits (docs/CLEAN_WINDOW_CONTRACT.md)
+#   just trader-clean-window status
+#   just trader-clean-window open -- --minutes 90 --reason engine_experiment
+#   just trader-clean-window close
+trader-clean-window *ARGS:
+    {{py}} scripts/trader_clean_window.py {{ARGS}}
+
 # Shortlist capital_path_ok multi-leg DNA × peer symbols (pack-grade honesty)
 #   just trader-shortlist-dna-multi
 #   just trader-shortlist-dna-multi -- --top-n 3 --max-peers 6

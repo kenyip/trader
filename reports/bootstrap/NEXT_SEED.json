@@ -1,53 +1,43 @@
 {
-  "generated_at": "2026-08-08T04:10:00+00:00",
-  "stamp": "20260807T2100",
-  "source": "continuum_judgment_2026-08-07T2100",
+  "generated_at": "2026-08-09T02:08:18+00:00",
+  "source": "handoff_gap_fix_2026-08-09",
   "ken_required": false,
-  "ken_only_for": [
-    "gateway_up",
-    "LIVE_PACKET_arm",
-    "fund_3k_at_packet"
-  ],
   "live_authority": false,
-  "trading_authority": false,
-  "next_action": "manage_open_paper_campaign",
-  "paper_campaign_execute": true,
-  "detail": {
-    "hint": "Overnight HOLD open AAL PCS; next RTH dual-PT re-mark. First-live board restored (SNAP CSP leader fit_3k bp≈506). Multi-leg: INTC IC + IWM CCS B4 fragile reject. Worker continues with family-scoped unsat + CSP sleeve gate. ken_required=false.",
-    "session_et": "2026-08-07 evening coach",
-    "book_full": false,
-    "working": 1,
-    "open_risk_usd": 40.3,
-    "max_concurrent": 2,
-    "max_open_risk": 500.0,
-    "new_entries": "STAND_ASIDE_off_hours",
-    "closed_this_session": [],
-    "open_orders": [
-      {
-        "order_id": "paper_537129ebd52d",
-        "strategy_id": "hyp_dna_aal_put_credit_spread_3486155f",
-        "symbol": "AAL",
-        "structure": "put_credit_spread",
-        "status": "working",
-        "max_loss_usd": 40.3,
-        "decision": "HOLD_overnight",
-        "note": "last RTH 1530 mid +4.20/adv -0.30 vs PT 5.39; dual PT not hit"
-      }
-    ],
-    "coach": {
-      "fix": "first_live_csp_bar_plus_family_thrash",
-      "first_live_leader": "hyp_dna_snap_cash_secured_put_dna_be83",
-      "first_live_n_eligible": 1143,
-      "rejected_b4": [
-        "hyp_dna_intc_iron_condor_665d6c9a",
-        "hyp_dna_iwm_call_credit_spread_b697ee8b"
-      ],
-      "tests_passed": 25
+  "done": [
+    {
+      "id": "p0_discovery_f2_handoff",
+      "commit": "262b0ff",
+      "n_quality_pass": 5
     },
-    "worker": {
-      "on": true,
-      "edge_search": "OK",
-      "note": "do not thrash densify; multi-leg preferred families mostly toxic/sat — CSP first-live is the ARM path now"
+    {
+      "id": "p1_clean_window_contract",
+      "files": [
+        "docs/CLEAN_WINDOW_CONTRACT.md",
+        "scripts/trader_clean_window.py"
+      ]
     }
+  ],
+  "next": [
+    {
+      "id": "p2_frozen_time5_hv20",
+      "status": "ready_when_clean_window",
+      "action": "open clean window then one-lever engine experiment"
+    },
+    {
+      "id": "first_live_seat_from_pack_grade",
+      "status": "queued",
+      "action": "map quality_pass DNA to first-live one-lot \u2264$300 seats"
+    },
+    {
+      "id": "event_driven_judgment",
+      "status": "seeded",
+      "action": "wake on quality_pass/seat/family flips only"
+    }
+  ],
+  "machine_seed": "p2_frozen_time5_hv20",
+  "pack_grade_now": {
+    "n_quality_pass": 5,
+    "report": "reports/bootstrap/MULTI_SYMBOL_REPROVE.json",
+    "generated_at": "2026-08-09T02:06:59+00:00"
   }
 }
