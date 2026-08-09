@@ -443,10 +443,33 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
 
     # --- phase 3: parallel prove (+ optional paper_loop) ---
     hyps = _shortlist_hyps()
+    # Refresh discovery F2 handoff surface before multi-symbol so new-axis
+    # prove_evals enter the pack-grade pool (not only old densify cells).
+    ingest_py = _REPO / "scripts" / "trader_ingest_discovery_f2.py"
+    if ingest_py.is_file():
+        # Prefer main-repo discovery cache when worktree/.cache is empty.
+        disc_roots = [
+            _REPO / ".cache" / "platform" / "spine" / "discovery",
+            Path("/Users/jarvis/dev/trader/.cache/platform/spine/discovery"),
+        ]
+        disc_root = next((p for p in disc_roots if p.is_dir()), disc_roots[0])
+        results["phases"]["discovery_f2_ingest"] = _run(
+            [
+                py,
+                str(ingest_py),
+                "--discovery-root",
+                str(disc_root),
+                "--out",
+                str(_REPO / "reports" / "bootstrap" / "DISCOVERY_F2_CANDIDATES.json"),
+                "--json",
+            ],
+            out / f"discovery_f2_ingest_{stamp}.log",
+            int(os.environ.get("TRADER_QC_INGEST_TIMEOUT", "180")),
+        )
     # Always expand multi-symbol book with QUALITY_SHORTLIST leaders (AAL/BAC/…)
     # so pack-grade honesty tracks research DNA, not densify seed book only.
     parallel_jobs: dict[str, list[str]] = {
-        # Densify seed multi (AMZN/IWM) expands book with shortlist symbols.
+        # Densify seed multi (AMZN/IWM) + discovery F2 handoff candidates.
         "multi_symbol": [
             py,
             str(_REPO / "scripts" / "trader_multi_symbol_reprove.py"),

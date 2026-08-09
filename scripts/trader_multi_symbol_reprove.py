@@ -73,14 +73,18 @@ def main(argv: list[str] | None = None) -> int:
                 "n_dna": report.get("n_dna"),
                 "n_quality_pass": report.get("n_quality_pass"),
                 "n_multi_f2": report.get("n_multi_f2"),
+                "n_discovery_f2": report.get("n_discovery_f2"),
+                "discovery_f2_candidate_ids": report.get("discovery_f2_candidate_ids"),
                 "book_symbols": report.get("book_symbols"),
                 "quality_shortlist_symbols": report.get("quality_shortlist_symbols"),
                 "from_quality_shortlist": report.get("from_quality_shortlist"),
+                "include_discovery_f2": report.get("include_discovery_f2"),
                 "include_seed_specs": report.get("include_seed_specs"),
                 "report_path": report.get("report_path"),
                 "results": [
                     {
                         "candidate_id": r.get("candidate_id"),
+                        "source": r.get("source"),
                         "f2_symbols": r.get("f2_symbols"),
                         "thick_f2_symbols": r.get("thick_f2_symbols"),
                         "multi_symbol_f2": r.get("multi_symbol_f2"),
