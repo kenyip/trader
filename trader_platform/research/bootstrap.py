@@ -430,6 +430,7 @@ def multi_symbol_reprove(
 
 DEFAULT_QUALITY_SHORTLIST = _REPO / "reports" / "bootstrap" / "QUALITY_SHORTLIST.json"
 DEFAULT_SEED_SPECS = _REPO / "configs" / "strategy_specs"
+DEFAULT_DISCOVERY_F2 = _REPO / "reports" / "bootstrap" / "DISCOVERY_F2_CANDIDATES.json"
 
 
 def symbols_from_quality_shortlist(
@@ -458,8 +459,11 @@ def load_dna_items_for_multi_symbol(
     shortlist: Sequence[Mapping[str, Any]] | None = None,
     include_seed_specs: bool = False,
     seed_specs_dir: str | Path | None = None,
+    include_discovery_f2: bool = True,
+    discovery_f2_path: str | Path | None = None,
+    discovery_f2_max_n: int | None = 24,
 ) -> list[dict[str, Any]]:
-    """Bootstrap densify DNA (+ optional frozen seed StrategySpecs) for multi-symbol re-prove."""
+    """Bootstrap densify DNA (+ discovery F2 handoff + optional seed specs) for multi-symbol re-prove."""
     items: list[dict[str, Any]] = []
     seen: set[str] = set()
 
@@ -477,6 +481,22 @@ def load_dna_items_for_multi_symbol(
             continue
         seen.add(cid)
         items.append(dict(item))
+
+    if include_discovery_f2:
+        try:
+            from trader_platform.research.discovery_f2_handoff import load_discovery_f2_items
+        except Exception:
+            load_discovery_f2_items = None  # type: ignore[assignment]
+        if load_discovery_f2_items is not None:
+            for item in load_discovery_f2_items(
+                discovery_f2_path or DEFAULT_DISCOVERY_F2,
+                max_n=discovery_f2_max_n,
+            ):
+                cid = str(item.get("candidate_id") or "")
+                if not cid or cid in seen:
+                    continue
+                seen.add(cid)
+                items.append(dict(item))
 
     if include_seed_specs:
         sdir = Path(seed_specs_dir) if seed_specs_dir else DEFAULT_SEED_SPECS
@@ -509,19 +529,26 @@ def run_multi_symbol_pack(
     report_path: str | Path | None = None,
     evaluate_fn: Any = None,
     include_seed_specs: bool = False,
+    include_discovery_f2: bool = True,
+    discovery_f2_path: str | Path | None = None,
     from_quality_shortlist: bool = False,
     quality_shortlist_path: str | Path | None = None,
     quality_top_n: int = 12,
 ) -> dict[str, Any]:
-    """Multi-symbol re-prove densify DNA (+ optional seeds) across a symbol book.
+    """Multi-symbol re-prove densify DNA (+ discovery F2 handoff + optional seeds).
 
     When ``from_quality_shortlist`` is set, leader symbols from QUALITY_SHORTLIST
     (e.g. AAL/BAC densify research leaders) are prepended to the multi-symbol book
     so single-name luck is stress-tested on the names the continuum actually ranks.
+
+    Discovery F2 candidates (DISCOVERY_F2_CANDIDATES.json) are included by default
+    so new-axis prove_evals enter the pack-grade pool (handoff gap fix 2026-08-07).
     """
     items = load_dna_items_for_multi_symbol(
         shortlist=shortlist,
         include_seed_specs=include_seed_specs,
+        include_discovery_f2=include_discovery_f2,
+        discovery_f2_path=discovery_f2_path,
     )
     book = [str(s).upper() for s in (symbols or DEFAULT_MULTI_SYMBOL_BOOK) if str(s).strip()]
     quality_syms: list[str] = []
@@ -532,7 +559,10 @@ def run_multi_symbol_pack(
         book = list(dict.fromkeys(quality_syms + book))
 
     rows: list[dict[str, Any]] = []
+    discovery_ids: list[str] = []
     for item in items:
+        if str(item.get("source") or "") == "discovery_f2":
+            discovery_ids.append(str(item.get("candidate_id") or ""))
         sp = item.get("spec_path")
         if not sp or not Path(str(sp)).exists():
             rows.append(
@@ -540,6 +570,7 @@ def run_multi_symbol_pack(
                     "candidate_id": item.get("candidate_id"),
                     "ok": False,
                     "reason": "missing_spec",
+                    "source": item.get("source"),
                 }
             )
             continue
@@ -550,30 +581,34 @@ def run_multi_symbol_pack(
             if str(s).strip()
         ]
         test_syms = list(dict.fromkeys(orig + book))
-        rows.append(
-            multi_symbol_reprove(
-                spec_path=sp,
-                symbols=test_syms,
-                evaluate_fn=evaluate_fn,
-            )
+        row = multi_symbol_reprove(
+            spec_path=sp,
+            symbols=test_syms,
+            evaluate_fn=evaluate_fn,
         )
+        row["source"] = item.get("source")
+        rows.append(row)
     payload = {
         "generated_at": _now(),
         "mode": "multi_symbol_pack",
         "n_dna": len(rows),
         "n_quality_pass": sum(1 for r in rows if r.get("quality_pass")),
         "n_multi_f2": sum(1 for r in rows if r.get("multi_symbol_f2")),
+        "n_discovery_f2": len([x for x in discovery_ids if x]),
+        "discovery_f2_candidate_ids": [x for x in discovery_ids if x],
         "book_symbols": book,
         "quality_shortlist_symbols": quality_syms,
         "from_quality_shortlist": bool(from_quality_shortlist),
         "include_seed_specs": bool(include_seed_specs),
+        "include_discovery_f2": bool(include_discovery_f2),
         "results": rows,
         "trading_authority": False,
         "live_authority": False,
         "honesty": (
             "Multi-symbol densify DNA stress — single-name F2 alone is not pack-grade. "
             "Quality-shortlist symbols expand the book so research leaders (AAL/BAC/…) "
-            "are included in the re-prove, not only default core names."
+            "are included in the re-prove, not only default core names. "
+            "Discovery F2 handoff candidates are included when DISCOVERY_F2_CANDIDATES.json exists."
         ),
     }
     path = write_bootstrap_report(payload, report_path or DEFAULT_MULTI_SYMBOL_REPORT)

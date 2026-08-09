@@ -534,6 +534,12 @@ trader-paper-loop *ARGS:
 trader-multi-symbol-reprove *ARGS:
     {{py}} scripts/trader_multi_symbol_reprove.py {{ARGS}}
 
+# Ingest discovery F2 prove_evals → DISCOVERY_F2_CANDIDATES.json (pack-grade handoff)
+#   just trader-ingest-discovery-f2
+#   just trader-ingest-discovery-f2 -- --discovery-root /Users/jarvis/dev/trader/.cache/platform/spine/discovery --json
+trader-ingest-discovery-f2 *ARGS:
+    {{py}} scripts/trader_ingest_discovery_f2.py {{ARGS}}
+
 # Shortlist capital_path_ok multi-leg DNA × peer symbols (pack-grade honesty)
 #   just trader-shortlist-dna-multi
 #   just trader-shortlist-dna-multi -- --top-n 3 --max-peers 6
