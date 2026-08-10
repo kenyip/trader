@@ -1,43 +1,164 @@
 {
-  "generated_at": "2026-08-09T02:08:18+00:00",
-  "source": "handoff_gap_fix_2026-08-09",
+  "generated_at": "2026-08-10T13:34:13.013403+00:00",
+  "stamp": "20260810T0930",
+  "source": "rth_eval_2026-08-10T0930",
+  "next_action": "manage_open_paper_campaign",
   "ken_required": false,
   "live_authority": false,
-  "done": [
-    {
-      "id": "p0_discovery_f2_handoff",
-      "commit": "262b0ff",
-      "n_quality_pass": 5
-    },
-    {
-      "id": "p1_clean_window_contract",
-      "files": [
-        "docs/CLEAN_WINDOW_CONTRACT.md",
-        "scripts/trader_clean_window.py"
-      ]
-    }
+  "trading_authority": false,
+  "paper_campaign_execute": true,
+  "ken_only_for": [
+    "gateway_up",
+    "LIVE_PACKET_arm",
+    "fund_3k_at_packet"
   ],
-  "next": [
-    {
-      "id": "p2_frozen_time5_hv20",
-      "status": "ready_when_clean_window",
-      "action": "open clean window then one-lever engine experiment"
+  "detail": {
+    "hint": "RTH Mon open: HOLD all 3 paper legs; dual PT not hit; thin last marks (skip vacuous \u0394); book 3/3 STAND_ASIDE new. Re-mark next RTH; CLOSE only on DNA ladder (dual PT / delta when bid-ask grade / defined_loss / ITM path). Off-hours: prune hyp yaml bloat (EDGE BLOATED_SKIP).",
+    "session": "RTH_OPEN",
+    "session_et": "2026-08-10 09:34 EDT",
+    "book_full": true,
+    "working": 3,
+    "open_risk_usd": 403.9,
+    "max_open_orders": 3,
+    "closed_this_session": [],
+    "new_entries": "STAND_ASIDE",
+    "new_entry_reason": "open_order_count 3 >= max_open_orders 3; one-open-per-symbol AAL already 2 legs; risk headroom thin",
+    "regimes": {
+      "AAL": {
+        "regime": "neutral",
+        "iv_rank": 65.48,
+        "high_iv": true,
+        "spot_scout": 15.63
+      },
+      "BAC": {
+        "regime": "neutral",
+        "iv_rank": 25.4,
+        "high_iv": false,
+        "spot_scout": 63.17
+      }
     },
-    {
-      "id": "first_live_seat_from_pack_grade",
-      "status": "queued",
-      "action": "map quality_pass DNA to first-live one-lot \u2264$300 seats"
+    "rth_ops": {
+      "stamp": "20260810T133146",
+      "n_intents_scout": 8,
+      "n_candidates": 15,
+      "actions": {
+        "OPEN_PCS": 7,
+        "OPEN_CCS": 1,
+        "SKIP": 7
+      },
+      "autonomy": "denied\u00d75 (book full max_open_orders=3)",
+      "rc": {
+        "scout": 0,
+        "autonomy_dry": 0
+      }
     },
-    {
-      "id": "event_driven_judgment",
-      "status": "seeded",
-      "action": "wake on quality_pass/seat/family flips only"
-    }
-  ],
-  "machine_seed": "p2_frozen_time5_hv20",
-  "pack_grade_now": {
-    "n_quality_pass": 5,
-    "report": "reports/bootstrap/MULTI_SYMBOL_REPROVE.json",
-    "generated_at": "2026-08-09T02:06:59+00:00"
+    "edge_note": "worker ON; edge_search=BLOATED_SKIP registry\u22486.0MB \u2014 off-hours prune",
+    "open_orders": [
+      {
+        "order_id": "paper_537129ebd52d",
+        "symbol": "AAL",
+        "structure": "put_credit_spread",
+        "strategy_id": "hyp_dna_aal_put_credit_spread_3486155f",
+        "status": "working",
+        "max_loss_usd": 40.3,
+        "expiration": "2026-08-21",
+        "short_strike": 15.0,
+        "long_strike": 14.5,
+        "entry_credit": 0.09697079476663362,
+        "spot": 15.609999656677246,
+        "chg_pct": -2.070263063947453,
+        "short_otm": 0.6099996566772461,
+        "short_itm": false,
+        "mtm_usd": 3.6970794766633603,
+        "mtm_adverse_usd": 3.6970794766633603,
+        "close_debit": 0.06000000000000001,
+        "short_delta_approx": -4.558585920455549e-05,
+        "ml_used_frac": 0.0,
+        "short_mark_src": "last",
+        "long_mark_src": "last",
+        "quote_flags": [],
+        "profit_target": 0.5555465179774001,
+        "profit_target_usd": 5.387178737810439,
+        "delta_breach": 0.45,
+        "defined_loss_exit_frac": 0.753171882607278,
+        "decision": "HOLD",
+        "reasons": [
+          "short_OTM_or_quiet_path; mtm within budget"
+        ]
+      },
+      {
+        "order_id": "paper_7666d8e35aaf",
+        "symbol": "AAL",
+        "structure": "call_credit_spread",
+        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
+        "status": "working",
+        "max_loss_usd": 184.72,
+        "expiration": "2026-08-21",
+        "short_strike": 17.5,
+        "long_strike": 19.5,
+        "entry_credit": 0.15283578744992043,
+        "spot": 15.609999656677246,
+        "chg_pct": -2.070263063947453,
+        "short_otm": 1.890000343322754,
+        "short_itm": false,
+        "mtm_usd": 4.2835787449920435,
+        "mtm_adverse_usd": 4.2835787449920435,
+        "close_debit": 0.11,
+        "short_delta_approx": 4.8999738710975294e-08,
+        "ml_used_frac": 0.0,
+        "short_mark_src": "last",
+        "long_mark_src": "last",
+        "quote_flags": [],
+        "profit_target": 0.5,
+        "profit_target_usd": 7.641789372496022,
+        "delta_breach": 0.45,
+        "defined_loss_exit_frac": 0.85,
+        "decision": "HOLD",
+        "reasons": [
+          "short_OTM_or_quiet_path; mtm within budget"
+        ]
+      },
+      {
+        "order_id": "paper_f851e2b570da",
+        "symbol": "BAC",
+        "structure": "put_credit_spread",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_4fb68257",
+        "status": "working",
+        "max_loss_usd": 178.88,
+        "expiration": "2026-08-14",
+        "short_strike": 62.0,
+        "long_strike": 60.0,
+        "entry_credit": 0.2112238804089217,
+        "spot": 63.25,
+        "chg_pct": 0.12664529582655515,
+        "short_otm": 1.25,
+        "short_itm": false,
+        "mtm_usd": 4.12238804089217,
+        "mtm_adverse_usd": 4.12238804089217,
+        "close_debit": 0.17,
+        "short_delta_approx": -0.000372158534365008,
+        "ml_used_frac": 0.0,
+        "short_mark_src": "last",
+        "long_mark_src": "last",
+        "quote_flags": [],
+        "profit_target": 0.5,
+        "profit_target_usd": 10.561194020446084,
+        "delta_breach": 0.45,
+        "defined_loss_exit_frac": 0.85,
+        "decision": "HOLD",
+        "reasons": [
+          "short_OTM_or_quiet_path; mtm within budget"
+        ]
+      }
+    ],
+    "equities": {
+      "AAL": 15.600000381469727,
+      "BAC": 63.18000030517578,
+      "SNAP": 5.304999828338623,
+      "SPY": 773.3900146484375,
+      "QQQ": 722.7899780273438,
+      "PLTR": 174.65499877929688
+    },
+    "marks_generated_at": "2026-08-10T13:31:32.242739+00:00"
   }
 }
