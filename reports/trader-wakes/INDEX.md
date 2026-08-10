@@ -1,3 +1,4 @@
+| 2026-08-10T1330 | rth | HOLD AAL PCS −7.30 (OTM 0.30 |Δ|0.37 ml23%) + BAC PCS +7.13 (OTM 1.65 vs PT 12.95); STAND_ASIDE new book 2/2 $120; EDGE OK | manage_open_paper_campaign |
 | 2026-08-10T1230 | rth | HOLD AAL PCS −4.30 (OTM 0.46 |Δ|0.32) + BAC PCS +7.13 (OTM 1.60 vs PT 12.95); STAND_ASIDE new book 2/2 $120; EDGE OK | manage_open_paper_campaign |
 | 2026-08-10T0900 | continuum | EDGE unfreeze prune 6.0→1.8MB + ghost shortlist filter (174); AMD/IWM B4 reject; edge_search=OK; paper 2 open AAL+BAC | manage_open_paper_campaign |
 | 2026-08-10T1130 | rth | HOLD AAL PCS −3.80 (OTM 0.53 |Δ|0.31 ml 15.6%); STAND_ASIDE new (AAL open + BAC cool-off); scout research_only×5; book 1/3 $40 | manage_open_paper_campaign |
