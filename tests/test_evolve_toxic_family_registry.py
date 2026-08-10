@@ -212,6 +212,57 @@ def test_apply_saturated_skip_does_not_consume_max_create_budget(tmp_path: Path)
     assert "bac" not in joined
 
 
+def test_apply_existing_updates_do_not_consume_max_create_budget(tmp_path: Path):
+    """Re-sim updates of known DNA must not starve unsaturated creates (coach 2026-08-10)."""
+    from trader_platform.evolve_tick import hyp_id_for_dna
+
+    hyps = tmp_path / "hypotheses.yaml"
+    hyps.write_text("version: 1\nhypotheses: []\n", encoding="utf-8")
+    reg = HypothesisRegistry(hyps)
+    # Pre-register two high-score DNA rows (already in registry = update path).
+    v_arm = _verdict("ARM", "call_credit_spread", 495.0)
+    v_aal = _verdict("AAL", "iron_condor", 109.0)
+    for v in (v_arm, v_aal):
+        dna = v.dna
+        reg.add(
+            hypothesis_id=hyp_id_for_dna(dna),
+            name=f"seed {dna.structure}",
+            thesis="seed",
+            sleeve="premium",
+            instruments=list(dna.symbols),
+            entry_logic_ref="x",
+            exit_logic_ref="y",
+            status="candidate",
+            evidence_links=["seed"],
+            notes=f"structure={dna.structure}",
+            dna=dna.to_dict(),
+        )
+    # Top SHIPs are updates; unsaturated KO/SOFI must still create under max_create=2.
+    results = [
+        v_arm,
+        v_aal,
+        _verdict("KO", "iron_condor", 33.0),
+        _verdict("SOFI", "call_credit_spread", 28.0),
+        _verdict("XOM", "call_credit_spread", 22.0),
+    ]
+    created, updated = apply_results(
+        results,
+        registry=reg,
+        max_create=2,
+        ship_only=True,
+        rotation={"by_hyp_id": {}},
+        skip_toxic_families=True,
+    )
+    assert hyp_id_for_dna(v_arm.dna) in updated
+    assert hyp_id_for_dna(v_aal.dna) in updated
+    assert len(created) == 2
+    joined = " ".join(created)
+    assert "ko" in joined or "sofi" in joined
+    assert "arm" not in joined
+    # Third new family must not exceed max_create
+    assert "xom" not in joined
+
+
 def test_family_create_saturated_threshold():
     from trader_platform.stress_family_policy import family_create_saturated
 

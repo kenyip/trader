@@ -894,6 +894,11 @@ def apply_results(
     New creates also require score>0 and n_trades>=min_create_trades so thin
     NEEDS_MORE_DATA (n=3–5) cannot bloat the registry while never entering the
     stress queue (2026-07-28 continuum coach: 142 unstressed multi-leg, 0 selectable).
+
+    ``max_create`` counts **new** hyp rows only. Re-sim updates of already-registered
+    DNA are free evidence refreshes and must not exhaust the budget (2026-08-10
+    continuum coach: near-fully-stressed multi-leg registry + DR update-only cycles
+    left the B3/B4 selector empty).
     """
     created: list[str] = []
     updated: list[str] = []
@@ -995,12 +1000,14 @@ def apply_results(
         )
     )
 
-    # Budget is successful write slots; toxic/saturated new-creates skip without
-    # consuming budget so unsaturated DNA still fills max_create.
-    n_written = 0
+    # max_create budgets *new* registry rows only. Evidence updates on existing
+    # hyp_ids are free: when the multi-leg registry is mostly already-stressed,
+    # top SHIP ranks are re-sim updates of known DNA and used to consume the
+    # whole budget, starving unsaturated creates → empty B3/B4 queues forever
+    # (2026-08-10 continuum coach: 512 multi-leg, 2 unstressed, DR only updated).
+    # Toxic/saturated new-creates still skip without consuming create budget.
+    n_created = 0
     for r in ranked:
-        if n_written >= max_create:
-            break
         if r.verdict == "REJECT":
             continue
         dna = r.dna
@@ -1029,8 +1036,10 @@ def apply_results(
                     raw.setdefault("null_results", []).append(note)
             # never auto escalate status here
             updated.append(hid)
-            n_written += 1
+            # free — do not count toward max_create
         else:
+            if n_created >= max_create:
+                continue
             # Toxic / saturated families: do not mint new hyp rows (updates allowed).
             if _is_toxic_family(r):
                 continue
@@ -1055,11 +1064,10 @@ def apply_results(
                 )
                 created.append(h.id)
                 by_id[h.id] = {"id": h.id}
-                n_written += 1
+                n_created += 1
             except ValueError:
-                # race/dup
+                # race/dup — treat as free update, not a create slot
                 updated.append(hid)
-                n_written += 1
 
     # persist updates for existing
     if updated:

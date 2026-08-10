@@ -313,8 +313,13 @@ def _structure_of(h: Any) -> str | None:
 
 def _symbol_of(h: Any) -> str | None:
     dna = getattr(h, "dna", None) or {}
-    if isinstance(dna, dict) and dna.get("symbol"):
-        return str(dna["symbol"]).upper()
+    if isinstance(dna, dict):
+        if dna.get("symbol"):
+            return str(dna["symbol"]).upper()
+        # StrategyDNA serializes primary under symbols: [SYM, ...]
+        syms = dna.get("symbols") or []
+        if isinstance(syms, (list, tuple)) and syms:
+            return str(syms[0]).upper()
     instruments = list(getattr(h, "instruments", None) or [])
     if instruments:
         return str(instruments[0]).upper()
