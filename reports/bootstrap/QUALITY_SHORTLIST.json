@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-08T04:09:23+00:00",
+  "generated_at": "2026-08-10T16:09:54+00:00",
   "phase": "BUILD_PAPER_SEARCH",
   "authority": "research_paper_only",
-  "honesty": "Proxy BS sims + B3/B4 only. Not TOP_HYP. Multi-leg not MCP-live. Stress rotation ledger drives shortlist; quality_cycle mixes leaders+fresh. Capital-path rejects: soft NULL@~0, soft-loss/neg@5%, non-pos full PnL. Rank dens_bucket(0-1 tied) \u2192 slip verdict (SHIP>NEEDS>NULL) \u2192 dd \u2192 raw dens \u2192 slip pnl. Multi-leg shortlist caps \u22642 per symbol; skip identical dens/dd/pnl risk twins.",
+  "honesty": "Proxy BS sims + B3/B4 only. Not TOP_HYP. Multi-leg not MCP-live. Stress rotation ledger drives shortlist; quality_cycle mixes leaders+fresh. Capital-path rejects: soft NULL@~0, soft-loss/neg@5%, non-pos full PnL. Rank dens_bucket(0-1 tied) \u2192 slip verdict (SHIP>NEEDS>NULL) \u2192 dd \u2192 raw dens \u2192 slip pnl. Multi-leg shortlist caps \u22642 per symbol; skip identical dens/dd/pnl risk twins. Multi-leg leaders must exist in living hypotheses.yaml (registry ghosts dropped).",
   "agentic": {
     "account_mask": "\u2022\u2022\u2022\u20228507",
     "cash_usd": 500,
@@ -12,80 +12,42 @@
   },
   "shortlist": [
     {
-      "hyp_id": "hyp_dna_ccl_iron_condor_77c95cf3",
-      "structure": "iron_condor",
-      "symbol": "CCL",
-      "status": "testing",
-      "lane": "paper_research",
-      "stress_priority": true,
-      "b3_hold": true,
-      "dense_neg_ge3": 0,
-      "full_pnl": 658.26,
-      "max_dd": 27.54,
-      "max_loss_usd_approx": 246.52,
-      "b4_cost_hold": true,
-      "b4_note": "SHIP@5pct pnl~151.8 survives_5pct_slip",
-      "why": "Best risk profile among rotated B3/B4",
-      "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
-      "stress_source": "quality_cycle_20260807T054146",
-      "stressed_at": "2026-08-07T05:43:11+00:00"
-    },
-    {
-      "hyp_id": "hyp_dna_ccl_iron_condor_f4383147",
-      "structure": "iron_condor",
-      "symbol": "CCL",
-      "status": "testing",
-      "lane": "paper_research",
-      "stress_priority": true,
-      "b3_hold": true,
-      "dense_neg_ge3": 0,
-      "full_pnl": 622.92,
-      "max_dd": 27.54,
-      "max_loss_usd_approx": 246.55,
-      "b4_cost_hold": true,
-      "b4_note": "SHIP@5pct pnl~149.72 survives_5pct_slip",
-      "why": "Rotated stress survivor; secondary to tighter-DD leader",
-      "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
-      "stress_source": "quality_cycle_20260807T064648",
-      "stressed_at": "2026-08-07T06:48:15+00:00"
-    },
-    {
       "hyp_id": "hyp_dna_aal_put_credit_spread_5fa0eac8",
       "structure": "put_credit_spread",
       "symbol": "AAL",
-      "status": "candidate",
+      "status": "testing",
       "lane": "paper_research",
-      "stress_priority": false,
+      "stress_priority": true,
       "b3_hold": true,
       "dense_neg_ge3": 1,
-      "full_pnl": 196.59,
+      "full_pnl": 195.56,
       "max_dd": 31.46,
       "max_loss_usd_approx": 39.84,
       "b4_cost_hold": true,
-      "b4_note": "SHIP@5pct pnl~60.11 survives_5pct_slip",
-      "why": "Rotated stress survivor; secondary to tighter-DD leader",
+      "b4_note": "SHIP@5pct pnl~59.03 survives_5pct_slip",
+      "why": "Best risk profile among rotated B3/B4",
       "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
-      "stress_source": "coach",
-      "stressed_at": "2026-08-07T04:03:37+00:00"
+      "stress_source": "coach_20260810T0900",
+      "stressed_at": "2026-08-10T16:06:51+00:00"
     },
     {
       "hyp_id": "hyp_dna_aal_put_credit_spread_3486155f",
       "structure": "put_credit_spread",
       "symbol": "AAL",
-      "status": "candidate",
+      "status": "testing",
       "lane": "paper_research",
-      "stress_priority": false,
+      "stress_priority": true,
       "b3_hold": true,
       "dense_neg_ge3": 1,
-      "full_pnl": 200.45,
+      "full_pnl": 199.42,
       "max_dd": 31.46,
       "max_loss_usd_approx": 39.85,
       "b4_cost_hold": true,
-      "b4_note": "SHIP@5pct pnl~55.96 survives_5pct_slip",
+      "b4_note": "SHIP@5pct pnl~54.87 survives_5pct_slip",
       "why": "Rotated stress survivor; secondary to tighter-DD leader",
       "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
-      "stress_source": "coach",
-      "stressed_at": "2026-08-07T04:04:05+00:00"
+      "stress_source": "coach_20260810T0900",
+      "stressed_at": "2026-08-10T16:06:51+00:00"
     },
     {
       "hyp_id": "hyp_dna_bac_put_credit_spread_631f9804",
@@ -126,6 +88,44 @@
       "stressed_at": "2026-07-29T03:48:54+00:00"
     },
     {
+      "hyp_id": "hyp_dna_arm_put_credit_spread_f1f90cc9",
+      "structure": "put_credit_spread",
+      "symbol": "ARM",
+      "status": "candidate",
+      "lane": "paper_research",
+      "stress_priority": false,
+      "b3_hold": true,
+      "dense_neg_ge3": 3,
+      "full_pnl": 632.34,
+      "max_dd": 188.52,
+      "max_loss_usd_approx": 185.57,
+      "b4_cost_hold": true,
+      "b4_note": "SHIP@5pct pnl~74.1 survives_5pct_slip",
+      "why": "Rotated stress survivor; secondary to tighter-DD leader",
+      "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
+      "stress_source": "quality_cycle_20260804T203840",
+      "stressed_at": "2026-08-04T20:39:07+00:00"
+    },
+    {
+      "hyp_id": "hyp_dna_arm_put_credit_spread_323881ec",
+      "structure": "put_credit_spread",
+      "symbol": "ARM",
+      "status": "candidate",
+      "lane": "paper_research",
+      "stress_priority": false,
+      "b3_hold": true,
+      "dense_neg_ge3": 3,
+      "full_pnl": 624.45,
+      "max_dd": 188.52,
+      "max_loss_usd_approx": 185.57,
+      "b4_cost_hold": true,
+      "b4_note": "SHIP@5pct pnl~42.94 survives_5pct_slip",
+      "why": "Rotated stress survivor; secondary to tighter-DD leader",
+      "caveat": "Proxy BS + B3/B4 only. Multi-leg not MCP placeable. Not pack multi-symbol quality_pass.",
+      "stress_source": "quality_cycle_20260730T162914",
+      "stressed_at": "2026-07-30T16:29:51+00:00"
+    },
+    {
       "hyp_id": "hyp_dna_snap_cash_secured_put_dna_be83",
       "structure": "cash_secured_put",
       "symbol": "SNAP",
@@ -133,7 +133,7 @@
       "stress_priority": false,
       "ship_score": 28.63479841950273,
       "n_trades": 131,
-      "csp_bp_proxy": 506.35,
+      "csp_bp_proxy": 503.03,
       "capital_fit": "fit_3k",
       "why": "single-leg cash_secured_put on SNAP; fits $3k sleeve collateral (CSP/wheel); sim SHIP n=131",
       "caveat": "Proxy sim + spot BP only. Not pack-grade multi-symbol edge. RH MCP single-leg place still requires Ken arm for live. CSP collateral is gated by sleeve fit_3k, not the $300 defined-risk bar."
@@ -146,7 +146,7 @@
       "stress_priority": false,
       "ship_score": 40.446260963192195,
       "n_trades": 85,
-      "csp_bp_proxy": 1514.3,
+      "csp_bp_proxy": 1484.77,
       "capital_fit": "fit_3k",
       "why": "single-leg short_put_credit on AAL; fits $3k sleeve collateral (CSP/wheel); sim SHIP n=85",
       "caveat": "Proxy sim + spot BP only. Not pack-grade multi-symbol edge. RH MCP single-leg place still requires Ken arm for live. CSP collateral is gated by sleeve fit_3k, not the $300 defined-risk bar."
@@ -159,7 +159,7 @@
       "stress_priority": false,
       "ship_score": 3.087016401972928,
       "n_trades": 61,
-      "csp_bp_proxy": 770.45,
+      "csp_bp_proxy": 766.51,
       "capital_fit": "fit_3k",
       "why": "single-leg short_put_credit on TSLL; fits $3k sleeve collateral (CSP/wheel); sim SHIP n=61",
       "caveat": "Proxy sim + spot BP only. Not pack-grade multi-symbol edge. RH MCP single-leg place still requires Ken arm for live. CSP collateral is gated by sleeve fit_3k, not the $300 defined-risk bar."
@@ -167,38 +167,167 @@
   ],
   "rejected_tonight": [
     {
-      "hyp_id": "hyp_dna_ccl_call_credit_spread_fe4daffd",
-      "reason": "B3 hold=false (neg_ge3=12) and B4 large_loss_at_5pct"
+      "hyp_id": "hyp_dna_tsll_call_credit_spread_b639e8a8",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
     },
     {
-      "hyp_id": "hyp_dna_pltr_put_credit_spread_aec46fc3",
-      "reason": "B4 @5pct NULL edge vanished (soft cost fail)"
+      "hyp_id": "hyp_dna_tsll_call_credit_spread_d68b2e2d",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
     },
     {
-      "hyp_id": "hyp_dna_tsll_put_credit_spread_9a353011",
-      "reason": "Full-history NULL; dense-neg=6; not competitive"
+      "hyp_id": "hyp_dna_tsll_call_credit_spread_8a6e2b2d",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
     },
     {
-      "hyp_id": "hyp_dna_ccl_put_credit_spread_b41d366f",
-      "reason": "NEEDS_MORE_DATA n=5"
+      "hyp_id": "hyp_dna_tsll_put_credit_spread_15055db2",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
     },
     {
-      "hyp_id": "hyp_dna_snap_call_credit_spread_b795d5b4",
-      "reason": "NEEDS_MORE_DATA thin negative"
+      "hyp_id": "hyp_dna_tsll_call_credit_spread_c423ea40",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
     },
     {
-      "hyp_id": "PLTR/AAL CSP high-DD SHIPs",
-      "reason": "Vanity SHIP with DD hundreds; not MCP sleeve-fit at $500"
+      "hyp_id": "hyp_dna_tsll_call_credit_spread_74eca2ee",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
     },
     {
-      "hyp_id": "hyp_dna_mu_put_credit_spread_1340cefb",
-      "reason": "B4 cost_hold=false slip5=REJECT pnl=-635.9"
+      "hyp_id": "hyp_dna_pltr_put_credit_spread_ad486d15",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
     },
     {
-      "hyp_id": "hyp_dna_nflx_call_credit_spread_9545399b",
-      "reason": "B3 hold=false dense_neg=5 dd=450.81"
+      "hyp_id": "hyp_dna_pltr_put_credit_spread_3b725bbe",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_pltr_put_credit_spread_0583fd23",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_tsll_put_credit_spread_638516d4",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_pltr_put_credit_spread_2c3c1957",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_ccl_iron_condor_110756ac",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_pltr_put_credit_spread_5cef8764",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_pltr_put_credit_spread_af80f9de",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_tsll_call_credit_spread_cf697804",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_tsll_call_credit_spread_cdfd137b",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_tsll_call_credit_spread_69bdf17f",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_ccl_iron_condor_5f6466af",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_nflx_iron_condor_5847425d",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_nflx_iron_condor_904a81ac",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_nflx_iron_condor_0284855e",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_nflx_iron_condor_4a83c4e9",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_nflx_iron_condor_daad8fb4",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_nflx_iron_condor_637801f1",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_f_call_credit_spread_e2cc9598",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_snap_iron_condor_f5356a71",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_f_call_credit_spread_3a46fa88",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_f_put_credit_spread_0322ea75",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_tsll_put_credit_spread_8c265416",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_snap_iron_condor_6bdefdb0",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_f_call_credit_spread_1d37c523",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_tsll_put_credit_spread_a5c21de0",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_f_call_credit_spread_73472392",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_f_call_credit_spread_adb82760",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_f_call_credit_spread_9712be88",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_f_call_credit_spread_dc584a30",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_f_call_credit_spread_4a62f919",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_ccl_put_credit_spread_2ae3ed35",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_tsll_call_credit_spread_27f619bd",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
+    },
+    {
+      "hyp_id": "hyp_dna_snap_call_credit_spread_30afd65e",
+      "reason": "registry_ghost_missing_from_hypotheses_yaml"
     }
   ],
+  "n_registry_ghost_skipped": 174,
   "densify_pack": {
     "quality_pass": false,
     "note": "Continuum multi re-prove still quality_pass=false; plumbing only"

@@ -1158,3 +1158,100 @@ def test_shortlist_skips_identical_risk_profile_twins(tmp_path: Path, monkeypatc
     assert len(aal_ids) == 1, multi
     syms = {str(r.get("symbol")).upper() for r in multi}
     assert "BAC" in syms and "TSLL" in syms, multi
+
+def test_refresh_shortlist_drops_registry_ghost_multi_leg(tmp_path: Path, monkeypatch):
+    """Deleted multi-leg capital_path leaders must not stay stress_priority (2026-08-10)."""
+    import scripts.trader_ingest_stress_rotation as ing
+
+    repo = tmp_path
+    bootstrap = repo / "reports" / "bootstrap"
+    hyps_dir = repo / "trader_platform" / "data"
+    bootstrap.mkdir(parents=True)
+    hyps_dir.mkdir(parents=True)
+
+    living = {
+        "version": 1,
+        "hypotheses": [
+            {
+                "id": "hyp_dna_aal_put_credit_spread_live",
+                "status": "testing",
+                "structure": "put_credit_spread",
+                "symbol": "AAL",
+            }
+        ],
+    }
+    try:
+        import yaml
+    except Exception:  # pragma: no cover
+        yaml = None
+    if yaml is not None:
+        (hyps_dir / "hypotheses.yaml").write_text(
+            yaml.safe_dump(living, sort_keys=False), encoding="utf-8"
+        )
+    else:
+        # Minimal YAML the loader can parse without pyyaml via HypothesisRegistry
+        (hyps_dir / "hypotheses.yaml").write_text(
+            "version: 1\nhypotheses:\n"
+            "  - id: hyp_dna_aal_put_credit_spread_live\n"
+            "    status: testing\n"
+            "    structure: put_credit_spread\n"
+            "    symbol: AAL\n",
+            encoding="utf-8",
+        )
+
+    by = {
+        "hyp_dna_ccl_iron_condor_ghost": {
+            "hyp_id": "hyp_dna_ccl_iron_condor_ghost",
+            "symbol": "CCL",
+            "structure": "iron_condor",
+            "b3_hold": True,
+            "b4_cost_hold": True,
+            "b4_slip5_verdict": "SHIP",
+            "b4_slip5_pnl": 500.0,
+            "dense_neg_ge3": 0,
+            "max_dd": 20.0,
+            "full_pnl": 650.0,
+            "capital_path_ok": True,
+            "reject_reason": None,
+            "source": "test",
+            "stressed_at": "2026-08-10T12:00:00+00:00",
+        },
+        "hyp_dna_aal_put_credit_spread_live": {
+            "hyp_id": "hyp_dna_aal_put_credit_spread_live",
+            "symbol": "AAL",
+            "structure": "put_credit_spread",
+            "b3_hold": True,
+            "b4_cost_hold": True,
+            "b4_slip5_verdict": "SHIP",
+            "b4_slip5_pnl": 80.0,
+            "dense_neg_ge3": 1,
+            "max_dd": 35.0,
+            "full_pnl": 200.0,
+            "capital_path_ok": True,
+            "reject_reason": None,
+            "source": "test",
+            "stressed_at": "2026-08-10T12:00:00+00:00",
+        },
+    }
+    (bootstrap / "STRESS_ROTATION.json").write_text(
+        json.dumps({"by_hyp_id": by}), encoding="utf-8"
+    )
+    (bootstrap / "QUALITY_SHORTLIST.json").write_text(
+        json.dumps({"shortlist": []}), encoding="utf-8"
+    )
+    monkeypatch.setattr(ing, "_REPO", repo)
+    monkeypatch.setattr(ing, "_LEDGER", bootstrap / "STRESS_ROTATION.json")
+    monkeypatch.setattr(ing, "_SHORTLIST", bootstrap / "QUALITY_SHORTLIST.json")
+
+    res = ing.refresh_shortlist_from_ledger()
+    data = json.loads((bootstrap / "QUALITY_SHORTLIST.json").read_text(encoding="utf-8"))
+    multi = [r for r in data["shortlist"] if r.get("lane") == "paper_research"]
+    ids = [r["hyp_id"] for r in multi]
+    assert "hyp_dna_aal_put_credit_spread_live" in ids, data
+    assert "hyp_dna_ccl_iron_condor_ghost" not in ids, data
+    assert res.get("n_registry_ghost_skipped", 0) >= 1
+    assert any(
+        r.get("hyp_id") == "hyp_dna_ccl_iron_condor_ghost"
+        and "registry_ghost" in str(r.get("reason") or "")
+        for r in data.get("rejected_tonight") or []
+    )

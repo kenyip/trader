@@ -814,6 +814,17 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--no-logs", action="store_true")
+    ap.add_argument(
+        "--write-latest",
+        action="store_true",
+        default=True,
+        help="Write .cache/platform/quality_residual/stress_selection_LATEST.json (default on).",
+    )
+    ap.add_argument(
+        "--no-write-latest",
+        action="store_true",
+        help="Skip writing stress_selection_LATEST.json.",
+    )
     args = ap.parse_args(argv)
     res = select_stress_hyps(
         limit=int(args.limit),
@@ -827,6 +838,11 @@ def main(argv: list[str] | None = None) -> int:
         lifetime_fail_min=int(args.lifetime_fail_min),
         max_ok_rate=float(args.max_ok_rate),
     )
+    if args.write_latest and not args.no_write_latest:
+        out_dir = _REPO / ".cache" / "platform" / "quality_residual"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        latest = out_dir / "stress_selection_LATEST.json"
+        latest.write_text(json.dumps(res, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     if args.json:
         print(json.dumps(res, indent=2, sort_keys=True))
     else:

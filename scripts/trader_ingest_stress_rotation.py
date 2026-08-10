@@ -44,6 +44,53 @@ def _load_json(path: Path) -> dict[str, Any]:
         return {}
 
 
+def _hyps_yaml_path() -> Path:
+    """Living registry path aligned with the active stress ledger tree.
+
+    Prefer <ledger>/../../trader_platform/data/hypotheses.yaml so tests that only
+    redirect _LEDGER/_SHORTLIST under tmp_path do not accidentally load the real
+    workspace registry (which would ghost-filter synthetic hyp_ids).
+    """
+    try:
+        # reports/bootstrap/STRESS_ROTATION.json → parents[2] == repo root
+        ledger_repo = _LEDGER.resolve().parents[2]
+        return ledger_repo / "trader_platform" / "data" / "hypotheses.yaml"
+    except Exception:
+        return _REPO / "trader_platform" / "data" / "hypotheses.yaml"
+
+
+def _living_registry_hyp_ids(path: Path | None = None) -> set[str] | None:
+    """Return living hyp ids from hypotheses.yaml, or None if registry unavailable.
+
+    None means \"do not filter\" (tests / missing file). Empty set means registry
+    loaded but has zero rows — still filter (drop everything missing).
+    2026-08-10 coach: shortlist kept deleted CCL IC capital_path leaders as
+    stress_priority → B3/B4 burned every cycle on ghost filter empty living set.
+    """
+    p = path if path is not None else _hyps_yaml_path()
+    if not p.is_file():
+        return None
+    try:
+        # Prefer HypothesisRegistry for thrash-tolerant load; fall back to raw YAML.
+        try:
+            from trader_platform.hypothesis_registry import HypothesisRegistry
+
+            store = HypothesisRegistry(p).load(retries=6, retry_sleep_s=0.15)
+            rows = store.get("hypotheses") or []
+        except Exception:
+            import yaml  # type: ignore
+
+            raw = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+            rows = raw.get("hypotheses") or []
+        out: set[str] = set()
+        for h in rows:
+            if isinstance(h, dict) and h.get("id"):
+                out.add(str(h["id"]))
+        return out
+    except Exception:
+        return None
+
+
 def _f(x: Any, default: float | None = None) -> float | None:
     if x is None:
         return default
@@ -331,6 +378,9 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
     ]
     multi_sorted = sorted(multi, key=rank_key)
 
+    living_ids = _living_registry_hyp_ids()
+    n_registry_ghost_skipped = 0
+
     shortlist: list[dict[str, Any]] = []
     rejected: list[dict[str, Any]] = list(prev.get("rejected_tonight") or [])
     seen_reject = {r.get("hyp_id") for r in rejected}
@@ -429,6 +479,18 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
                 )
                 seen_reject.add(hid)
             continue
+        # Drop deleted/pruned multi-leg DNA still lingering as capital_path_ok in ledger.
+        if living_ids is not None and str(hid) not in living_ids:
+            n_registry_ghost_skipped += 1
+            if hid not in seen_reject:
+                rejected.append(
+                    {
+                        "hyp_id": hid,
+                        "reason": "registry_ghost_missing_from_hypotheses_yaml",
+                    }
+                )
+                seen_reject.add(hid)
+            continue
         sym_u = str(e.get("symbol") or "?").upper()
         if per_sym.get(sym_u, 0) >= max_per_symbol:
             continue
@@ -487,7 +549,8 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
             "Stress rotation ledger drives shortlist; quality_cycle mixes leaders+fresh. "
             "Capital-path rejects: soft NULL@~0, soft-loss/neg@5%, non-pos full PnL. "
             "Rank dens_bucket(0-1 tied) → slip verdict (SHIP>NEEDS>NULL) → dd → raw dens → slip pnl. "
-            "Multi-leg shortlist caps ≤2 per symbol; skip identical dens/dd/pnl risk twins."
+            "Multi-leg shortlist caps ≤2 per symbol; skip identical dens/dd/pnl risk twins. "
+            "Multi-leg leaders must exist in living hypotheses.yaml (registry ghosts dropped)."
         ),
         "agentic": prev.get("agentic")
         or {
@@ -498,6 +561,7 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
         },
         "shortlist": shortlist,
         "rejected_tonight": rejected[-40:],
+        "n_registry_ghost_skipped": n_registry_ghost_skipped,
         "densify_pack": prev.get("densify_pack")
         or {"quality_pass": False, "note": "plumbing only"},
         "stress_rotation_ledger": str(_LEDGER),
@@ -516,6 +580,7 @@ def refresh_shortlist_from_ledger() -> dict[str, Any]:
         "shortlist_path": str(_SHORTLIST),
         "n_shortlist": len(shortlist),
         "n_rejected": len(rejected),
+        "n_registry_ghost_skipped": n_registry_ghost_skipped,
         "top_ids": [r.get("hyp_id") for r in shortlist[:6]],
     }
 
