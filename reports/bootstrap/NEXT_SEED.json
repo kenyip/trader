@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-08-10T13:34:28.792868+00:00",
-  "stamp": "20260810T0930",
-  "source": "rth_eval_2026-08-10T0930",
+  "generated_at": "2026-08-10T14:34:07.725608+00:00",
+  "stamp": "20260810T1030",
+  "source": "rth_eval_2026-08-10T1030",
   "next_action": "manage_open_paper_campaign",
   "ken_required": false,
   "live_authority": false,
@@ -13,32 +13,57 @@
     "fund_3k_at_packet"
   ],
   "detail": {
-    "hint": "RTH Mon open: HOLD all 3 paper legs; dual PT not hit; thin last marks (skip vacuous \u0394); book 3/3 STAND_ASIDE new. Re-mark next RTH; CLOSE only on DNA ladder (dual PT / delta when bid-ask grade / defined_loss / ITM path). Off-hours: prune hyp yaml bloat (EDGE BLOATED_SKIP).",
-    "session": "RTH_OPEN",
-    "session_et": "2026-08-10 09:34 EDT",
-    "book_full": true,
-    "working": 3,
-    "open_risk_usd": 403.9,
+    "hint": "RTH Mon mid: CLOSED AAL CCS + BAC PCS on dual profit_target; HOLD AAL PCS (soft red mtm, still OTM, |\u0394|<0.45). Book 1/3 risk~$40. STAND_ASIDE new same tick post-close (cool-off). Next RTH: re-mark AAL PCS for dual PT recovery or defined_loss/delta; optional guarded paper only if DNA + headroom after cool-off. Off-hours: prune hyp yaml bloat (EDGE BLOATED_SKIP).",
+    "session": "RTH_MID",
+    "session_et": "2026-08-10 10:34 EDT",
+    "book_full": false,
+    "working": 1,
+    "open_risk_usd": 40.3,
     "max_open_orders": 3,
-    "closed_this_session": [],
+    "closed_this_session": [
+      {
+        "order_id": "paper_7666d8e35aaf",
+        "symbol": "AAL",
+        "structure": "call_credit_spread",
+        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
+        "reason": "profit_target",
+        "mtm_usd": 13.783578744992042,
+        "mtm_adverse_usd": 12.283578744992043,
+        "profit_target_usd": 7.641789372496022,
+        "max_loss_usd": 184.72
+      },
+      {
+        "order_id": "paper_f851e2b570da",
+        "symbol": "BAC",
+        "structure": "put_credit_spread",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_4fb68257",
+        "reason": "profit_target",
+        "mtm_usd": 13.122388040892172,
+        "mtm_adverse_usd": 12.12238804089217,
+        "profit_target_usd": 10.561194020446084,
+        "max_loss_usd": 178.88
+      }
+    ],
     "new_entries": "STAND_ASIDE",
-    "new_entry_reason": "open_order_count 3 >= max_open_orders 3; one-open-per-symbol AAL already 2 legs; risk headroom thin",
+    "new_entry_reason": "post-close cool-off same tick; prefer manage remaining AAL PCS; scout OPEN_* noise not mandate; one-open-per-symbol AAL already open",
     "regimes": {
       "AAL": {
         "regime": "neutral",
         "iv_rank": 65.48,
         "high_iv": true,
+        "spot_mark": 15.539999961853027,
         "spot_scout": 15.63
       },
       "BAC": {
         "regime": "neutral",
         "iv_rank": 25.4,
         "high_iv": false,
+        "spot_mark": 63.75,
         "spot_scout": 63.17
       }
     },
     "rth_ops": {
-      "stamp": "20260810T133146",
+      "stamp": "20260810T143125",
       "n_intents_scout": 8,
       "n_candidates": 15,
       "actions": {
@@ -46,7 +71,7 @@
         "OPEN_CCS": 1,
         "SKIP": 7
       },
-      "autonomy": "denied\u00d75 (book full max_open_orders=3)",
+      "autonomy": "denied\u00d75 (pre-close book full max_open_orders=3)",
       "rc": {
         "scout": 0,
         "autonomy_dry": 0
@@ -65,17 +90,17 @@
         "short_strike": 15.0,
         "long_strike": 14.5,
         "entry_credit": 0.09697079476663362,
-        "spot": 15.609999656677246,
-        "chg_pct": -2.070263063947453,
-        "short_otm": 0.6099996566772461,
+        "spot": 15.539999961853027,
+        "chg_pct": -2.5094079614816134,
+        "short_otm": 0.5399999618530273,
         "short_itm": false,
-        "mtm_usd": 3.6970794766633603,
-        "mtm_adverse_usd": 3.6970794766633603,
-        "close_debit": 0.06000000000000001,
-        "short_delta_approx": -4.558585920455549e-05,
-        "ml_used_frac": 0.0,
-        "short_mark_src": "last",
-        "long_mark_src": "last",
+        "mtm_usd": -4.302920523336643,
+        "mtm_adverse_usd": -6.302920523336638,
+        "close_debit": 0.14000000000000004,
+        "short_delta_approx": -0.3122658079669469,
+        "ml_used_frac": 0.15640001298602083,
+        "short_mark_src": "bid_ask",
+        "long_mark_src": "bid_ask",
         "quote_flags": [],
         "profit_target": 0.5555465179774001,
         "profit_target_usd": 5.387178737810439,
@@ -84,81 +109,19 @@
         "decision": "HOLD",
         "reasons": [
           "short_OTM_or_quiet_path; mtm within budget"
-        ]
-      },
-      {
-        "order_id": "paper_7666d8e35aaf",
-        "symbol": "AAL",
-        "structure": "call_credit_spread",
-        "strategy_id": "hyp_dna_aal_call_credit_spread_5a213de0",
-        "status": "working",
-        "max_loss_usd": 184.72,
-        "expiration": "2026-08-21",
-        "short_strike": 17.5,
-        "long_strike": 19.5,
-        "entry_credit": 0.15283578744992043,
-        "spot": 15.609999656677246,
-        "chg_pct": -2.070263063947453,
-        "short_otm": 1.890000343322754,
-        "short_itm": false,
-        "mtm_usd": 4.2835787449920435,
-        "mtm_adverse_usd": 4.2835787449920435,
-        "close_debit": 0.11,
-        "short_delta_approx": 4.8999738710975294e-08,
-        "ml_used_frac": 0.0,
-        "short_mark_src": "last",
-        "long_mark_src": "last",
-        "quote_flags": [],
-        "profit_target": 0.5,
-        "profit_target_usd": 7.641789372496022,
-        "delta_breach": 0.45,
-        "defined_loss_exit_frac": 0.85,
-        "decision": "HOLD",
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ]
-      },
-      {
-        "order_id": "paper_f851e2b570da",
-        "symbol": "BAC",
-        "structure": "put_credit_spread",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_4fb68257",
-        "status": "working",
-        "max_loss_usd": 178.88,
-        "expiration": "2026-08-14",
-        "short_strike": 62.0,
-        "long_strike": 60.0,
-        "entry_credit": 0.2112238804089217,
-        "spot": 63.25,
-        "chg_pct": 0.12664529582655515,
-        "short_otm": 1.25,
-        "short_itm": false,
-        "mtm_usd": 4.12238804089217,
-        "mtm_adverse_usd": 4.12238804089217,
-        "close_debit": 0.17,
-        "short_delta_approx": -0.000372158534365008,
-        "ml_used_frac": 0.0,
-        "short_mark_src": "last",
-        "long_mark_src": "last",
-        "quote_flags": [],
-        "profit_target": 0.5,
-        "profit_target_usd": 10.561194020446084,
-        "delta_breach": 0.45,
-        "defined_loss_exit_frac": 0.85,
-        "decision": "HOLD",
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ]
+        ],
+        "exit": null
       }
     ],
     "equities": {
-      "AAL": 15.600000381469727,
-      "BAC": 63.18000030517578,
-      "SNAP": 5.304999828338623,
-      "SPY": 773.3900146484375,
-      "QQQ": 722.7899780273438,
-      "PLTR": 174.65499877929688
+      "AAL": 15.53499984741211,
+      "BAC": 63.755001068115234,
+      "SNAP": 5.364999771118164,
+      "SPY": 774.5399780273438,
+      "QQQ": 723.9201049804688,
+      "PLTR": 177.6501007080078
     },
-    "marks_generated_at": "2026-08-10T13:31:32.242739+00:00"
+    "marks_generated_at": "2026-08-10T14:31:23.812037+00:00",
+    "close_script": ".cache/platform/rth_close_pt_20260810T1030.py"
   }
 }

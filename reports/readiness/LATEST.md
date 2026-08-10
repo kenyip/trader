@@ -1,16 +1,17 @@
-# Readiness snapshot — 2026-08-10T0930 RTH open
+# Readiness snapshot — 2026-08-10T1030 RTH mid
 
 PHASE: **SHADOW** (ops)  
 EDGE: pack-grade shortlist_dna_multi; research **CCL IC**; worker ON **BLOATED_SKIP** registry≈6.0MB  
-ROBOT: paper **3 open** risk=$403.9 sessions 14/3; **shadow PASS**  
+ROBOT: paper **1 open** risk=$40.3 sessions 14/3; **shadow PASS** (closed AAL CCS + BAC PCS this tick)  
 ARM: blocked — Ken LIVE_PACKET only; test cash~$500; live_armed=false  
 
-RTH 2026-08-10T0930: HOLD AAL PCS + AAL CCS + BAC PCS (dual PT clear; thin last marks); STAND_ASIDE new (max_open_orders 3/3).  
+RTH 2026-08-10T1030: **CLOSE** AAL CCS PT + BAC PCS PT (dual mid+adverse); **HOLD** AAL PCS soft-red OTM; STAND_ASIDE new post-close.  
 ken_required: false  
 NEXT: manage_open_paper_campaign
 
-## C-row rth 2026-08-10T0930
-- marks: HOLD×3 (AAL PCS mtm≈+3.70 OTM 0.61; AAL CCS +4.28; BAC +4.12)
-- rth-ops: scout 8 intents AAL/BAC OPEN_*; autonomy denied×5 book full
-- no close / no new paper / no live
-- updated: 2026-08-10T13:34:28.792868+00:00
+## C-row rth 2026-08-10T1030
+- marks: CLOSE AAL CCS mtm≈+13.78/adv+12.28 ≥ PT 7.64; CLOSE BAC PCS +13.12/adv+12.12 ≥ PT 10.56; HOLD AAL PCS mtm≈−4.30 OTM 0.54 |Δ|≈0.31
+- ledger after: working=1 open_risk=$40.3
+- rth-ops: scout 8 intents AAL/BAC OPEN_*; autonomy denied×5 book full (pre-close)
+- no new paper / no live
+- updated: 2026-08-10T14:34:07.725608+00:00
