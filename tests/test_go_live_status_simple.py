@@ -56,6 +56,72 @@ def test_first_live_loader_rejects_legacy_sleeve_only_seat(monkeypatch):
     assert loaded["raw_n_eligible"] == 901
 
 
+def test_first_live_loader_accepts_fit_3k_csp_above_300_bar(monkeypatch):
+    """Status must not empty the board by treating CSP collateral BP as $300 max-loss."""
+    report = {
+        "max_loss_budget_usd": 300.0,
+        "n_eligible": 2,
+        "leader": {
+            "eligible": True,
+            "symbol": "SNAP",
+            "structure": "cash_secured_put",
+            "capital_fit": "fit_3k",
+            "capital_ok": True,
+            "max_loss_usd_proxy": 503.03,
+            "csp_bp_proxy": 503.03,
+            "path_max_loss_usd": None,
+            "verdict": "SHIP",
+            "hyp_id": "hyp_snap",
+        },
+        "shortlist": [
+            {
+                "eligible": True,
+                "symbol": "SNAP",
+                "structure": "cash_secured_put",
+                "capital_fit": "fit_3k",
+                "capital_ok": True,
+                "max_loss_usd_proxy": 503.03,
+                "csp_bp_proxy": 503.03,
+                "path_max_loss_usd": None,
+                "verdict": "SHIP",
+                "hyp_id": "hyp_snap",
+            },
+            {
+                "eligible": True,
+                "symbol": "TSLL",
+                "structure": "cash_secured_put",
+                "capital_fit": "fit_3k",
+                "capital_ok": True,
+                "max_loss_usd_proxy": 766.51,
+                "csp_bp_proxy": 766.51,
+                "path_max_loss_usd": None,
+                "verdict": "SHIP",
+                "hyp_id": "hyp_tsll",
+            },
+            {
+                # Explicit path stop still fails the $300 bar even with fit_3k.
+                "eligible": True,
+                "symbol": "F",
+                "structure": "cash_secured_put",
+                "capital_fit": "fit_3k",
+                "capital_ok": True,
+                "max_loss_usd_proxy": 500.0,
+                "csp_bp_proxy": 500.0,
+                "path_max_loss_usd": 450.0,
+                "verdict": "SHIP",
+                "hyp_id": "hyp_f_stop",
+            },
+        ],
+    }
+    monkeypatch.setattr("scripts.trader_go_live_status._load_json", lambda _path: report)
+    loaded = _load_first_live_lane()
+    assert loaded["leader"] is not None
+    assert loaded["leader"]["symbol"] == "SNAP"
+    assert loaded["n_eligible"] == 2
+    assert {r["symbol"] for r in loaded["shortlist"]} == {"SNAP", "TSLL"}
+    assert loaded["raw_n_eligible"] == 2
+
+
 def test_format_text_uses_three_layers_not_alphabet_soup():
     # Minimal Funnel-like object via collect would need repo; unit the formatter contract
     from scripts.trader_go_live_status import Funnel

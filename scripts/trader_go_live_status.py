@@ -410,29 +410,92 @@ def _classify_structure(structure: str) -> str:
     return "other"
 
 
+# Keep in sync with trader_platform.first_live_lane.SHORT_COLLATERAL_STRUCTURES.
+_SHORT_COLLATERAL_STRUCTURES = frozenset(
+    {
+        "cash_secured_put",
+        "csp",
+        "short_put_credit",
+        "short_call_credit",
+        "regime_short_premium",
+        "short_dte_aggressive",
+        "long_dte_conservative",
+        "wheel_assignment",
+    }
+)
+
+
 def _load_first_live_lane() -> dict[str, Any]:
-    """Dedicated first-live single-leg ranker report (not multi-leg research shortlist)."""
+    """Dedicated first-live single-leg ranker report (not multi-leg research shortlist).
+
+    Match first_live_lane capital doctrine (2026-08-07/08 coach):
+    - CSP/wheel: sleeve fit_3k + capital_ok is the gate. Never treat full cash-secured
+      BP (max_loss_usd_proxy / csp_bp_proxy) as the $300 defined-risk bar.
+    - Long debit / defined-risk: keep max_loss_usd_proxy ≤ max_loss_budget_usd.
+    - Explicit path stops on short premium (path_max_loss_usd) still honor the bar.
+    Legacy sleeve-only seats without capital_fit/capital_ok stay rejected.
+    """
     data = _load_json(_FIRST_LIVE) or {}
     if not data:
         return {"leader": None, "shortlist": [], "n_eligible": 0}
 
     max_loss_budget = float(data.get("max_loss_budget_usd") or 300.0)
 
+    def _finite_pos(val: Any) -> float | None:
+        try:
+            if val is None:
+                return None
+            x = float(val)
+            if x != x or x <= 0:  # NaN or non-positive
+                return None
+            return x
+        except (TypeError, ValueError):
+            return None
+
     def strict_budget_ok(row: Any) -> bool:
         if not isinstance(row, dict) or row.get("eligible") is False:
             return False
-        ml = row.get("max_loss_usd_proxy")
-        if ml is None:
-            # Older short-premium artifacts may only carry collateral BP.
-            ml = row.get("csp_bp_proxy")
-        try:
-            return ml is not None and 0 < float(ml) <= max_loss_budget
-        except (TypeError, ValueError):
+
+        structure = str(row.get("structure") or "").strip().lower()
+        is_short = structure in _SHORT_COLLATERAL_STRUCTURES or (
+            # Older artifacts sometimes omit structure but carry CSP collateral fields.
+            structure == ""
+            and (row.get("csp_bp_proxy") is not None or row.get("capital_fit") is not None)
+        )
+
+        # Explicit path stop (DNA/metrics) always honors the defined-risk bar.
+        path_ml = _finite_pos(row.get("path_max_loss_usd"))
+        if path_ml is not None and path_ml > max_loss_budget:
             return False
+
+        if is_short:
+            if row.get("capital_ok") is False:
+                return False
+            fit = str(row.get("capital_fit") or "").strip().lower()
+            if fit == "fit_3k" or row.get("capital_ok") is True:
+                return True
+            # Legacy short seat without capital_fit/capital_ok: reject oversized BP.
+            bp = _finite_pos(row.get("csp_bp_proxy"))
+            if bp is None:
+                bp = _finite_pos(row.get("max_loss_usd_proxy"))
+            if bp is None:
+                return False
+            # Without sleeve-fit labels, only keep tiny defined-risk-shaped leftovers.
+            return bp <= max_loss_budget
+
+        # Long debit / other: require bounded max-loss under the bar.
+        ml = _finite_pos(row.get("max_loss_usd_proxy"))
+        if ml is None:
+            ml = path_ml
+        if ml is None:
+            return False
+        return ml <= max_loss_budget
 
     raw_shortlist = list(data.get("shortlist") or [])
     strict_shortlist = [row for row in raw_shortlist if strict_budget_ok(row)]
     leader = data.get("leader") if strict_budget_ok(data.get("leader")) else None
+    if leader is None and strict_shortlist:
+        leader = strict_shortlist[0]
     return {
         "leader": leader,
         "shortlist": strict_shortlist[:8],
