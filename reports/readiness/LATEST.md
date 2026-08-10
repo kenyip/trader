@@ -13,4 +13,4 @@ NEXT: manage_open_paper_campaign
 - marks: HOLD×3 (AAL PCS mtm≈+3.70 OTM 0.61; AAL CCS +4.28; BAC +4.12)
 - rth-ops: scout 8 intents AAL/BAC OPEN_*; autonomy denied×5 book full
 - no close / no new paper / no live
-- updated: 2026-08-10T13:34:13.013403+00:00
+- updated: 2026-08-10T13:34:28.792868+00:00
