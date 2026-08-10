@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-08-10T14:34:07.725608+00:00",
-  "stamp": "20260810T1030",
-  "source": "rth_eval_2026-08-10T1030",
+  "generated_at": "2026-08-10T15:33:26+00:00",
+  "stamp": "20260810T1130",
+  "source": "rth_eval_2026-08-10T1130",
   "next_action": "manage_open_paper_campaign",
   "ken_required": false,
   "live_authority": false,
@@ -13,9 +13,9 @@
     "fund_3k_at_packet"
   ],
   "detail": {
-    "hint": "RTH Mon mid: CLOSED AAL CCS + BAC PCS on dual profit_target; HOLD AAL PCS (soft red mtm, still OTM, |\u0394|<0.45). Book 1/3 risk~$40. STAND_ASIDE new same tick post-close (cool-off). Next RTH: re-mark AAL PCS for dual PT recovery or defined_loss/delta; optional guarded paper only if DNA + headroom after cool-off. Off-hours: prune hyp yaml bloat (EDGE BLOATED_SKIP).",
-    "session": "RTH_MID",
-    "session_et": "2026-08-10 10:34 EDT",
+    "hint": "RTH Mon ~11:31 ET: HOLD only open AAL PCS 15/14.5p exp 08-21 (spot\u224815.53 chg -2.59%; OTM $0.53; mtm/adv $-3.80/$-6.30 vs PT +$5.39; |\u0394|\u22480.311<0.45; ml_used\u224815.6%). STAND_ASIDE new: AAL one-open-per-symbol; BAC same-session PT cool-off after 1030 close; autonomy dry research_only\u00d75 not place mandate. Book 1/3 risk~$40. Next RTH: re-mark AAL PCS dual PT / defined_loss / delta; optional BAC PCS only after cool-off if campaign guards + headroom. Off-hours: prune hyp yaml bloat (EDGE BLOATED_SKIP).",
+    "session": "RTH_LATE_MORNING",
+    "session_et": "2026-08-10 11:31 EDT",
     "book_full": false,
     "working": 1,
     "open_risk_usd": 40.3,
@@ -30,7 +30,8 @@
         "mtm_usd": 13.783578744992042,
         "mtm_adverse_usd": 12.283578744992043,
         "profit_target_usd": 7.641789372496022,
-        "max_loss_usd": 184.72
+        "max_loss_usd": 184.72,
+        "closed_at_stamp": "20260810T1030"
       },
       {
         "order_id": "paper_f851e2b570da",
@@ -41,29 +42,31 @@
         "mtm_usd": 13.122388040892172,
         "mtm_adverse_usd": 12.12238804089217,
         "profit_target_usd": 10.561194020446084,
-        "max_loss_usd": 178.88
+        "max_loss_usd": 178.88,
+        "closed_at_stamp": "20260810T1030"
       }
     ],
+    "closed_this_tick": [],
     "new_entries": "STAND_ASIDE",
-    "new_entry_reason": "post-close cool-off same tick; prefer manage remaining AAL PCS; scout OPEN_* noise not mandate; one-open-per-symbol AAL already open",
+    "new_entry_reason": "HOLD manage primary; AAL already one open PCS; BAC cool-off same calendar day after PT close; scout OPEN_PCS/CCS \u2192 autonomy research_only (not auto-place); prefer stand-aside over spray",
     "regimes": {
       "AAL": {
         "regime": "neutral",
         "iv_rank": 65.48,
         "high_iv": true,
-        "spot_mark": 15.539999961853027,
-        "spot_scout": 15.63
+        "spot_mark": 15.527899742126465,
+        "spot_scout": 15.6292
       },
       "BAC": {
         "regime": "neutral",
         "iv_rank": 25.4,
         "high_iv": false,
-        "spot_mark": 63.75,
+        "spot_mark": 63.94499969482422,
         "spot_scout": 63.17
       }
     },
     "rth_ops": {
-      "stamp": "20260810T143125",
+      "stamp": "20260810T153115",
       "n_intents_scout": 8,
       "n_candidates": 15,
       "actions": {
@@ -71,7 +74,7 @@
         "OPEN_CCS": 1,
         "SKIP": 7
       },
-      "autonomy": "denied\u00d75 (pre-close book full max_open_orders=3)",
+      "autonomy": "research_only\u00d75 (defined-risk allowed; dry mode \u2014 not paper place)",
       "rc": {
         "scout": 0,
         "autonomy_dry": 0
@@ -90,15 +93,15 @@
         "short_strike": 15.0,
         "long_strike": 14.5,
         "entry_credit": 0.09697079476663362,
-        "spot": 15.539999961853027,
-        "chg_pct": -2.5094079614816134,
-        "short_otm": 0.5399999618530273,
+        "spot": 15.527899742126465,
+        "chg_pct": -2.585319003169806,
+        "short_otm": 0.5278997421264648,
         "short_itm": false,
-        "mtm_usd": -4.302920523336643,
-        "mtm_adverse_usd": -6.302920523336638,
-        "close_debit": 0.14000000000000004,
-        "short_delta_approx": -0.3122658079669469,
-        "ml_used_frac": 0.15640001298602083,
+        "mtm_usd": -3.802920523336639,
+        "mtm_adverse_usd": -6.302920523336636,
+        "close_debit": 0.135,
+        "short_delta_approx": -0.3112740007648096,
+        "ml_used_frac": 0.15640001298602074,
         "short_mark_src": "bid_ask",
         "long_mark_src": "bid_ask",
         "quote_flags": [],
@@ -114,14 +117,22 @@
       }
     ],
     "equities": {
-      "AAL": 15.53499984741211,
-      "BAC": 63.755001068115234,
-      "SNAP": 5.364999771118164,
-      "SPY": 774.5399780273438,
-      "QQQ": 723.9201049804688,
-      "PLTR": 177.6501007080078
+      "AAL": 15.527899742126465,
+      "BAC": 63.94499969482422,
+      "SNAP": 5.355000019073486,
+      "SPY": 773.760009765625,
+      "QQQ": 721.4299926757812,
+      "PLTR": 178.1699981689453
     },
-    "marks_generated_at": "2026-08-10T14:31:23.812037+00:00",
-    "close_script": ".cache/platform/rth_close_pt_20260810T1030.py"
+    "marks_generated_at": "2026-08-10T15:31:13.870311+00:00",
+    "decisions_this_tick": [
+      {
+        "order_id": "paper_537129ebd52d",
+        "decision": "HOLD",
+        "reasons": [
+          "short_OTM_or_quiet_path; mtm within budget"
+        ]
+      }
+    ]
   }
 }

@@ -1,3 +1,4 @@
+| 2026-08-10T1130 | rth | HOLD AAL PCS −3.80 (OTM 0.53 |Δ|0.31 ml 15.6%); STAND_ASIDE new (AAL open + BAC cool-off); scout research_only×5; book 1/3 $40 | manage_open_paper_campaign |
 | 2026-08-10T1030 | rth | CLOSE AAL CCS PT +13.78 + BAC PCS PT +13.12 (dual gate); HOLD AAL PCS −4.30 (OTM 0.54 |Δ|0.31); book 3→1 risk $40; STAND_ASIDE new post-close | manage_open_paper_campaign |
 | 2026-08-10T0930 | rth | HOLD×3 AAL PCS +3.70 (OTM 0.61 AAL -2.07%) + AAL CCS +4.28 + BAC PCS +4.12; STAND_ASIDE new book 3/3; EDGE BLOATED_SKIP | manage_open_paper_campaign |
 | 2026-08-07T2100 | continuum | first-live CSP bar fix (SNAP leader); family thrash sibling-safe; MU/TSLA demote; INTC IC+IWM CCS B4 reject | manage_open_paper_campaign |
