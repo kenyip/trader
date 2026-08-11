@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-08-11T14:33:47+00:00",
-  "stamp": "20260811T1030",
-  "source": "rth_eval_2026-08-11T1030",
+  "generated_at": "2026-08-11T15:33:54+00:00",
+  "stamp": "20260811T1130",
+  "source": "rth_eval_2026-08-11T1130",
   "ken_required": false,
   "live_authority": false,
   "trading_authority": false,
@@ -13,8 +13,8 @@
     "fund_3k_at_packet"
   ],
   "detail": {
-    "hint": "RTH mid: HOLD both PCS on bid/ask marks. AAL recovered open scare (OTM $0.07\u2192$0.33, mtm \u221211.3\u2192\u22125.8, |\u0394|0.37<0.45). BAC +10.63 mid / +7.63 adv vs dual PT $12.95 \u2014 not yet. STAND_ASIDE new while book_full 2/2. Scout OPEN_CCS AAL = research_only only.",
-    "session_et": "2026-08-11 ~10:30 ET mid (Tue)",
+    "hint": "RTH ~11:30 ET: HOLD both PCS on bid/ask. AAL continued heal (OTM $0.33\u2192$0.40, mtm \u22125.8\u2192\u22123.3, |\u0394|0.34<0.45, ml_used\u224818%). BAC +10.13 mid / +7.63 adv vs dual PT $12.95 \u2014 still short both legs. STAND_ASIDE new while book_full 2/2. Scout OPEN_CCS AAL = research_only only.",
+    "session_et": "2026-08-11 ~11:30 ET mid (Tue)",
     "book_full": true,
     "working": 2,
     "open_risk_usd": 119.67,
@@ -28,16 +28,16 @@
         "status": "working",
         "max_loss_usd": 40.3,
         "decision": "HOLD",
-        "mtm_usd": -5.8,
-        "mtm_adverse_usd": -10.3,
-        "spot": 15.325,
-        "chg_pct": 2.167,
+        "mtm_usd": -3.3,
+        "mtm_adverse_usd": -7.3,
+        "spot": 15.405,
+        "chg_pct": 2.7,
         "short_strike": 15.0,
         "long_strike": 14.5,
-        "short_otm": 0.325,
+        "short_otm": 0.405,
         "short_itm": false,
-        "ml_used_frac": 0.2557,
-        "short_delta_abs": 0.3657,
+        "ml_used_frac": 0.1812,
+        "short_delta_abs": 0.3389,
         "delta_note": "bid_ask_ok",
         "exp": "2026-08-21",
         "entry_credit": 0.09697079476663362,
@@ -50,6 +50,16 @@
           "dte_stop": 3,
           "pt_usd": 5.39
         },
+        "dual_pt": {
+          "pt_usd": 5.39,
+          "mtm_mid": -3.3,
+          "mtm_adverse": -7.3,
+          "mid_ge_pt": false,
+          "adverse_ge_pt": false,
+          "dual_pt_close": false
+        },
+        "defined_loss_hit": false,
+        "delta_breach_hit": false,
         "reasons": [
           "short_OTM_or_quiet_path; mtm within budget"
         ]
@@ -62,16 +72,16 @@
         "status": "working",
         "max_loss_usd": 79.37,
         "decision": "HOLD",
-        "mtm_usd": 10.63,
+        "mtm_usd": 10.13,
         "mtm_adverse_usd": 7.63,
-        "spot": 63.91,
-        "chg_pct": 0.078,
+        "spot": 63.865,
+        "chg_pct": 0.008,
         "short_strike": 62.0,
         "long_strike": 61.0,
-        "short_otm": 1.91,
+        "short_otm": 1.865,
         "short_itm": false,
         "ml_used_frac": 0.0,
-        "short_delta_abs": 0.1584,
+        "short_delta_abs": 0.1557,
         "delta_note": "bid_ask_ok",
         "exp": "2026-08-21",
         "entry_credit": 0.20629356829171286,
@@ -84,13 +94,23 @@
           "dte_stop": 3,
           "pt_usd": 12.95
         },
+        "dual_pt": {
+          "pt_usd": 12.95,
+          "mtm_mid": 10.13,
+          "mtm_adverse": 7.63,
+          "mid_ge_pt": false,
+          "adverse_ge_pt": false,
+          "dual_pt_close": false
+        },
+        "defined_loss_hit": false,
+        "delta_breach_hit": false,
         "reasons": [
           "short_OTM_or_quiet_path; mtm within budget"
         ]
       }
     ],
     "scout": {
-      "stamp": "20260811T143141",
+      "stamp": "20260811T153118",
       "n_intents": 1,
       "n_stand_asides": 15,
       "n_candidates": 16,
@@ -105,10 +125,19 @@
       "only_OPEN_CCS_research_only",
       "aal_already_open_same_symbol"
     ],
-    "marks_generated_at": "2026-08-11T14:31:23.830117+00:00",
-    "vs_open_0930": {
-      "AAL": "mtm -11.30\u2192-5.80; OTM 0.07\u21920.33; |d| vacuous\u21920.37",
-      "BAC": "mtm +8.63\u2192+10.63 mid; OTM 2.00\u21921.91; still short dual PT 12.95"
+    "vs_prior_1030": {
+      "AAL": "mtm -5.80\u2192-3.30; OTM 0.33\u21920.40; |d| 0.37\u21920.34",
+      "BAC": "mtm +10.63\u2192+10.13; adv +7.63\u2192+7.63; OTM 1.91\u21921.87; still < PT 12.95 dual"
+    },
+    "marks_path": ".cache/platform/rth_eval_marks_latest.json",
+    "marks_at": "2026-08-11T15:31:17.635130+00:00",
+    "equities": {
+      "AAL": 15.404999732971191,
+      "BAC": 63.8650016784668,
+      "SNAP": 5.505000114440918,
+      "SPY": 772.5449829101562,
+      "QQQ": 720.3200073242188,
+      "PLTR": 175.18299865722656
     }
   }
 }
