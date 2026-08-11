@@ -1,3 +1,4 @@
+- 2026-08-11T0930-rth — RTH open: HOLD AAL PCS mtm≈-11.3 OTM$0.07 + HOLD BAC +8.63 vs PT12.95; STAND_ASIDE new book_full; scout OPEN_CCS research_only
 | 2026-08-10T2110 | continuum | ghost-sat living-count reopen; CCL IC+CCS create→B3/B4 reject; F IC leaders hold; paper 2 open | manage_open_paper_campaign |
 | 2026-08-10T1505 | continuum | max_create free-updates fix; unsat AAPL PCS+IWM CCS B4 reject; F IC leaders hold; paper 2 open | manage_open_paper_campaign |
 | 2026-08-10T1530 | rth | HOLD AAL PCS -8.30 (OTM 0.21 |d|0.40 ml26%) + BAC PCS +9.63 (OTM 1.69 vs PT 12.95); STAND_ASIDE new book 2/2 $120; EDGE OK | manage_open_paper_campaign |

@@ -1,13 +1,14 @@
-# Readiness LATEST — 2026-08-10T2110 continuum coach
+# Readiness LATEST — 2026-08-11T0930 RTH eval (Tue open)
 
-PHASE: SHADOW ops / PAPER manage + EDGE search repair  
+PHASE: SHADOW ops / PAPER manage  
 SLEEVE: $3000 plan · test cash≈500 · live_armed=false  
 
 | Layer | State |
 |---|---|
-| EDGE | OK · worker ON · registry≈4.0MB · F IC dens0 leaders · ghost-sat living-count reopen · CCL IC/CCS B3/B4 reject |
-| ROBOT | OK · paper 2 open risk~$120 · sessions 15/3 · shadow PASS |
+| EDGE | OK · worker ON · registry≈4.7MB · F IC dens0 leaders · shortlist_dna_multi pack-grade · first-live SNAP CSP |
+| ROBOT | OK · paper 2 open AAL+BAC PCS risk~$120 · sessions 15/3 · **HOLD×2** open marks · shadow PASS |
 | ARM | BLOCKED · Ken LIVE_PACKET only |
 
-Coach 2026-08-10 ~21:10 PDT: empty stress queue root = ledger sat after prune with 0 living DNA; living_count floor reopens SNAP/TSLL/CCL-class families; B4 still kills vanity.  
+RTH 2026-08-11 ~09:30 ET: AAL PCS HOLD mtm≈−$11.30 OTM $0.07 (path softer vs Mon; open Δ vacuous); BAC PCS HOLD mtm≈+$8.63 vs PT~$12.95; STAND_ASIDE new (book_full). Scout OPEN_CCS AAL = research_only only.  
+
 NEXT: manage_open_paper_campaign · ken_required=false
