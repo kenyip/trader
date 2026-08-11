@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-08-11T18:33:17+00:00",
-  "stamp": "20260811T1430",
-  "source": "rth_eval_2026-08-11T1430",
+  "generated_at": "2026-08-11T19:32:54+00:00",
+  "stamp": "20260811T1530",
+  "source": "rth_eval_2026-08-11T1530",
   "ken_required": false,
   "ken_only_for": [
     "gateway_up",
@@ -13,25 +13,13 @@
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
   "detail": {
-    "hint": "RTH: mark/manage paper; HOLD while ladder clear; STAND_ASIDE new while book full; watch BAC dual PT $12.95 (now mid +$11.63 / adv +$10.63); AAL soft-red mid $-4.30 OTM $0.42 |d|=0.32",
-    "session_et": "2026-08-11 ~14:30 ET mid-afternoon (Tue)",
+    "hint": "RTH: mark/manage paper; HOLD while ladder clear; STAND_ASIDE new while book full; watch BAC dual PT $12.95 (gaps mid\u22481.82 adv\u22483.32); AAL soft-red mtm=-3.8 OTM ml~16%",
+    "session_et": "2026-08-11 ~15:30 ET late afternoon (Tue)",
     "book_full": true,
-    "working": 2,
     "open_risk_usd": 119.67,
-    "max_concurrent": 2,
-    "max_open_risk": 500.0,
+    "working": 2,
     "new_entries": "STAND_ASIDE",
-    "new_entry_reasons": [
-      "book_full_2_of_2",
-      "open_risk_119.67_of_500",
-      "one_open_per_symbol_AAL_BAC"
-    ],
     "closed_this_session": [],
-    "scout": {
-      "mode": "book_full_manage_expected",
-      "n_intents": 0,
-      "note": "campaign cadence skip / manage residual; no new capital-fit OPEN_*"
-    },
     "open_orders": [
       {
         "order_id": "paper_537129ebd52d",
@@ -41,16 +29,16 @@
         "status": "working",
         "max_loss_usd": 40.3,
         "decision": "HOLD",
-        "mtm_usd": -4.3,
+        "mtm_usd": -3.8,
         "mtm_adverse_usd": -6.3,
-        "spot": 15.4171,
-        "chg_pct": 2.781,
+        "spot": 15.3999,
+        "chg_pct": 2.666,
         "short_strike": 15.0,
         "long_strike": 14.5,
-        "short_otm": 0.417,
+        "short_otm": 0.4,
         "short_itm": false,
         "ml_used_frac": 0.1564,
-        "short_delta_abs": 0.324,
+        "short_delta_abs": 0.327,
         "exp": "2026-08-21",
         "entry_credit": 0.09697079476663362,
         "quote_short_src": "bid_ask",
@@ -71,7 +59,7 @@
         "delta_breach_hit": false,
         "pt_gap_mid": null,
         "pt_gap_adv": null,
-        "vs_1330": "softened mid -2.80\u2192-4.30 (path drift, still HOLD)"
+        "vs_1430": "healed mid -4.30\u2192-3.80 (still soft-red HOLD; OTM |d|~0.33)"
       },
       {
         "order_id": "paper_f9f4ed941138",
@@ -81,16 +69,16 @@
         "status": "working",
         "max_loss_usd": 79.37,
         "decision": "HOLD",
-        "mtm_usd": 11.63,
-        "mtm_adverse_usd": 10.63,
-        "spot": 64.075,
-        "chg_pct": 0.337,
+        "mtm_usd": 11.13,
+        "mtm_adverse_usd": 9.63,
+        "spot": 64.06,
+        "chg_pct": 0.313,
         "short_strike": 62.0,
         "long_strike": 61.0,
-        "short_otm": 2.075,
+        "short_otm": 2.06,
         "short_itm": false,
         "ml_used_frac": 0.0,
-        "short_delta_abs": 0.129,
+        "short_delta_abs": 0.133,
         "exp": "2026-08-21",
         "entry_credit": 0.20629356829171286,
         "quote_short_src": "bid_ask",
@@ -98,7 +86,7 @@
         "quote_flags": [],
         "reasons": [
           "no_ladder: dual_pt=False dl=False d_breach=False",
-          "pt_gap mid=1.32 adv=2.32"
+          "pt_gap mid=1.82 adv=3.32"
         ],
         "ladder": {
           "profit_target": 0.6276891974059672,
@@ -110,25 +98,20 @@
         "dual_pt_close": false,
         "defined_loss_hit": false,
         "delta_breach_hit": false,
-        "pt_gap_mid": 1.32,
-        "pt_gap_adv": 2.32,
-        "vs_1330": "flat mid +11.63 / adv +10.63 (still ~1.3\u20132.3 under dual PT 12.95)"
+        "pt_gap_mid": 1.82,
+        "pt_gap_adv": 3.32,
+        "vs_1430": "softened mid +11.63\u2192+11.13 / adv +10.63\u2192+9.63 (PT gaps wider ~1.8/3.3)"
       }
     ],
-    "decisions": {
-      "AAL_PCS": "HOLD",
-      "BAC_PCS": "HOLD",
-      "new_entries": "STAND_ASIDE"
+    "equities_snapshot": {
+      "AAL": 15.399900436401367,
+      "BAC": 64.05999755859375,
+      "SNAP": 5.46999979019165,
+      "SPY": 770.72998046875,
+      "QQQ": 718.25,
+      "PLTR": 175.27000427246094
     },
-    "equities": {
-      "AAL": 15.414999961853027,
-      "BAC": 64.07499694824219,
-      "SNAP": 5.445000171661377,
-      "SPY": 769.9500122070312,
-      "QQQ": 716.594970703125,
-      "PLTR": 175.01499938964844
-    },
-    "marks_generated_at": "2026-08-11T18:31:32.098940+00:00",
-    "pt_check": "/Users/jarvis/dev/trader/.cache/platform/rth_pt_check_20260811T1430.json"
+    "marks_generated_at": "2026-08-11T19:31:55.444620+00:00",
+    "any_close": false
   }
 }
