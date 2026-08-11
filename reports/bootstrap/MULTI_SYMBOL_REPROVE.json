@@ -1,11 +1,10 @@
 {
   "book_symbols": [
+    "F",
     "AAL",
     "BAC",
-    "CCL",
-    "F",
+    "SNAP",
     "TSLL",
-    "SMCI",
     "KO",
     "IWM",
     "AMZN",
@@ -13,22 +12,49 @@
     "QQQ",
     "INTC"
   ],
+  "discovery_f2_candidate_ids": [
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_2",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_7",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c8_w1_pcs_bu_6",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt50_dl18_iv15_c6_w1_pcs_bu_6",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt50_dl18_iv15_c6_w1_pcs_bu_0",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv0_c8_w2_pcs_bu_4",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv25_c10_w1_pcs_bu_2",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv25_c10_w1_pcs_bu_9",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv25_c8_w1_pcs_bu_10",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl22_iv0_c8_w2_pcs_bu_2",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl14_iv15_c6_w1_pcs_bu_4",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl14_iv15_c8_w1_pcs_bu_4",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_10",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_2",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_7",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_9",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c5_w1_pcs_bu_8",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c6_w1_pcs_bu_7",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c6_w1_pcs_bu_8",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c8_w1_pcs_bu_2",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c8_w1_pcs_bu_4",
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c8_w1_pcs_bu_7"
+  ],
   "from_quality_shortlist": true,
-  "generated_at": "2026-08-05T06:21:06+00:00",
-  "honesty": "Multi-symbol densify DNA stress \u2014 single-name F2 alone is not pack-grade. Quality-shortlist symbols expand the book so research leaders (AAL/BAC/\u2026) are included in the re-prove, not only default core names.",
+  "generated_at": "2026-08-11T04:09:40+00:00",
+  "honesty": "Multi-symbol densify DNA stress \u2014 single-name F2 alone is not pack-grade. Quality-shortlist symbols expand the book so research leaders (AAL/BAC/\u2026) are included in the re-prove, not only default core names. Discovery F2 handoff candidates are included when DISCOVERY_F2_CANDIDATES.json exists.",
+  "include_discovery_f2": true,
   "include_seed_specs": false,
   "live_authority": false,
   "mode": "multi_symbol_pack",
-  "n_dna": 2,
-  "n_multi_f2": 0,
-  "n_quality_pass": 0,
+  "n_discovery_f2": 24,
+  "n_dna": 26,
+  "n_multi_f2": 5,
+  "n_quality_pass": 4,
   "quality_shortlist_symbols": [
+    "F",
     "AAL",
     "BAC",
-    "CCL",
-    "F",
-    "TSLL",
-    "SMCI"
+    "SNAP",
+    "TSLL"
   ],
   "results": [
     {
@@ -37,7 +63,7 @@
         "AMZN"
       ],
       "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0",
-      "generated_at": "2026-08-05T06:20:58+00:00",
+      "generated_at": "2026-08-11T04:06:31+00:00",
       "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
       "live_authority": false,
       "min_symbols_with_f2": 2,
@@ -54,6 +80,15 @@
           "n_trades_holdout_worst_axis": 10,
           "n_train_pass": 1,
           "symbol": "AMZN",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
           "thick_enough": false
         },
         {
@@ -80,16 +115,7 @@
           "n_holdout_pass": 0,
           "n_trades_holdout_worst_axis": null,
           "n_train_pass": 0,
-          "symbol": "CCL",
-          "thick_enough": false
-        },
-        {
-          "decision": "FAMILY_CLOSED",
-          "f2": false,
-          "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": null,
-          "n_train_pass": 0,
-          "symbol": "F",
+          "symbol": "SNAP",
           "thick_enough": false
         },
         {
@@ -99,15 +125,6 @@
           "n_trades_holdout_worst_axis": null,
           "n_train_pass": 0,
           "symbol": "TSLL",
-          "thick_enough": false
-        },
-        {
-          "decision": "FAMILY_CLOSED",
-          "f2": false,
-          "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": null,
-          "n_train_pass": 0,
-          "symbol": "SMCI",
           "thick_enough": false
         },
         {
@@ -157,15 +174,15 @@
         }
       ],
       "quality_pass": false,
+      "source": "living_f2",
       "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0294_20260719T114455Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt60_dl22_iv40_c8_w1_pcs_bu_0__prove.json",
       "symbols_tested": [
         "AMZN",
+        "F",
         "AAL",
         "BAC",
-        "CCL",
-        "F",
+        "SNAP",
         "TSLL",
-        "SMCI",
         "KO",
         "IWM",
         "AAPL",
@@ -181,7 +198,7 @@
         "IWM"
       ],
       "family_id": "IV_RICH_NONCOLLAPSE_PCS_INCOME__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4",
-      "generated_at": "2026-08-05T06:21:06+00:00",
+      "generated_at": "2026-08-11T04:06:37+00:00",
       "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
       "live_authority": false,
       "min_symbols_with_f2": 2,
@@ -198,6 +215,15 @@
           "n_trades_holdout_worst_axis": 9,
           "n_train_pass": 1,
           "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
           "thick_enough": false
         },
         {
@@ -224,16 +250,7 @@
           "n_holdout_pass": 0,
           "n_trades_holdout_worst_axis": null,
           "n_train_pass": 0,
-          "symbol": "CCL",
-          "thick_enough": false
-        },
-        {
-          "decision": "FAMILY_CLOSED",
-          "f2": false,
-          "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": null,
-          "n_train_pass": 0,
-          "symbol": "F",
+          "symbol": "SNAP",
           "thick_enough": false
         },
         {
@@ -243,15 +260,6 @@
           "n_trades_holdout_worst_axis": null,
           "n_train_pass": 0,
           "symbol": "TSLL",
-          "thick_enough": false
-        },
-        {
-          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
-          "f2": false,
-          "n_holdout_pass": 0,
-          "n_trades_holdout_worst_axis": 3,
-          "n_train_pass": 1,
-          "symbol": "SMCI",
           "thick_enough": false
         },
         {
@@ -301,15 +309,15 @@
         }
       ],
       "quality_pass": false,
+      "source": "living_f2",
       "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0343_20260719T120559Z/PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4__prove.json",
       "symbols_tested": [
         "IWM",
+        "F",
         "AAL",
         "BAC",
-        "CCL",
-        "F",
+        "SNAP",
         "TSLL",
-        "SMCI",
         "KO",
         "AMZN",
         "AAPL",
@@ -317,6 +325,3343 @@
         "INTC"
       ],
       "thick_f2_symbols": [],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_2",
+      "f2_symbols": [
+        "AMZN",
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_2",
+      "generated_at": "2026-08-11T04:06:45+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": true,
+      "n_f2_symbols": 2,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 13,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": true,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0016_20260805T063239Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_2__prove.json",
+      "symbols_tested": [
+        "AMZN",
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "AMZN",
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_7",
+      "f2_symbols": [
+        "AMZN",
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_7",
+      "generated_at": "2026-08-11T04:06:52+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": true,
+      "n_f2_symbols": 2,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 13,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": true,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0028_20260805T060110Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_7__prove.json",
+      "symbols_tested": [
+        "AMZN",
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "AMZN",
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6",
+      "f2_symbols": [
+        "INTC",
+        "PLTR"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6",
+      "generated_at": "2026-08-11T04:07:01+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": true,
+      "n_f2_symbols": 2,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 15,
+          "n_train_pass": 1,
+          "symbol": "PLTR",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 15,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": true,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0014_20260805T063146Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "PLTR",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC",
+        "PLTR"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c8_w1_pcs_bu_6",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv15_c8_w1_pcs_bu_6",
+      "generated_at": "2026-08-11T04:07:09+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "PLTR",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 15,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0008_20260805T055225Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c8_w1_pcs_bu_6__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "PLTR",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt50_dl18_iv15_c6_w1_pcs_bu_6",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt50_dl18_iv15_c6_w1_pcs_bu_6",
+      "generated_at": "2026-08-11T04:07:18+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 18,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "PLTR",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 22,
+          "n_train_pass": 1,
+          "symbol": "KO",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 15,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0024_20260805T063613Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt50_dl18_iv15_c6_w1_pcs_bu_6__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "PLTR",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt50_dl18_iv15_c6_w1_pcs_bu_0",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d7_pt50_dl18_iv15_c6_w1_pcs_bu_0",
+      "generated_at": "2026-08-11T04:07:27+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 18,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "PLTR",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 22,
+          "n_train_pass": 1,
+          "symbol": "KO",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 15,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0072_20260805T065700Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d7_pt50_dl18_iv15_c6_w1_pcs_bu_0__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "PLTR",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4",
+      "f2_symbols": [
+        "INTC",
+        "KO"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4",
+      "generated_at": "2026-08-11T04:07:35+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": true,
+      "n_f2_symbols": 2,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 15,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 18,
+          "n_train_pass": 1,
+          "symbol": "KO",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AMZN",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": true,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0056_20260805T064959Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "KO",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC",
+        "KO"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv0_c8_w2_pcs_bu_4",
+      "f2_symbols": [
+        "INTC",
+        "TSLL"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt30_dl18_iv0_c8_w2_pcs_bu_4",
+      "generated_at": "2026-08-11T04:07:43+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": true,
+      "n_f2_symbols": 2,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 18,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 8,
+          "n_train_pass": 1,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AMZN",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0052_20260805T064813Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv0_c8_w2_pcs_bu_4__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv25_c10_w1_pcs_bu_2",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt30_dl18_iv25_c10_w1_pcs_bu_2",
+      "generated_at": "2026-08-11T04:07:52+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 13,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0010_20260805T062958Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv25_c10_w1_pcs_bu_2__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv25_c10_w1_pcs_bu_9",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt30_dl18_iv25_c10_w1_pcs_bu_9",
+      "generated_at": "2026-08-11T04:07:59+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 13,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0028_20260805T060110Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv25_c10_w1_pcs_bu_9__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv25_c8_w1_pcs_bu_10",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt30_dl18_iv25_c8_w1_pcs_bu_10",
+      "generated_at": "2026-08-11T04:08:07+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 14,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0028_20260805T060110Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv25_c8_w1_pcs_bu_10__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl22_iv0_c8_w2_pcs_bu_2",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt30_dl22_iv0_c8_w2_pcs_bu_2",
+      "generated_at": "2026-08-11T04:08:14+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 20,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AMZN",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0004_20260805T062734Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl22_iv0_c8_w2_pcs_bu_2__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl14_iv15_c6_w1_pcs_bu_4",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl14_iv15_c6_w1_pcs_bu_4",
+      "generated_at": "2026-08-11T04:08:22+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 18,
+          "n_train_pass": 1,
+          "symbol": "KO",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 15,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0064_20260805T065337Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl14_iv15_c6_w1_pcs_bu_4__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl14_iv15_c8_w1_pcs_bu_4",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl14_iv15_c8_w1_pcs_bu_4",
+      "generated_at": "2026-08-11T04:08:29+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 18,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AMZN",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0008_20260805T062911Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl14_iv15_c8_w1_pcs_bu_4__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_10",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_10",
+      "generated_at": "2026-08-11T04:08:36+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 13,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0012_20260805T063052Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_10__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_2",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_2",
+      "generated_at": "2026-08-11T04:08:43+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 13,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0020_20260805T063423Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_2__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_7",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_7",
+      "generated_at": "2026-08-11T04:08:49+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 13,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0060_20260805T065146Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_7__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_9",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_9",
+      "generated_at": "2026-08-11T04:08:56+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 13,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0008_20260805T055225Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c10_w1_pcs_bu_9__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c5_w1_pcs_bu_8",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv25_c5_w1_pcs_bu_8",
+      "generated_at": "2026-08-11T04:09:03+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 14,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0014_20260805T063146Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c5_w1_pcs_bu_8__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c6_w1_pcs_bu_7",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv25_c6_w1_pcs_bu_7",
+      "generated_at": "2026-08-11T04:09:11+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 14,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0064_20260805T065337Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c6_w1_pcs_bu_7__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c6_w1_pcs_bu_8",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv25_c6_w1_pcs_bu_8",
+      "generated_at": "2026-08-11T04:09:18+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 14,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0008_20260805T055225Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c6_w1_pcs_bu_8__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c8_w1_pcs_bu_2",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv25_c8_w1_pcs_bu_2",
+      "generated_at": "2026-08-11T04:09:25+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 14,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0032_20260805T060303Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c8_w1_pcs_bu_2__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c8_w1_pcs_bu_4",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv25_c8_w1_pcs_bu_4",
+      "generated_at": "2026-08-11T04:09:33+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 14,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0030_20260805T060203Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c8_w1_pcs_bu_4__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
+      "trading_authority": false
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c8_w1_pcs_bu_7",
+      "f2_symbols": [
+        "INTC"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv25_c8_w1_pcs_bu_7",
+      "generated_at": "2026-08-11T04:09:40+00:00",
+      "honesty": "Per-symbol dual-cost re-prove. quality_pass requires \u2265min_symbols independent F2 with holdout n_trades \u2265 bar on worst cost axis.",
+      "live_authority": false,
+      "min_symbols_with_f2": 2,
+      "min_trades_per_passing_axis": 12,
+      "mode": "multi_symbol_reprove",
+      "multi_symbol_f2": false,
+      "n_f2_symbols": 1,
+      "option_mark_provenance": "black_scholes_proxy",
+      "per_symbol": [
+        {
+          "decision": "STRATEGY_ADVANCED_F2",
+          "f2": true,
+          "n_holdout_pass": 1,
+          "n_trades_holdout_worst_axis": 19,
+          "n_train_pass": 1,
+          "symbol": "INTC",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "F",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "BAC",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "SNAP",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "TSLL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "KO",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "IWM",
+          "thick_enough": false
+        },
+        {
+          "decision": "STRATEGY_ADVANCED_F1_HOLDOUT_FAILED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": 14,
+          "n_train_pass": 1,
+          "symbol": "AMZN",
+          "thick_enough": true
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "AAPL",
+          "thick_enough": false
+        },
+        {
+          "decision": "FAMILY_CLOSED",
+          "f2": false,
+          "n_holdout_pass": 0,
+          "n_trades_holdout_worst_axis": null,
+          "n_train_pass": 0,
+          "symbol": "QQQ",
+          "thick_enough": false
+        }
+      ],
+      "quality_pass": false,
+      "source": "discovery_f2",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0008_20260805T062911Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv25_c8_w1_pcs_bu_7__prove.json",
+      "symbols_tested": [
+        "INTC",
+        "F",
+        "AAL",
+        "BAC",
+        "SNAP",
+        "TSLL",
+        "KO",
+        "IWM",
+        "AMZN",
+        "AAPL",
+        "QQQ"
+      ],
+      "thick_f2_symbols": [
+        "INTC"
+      ],
       "trading_authority": false
     }
   ],

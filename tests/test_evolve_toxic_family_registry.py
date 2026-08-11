@@ -144,7 +144,37 @@ def test_apply_skips_hot_fail_streak_family_creates(tmp_path: Path):
 def test_apply_skips_saturated_family_creates_prefers_unsaturated(tmp_path: Path):
     """Many capital_path_ok survivors block new clones; unsaturated family wins budget."""
     hyps = tmp_path / "hypotheses.yaml"
-    hyps.write_text("version: 1\nhypotheses: []\n", encoding="utf-8")
+    # Pre-seed living AAL PCS dens (≥ min_living) so ledger saturation still holds.
+    # Ghost-prune reopen only when living count is below the floor (2026-08-10 coach).
+    living_rows = []
+    for i in range(5):
+        living_rows.append(
+            {
+                "id": f"hyp_dna_aal_put_credit_spread_live{i:02d}",
+                "name": f"seed aal pcs {i}",
+                "thesis": "seed",
+                "sleeve": "premium",
+                "instruments": ["AAL"],
+                "entry_logic_ref": "x",
+                "exit_logic_ref": "y",
+                "status": "candidate",
+                "evidence_links": ["seed"],
+                "null_results": [],
+                "notes": "structure=put_credit_spread",
+                "dna": {
+                    "structure": "put_credit_spread",
+                    "symbols": ["AAL"],
+                    "dna_id": f"dna_live_aal_pcs_{i:02d}",
+                    "config": {"spread_width": 1.0 + 0.1 * i},
+                },
+            }
+        )
+    import yaml
+
+    hyps.write_text(
+        yaml.safe_dump({"version": 1, "hypotheses": living_rows}, sort_keys=False),
+        encoding="utf-8",
+    )
     reg = HypothesisRegistry(hyps)
     now = _now()
     by = {
@@ -179,8 +209,36 @@ def test_apply_skips_saturated_family_creates_prefers_unsaturated(tmp_path: Path
 
 
 def test_apply_saturated_skip_does_not_consume_max_create_budget(tmp_path: Path):
+    import yaml
+
+    living_rows = []
+    for i in range(5):
+        living_rows.append(
+            {
+                "id": f"hyp_dna_bac_put_credit_spread_live{i:02d}",
+                "name": f"seed bac pcs {i}",
+                "thesis": "seed",
+                "sleeve": "premium",
+                "instruments": ["BAC"],
+                "entry_logic_ref": "x",
+                "exit_logic_ref": "y",
+                "status": "candidate",
+                "evidence_links": ["seed"],
+                "null_results": [],
+                "notes": "structure=put_credit_spread",
+                "dna": {
+                    "structure": "put_credit_spread",
+                    "symbols": ["BAC"],
+                    "dna_id": f"dna_live_bac_pcs_{i:02d}",
+                    "config": {"spread_width": 1.0 + 0.1 * i},
+                },
+            }
+        )
     hyps = tmp_path / "hypotheses.yaml"
-    hyps.write_text("version: 1\nhypotheses: []\n", encoding="utf-8")
+    hyps.write_text(
+        yaml.safe_dump({"version": 1, "hypotheses": living_rows}, sort_keys=False),
+        encoding="utf-8",
+    )
     reg = HypothesisRegistry(hyps)
     now = _now()
     by = {
@@ -285,6 +343,84 @@ def test_family_create_saturated_threshold():
         "stressed_at": now,
     }
     assert family_create_saturated("X", "put_credit_spread", rotation=rot, min_capital_path_ok=25)
+
+
+def test_family_create_saturated_ghost_prune_reopen():
+    """Ledger ≥25 oks must not saturate when living registry DNA is gone (prune)."""
+    from trader_platform.stress_family_policy import (
+        family_create_saturated,
+        living_multi_leg_family_counts,
+        unsaturated_discovery_families,
+    )
+
+    now = _now()
+    by = {
+        f"snap{i}": {
+            "symbol": "SNAP",
+            "structure": "call_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+        for i in range(25)
+    }
+    rot = {"by_hyp_id": by}
+    # Legacy ledger-only: still saturated.
+    assert family_create_saturated(
+        "SNAP", "call_credit_spread", rotation=rot, min_capital_path_ok=25
+    )
+    # Ghost-prune: 0 living rows → reopen creates.
+    assert not family_create_saturated(
+        "SNAP",
+        "call_credit_spread",
+        rotation=rot,
+        min_capital_path_ok=25,
+        living_count=0,
+    )
+    assert not family_create_saturated(
+        "SNAP",
+        "call_credit_spread",
+        rotation=rot,
+        min_capital_path_ok=25,
+        living_count=2,
+        min_living=3,
+    )
+    # Living dens clones still block.
+    assert family_create_saturated(
+        "SNAP",
+        "call_credit_spread",
+        rotation=rot,
+        min_capital_path_ok=25,
+        living_count=5,
+        min_living=3,
+    )
+    live = living_multi_leg_family_counts(
+        [
+            {
+                "id": "hyp_dna_aal_put_credit_spread_x",
+                "dna": {"structure": "put_credit_spread", "symbols": ["AAL"]},
+            }
+        ]
+    )
+    assert live.get(("AAL", "put_credit_spread")) == 1
+    fams = unsaturated_discovery_families(
+        limit=6,
+        rotation=rot,
+        universe=["SNAP", "ZZZ"],
+        structures=("call_credit_spread", "put_credit_spread"),
+        living_family_counts={("SNAP", "call_credit_spread"): 0},
+    )
+    assert any(
+        f.get("symbol") == "SNAP" and f.get("structure") == "call_credit_spread" for f in fams
+    ), fams
+    # Living count above floor keeps SNAP ghost-sat closed.
+    fams_closed = unsaturated_discovery_families(
+        limit=6,
+        rotation=rot,
+        universe=["SNAP"],
+        structures=("call_credit_spread",),
+        living_family_counts={("SNAP", "call_credit_spread"): 10},
+    )
+    assert not any(f.get("symbol") == "SNAP" for f in fams_closed), fams_closed
 
 
 def test_unsaturated_discovery_symbols_skips_toxic_and_saturated():
@@ -762,9 +898,11 @@ def test_unsaturated_with_ic_surfaces_current_open_families():
     out = unsaturated_discovery_families(
         limit=8,
         structures=("put_credit_spread", "call_credit_spread", "iron_condor"),
+        use_registry_living_counts=True,
     )
     pairs = [(r.get("symbol"), r.get("structure")) for r in out]
     structs = {p[1] for p in pairs}
-    # The exact open symbol rotates with the live ledger.  Assert the policy,
-    # not a dated SNAP/F/CCL ordering snapshot.
+    # Ghost-prune reopen + preferred cold should surface IC and/or PFE-class families.
+    # Exact open symbol rotates with the live ledger — assert policy, not a dated order.
     assert "iron_condor" in structs or any(p[0] == "PFE" for p in pairs)
+    assert pairs, "expected at least one open multi-leg family"

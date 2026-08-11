@@ -889,7 +889,9 @@ def apply_results(
 
     Saturated families (many lifetime capital_path_ok, default ≥25) also skip *new*
     creates so AAL/BAC PCS clone thrash cannot monopolize max_create while unsaturated
-    multi-leg SHIPs starve (2026-07-29 continuum coach).
+    multi-leg SHIPs starve (2026-07-29 continuum coach). Ghost-prune reopen: when living
+    registry DNA for the family is below the floor, ledger oks alone do not saturate
+    (2026-08-10 continuum coach).
 
     New creates also require score>0 and n_trades>=min_create_trades so thin
     NEEDS_MORE_DATA (n=3–5) cannot bloat the registry while never entering the
@@ -908,6 +910,9 @@ def apply_results(
     by_id = {h.get("id"): h for h in store.get("hypotheses") or []}
     rot = rotation if rotation is not None else (load_rotation() if skip_toxic_families else {})
     min_tr = max(0, int(min_create_trades))
+    from trader_platform.stress_family_policy import living_multi_leg_family_counts
+
+    live_counts = living_multi_leg_family_counts(list(store.get("hypotheses") or []))
 
     def _rank_key(r: SimVerdict) -> tuple[int, float]:
         # SHIP before NEEDS_MORE_DATA/NULL even if raw score is lower.
@@ -955,7 +960,12 @@ def apply_results(
             return False
         sym = dna_primary_symbol(r.dna)
         struct = dna_structure(r.dna)
-        return family_create_saturated(sym, struct, rotation=rot)
+        living = 0
+        if sym and struct:
+            living = int(live_counts.get((str(sym).upper(), str(struct).lower()), 0))
+        return family_create_saturated(
+            sym, struct, rotation=rot, living_count=living
+        )
 
     def _create_family_rank(r: SimVerdict) -> int:
         # Prefer unsaturated non-toxic families for max_create (0 best → 2 worst).
@@ -1188,6 +1198,7 @@ def run_evolve_tick(
             open_fams = unsaturated_discovery_families(
                 limit=max(int(unsat_extra) * 2, 6),
                 structures=tuple(struct_set & ml_structs) or None,
+                use_registry_living_counts=True,
             )
             # Always append structure-focused rows (even if symbol already in research tops).
             for fam in open_fams:

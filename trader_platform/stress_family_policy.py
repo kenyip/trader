@@ -261,12 +261,51 @@ def family_challenge_toxic(
     return False
 
 
+def living_multi_leg_family_counts(
+    hypotheses: list[dict[str, Any]] | None = None,
+) -> dict[tuple[str, str], int]:
+    """Count living registry rows per (symbol, structure).
+
+    Used to reopen *ghost-saturated* families after prune removed capital_path
+    survivors from hypotheses.yaml while STRESS_ROTATION still shows ≥25 oks
+    (2026-08-10 continuum coach: SNAP/TSLL CCS SHIP + empty stress queue).
+    """
+    rows = hypotheses
+    if rows is None:
+        try:
+            from trader_platform.hypothesis_registry import HypothesisRegistry
+
+            store = HypothesisRegistry().load()
+            rows = list(store.get("hypotheses") or [])
+        except Exception:  # noqa: BLE001
+            return {}
+    counts: dict[tuple[str, str], int] = {}
+    for raw in rows or []:
+        if not isinstance(raw, dict):
+            continue
+        sym = dna_primary_symbol(raw.get("dna") or raw)
+        if not sym:
+            instruments = raw.get("instruments") or []
+            if isinstance(instruments, (list, tuple)) and instruments:
+                sym = str(instruments[0] or "").strip().upper() or None
+        st = dna_structure(raw.get("dna") or raw)
+        if not st:
+            st = str(raw.get("structure") or "").strip().lower() or None
+        if not sym or not st:
+            continue
+        key = (str(sym).strip().upper(), str(st).strip().lower())
+        counts[key] = int(counts.get(key, 0)) + 1
+    return counts
+
+
 def family_create_saturated(
     symbol: str | None,
     structure: str | None,
     *,
     rotation: dict[str, Any] | None = None,
     min_capital_path_ok: int = 25,
+    living_count: int | None = None,
+    min_living: int = 3,
 ) -> bool:
     """True when symbol×structure already has enough capital_path_ok survivors.
 
@@ -275,8 +314,18 @@ def family_create_saturated(
     multi-leg SHIPs (F CCS, SNAP PCS, …) never get a registry row. Skip *new*
     creates once lifetime capital_path_ok ≥ min (default 25); updates allowed.
     2026-07-29 continuum coach.
+
+    Ghost-prune reopen (2026-08-10 continuum coach): after hard-cap prune, rotation
+    can still show ≥25 capital_path_ok while living registry DNA for the family is
+    0 (SNAP/TSLL/CCL CCS etc.). Ledger-only saturation then freezes creates forever
+    and the B3/B4 queue stays empty even when DR re-discovers SHIP. When
+    ``living_count`` is provided and below ``min_living`` (default 3), do **not**
+    treat the family as saturated. ``living_count=None`` keeps legacy ledger-only
+    behavior (unit tests / callers without registry context).
     """
     if not symbol or not structure or min_capital_path_ok <= 0:
+        return False
+    if living_count is not None and int(living_count) < int(min_living):
         return False
     rot = rotation if rotation is not None else load_rotation()
     _fails, oks = family_lifetime_fail_ok(symbol, structure, rotation=rot)
@@ -407,6 +456,8 @@ def unsaturated_discovery_symbols(
     min_capital_path_ok_sat: int = 25,
     recent_window_hours: float = 6.0,
     recent_fail_thrash_min: int = 6,
+    living_family_counts: dict[tuple[str, str], int] | None = None,
+    use_registry_living_counts: bool = False,
 ) -> list[str]:
     """Symbols with ≥1 multi-leg family that is neither toxic nor create-saturated.
 
@@ -422,6 +473,10 @@ def unsaturated_discovery_symbols(
 
     2026-08-07 coach: effective universe always unions preferred cold discovery so
     KO/INTC cannot disappear when research universe drifts.
+
+    2026-08-10 coach: optional living registry counts reopen ghost-saturated families
+    (ledger oks ≥ sat but living DNA pruned). Default off so unit tests stay
+    ledger-pure; evolve_tick enables registry-aware counts in production.
     """
     if limit <= 0:
         return []
@@ -433,6 +488,9 @@ def unsaturated_discovery_symbols(
         universe = _effective_discovery_universe(None)
     else:
         universe = [str(s or "").strip().upper() for s in universe if str(s or "").strip()]
+    live_map = living_family_counts
+    if live_map is None and use_registry_living_counts:
+        live_map = living_multi_leg_family_counts()
     # Prefer proven-unsaturated (1..sat-1 lifetime oks) over cold names; within each
     # tier prefer recent capital_path oks and fewer recent fails (not pure ok_mass).
     scored: list[tuple[int, int, int, int, int, str]] = []
@@ -455,8 +513,15 @@ def unsaturated_discovery_symbols(
         for st in structs:
             if family_challenge_toxic(sym, st, rotation=rot):
                 continue
+            living = None
+            if live_map is not None:
+                living = int(live_map.get((sym, str(st).strip().lower()), 0))
             if family_create_saturated(
-                sym, st, rotation=rot, min_capital_path_ok=min_capital_path_ok_sat
+                sym,
+                st,
+                rotation=rot,
+                min_capital_path_ok=min_capital_path_ok_sat,
+                living_count=living,
             ):
                 continue
             open_structs += 1
@@ -473,8 +538,9 @@ def unsaturated_discovery_symbols(
             and recent_fail_mass >= int(recent_fail_thrash_min)
         ):
             continue
-        # tier0 = has some capital_path survivors but room to create; tier1 = cold
-        tier = 0 if 0 < ok_mass < int(min_capital_path_ok_sat) else 1
+        # tier0 = any proven capital_path history with create room (includes ghost-prune
+        # reopen where ok_mass ≥ sat but living DNA was pruned); tier1 = cold.
+        tier = 0 if ok_mass > 0 else 1
         pref_b, pref_i, mega = _cold_symbol_rank(sym)
         scored.append(
             (
@@ -510,6 +576,8 @@ def unsaturated_discovery_families(
     min_capital_path_ok_sat: int = 25,
     recent_window_hours: float = 6.0,
     recent_fail_thrash_min: int = 6,
+    living_family_counts: dict[tuple[str, str], int] | None = None,
+    use_registry_living_counts: bool = False,
 ) -> list[dict[str, Any]]:
     """Open (symbol, structure) pairs that may still accept *new* creates.
 
@@ -517,6 +585,8 @@ def unsaturated_discovery_families(
     and only F CCS is open — DR then wastes the pop on doomed F PCS / NFLX CCS SHIPs
     and max_create stays 0 because every positive SHIP is toxic/saturated (2026-07-31
     continuum coach: unstressed multi-leg registry count=0, stress queue empty).
+
+    2026-08-10 coach: optional living registry counts reopen ghost-saturated families.
     """
     if limit <= 0:
         return []
@@ -528,6 +598,9 @@ def unsaturated_discovery_families(
         universe = _effective_discovery_universe(None)
     else:
         universe = [str(s or "").strip().upper() for s in universe if str(s or "").strip()]
+    live_map = living_family_counts
+    if live_map is None and use_registry_living_counts:
+        live_map = living_multi_leg_family_counts()
 
     scored: list[tuple[int, int, int, int, str, str]] = []
     for raw in universe:
@@ -546,8 +619,15 @@ def unsaturated_discovery_families(
         for st in structs:
             if family_challenge_toxic(sym, st, rotation=rot):
                 continue
+            living = None
+            if live_map is not None:
+                living = int(live_map.get((sym, str(st).strip().lower()), 0))
             if family_create_saturated(
-                sym, st, rotation=rot, min_capital_path_ok=min_capital_path_ok_sat
+                sym,
+                st,
+                rotation=rot,
+                min_capital_path_ok=min_capital_path_ok_sat,
+                living_count=living,
             ):
                 continue
             _f, oks = family_lifetime_fail_ok(sym, st, rotation=rot)
@@ -567,7 +647,8 @@ def unsaturated_discovery_families(
                 continue
             # Still demote families on symbols with pure symbol thrash via score —
             # do not hard-skip an open sibling structure.
-            tier = 0 if 0 < ok_i < int(min_capital_path_ok_sat) else 1
+            # tier0 includes ghost-prune reopen (ok_i ≥ sat, living below floor).
+            tier = 0 if ok_i > 0 else 1
             pref_b, pref_i, mega = _cold_symbol_rank(sym)
             # Prefer proven-open families, then recent ok mass, fewer fails, more lifetime ok.
             # Cold tier: preferred liquid $3k names before alphabetical mega-caps.

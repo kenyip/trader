@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. Off-hours EDGE: free-update max_create fix live — expect creates on unsat families when SHIP.",
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. EDGE: ghost-sat living-count reopen shipped 2026-08-10T2110 — expect stress queue when SNAP/TSLL/PFE/F CCS mint.",
     "open_orders": [
       {
         "max_loss_usd": 40.3,
@@ -19,19 +19,18 @@
         "symbol": "BAC"
       }
     ],
-    "coach_20260810T1505": {
-      "fix": "apply_results max_create no longer charges evidence updates",
-      "b4_reject": [
-        "hyp_dna_aapl_put_credit_spread_2c8840e6",
-        "hyp_dna_iwm_call_credit_spread_13d60e0c"
+    "coach": {
+      "stamp": "2026-08-10T2110",
+      "fix": "ghost_saturation_living_count_reopen",
+      "created": [
+        "hyp_dna_ccl_iron_condor_7bd9a593",
+        "hyp_dna_ccl_call_credit_spread_ae1f10f4"
       ],
-      "shortlist_leaders": [
-        "hyp_dna_f_iron_condor_5d8c1fff",
-        "hyp_dna_f_iron_condor_75f2ffa8"
-      ]
+      "capital_path": false,
+      "leaders_hold": "F iron_condor dens0"
     }
   },
-  "generated_at": "2026-08-10T22:10:00+00:00",
+  "generated_at": "2026-08-11T04:10:10+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -41,7 +40,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_20260810T1505",
-  "stamp": "20260810T1505",
+  "source": "continuum_judgment_20260810T2110",
+  "stamp": "20260811T041010",
   "trading_authority": false
 }
