@@ -305,7 +305,7 @@ def family_create_saturated(
     rotation: dict[str, Any] | None = None,
     min_capital_path_ok: int = 25,
     living_count: int | None = None,
-    min_living: int = 3,
+    min_living: int = 6,
 ) -> bool:
     """True when symbol×structure already has enough capital_path_ok survivors.
 
@@ -319,9 +319,16 @@ def family_create_saturated(
     can still show ≥25 capital_path_ok while living registry DNA for the family is
     0 (SNAP/TSLL/CCL CCS etc.). Ledger-only saturation then freezes creates forever
     and the B3/B4 queue stays empty even when DR re-discovers SHIP. When
-    ``living_count`` is provided and below ``min_living`` (default 3), do **not**
-    treat the family as saturated. ``living_count=None`` keeps legacy ledger-only
-    behavior (unit tests / callers without registry context).
+    ``living_count`` is provided and below ``min_living``, do **not** treat the
+    family as saturated. ``living_count=None`` keeps legacy ledger-only behavior
+    (unit tests / callers without registry context).
+
+    Thin-living floor (2026-08-11 continuum coach): default ``min_living`` raised
+    3→6. After prune, preferred families often retain only 3–4 living rows while
+    ledger oks ≥25 (SNAP/F/PFE/CCL CCS). That tripped sat, unsat inject fell
+    through to cold mega-cap CCS (AVGO/DIA/META) with zero_trades, and the stress
+    queue stayed empty except toxic KO/NFLX/AAPL. Require a thicker living dens
+    before freezing creates; F IC-style monocultures with living≫6 stay saturated.
     """
     if not symbol or not structure or min_capital_path_ok <= 0:
         return False

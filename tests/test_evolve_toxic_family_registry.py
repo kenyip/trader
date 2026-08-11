@@ -144,10 +144,10 @@ def test_apply_skips_hot_fail_streak_family_creates(tmp_path: Path):
 def test_apply_skips_saturated_family_creates_prefers_unsaturated(tmp_path: Path):
     """Many capital_path_ok survivors block new clones; unsaturated family wins budget."""
     hyps = tmp_path / "hypotheses.yaml"
-    # Pre-seed living AAL PCS dens (≥ min_living) so ledger saturation still holds.
-    # Ghost-prune reopen only when living count is below the floor (2026-08-10 coach).
+    # Pre-seed living AAL PCS dens (≥ min_living=6) so ledger saturation still holds.
+    # Ghost/thin-living reopen only when living count is below the floor.
     living_rows = []
-    for i in range(5):
+    for i in range(6):
         living_rows.append(
             {
                 "id": f"hyp_dna_aal_put_credit_spread_live{i:02d}",
@@ -212,7 +212,7 @@ def test_apply_saturated_skip_does_not_consume_max_create_budget(tmp_path: Path)
     import yaml
 
     living_rows = []
-    for i in range(5):
+    for i in range(6):  # ≥ default min_living so BAC PCS ledger sat still holds
         living_rows.append(
             {
                 "id": f"hyp_dna_bac_put_credit_spread_live{i:02d}",
@@ -346,7 +346,7 @@ def test_family_create_saturated_threshold():
 
 
 def test_family_create_saturated_ghost_prune_reopen():
-    """Ledger ≥25 oks must not saturate when living registry DNA is gone (prune)."""
+    """Ledger ≥25 oks must not saturate when living registry DNA is gone/thin."""
     from trader_platform.stress_family_policy import (
         family_create_saturated,
         living_multi_leg_family_counts,
@@ -376,6 +376,22 @@ def test_family_create_saturated_ghost_prune_reopen():
         min_capital_path_ok=25,
         living_count=0,
     )
+    # Thin living (post-prune 3–4 rows) still reopens under default min_living=6.
+    assert not family_create_saturated(
+        "SNAP",
+        "call_credit_spread",
+        rotation=rot,
+        min_capital_path_ok=25,
+        living_count=3,
+    )
+    assert not family_create_saturated(
+        "SNAP",
+        "call_credit_spread",
+        rotation=rot,
+        min_capital_path_ok=25,
+        living_count=5,
+    )
+    # Explicit lower floor still blocks once living dens crosses it.
     assert not family_create_saturated(
         "SNAP",
         "call_credit_spread",
@@ -384,7 +400,6 @@ def test_family_create_saturated_ghost_prune_reopen():
         living_count=2,
         min_living=3,
     )
-    # Living dens clones still block.
     assert family_create_saturated(
         "SNAP",
         "call_credit_spread",
@@ -392,6 +407,14 @@ def test_family_create_saturated_ghost_prune_reopen():
         min_capital_path_ok=25,
         living_count=5,
         min_living=3,
+    )
+    # Default floor: thick living dens clones still block.
+    assert family_create_saturated(
+        "SNAP",
+        "call_credit_spread",
+        rotation=rot,
+        min_capital_path_ok=25,
+        living_count=6,
     )
     live = living_multi_leg_family_counts(
         [

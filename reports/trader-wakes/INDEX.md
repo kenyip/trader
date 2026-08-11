@@ -1,3 +1,4 @@
+- 2026-08-11T0908-continuum-judgment — coach: thin-living sat min_living 3→6; CCL/SNAP/TSLL CCS create→B3/B4 reject; F IC leaders; paper 2 open manage
 - 2026-08-11T1130-rth — RTH mid: HOLD AAL PCS mtm≈-3.3 OTM$0.40 |d|0.34 + HOLD BAC +10.13/adv+7.63 vs PT12.95; STAND_ASIDE new book_full; scout OPEN_CCS research_only
 - 2026-08-11T1030-rth — RTH mid: HOLD AAL PCS mtm≈-5.8 OTM$0.33 |d|0.37 + HOLD BAC +10.63/adv+7.63 vs PT12.95; STAND_ASIDE new book_full; scout OPEN_CCS research_only
 - 2026-08-11T0930-rth — RTH open: HOLD AAL PCS mtm≈-11.3 OTM$0.07 + HOLD BAC +8.63 vs PT12.95; STAND_ASIDE new book_full; scout OPEN_CCS research_only
