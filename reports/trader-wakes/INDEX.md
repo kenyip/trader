@@ -1,3 +1,4 @@
+- [2026-08-11T1430-rth](2026-08-11T1430-rth.md) — RTH manage HOLD AAL+BAC · STAND_ASIDE book_full · BAC dual-PT gap ~1.3/2.3
 - [2026-08-11T1330-rth](2026-08-11T1330-rth.md) — RTH manage HOLD AAL+BAC · STAND_ASIDE book_full · BAC→PT
 - 2026-08-11T1230-rth — RTH mid: HOLD AAL PCS mtm≈-4.8 OTM$0.40 |d|0.33 + HOLD BAC +10.13/adv+8.63 vs PT12.95; STAND_ASIDE new book_full; soft-red AAL drift vs 11:30
 - 2026-08-11T0908-continuum-judgment — coach: thin-living sat min_living 3→6; CCL/SNAP/TSLL CCS create→B3/B4 reject; F IC leaders; paper 2 open manage
