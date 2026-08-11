@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-08-11T16:33:14+00:00",
-  "stamp": "20260811T1230",
-  "source": "rth_eval_2026-08-11T1230",
-  "ken_required": false,
-  "live_authority": false,
-  "trading_authority": false,
-  "paper_campaign_execute": true,
   "next_action": "manage_open_paper_campaign",
+  "ken_required": false,
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
     "fund_3k_at_packet"
   ],
+  "live_authority": false,
+  "trading_authority": false,
+  "paper_campaign_execute": true,
+  "source": "rth_eval_2026-08-11T1330",
+  "stamp": "20260811T1330",
+  "generated_at": "2026-08-11T17:33:18.335931+00:00",
   "detail": {
-    "hint": "RTH ~12:30 ET: HOLD both PCS on bid/ask. AAL soft-red drift vs 11:30 (mtm \u22123.3\u2192\u22124.8, OTM~$0.40, |\u0394|0.33<0.45, ml_used\u224818%). BAC mid +10.13 / adv +8.63 vs dual PT $12.95 \u2014 still short both; adv improved. STAND_ASIDE new while book_full 2/2. Campaign scout skipped (manage fast path).",
-    "session_et": "2026-08-11 ~12:30 ET mid (Tue)",
+    "hint": "RTH: mark/manage paper; dual PT BAC needs mid\u2227adv\u2265$12.95; AAL soft-red quiet path HOLD; STAND_ASIDE new while book_full 2/2",
+    "decision_new_entries": "STAND_ASIDE",
     "book_full": true,
     "working": 2,
     "open_risk_usd": 119.67,
@@ -22,119 +22,69 @@
     "open_orders": [
       {
         "order_id": "paper_537129ebd52d",
-        "strategy_id": "hyp_dna_aal_put_credit_spread_3486155f",
         "symbol": "AAL",
         "structure": "put_credit_spread",
+        "strategy_id": "hyp_dna_aal_put_credit_spread_3486155f",
         "status": "working",
         "max_loss_usd": 40.3,
+        "spot": 15.475000381469727,
+        "short_k": 15.0,
+        "long_k": 14.5,
+        "otm": 0.47500038146972656,
+        "delta": -0.30773582394521504,
+        "mtm": -2.8029205233366383,
+        "mtm_adverse": -4.30292052333664,
+        "pt_usd": 5.3872,
+        "ml_used_frac": 0.10677222142274542,
         "decision": "HOLD",
-        "mtm_usd": -4.8,
-        "mtm_adverse_usd": -7.3,
-        "spot": 15.405,
-        "chg_pct": 2.7,
-        "short_strike": 15.0,
-        "long_strike": 14.5,
-        "short_otm": 0.405,
-        "short_itm": false,
-        "ml_used_frac": 0.1812,
-        "short_delta_abs": 0.3331,
-        "delta_note": "bid_ask_ok",
-        "exp": "2026-08-21",
-        "entry_credit": 0.09697079476663362,
-        "quote_short_src": "bid_ask",
-        "quote_long_src": "bid_ask",
-        "ladder": {
-          "profit_target": 0.5555465179774001,
-          "delta_breach": 0.45,
-          "defined_loss_exit_frac": 0.753171882607278,
-          "dte_stop": 3,
-          "pt_usd": 5.39
-        },
-        "dual_pt": {
-          "pt_usd": 5.39,
-          "mtm_mid": -4.8,
-          "mtm_adverse": -7.3,
-          "mid_ge_pt": false,
-          "adverse_ge_pt": false,
-          "dual_pt_close": false
-        },
+        "dual_pt_close": false,
         "defined_loss_hit": false,
-        "delta_breach_hit": false,
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ]
+        "delta_breach_hit": false
       },
       {
         "order_id": "paper_f9f4ed941138",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_631f9804",
         "symbol": "BAC",
         "structure": "put_credit_spread",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_631f9804",
         "status": "working",
         "max_loss_usd": 79.37,
-        "decision": "HOLD",
-        "mtm_usd": 10.13,
-        "mtm_adverse_usd": 8.63,
-        "spot": 64.03,
-        "chg_pct": 0.266,
-        "short_strike": 62.0,
-        "long_strike": 61.0,
-        "short_otm": 2.03,
-        "short_itm": false,
+        "spot": 64.03500366210938,
+        "short_k": 62.0,
+        "long_k": 61.0,
+        "otm": 2.035003662109375,
+        "delta": -0.1304414862556994,
+        "mtm": 11.629356829171286,
+        "mtm_adverse": 10.629356829171286,
+        "pt_usd": 12.9488,
         "ml_used_frac": 0.0,
-        "short_delta_abs": 0.1437,
-        "delta_note": "bid_ask_ok",
-        "exp": "2026-08-21",
-        "entry_credit": 0.20629356829171286,
-        "quote_short_src": "bid_ask",
-        "quote_long_src": "bid_ask",
-        "ladder": {
-          "profit_target": 0.6276891974059672,
-          "delta_breach": 0.45,
-          "defined_loss_exit_frac": 0.85,
-          "dte_stop": 3,
-          "pt_usd": 12.95
-        },
-        "dual_pt": {
-          "pt_usd": 12.95,
-          "mtm_mid": 10.13,
-          "mtm_adverse": 8.63,
-          "mid_ge_pt": false,
-          "adverse_ge_pt": false,
-          "dual_pt_close": false
-        },
+        "decision": "HOLD",
+        "dual_pt_close": false,
         "defined_loss_hit": false,
-        "delta_breach_hit": false,
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ]
+        "delta_breach_hit": false
       }
     ],
-    "scout": {
-      "stamp": "20260811T153523",
-      "n_intents": 1,
-      "note": "last full rth-ops ~11:35 UTC; book_full campaign skips scout",
-      "campaign_scout": "skipped_book_full"
-    },
-    "stand_aside_new": true,
-    "stand_aside_reasons": [
-      "book_full_2_of_2",
-      "open_risk_119.67",
-      "no_ladder_exit_fire",
-      "no_capital_fit_OPEN_PCS_headroom"
-    ],
-    "vs_prior_1130": {
-      "AAL": "mtm -3.30\u2192-4.80; OTM 0.405\u21920.405; |d| 0.34\u21920.33; soft-red mark drift HOLD",
-      "BAC": "mtm +10.13\u2192+10.13; adv +7.63\u2192+8.63; OTM 1.87\u21922.03; still < PT 12.95 dual"
-    },
-    "marks_path": ".cache/platform/rth_eval_marks_latest.json",
-    "marks_at": "2026-08-11T16:31:30.129460+00:00",
     "equities": {
-      "AAL": 15.414999961853027,
-      "BAC": 64.02999877929688,
-      "SNAP": 5.494999885559082,
-      "SPY": 771.830078125,
-      "QQQ": 718.4450073242188,
-      "PLTR": 173.29110717773438
+      "AAL": 15.47700023651123,
+      "BAC": 64.03500366210938,
+      "SNAP": 5.465000152587891,
+      "SPY": 770.8099975585938,
+      "QQQ": 717.5999755859375,
+      "PLTR": 176.14999389648438
+    },
+    "vs_prior_1230": {
+      "AAL_mtm": {
+        "was": -4.8,
+        "now": -2.8
+      },
+      "BAC_mtm": {
+        "was": 10.13,
+        "now": 11.63
+      },
+      "BAC_adv": {
+        "was": 8.63,
+        "now": 10.63
+      },
+      "note": "AAL healed soft-red; BAC still ~1.3 shy dual PT"
     }
   }
 }

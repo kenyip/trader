@@ -12,3 +12,9 @@ SLEEVE: $3000 plan · test cash≈500 · live_armed=false
 Coach 2026-08-11 ~09:08 PDT: empty stress queue was thin-living preferred sat (SNAP/F/PFE/CCL living 3–4) → unsat mega-cap drift. Patched min_living 3→6; forced CCL/SNAP/TSLL CCS create→B3/B4 reject; leaders unchanged.  
 
 NEXT: manage_open_paper_campaign · ken_required=false
+
+## C-row RTH 2026-08-11T1330
+- paper manage: HOLD AAL+BAC; open_risk=$119.67; book_full; STAND_ASIDE new
+- ladder: no dual_pt / delta_breach / defined_loss
+- BAC mtm/adv 11.63/10.63 vs PT 12.95
+- live_armed=false; ken_required=false
