@@ -1,3 +1,4 @@
+- [2026-08-11T1504-continuum-judgment](2026-08-11T1504-continuum-judgment.md) — EDGE unfreeze prune 6.0→1.8MB + ghost shortlist; AMD IC+PFE CCS B4 reject; F IC leaders; edge_search=OK; paper 2 open manage
 - [2026-08-11T1530-rth](2026-08-11T1530-rth.md) — RTH manage HOLD AAL+BAC · STAND_ASIDE book_full · BAC dual-PT gap ~1.8/3.3 (widened)
 - [2026-08-11T1430-rth](2026-08-11T1430-rth.md) — RTH manage HOLD AAL+BAC · STAND_ASIDE book_full · BAC dual-PT gap ~1.3/2.3
 - [2026-08-11T1330-rth](2026-08-11T1330-rth.md) — RTH manage HOLD AAL+BAC · STAND_ASIDE book_full · BAC→PT

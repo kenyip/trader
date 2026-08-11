@@ -1,117 +1,38 @@
 {
-  "generated_at": "2026-08-11T19:32:54+00:00",
-  "stamp": "20260811T1530",
-  "source": "rth_eval_2026-08-11T1530",
-  "ken_required": false,
+  "detail": {
+    "coach": "2026-08-11T1504 EDGE unfreeze prune dual-fix; edge_search=OK registry~1.8MB; AMD IC+PFE CCS B4 reject; leaders F IC dens0",
+    "hint": "RTH: mark/manage paper DNA ladder; STAND_ASIDE new while book_full. EDGE worker continues unfrozen — re-prune if registry approaches 6MB BLOATED_SKIP.",
+    "open_orders": [
+      {
+        "max_loss_usd": 40.3,
+        "order_id": "paper_537129ebd52d",
+        "status": "working",
+        "strategy_id": "hyp_dna_aal_put_credit_spread_3486155f",
+        "structure": "put_credit_spread",
+        "symbol": "AAL"
+      },
+      {
+        "max_loss_usd": 79.37,
+        "order_id": "paper_f9f4ed941138",
+        "status": "working",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_631f9804",
+        "structure": "put_credit_spread",
+        "symbol": "BAC"
+      }
+    ],
+    "open_risk_usd": 119.67
+  },
+  "generated_at": "2026-08-11T22:04:30+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
     "fund_3k_at_packet"
   ],
+  "ken_required": false,
   "live_authority": false,
-  "trading_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "detail": {
-    "hint": "RTH: mark/manage paper; HOLD while ladder clear; STAND_ASIDE new while book full; watch BAC dual PT $12.95 (gaps mid\u22481.82 adv\u22483.32); AAL soft-red mtm=-3.8 OTM ml~16%",
-    "session_et": "2026-08-11 ~15:30 ET late afternoon (Tue)",
-    "book_full": true,
-    "open_risk_usd": 119.67,
-    "working": 2,
-    "new_entries": "STAND_ASIDE",
-    "closed_this_session": [],
-    "open_orders": [
-      {
-        "order_id": "paper_537129ebd52d",
-        "strategy_id": "hyp_dna_aal_put_credit_spread_3486155f",
-        "symbol": "AAL",
-        "structure": "put_credit_spread",
-        "status": "working",
-        "max_loss_usd": 40.3,
-        "decision": "HOLD",
-        "mtm_usd": -3.8,
-        "mtm_adverse_usd": -6.3,
-        "spot": 15.3999,
-        "chg_pct": 2.666,
-        "short_strike": 15.0,
-        "long_strike": 14.5,
-        "short_otm": 0.4,
-        "short_itm": false,
-        "ml_used_frac": 0.1564,
-        "short_delta_abs": 0.327,
-        "exp": "2026-08-21",
-        "entry_credit": 0.09697079476663362,
-        "quote_short_src": "bid_ask",
-        "quote_long_src": "bid_ask",
-        "quote_flags": [],
-        "reasons": [
-          "no_ladder: dual_pt=False dl=False d_breach=False"
-        ],
-        "ladder": {
-          "profit_target": 0.5555465179774001,
-          "delta_breach": 0.45,
-          "defined_loss_exit_frac": 0.753171882607278,
-          "dte_stop": 3,
-          "pt_usd": 5.39
-        },
-        "dual_pt_close": false,
-        "defined_loss_hit": false,
-        "delta_breach_hit": false,
-        "pt_gap_mid": null,
-        "pt_gap_adv": null,
-        "vs_1430": "healed mid -4.30\u2192-3.80 (still soft-red HOLD; OTM |d|~0.33)"
-      },
-      {
-        "order_id": "paper_f9f4ed941138",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_631f9804",
-        "symbol": "BAC",
-        "structure": "put_credit_spread",
-        "status": "working",
-        "max_loss_usd": 79.37,
-        "decision": "HOLD",
-        "mtm_usd": 11.13,
-        "mtm_adverse_usd": 9.63,
-        "spot": 64.06,
-        "chg_pct": 0.313,
-        "short_strike": 62.0,
-        "long_strike": 61.0,
-        "short_otm": 2.06,
-        "short_itm": false,
-        "ml_used_frac": 0.0,
-        "short_delta_abs": 0.133,
-        "exp": "2026-08-21",
-        "entry_credit": 0.20629356829171286,
-        "quote_short_src": "bid_ask",
-        "quote_long_src": "bid_ask",
-        "quote_flags": [],
-        "reasons": [
-          "no_ladder: dual_pt=False dl=False d_breach=False",
-          "pt_gap mid=1.82 adv=3.32"
-        ],
-        "ladder": {
-          "profit_target": 0.6276891974059672,
-          "delta_breach": 0.45,
-          "defined_loss_exit_frac": 0.85,
-          "dte_stop": 3,
-          "pt_usd": 12.95
-        },
-        "dual_pt_close": false,
-        "defined_loss_hit": false,
-        "delta_breach_hit": false,
-        "pt_gap_mid": 1.82,
-        "pt_gap_adv": 3.32,
-        "vs_1430": "softened mid +11.63\u2192+11.13 / adv +10.63\u2192+9.63 (PT gaps wider ~1.8/3.3)"
-      }
-    ],
-    "equities_snapshot": {
-      "AAL": 15.399900436401367,
-      "BAC": 64.05999755859375,
-      "SNAP": 5.46999979019165,
-      "SPY": 770.72998046875,
-      "QQQ": 718.25,
-      "PLTR": 175.27000427246094
-    },
-    "marks_generated_at": "2026-08-11T19:31:55.444620+00:00",
-    "any_close": false
-  }
+  "source": "continuum_judgment_2026-08-11T1504",
+  "stamp": "20260811T1504",
+  "trading_authority": false
 }

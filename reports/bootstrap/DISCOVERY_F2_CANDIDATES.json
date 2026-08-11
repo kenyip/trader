@@ -5784,7 +5784,7 @@
   ],
   "capital_path_ok": false,
   "discovery_root": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery",
-  "generated_at": "2026-08-09T02:01:34+00:00",
+  "generated_at": "2026-08-11T22:04:09+00:00",
   "honesty": "Loadable discovery F2 surface for multi-symbol reprove. Does not grant capital_path_ok, paper/live, or pack-grade by itself.",
   "live_authority": false,
   "mode": "discovery_f2_handoff",
