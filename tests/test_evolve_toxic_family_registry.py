@@ -851,11 +851,57 @@ def test_unsaturated_discovery_families_caps_cold_tier():
     assert any(p[0] == "CCL" and p[2] == 0 for p in pairs)
     mega = {"AVGO", "DIA", "GOOGL", "JPM", "META", "NVDA"}
     n_mega_cold = sum(1 for p in pairs if p[2] >= 1 and p[0] in mega)
-    # Non-preferred cold still capped; preferred cold (F/CCL open twins) may add.
-    assert n_mega_cold <= max(2, 8 // 3)
+    # 2026-08-12 coach: cold mega hard-skipped entirely (not merely capped).
+    assert n_mega_cold == 0, pairs
     assert len(out) <= 8
     # Tier-0 leaders stay ahead of mega cold.
     assert pairs[0][2] == 0
+
+
+def test_unsaturated_hard_skips_cold_mega_when_preferred_closed():
+    """Empty preferred open must not fall through to AAPL/AMD zero-trade CCS."""
+    from trader_platform.stress_family_policy import unsaturated_discovery_families
+
+    now = _now()
+    # Preferred multi-leg families all saturated/toxic-shaped; only mega cold open.
+    by = {
+        f"f_sat_{i}": {
+            "symbol": "F",
+            "structure": "iron_condor",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+        for i in range(30)
+    }
+    for sym in ("AAPL", "AMD", "AMZN", "AVGO"):
+        by[f"{sym}_c"] = {
+            "symbol": sym,
+            "structure": "call_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now,
+        }
+    # Preferred cold XOM CCS remains eligible.
+    by["xom_c"] = {
+        "symbol": "XOM",
+        "structure": "call_credit_spread",
+        "capital_path_ok": False,
+        "stressed_at": now,
+    }
+    live = {
+        ("F", "iron_condor"): 10,  # sat holds with living ≥ min_living
+    }
+    out = unsaturated_discovery_families(
+        limit=6,
+        rotation={"by_hyp_id": by},
+        universe=["F", "AAPL", "AMD", "AMZN", "AVGO", "XOM"],
+        structures=("put_credit_spread", "call_credit_spread", "iron_condor"),
+        recent_fail_thrash_min=99,
+        living_family_counts=live,
+        use_registry_living_counts=False,
+    )
+    syms = {r["symbol"] for r in out}
+    assert "AAPL" not in syms and "AMD" not in syms and "AMZN" not in syms and "AVGO" not in syms, out
+    assert "XOM" in syms, out
 
 
 def test_build_population_registry_family_seeds(monkeypatch, tmp_path):

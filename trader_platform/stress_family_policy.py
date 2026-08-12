@@ -218,7 +218,7 @@ def family_challenge_toxic(
     streak_fail_min: int = 6,
     streak_max_ok: int = 1,
     living_count: int | None = None,
-    streak_min_living: int = 6,
+    streak_min_living: int = 12,
     streak_reopen_min_lifetime_ok: int = 3,
 ) -> bool:
     """Hard-block hopeless symbol×structure families (same thresholds as selector).
@@ -238,12 +238,20 @@ def family_challenge_toxic(
     living_count 0–5 while a recent fail streak still trips hot toxic. That froze
     both evolve creates and B3/B4 on F CCS / IWM PCS-class DNA and left unsat
     inject on mega-cap CCS zero_trades with unstressed_ml=0. When ``living_count``
-    is provided and below ``streak_min_living`` (default 6, matches sat floor)
+    is provided and below ``streak_min_living``
     **and** lifetime capital_path_ok ≥ ``streak_reopen_min_lifetime_ok`` (default 3),
     skip the hot-streak arm only — lifetime/window hopeless toxic still hard-blocks,
     and zero-ok / fluke families stay streak-toxic even at living=0 (INTC PCS).
     ``living_count=None`` keeps legacy streak behavior (unit tests / callers without
     registry context).
+
+    Moderate-living reopen floor (2026-08-12 continuum coach): default
+    ``streak_min_living`` raised 6→12. After sat floors, preferred CCS twins often
+    sit at living dens 6–8 (F/PFE/SNAP/CCL CCS) with lifetime capital_path_ok≫0 while
+    hot-streak still blocked creates. Unsat then fell through to cold mega-cap
+    CCS/IC (AAPL/AMD/AMZN/XOM zero_trades), DR created 0 multi-leg, and the stress
+    selector stayed n=0 (TTL leaders + toxic-only unstressed). Keep thick dens
+    (AAL CCS living≫12) hot-toxic; reopen moderate dens so B3/B4 can rotate again.
     """
     if not symbol or not structure:
         return False
@@ -678,6 +686,13 @@ def unsaturated_discovery_families(
             # tier0 includes ghost-prune reopen (ok_i ≥ sat, living below floor).
             tier = 0 if ok_i > 0 else 1
             pref_b, pref_i, mega = _cold_symbol_rank(sym)
+            # Hard-skip cold mega-cap families (2026-08-12 continuum coach).
+            # Rank demote alone still let AAPL/AMD/AMZN/AVGO CCS fill unsat when
+            # every preferred multi-leg family was sat or hot-toxic — DR then burned
+            # pop on zero_trades and stress queue stayed empty. Prefer empty inject
+            # (or preferred cold like XOM/INTC) over mega zero-trade thrash.
+            if tier >= 1 and sym in _MEGA_CAP_COLD_DEMOTE:
+                continue
             # Prefer proven-open families, then recent ok mass, fewer fails, more lifetime ok.
             # Cold tier: preferred liquid $3k names before alphabetical mega-caps.
             scored.append(

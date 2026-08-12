@@ -1,3 +1,5 @@
+| 2026-08-12T0900 | continuum-judgment | EDGE unlock: streak_min_living 6→12 + mega cold hard-skip; selector n=0→6; PFE CCS capital_path_ok dens3 secondary; F IC leaders hold; BAC paper HOLD | manage_open_paper_campaign |
+- `2026-08-12T0900-continuum-judgment.md` — coach: moderate-living hot-streak reopen + mega unsat hard-skip; B3/B4 PFE CCS ok dens3; queue residual open
 | 2026-08-12T1130 | rth | CLOSE AAL delta_breach mtm$-11.30 OTM$0.035 |d|0.466 + CLOSE BAC dual PT +$16.13/+$14.63>=$12.95; book 2->0; STAND_ASIDE cool-off | manage_open_paper_campaign |
 - `2026-08-12T1030-rth.md` — RTH manage: HOLD AAL mtm $-9.80 + HOLD BAC mid $13.13/adv $10.63 vs PT $12.95 (dual false); STAND_ASIDE new book_full
 - [2026-08-12T0931-rth](2026-08-12T0931-rth.md) — RTH open: HOLD AAL PCS −9.30 (OTM 0.34 ml23%) + HOLD BAC +10.63 vs PT 12.95 gap~2.32; STAND_ASIDE book_full; last/last open marks

@@ -1078,6 +1078,31 @@ def test_family_hot_fail_streak_toxic_blocks_despite_historic_oks():
         streak_lookback=8,
         living_count=0,
     )
+    # Moderate living dens (sat floor 6–8) also reopens under default
+    # streak_min_living=12 (2026-08-12 coach: F/PFE/SNAP CCS living≈6–7).
+    assert not family_challenge_toxic(
+        "AAL",
+        "call_credit_spread",
+        rotation=rot,
+        toxic_fail_min=8,
+        lifetime_fail_min=20,
+        max_ok_rate=0.05,
+        streak_fail_min=6,
+        streak_lookback=8,
+        living_count=7,
+    )
+    # At/above default streak_min_living=12 keep hot-streak toxic.
+    assert family_challenge_toxic(
+        "AAL",
+        "call_credit_spread",
+        rotation=rot,
+        toxic_fail_min=8,
+        lifetime_fail_min=20,
+        max_ok_rate=0.05,
+        streak_fail_min=6,
+        streak_lookback=8,
+        living_count=12,
+    )
     # Thin living + zero lifetime ok still hot-streak toxic.
     by_zero = {
         f"hyp_dna_intc_put_credit_spread_hot{i}": {
