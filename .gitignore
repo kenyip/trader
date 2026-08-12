@@ -24,3 +24,7 @@ agentic_kill.switch
 
 # Desk B living registry runtime (local only)
 trader_platform/data/living_registry.json
+
+# Generated runtime artifacts (Ken ownership A 2026-08-12) — keep on disk, never git-dirty
+reports/bootstrap/*.json
+trader_platform/data/hypotheses.yaml
