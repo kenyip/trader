@@ -5,6 +5,7 @@ SLEEVE: $3000 plan · test cash≈500 · live_armed=false
 
 | Layer | State |
 |---|---|
+| 2026-08-12T1330 | RTH | HOLD BAC paper 1/2 risk79 dualPT false | paper manage | EDGE/ROBOT ok ARM blocked |
 | EDGE | **OK** · worker ON · pack-grade shortlist_dna_multi · F IC dens0 leaders · first-live SNAP CSP fit_3k |
 | ROBOT | OK · paper **1 open** BAC PCS **HOLD** risk~$79.32 · sessions 16/3 · shadow PASS |
 | ARM | BLOCKED · Ken LIVE_PACKET only |

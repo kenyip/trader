@@ -1,3 +1,5 @@
+| 2026-08-12T1330 | rth | HOLD BAC PCS mtm +8.68/adv +7.68 vs PT 12.98 (dual false) OTM1.61 |d|0.16; STAND_ASIDE new (BAC open + AAL/F filters); book 1/2 risk79 | manage_open_paper_campaign |
+- `2026-08-12T1330-rth.md` — RTH mid: HOLD BAC refill; dual-PT gap ~4.3/5.3; no non-BAC capital-fit OPEN_*
 | 2026-08-12T1230 | rth | HOLD BAC PCS mtm +8.68/adv +6.68 vs PT 12.98 (dual false) OTM1.60 |d|0.17; STAND_ASIDE new (BAC open + AAL filters + F IC bearish); book 1/2 risk79 | manage_open_paper_campaign |
 - `2026-08-12T1230-rth.md` — RTH mid: HOLD BAC refill after 1130 closes; dual-PT gap ~4.3/6.3; no non-BAC capital-fit OPEN_*
 | 2026-08-12T0900 | continuum-judgment | EDGE unlock: streak_min_living 6→12 + mega cold hard-skip; selector n=0→6; PFE CCS capital_path_ok dens3 secondary; F IC leaders hold; BAC paper HOLD | manage_open_paper_campaign |
