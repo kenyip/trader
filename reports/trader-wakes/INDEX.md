@@ -1,4 +1,6 @@
+| 2026-08-12T1430 | rth | HOLD BAC PCS mtm +10.68/adv +9.68 vs PT 12.98 (dual false) OTM1.72 |d|0.15; STAND_ASIDE new (BAC open + AAL filters); book 1/2 risk79 | manage_open_paper_campaign |
 | 2026-08-12T1330 | rth | HOLD BAC PCS mtm +8.68/adv +7.68 vs PT 12.98 (dual false) OTM1.61 |d|0.16; STAND_ASIDE new (BAC open + AAL/F filters); book 1/2 risk79 | manage_open_paper_campaign |
+- `2026-08-12T1430-rth.md` — RTH mid: HOLD BAC refill grind toward PT; dual gap ~2.3/3.3; no non-BAC capital-fit OPEN_*
 - `2026-08-12T1330-rth.md` — RTH mid: HOLD BAC refill; dual-PT gap ~4.3/5.3; no non-BAC capital-fit OPEN_*
 | 2026-08-12T1230 | rth | HOLD BAC PCS mtm +8.68/adv +6.68 vs PT 12.98 (dual false) OTM1.60 |d|0.17; STAND_ASIDE new (BAC open + AAL filters + F IC bearish); book 1/2 risk79 | manage_open_paper_campaign |
 - `2026-08-12T1230-rth.md` — RTH mid: HOLD BAC refill after 1130 closes; dual-PT gap ~4.3/6.3; no non-BAC capital-fit OPEN_*
