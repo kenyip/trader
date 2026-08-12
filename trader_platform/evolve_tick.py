@@ -952,7 +952,12 @@ def apply_results(
             return False
         sym = dna_primary_symbol(r.dna)
         struct = dna_structure(r.dna)
-        return family_challenge_toxic(sym, struct, rotation=rot)
+        living = 0
+        if sym and struct:
+            living = int(live_counts.get((str(sym).upper(), str(struct).lower()), 0))
+        return family_challenge_toxic(
+            sym, struct, rotation=rot, living_count=living
+        )
 
     def _is_saturated_family(r: SimVerdict) -> bool:
         """Too many capital_path_ok survivors — stop minting dens clones."""

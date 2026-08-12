@@ -30,13 +30,17 @@ CHOSE: **thin-living hot-streak toxic reopen** + forced DR→B3/B4 on reopened p
    - skip hot-streak only when living&lt;6 **and** lifetime capital_path_ok≥3
    - thick living still hot-toxic; zero-ok stays streak-toxic at living=0
    - wired evolve apply, unsat families (`use_registry_living_counts=True` default), selector
-3. Tests: extended hot-streak cases + hopeless lifetime control — `tests/test_stress_rotation.py` **18 passed**
+3. Tests: extended hot-streak cases + `test_family_hot_streak_thin_living_does_not_block_hopeless_lifetime` — `tests/test_stress_rotation.py` **18 passed**
 4. Live policy check: F/CCL/SNAP CCS tox=false living=0; INTC PCS tox=true; unsat leads CCL/F/SNAP CCS tier0
 5. **Forced DR** `--symbols F CCL SNAP TSLL PFE --ship-only --max-create 6`  
    created: SNAP CCS×3 · PFE CCS×1 · CCL CCS×2
 6. **B3/B4** `regime_coach_20260812T0409` / `cost_coach_20260812T0409` + ingest+shortlist refresh:
-   - SNAP CCS `c7cf0e37` **capital_path_ok** dens8 dd~152 SHIP@5% (secondary)
-   - SNAP twins / PFE / CCL CCS → B3/B4 reject (risk bar or fragile slip)
+   | hyp | capital_path |
+   |---|---|
+   | SNAP CCS `c7cf0e37` | **ok** dens8 dd~152 SHIP@5% ~$56 (secondary) |
+   | SNAP CCS a7c8ca07 / ea781706 | reject B4 soft/neg |
+   | PFE CCS 5cdb76d5 | reject risk bar dens6 dd203 (SHIP@5% not enough) |
+   | CCL CCS d29c9407 / eb0bc2c0 | reject B3/B4 fragile |
 7. Shortlist tops **unchanged**: F IC dens0 → AAL PCS → BAC PCS
 8. Skill: `references/quality-acceleration.md` hot-streak thin-living section
 
@@ -50,8 +54,9 @@ No live/arm/MCP place_* · no densify bag · paper ledger HOLD residual for RTH
 | Tests | `tests/test_stress_rotation.py` 18 passed |
 | Evolve | `.cache/platform/quality_residual/evolve_dr_coach_20260812T0405.log` |
 | B3/B4 | `.cache/platform/quality_residual/regime_coach_20260812T0409.json` · `cost_coach_…` |
-| Rotation | `reports/bootstrap/STRESS_ROTATION.json` |
+| Rotation | `reports/bootstrap/STRESS_ROTATION.json` last coach ingest |
 | Shortlist | `reports/bootstrap/QUALITY_SHORTLIST.json` F IC leaders |
+| Status | EDGE PASS · ROBOT PASS · ARM BLOCKED |
 
 ## DURABLE
 
@@ -68,11 +73,12 @@ No live/arm/MCP place_* · no densify bag · paper ledger HOLD residual for RTH
 
 ## INTEGRATION
 
-- Selective commit of policy + tests + boards + wake; see git log
+- Selective commit: policy/evolve/selector/tests + QUALITY_SHORTLIST + STRESS_ROTATION + wake/INDEX/LATEST + readiness + NEXT_SEED
+- Leave worker-only caches / paper_loop noise unstaged when possible; hyp yaml includes intentional coach creates
 
 ## LESSON
 
-Empty stress queue with green EDGE can mean **proven families frozen by hot-streak toxic at living=0**, not “no edge.” Reopen creates when lifetime oks prove the family and living is thin; keep zero-ok streak-toxic.
+Empty stress queue with green EDGE can mean **proven families frozen by hot-streak toxic at living=0**, not “no edge.” Reopen creates when lifetime oks prove the family and living is thin; keep zero-ok streak-toxic. Always B3/B4 reopen vanity — dens0 leaders stay king.
 
 ## NEXT SEED
 

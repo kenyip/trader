@@ -1042,7 +1042,7 @@ def test_family_hot_fail_streak_toxic_blocks_despite_historic_oks():
     assert family_hot_fail_streak_toxic(
         "AAL", "call_credit_spread", rotation=rot, lookback=8, fail_min=6, max_ok_in_lookback=1
     )
-    # Lifetime ok-rate path alone would not toxic; streak path must.
+    # Lifetime ok-rate path alone would not toxic; streak path must (legacy living=None).
     assert family_challenge_toxic(
         "AAL",
         "call_credit_spread",
@@ -1053,6 +1053,52 @@ def test_family_hot_fail_streak_toxic_blocks_despite_historic_oks():
         streak_fail_min=6,
         streak_lookback=8,
     )
+    # Thick living dens still hot-streak toxic (clone thrash).
+    assert family_challenge_toxic(
+        "AAL",
+        "call_credit_spread",
+        rotation=rot,
+        toxic_fail_min=8,
+        lifetime_fail_min=20,
+        max_ok_rate=0.05,
+        streak_fail_min=6,
+        streak_lookback=8,
+        living_count=28,
+    )
+    # Thin living after prune: reopen creates/stress despite hot streak when
+    # lifetime capital_path_ok proves the family (F CCS), not zero-ok thrash.
+    assert not family_challenge_toxic(
+        "AAL",
+        "call_credit_spread",
+        rotation=rot,
+        toxic_fail_min=8,
+        lifetime_fail_min=20,
+        max_ok_rate=0.05,
+        streak_fail_min=6,
+        streak_lookback=8,
+        living_count=0,
+    )
+    # Thin living + zero lifetime ok still hot-streak toxic.
+    by_zero = {
+        f"hyp_dna_intc_put_credit_spread_hot{i}": {
+            "symbol": "INTC",
+            "structure": "put_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now.isoformat(),
+        }
+        for i in range(7)
+    }
+    assert family_challenge_toxic(
+        "INTC",
+        "put_credit_spread",
+        rotation={"by_hyp_id": by_zero},
+        toxic_fail_min=8,
+        lifetime_fail_min=20,
+        max_ok_rate=0.05,
+        streak_fail_min=6,
+        streak_lookback=8,
+        living_count=0,
+    )
     assert not family_challenge_toxic(
         "AAL",
         "call_credit_spread",
@@ -1061,6 +1107,31 @@ def test_family_hot_fail_streak_toxic_blocks_despite_historic_oks():
         lifetime_fail_min=20,
         max_ok_rate=0.05,
         streak_fail_min=0,  # disable streak path
+    )
+
+
+def test_family_hot_streak_thin_living_does_not_block_hopeless_lifetime():
+    """Thin living must not reopen zero-ok lifetime toxic families (INTC PCS)."""
+    from trader_platform.stress_family_policy import family_challenge_toxic
+
+    by = {
+        f"hyp_dna_intc_put_credit_spread_f{i}": {
+            "symbol": "INTC",
+            "structure": "put_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": "2026-08-01T12:00:00+00:00",
+        }
+        for i in range(22)
+    }
+    rot = {"by_hyp_id": by}
+    assert family_challenge_toxic(
+        "INTC",
+        "put_credit_spread",
+        rotation=rot,
+        toxic_fail_min=8,
+        lifetime_fail_min=20,
+        max_ok_rate=0.05,
+        living_count=0,
     )
 
 

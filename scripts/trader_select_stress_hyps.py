@@ -213,12 +213,15 @@ def _family_challenge_toxic(
     toxic_fail_min: int = 8,
     lifetime_fail_min: int = 20,
     max_ok_rate: float = 0.05,
+    living_count: int | None = None,
 ) -> bool:
     """Hard-block cooled-family challenge slots for hopeless families.
 
     Delegates to shared stress_family_policy so evolve apply and selector agree.
     2026-07-28 coach: also treat low residual ok-rate as toxic (NFLX CCS ~583f/4ok
     never tripped zero-ok toxic and burned every B3/B4 cycle).
+    2026-08-11 coach: pass living_count so hot-streak toxic does not freeze
+    thin-living proven families (F CCS ghost living=0).
     """
     if not symbol or not structure:
         return False
@@ -238,6 +241,7 @@ def _family_challenge_toxic(
                 toxic_fail_min=toxic_fail_min,
                 lifetime_fail_min=lifetime_fail_min,
                 max_ok_rate=max_ok_rate,
+                living_count=living_count,
             )
         )
     except Exception:
@@ -636,6 +640,17 @@ def select_stress_hyps(
     per_sym: dict[str, int] = defaultdict(int)
     per_family: dict[tuple[str, str], int] = defaultdict(int)
     cooled_challenge_used: set[tuple[str, str]] = set()
+    # Living dens for hot-streak toxic reopen (thin living ≠ AAL CCS clone thrash).
+    live_counts: dict[tuple[str, str], int] = {}
+    try:
+        sys.path.insert(0, str(_REPO))
+        from trader_platform.stress_family_policy import (  # noqa: WPS433
+            living_multi_leg_family_counts,
+        )
+
+        live_counts = living_multi_leg_family_counts()
+    except Exception:
+        live_counts = {}
     # count leaders toward diversity soft-cap
     for r in rows:
         per_sym[str(r.get("symbol") or "?")] += 1
@@ -656,6 +671,7 @@ def select_stress_hyps(
         sym = str(r.get("symbol") or "?")
         st = str(r.get("structure") or "")
         fam = (sym.upper(), st)
+        living = int(live_counts.get((sym.upper(), st.strip().lower()), 0))
         toxic = _family_challenge_toxic(
             sym,
             st,
@@ -663,6 +679,7 @@ def select_stress_hyps(
             toxic_fail_min=toxic_fail_min,
             lifetime_fail_min=lifetime_fail_min,
             max_ok_rate=max_ok_rate,
+            living_count=living,
         )
         cooled = _family_recent_fail_cooled(
             sym,

@@ -217,6 +217,9 @@ def family_challenge_toxic(
     streak_window_hours: float = 24.0,
     streak_fail_min: int = 6,
     streak_max_ok: int = 1,
+    living_count: int | None = None,
+    streak_min_living: int = 6,
+    streak_reopen_min_lifetime_ok: int = 3,
 ) -> bool:
     """Hard-block hopeless symbol×structure families (same thresholds as selector).
 
@@ -224,11 +227,23 @@ def family_challenge_toxic(
     - (recent or lifetime) fails meet the floor AND oks are zero or a tiny residual
       rate (default ≤5% oks); or
     - the newest stress streak is almost all capital_path fails (hot fail streak),
-      even if lifetime ok-rate still looks healthy.
+      even if lifetime ok-rate still looks healthy — **only when living dens is thick**.
 
     Zero-ok remains the hard case; low ok-rate catches legacy soft capital_path
     flukes (NFLX CCS 583f/4ok). Hot streak catches AAL CCS clone thrash where
     full-history SHIP dies at B4 soft NULL@5% repeatedly (2026-07-29 coach).
+
+    Thin-living hot-streak reopen (2026-08-11 continuum coach): after prune /
+    saturation floors, preferred families can show lifetime capital_path_ok≫0 with
+    living_count 0–5 while a recent fail streak still trips hot toxic. That froze
+    both evolve creates and B3/B4 on F CCS / IWM PCS-class DNA and left unsat
+    inject on mega-cap CCS zero_trades with unstressed_ml=0. When ``living_count``
+    is provided and below ``streak_min_living`` (default 6, matches sat floor)
+    **and** lifetime capital_path_ok ≥ ``streak_reopen_min_lifetime_ok`` (default 3),
+    skip the hot-streak arm only — lifetime/window hopeless toxic still hard-blocks,
+    and zero-ok / fluke families stay streak-toxic even at living=0 (INTC PCS).
+    ``living_count=None`` keeps legacy streak behavior (unit tests / callers without
+    registry context).
     """
     if not symbol or not structure:
         return False
@@ -248,6 +263,12 @@ def family_challenge_toxic(
         ):
             return True
     if streak_fail_min > 0 and streak_lookback > 0:
+        # Thin living + proven lifetime oks → allow fresh DNA after prune.
+        # Thin living + zero/fluke oks → keep hot-streak block (no INTC reopen).
+        if living_count is not None and int(living_count) < int(streak_min_living):
+            _lf2, lo2 = family_lifetime_fail_ok(symbol, structure, rotation=rot)
+            if int(lo2) >= int(streak_reopen_min_lifetime_ok):
+                return False
         if family_hot_fail_streak_toxic(
             symbol,
             structure,
@@ -518,11 +539,11 @@ def unsaturated_discovery_symbols(
             recent_fail_mass += int(rf)
             recent_ok_mass += int(ro)
         for st in structs:
-            if family_challenge_toxic(sym, st, rotation=rot):
-                continue
             living = None
             if live_map is not None:
                 living = int(live_map.get((sym, str(st).strip().lower()), 0))
+            if family_challenge_toxic(sym, st, rotation=rot, living_count=living):
+                continue
             if family_create_saturated(
                 sym,
                 st,
@@ -584,7 +605,7 @@ def unsaturated_discovery_families(
     recent_window_hours: float = 6.0,
     recent_fail_thrash_min: int = 6,
     living_family_counts: dict[tuple[str, str], int] | None = None,
-    use_registry_living_counts: bool = False,
+    use_registry_living_counts: bool = True,
 ) -> list[dict[str, Any]]:
     """Open (symbol, structure) pairs that may still accept *new* creates.
 
@@ -624,11 +645,11 @@ def unsaturated_discovery_families(
             recent_fail_mass += int(rf)
             recent_ok_mass += int(ro)
         for st in structs:
-            if family_challenge_toxic(sym, st, rotation=rot):
-                continue
             living = None
             if live_map is not None:
                 living = int(live_map.get((sym, str(st).strip().lower()), 0))
+            if family_challenge_toxic(sym, st, rotation=rot, living_count=living):
+                continue
             if family_create_saturated(
                 sym,
                 st,

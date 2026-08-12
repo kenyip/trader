@@ -1,7 +1,6 @@
 {
   "detail": {
-    "coach": "2026-08-11T1504 EDGE unfreeze prune dual-fix; edge_search=OK registry~1.8MB; AMD IC+PFE CCS B4 reject; leaders F IC dens0",
-    "hint": "RTH: mark/manage paper DNA ladder; STAND_ASIDE new while book_full. EDGE worker continues unfrozen — re-prune if registry approaches 6MB BLOATED_SKIP.",
+    "hint": "RTH: mark/manage paper; DNA ladder; stand-aside if no new capital-fit OPEN_*. EDGE: thin-living hot-streak reopen shipped 2026-08-11T2110 — worker continues DR on proven CCS.",
     "open_orders": [
       {
         "max_loss_usd": 40.3,
@@ -20,9 +19,13 @@
         "symbol": "BAC"
       }
     ],
-    "open_risk_usd": 119.67
+    "coach_20260811T2110": {
+      "fix": "family_challenge_toxic living-aware hot-streak reopen",
+      "capital_path_secondary": "hyp_dna_snap_call_credit_spread_c7cf0e37",
+      "leaders_unchanged": true
+    }
   },
-  "generated_at": "2026-08-11T22:04:30+00:00",
+  "generated_at": "2026-08-12T04:10:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -32,7 +35,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_2026-08-11T1504",
-  "stamp": "20260811T1504",
+  "source": "continuum_judgment_20260811T2110",
+  "stamp": "20260811T2110",
   "trading_authority": false
 }
