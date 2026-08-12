@@ -1,3 +1,4 @@
+- `2026-08-12T1030-rth.md` — RTH manage: HOLD AAL mtm $-9.80 + HOLD BAC mid $13.13/adv $10.63 vs PT $12.95 (dual false); STAND_ASIDE new book_full
 - [2026-08-12T0931-rth](2026-08-12T0931-rth.md) — RTH open: HOLD AAL PCS −9.30 (OTM 0.34 ml23%) + HOLD BAC +10.63 vs PT 12.95 gap~2.32; STAND_ASIDE book_full; last/last open marks
 - 2026-08-11T2110 continuum-judgment — thin-living hot-streak toxic reopen; SNAP CCS secondary capital_path_ok; F IC leaders hold
 - [2026-08-11T1504-continuum-judgment](2026-08-11T1504-continuum-judgment.md) — EDGE unfreeze prune 6.0→1.8MB + ghost shortlist; AMD IC+PFE CCS B4 reject; F IC leaders; edge_search=OK; paper 2 open manage
