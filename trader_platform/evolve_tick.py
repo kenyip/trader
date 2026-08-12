@@ -49,6 +49,7 @@ from trader_platform.stress_family_policy import (
     family_challenge_toxic,
     family_create_saturated,
     load_rotation,
+    resolve_create_sat_min_living,
 )
 
 _REPO = Path(__file__).resolve().parents[1]
@@ -913,6 +914,20 @@ def apply_results(
     from trader_platform.stress_family_policy import living_multi_leg_family_counts
 
     live_counts = living_multi_leg_family_counts(list(store.get("hypotheses") or []))
+    # Edge-freeze: when ≤2 multi-leg families remain open at normal sat floor, raise
+    # living floor so moderate preferred dens can mint (2026-08-12 evening coach).
+    sat_min_living = 6
+    if skip_toxic_families:
+        try:
+            sat_min_living = int(
+                resolve_create_sat_min_living(
+                    rotation=rot,
+                    living_family_counts=live_counts,
+                    use_registry_living_counts=False,
+                )
+            )
+        except Exception:  # noqa: BLE001
+            sat_min_living = 6
 
     def _rank_key(r: SimVerdict) -> tuple[int, float]:
         # SHIP before NEEDS_MORE_DATA/NULL even if raw score is lower.
@@ -969,7 +984,11 @@ def apply_results(
         if sym and struct:
             living = int(live_counts.get((str(sym).upper(), str(struct).lower()), 0))
         return family_create_saturated(
-            sym, struct, rotation=rot, living_count=living
+            sym,
+            struct,
+            rotation=rot,
+            living_count=living,
+            min_living=sat_min_living,
         )
 
     def _create_family_rank(r: SimVerdict) -> int:

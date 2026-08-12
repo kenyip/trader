@@ -358,6 +358,13 @@ def family_create_saturated(
     through to cold mega-cap CCS (AVGO/DIA/META) with zero_trades, and the stress
     queue stayed empty except toxic KO/NFLX/AAPL. Require a thicker living dens
     before freezing creates; F IC-style monocultures with living≫6 stay saturated.
+
+    Edge-freeze reopen (2026-08-12 continuum coach): when the *global* open create
+    surface collapses (only toxic unstressed multi-leg left; preferred CCS/IC sit at
+    living 6–7 with oks≥25), callers pass a higher ``min_living`` (default freeze
+    floor 12 via ``resolve_create_sat_min_living`` / unsat auto-relax). Thick
+    monocultures (AAL PCS hundreds living) stay saturated; moderate preferred dens
+    can mint novel DNA again so B3/B4 is not stuck on NFLX/PLTR/SNAP toxic-only.
     """
     if not symbol or not structure or min_capital_path_ok <= 0:
         return False
@@ -366,6 +373,12 @@ def family_create_saturated(
     rot = rotation if rotation is not None else load_rotation()
     _fails, oks = family_lifetime_fail_ok(symbol, structure, rotation=rot)
     return int(oks) >= int(min_capital_path_ok)
+
+
+# Edge-freeze defaults: reopen moderate living sat when open create families collapse.
+_EDGE_FREEZE_OPEN_FAMILY_MAX = 2
+_EDGE_FREEZE_MIN_LIVING = 12
+_NORMAL_CREATE_SAT_MIN_LIVING = 6
 
 
 _DEFAULT_ML_STRUCTURES: tuple[str, ...] = (
@@ -482,6 +495,40 @@ def _effective_discovery_universe(universe: list[str] | None) -> list[str]:
     return out
 
 
+def resolve_create_sat_min_living(
+    *,
+    rotation: dict[str, Any] | None = None,
+    structures: tuple[str, ...] | list[str] | None = None,
+    universe: list[str] | None = None,
+    living_family_counts: dict[tuple[str, str], int] | None = None,
+    use_registry_living_counts: bool = True,
+    open_family_max: int = _EDGE_FREEZE_OPEN_FAMILY_MAX,
+    normal_min_living: int = _NORMAL_CREATE_SAT_MIN_LIVING,
+    freeze_min_living: int = _EDGE_FREEZE_MIN_LIVING,
+    min_capital_path_ok_sat: int = 25,
+) -> int:
+    """Return ``min_living`` for create-sat checks under edge-freeze policy.
+
+    When ≤ ``open_family_max`` multi-leg families remain open at the normal sat
+    floor, raise the living floor so moderate preferred dens (6–11) can create
+    again. Thick monocultures stay blocked. Does not recurse into auto-relax.
+    """
+    open_fams = unsaturated_discovery_families(
+        limit=int(open_family_max) + 1,
+        rotation=rotation,
+        structures=structures,
+        universe=universe,
+        min_capital_path_ok_sat=min_capital_path_ok_sat,
+        living_family_counts=living_family_counts,
+        use_registry_living_counts=use_registry_living_counts,
+        min_living_for_sat=int(normal_min_living),
+        auto_edge_freeze=False,
+    )
+    if len(open_fams) <= int(open_family_max):
+        return int(freeze_min_living)
+    return int(normal_min_living)
+
+
 def unsaturated_discovery_symbols(
     *,
     limit: int = 6,
@@ -494,6 +541,8 @@ def unsaturated_discovery_symbols(
     recent_fail_thrash_min: int = 6,
     living_family_counts: dict[tuple[str, str], int] | None = None,
     use_registry_living_counts: bool = False,
+    min_living_for_sat: int | None = None,
+    auto_edge_freeze: bool = True,
 ) -> list[str]:
     """Symbols with ≥1 multi-leg family that is neither toxic nor create-saturated.
 
@@ -513,6 +562,9 @@ def unsaturated_discovery_symbols(
     2026-08-10 coach: optional living registry counts reopen ghost-saturated families
     (ledger oks ≥ sat but living DNA pruned). Default off so unit tests stay
     ledger-pure; evolve_tick enables registry-aware counts in production.
+
+    2026-08-12 evening coach: hard-skip cold mega symbols (not mere rank demote) and
+    auto edge-freeze raise of create-sat ``min_living`` when open surface collapses.
     """
     if limit <= 0:
         return []
@@ -527,6 +579,20 @@ def unsaturated_discovery_symbols(
     live_map = living_family_counts
     if live_map is None and use_registry_living_counts:
         live_map = living_multi_leg_family_counts()
+    sat_ml = (
+        int(min_living_for_sat)
+        if min_living_for_sat is not None
+        else int(_NORMAL_CREATE_SAT_MIN_LIVING)
+    )
+    if auto_edge_freeze and min_living_for_sat is None:
+        sat_ml = resolve_create_sat_min_living(
+            rotation=rot,
+            structures=structs,
+            universe=universe,
+            living_family_counts=live_map,
+            use_registry_living_counts=False,
+            min_capital_path_ok_sat=min_capital_path_ok_sat,
+        )
     # Prefer proven-unsaturated (1..sat-1 lifetime oks) over cold names; within each
     # tier prefer recent capital_path oks and fewer recent fails (not pure ok_mass).
     scored: list[tuple[int, int, int, int, int, str]] = []
@@ -558,6 +624,7 @@ def unsaturated_discovery_symbols(
                 rotation=rot,
                 min_capital_path_ok=min_capital_path_ok_sat,
                 living_count=living,
+                min_living=sat_ml,
             ):
                 continue
             open_structs += 1
@@ -578,6 +645,9 @@ def unsaturated_discovery_symbols(
         # reopen where ok_mass ≥ sat but living DNA was pruned); tier1 = cold.
         tier = 0 if ok_mass > 0 else 1
         pref_b, pref_i, mega = _cold_symbol_rank(sym)
+        # Hard-skip cold mega-cap symbols (2026-08-12 evening coach) — same as families.
+        if tier >= 1 and sym in _MEGA_CAP_COLD_DEMOTE:
+            continue
         scored.append(
             (
                 tier,
@@ -614,6 +684,8 @@ def unsaturated_discovery_families(
     recent_fail_thrash_min: int = 6,
     living_family_counts: dict[tuple[str, str], int] | None = None,
     use_registry_living_counts: bool = True,
+    min_living_for_sat: int | None = None,
+    auto_edge_freeze: bool = True,
 ) -> list[dict[str, Any]]:
     """Open (symbol, structure) pairs that may still accept *new* creates.
 
@@ -623,6 +695,9 @@ def unsaturated_discovery_families(
     continuum coach: unstressed multi-leg registry count=0, stress queue empty).
 
     2026-08-10 coach: optional living registry counts reopen ghost-saturated families.
+
+    2026-08-12 evening coach: ``auto_edge_freeze`` raises create-sat living floor when
+    ≤2 families open at normal floor so moderate preferred dens can mint again.
     """
     if limit <= 0:
         return []
@@ -637,6 +712,21 @@ def unsaturated_discovery_families(
     live_map = living_family_counts
     if live_map is None and use_registry_living_counts:
         live_map = living_multi_leg_family_counts()
+    sat_ml = (
+        int(min_living_for_sat)
+        if min_living_for_sat is not None
+        else int(_NORMAL_CREATE_SAT_MIN_LIVING)
+    )
+    if auto_edge_freeze and min_living_for_sat is None:
+        # Avoid recursion: resolve uses auto_edge_freeze=False + normal floor scan.
+        sat_ml = resolve_create_sat_min_living(
+            rotation=rot,
+            structures=structs,
+            universe=universe,
+            living_family_counts=live_map,
+            use_registry_living_counts=False,
+            min_capital_path_ok_sat=min_capital_path_ok_sat,
+        )
 
     scored: list[tuple[int, int, int, int, str, str]] = []
     for raw in universe:
@@ -664,6 +754,7 @@ def unsaturated_discovery_families(
                 rotation=rot,
                 min_capital_path_ok=min_capital_path_ok_sat,
                 living_count=living,
+                min_living=sat_ml,
             ):
                 continue
             _f, oks = family_lifetime_fail_ok(sym, st, rotation=rot)
@@ -755,6 +846,7 @@ def unsaturated_discovery_families(
                 "tier": tier,
                 "lifetime_ok": int(-neg_ok),
                 "source": "unsaturated_discovery_family",
+                "create_sat_min_living": sat_ml,
             }
         )
         if len(out) >= int(limit):

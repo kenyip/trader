@@ -1,22 +1,21 @@
-# Readiness LATEST — 2026-08-12T1531 RTH eval
+# Readiness LATEST — 2026-08-12T1515 continuum judgment
 
-PHASE: SHADOW ops / PAPER manage  
+PHASE: SHADOW ops / PAPER manage / EDGE coach  
 SLEEVE: $3000 plan · test cash≈500 · live_armed=false  
 
 | Layer | State |
 |---|---|
-| 2026-08-12T1531 | RTH | HOLD BAC paper 1/2 risk79 dualPT false mid+11.68/adv+10.68 vs PT12.98 | paper manage | EDGE/ROBOT ok ARM blocked |
-| 2026-08-12T1430 | RTH | HOLD BAC paper 1/2 risk79 dualPT false | paper manage | EDGE/ROBOT ok ARM blocked |
-| EDGE | **OK** · worker ON · pack-grade shortlist_dna_multi · F IC dens0 leaders · first-live SNAP CSP fit_3k |
-| ROBOT | OK · paper **1 open** BAC PCS **HOLD** risk~$79.32 · sessions 16/3 · shadow PASS |
+| 2026-08-12T1515 | coach | edge-freeze create-sat unlock; CCL IC+SNAP CCS B4 reject | EDGE search repair | EDGE/ROBOT ok ARM blocked |
+| 2026-08-12T1531 | RTH | HOLD BAC paper 1/2 risk79 dualPT false | paper manage | EDGE/ROBOT ok ARM blocked |
+| EDGE | **OK** · worker restarted · pack-grade shortlist_dna_multi · F IC dens0 · first-live SNAP CSP fit_3k · create surface unfrozen |
+| ROBOT | OK · paper **1 open** BAC PCS risk~$79.32 · sessions 16/3 · shadow PASS |
 | ARM | BLOCKED · Ken LIVE_PACKET only |
 
-RTH 15:31 ET: BAC mtm mid +$11.68 / adv +$10.68 vs PT $12.98 (dual false; gaps ~$1.30/$2.30); |Δ|0.13 OTM $1.89. STAND_ASIDE new (BAC open; AAL filters). No live/arm.
+Coach 15:15 PDT: preferred multi-leg create-sat freeze after stress drain → `resolve_create_sat_min_living` (floor 12 when open≤2). DR created 2; both B4 fragile reject. Leaders unchanged.
 
-NEXT: manage_open_paper_campaign · ken_required=false · source=rth_eval_2026-08-12T1531
+NEXT: manage_open_paper_campaign · ken_required=false · source=continuum_judgment_2026-08-12T1515
 
-## C-row RTH 2026-08-12T1531
-- paper: HOLD BAC `paper_b5422618e55d` mtm+$11.68/+$10.68 vs PT$12.98 · risk $79.32 · working 1/2
-- scout: rth-ops n_intents=6 all BAC OPEN_PCS research_only; AAL SA filters; campaign already_open BAC
-- closed_this_session: none
+## C-row continuum 2026-08-12T1515
+- edge: freeze unlock + B4 rejects on new DNA (no capital_path advance)
+- paper: BAC `paper_b5422618e55d` still working risk $79.32 (after-hours manage residual)
 - live_armed=false; ken_required=false

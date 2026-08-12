@@ -435,13 +435,15 @@ def test_family_create_saturated_ghost_prune_reopen():
     assert any(
         f.get("symbol") == "SNAP" and f.get("structure") == "call_credit_spread" for f in fams
     ), fams
-    # Living count above floor keeps SNAP ghost-sat closed.
+    # Living count above floor keeps SNAP ghost-sat closed (explicit floor; no auto freeze).
     fams_closed = unsaturated_discovery_families(
         limit=6,
         rotation=rot,
         universe=["SNAP"],
         structures=("call_credit_spread",),
         living_family_counts={("SNAP", "call_credit_spread"): 10},
+        auto_edge_freeze=False,
+        min_living_for_sat=6,
     )
     assert not any(f.get("symbol") == "SNAP" for f in fams_closed), fams_closed
 
@@ -902,6 +904,151 @@ def test_unsaturated_hard_skips_cold_mega_when_preferred_closed():
     syms = {r["symbol"] for r in out}
     assert "AAPL" not in syms and "AMD" not in syms and "AMZN" not in syms and "AVGO" not in syms, out
     assert "XOM" in syms, out
+
+
+def test_resolve_create_sat_min_living_edge_freeze():
+    """≤2 open families at normal floor → freeze min_living=12; else 6."""
+    from trader_platform.stress_family_policy import (
+        family_create_saturated,
+        resolve_create_sat_min_living,
+        unsaturated_discovery_families,
+    )
+
+    now = _now()
+    # SNAP CCS fully ledger-sat with living=7 (sat at floor 6, open at freeze 12).
+    by = {
+        f"snap{i}": {
+            "symbol": "SNAP",
+            "structure": "call_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+        for i in range(30)
+    }
+    # Only cold preferred XOM CCS open at normal floor (single structure).
+    by["xom0"] = {
+        "symbol": "XOM",
+        "structure": "call_credit_spread",
+        "capital_path_ok": False,
+        "stressed_at": now,
+    }
+    rot = {"by_hyp_id": by}
+    live = {("SNAP", "call_credit_spread"): 7, ("XOM", "call_credit_spread"): 0}
+    assert family_create_saturated(
+        "SNAP",
+        "call_credit_spread",
+        rotation=rot,
+        living_count=7,
+        min_living=6,
+    )
+    assert not family_create_saturated(
+        "SNAP",
+        "call_credit_spread",
+        rotation=rot,
+        living_count=7,
+        min_living=12,
+    )
+    ml = resolve_create_sat_min_living(
+        rotation=rot,
+        universe=["SNAP", "XOM"],
+        structures=("call_credit_spread",),
+        living_family_counts=live,
+        use_registry_living_counts=False,
+    )
+    assert ml == 12
+    # Auto edge-freeze unsat must reopen SNAP CCS.
+    out = unsaturated_discovery_families(
+        limit=6,
+        rotation=rot,
+        universe=["SNAP", "XOM"],
+        structures=("call_credit_spread",),
+        living_family_counts=live,
+        use_registry_living_counts=False,
+        recent_fail_thrash_min=99,
+    )
+    snap = [r for r in out if r["symbol"] == "SNAP" and r["structure"] == "call_credit_spread"]
+    assert snap, out
+    assert snap[0].get("create_sat_min_living") == 12
+    # Many open preferred cold families → normal floor 6.
+    rot_open = {"by_hyp_id": {}}
+    ml_open = resolve_create_sat_min_living(
+        rotation=rot_open,
+        universe=["F", "KO", "IWM", "PFE", "CCL", "SOFI"],
+        structures=("put_credit_spread", "call_credit_spread", "iron_condor"),
+        living_family_counts={},
+        use_registry_living_counts=False,
+    )
+    assert ml_open == 6
+
+
+def test_apply_edge_freeze_allows_moderate_sat_create(tmp_path: Path, monkeypatch):
+    """apply_results must mint unsaturated moderate-sat SHIP when freeze floor is active."""
+    from trader_platform import evolve_tick as ev
+    from trader_platform.evolve_tick import apply_results
+    from trader_platform.hypothesis_registry import HypothesisRegistry
+    from trader_platform.strategy_dna import dna_from_structure
+
+    now = _now()
+    by = {
+        f"snap{i}": {
+            "symbol": "SNAP",
+            "structure": "call_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+        for i in range(30)
+    }
+    rot = {"by_hyp_id": by}
+    reg_path = tmp_path / "hyps.yaml"
+    reg = HypothesisRegistry(reg_path)
+    reg.ensure_seeded()
+    base = dna_from_structure(
+        "call_credit_spread",
+        ["SNAP"],
+        config_overrides={"spread_width": 1.0, "min_credit_pct": 0.2, "call_in_bull_ok": True},
+    )
+    for i in range(7):
+        d = base.to_dict()
+        d["config"] = dict(d.get("config") or {})
+        d["config"]["spread_width"] = 1.0 + 0.05 * i
+        reg.add(
+            name=f"SNAP CCS {i}",
+            thesis="seed",
+            sleeve="tactical",
+            instruments=["SNAP"],
+            status="candidate",
+            hypothesis_id=f"hyp_dna_snap_call_credit_spread_seed{i:02d}",
+            dna=d,
+        )
+    # Force edge-freeze floor (unit isolation from full preferred cold open surface).
+    monkeypatch.setattr(ev, "resolve_create_sat_min_living", lambda **kwargs: 12)
+    novel = dna_from_structure(
+        "call_credit_spread",
+        ["SNAP"],
+        config_overrides={"spread_width": 2.5, "min_credit_pct": 0.25, "call_in_bull_ok": True},
+    )
+    results = [
+        SimVerdict(
+            dna=novel,
+            ok=True,
+            skipped=False,
+            reason="positive_sim",
+            n_trades=22,
+            metrics={"pnl": 100.0, "max_dd": 40.0},
+            score=88.0,
+            verdict="SHIP",
+            evidence_path="",
+        )
+    ]
+    created, updated = apply_results(
+        results,
+        registry=reg,
+        max_create=2,
+        ship_only=True,
+        rotation=rot,
+        skip_toxic_families=True,
+    )
+    assert created, f"expected edge-freeze create, got created={created} updated={updated}"
 
 
 def test_build_population_registry_family_seeds(monkeypatch, tmp_path):
