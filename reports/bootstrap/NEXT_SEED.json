@@ -1,12 +1,11 @@
 {
   "detail": {
-    "hint": "RTH: HOLD BAC last-mark +10.68 vs PT 12.98 (dual false, gap ~2.30); STAND_ASIDE new (pack NO_SETUP + BAC open + AAL research_only)",
+    "hint": "RTH: mark/manage paper; HOLD BAC until dual PT or DNA stop; stand-aside if no new capital-fit OPEN_*",
     "closed_this_session": [],
-    "decisions": {
+    "decision": {
       "BAC": "HOLD",
-      "new_entries": "STAND_ASIDE"
+      "new": "STAND_ASIDE"
     },
-    "marks_generated_at": "2026-08-13T13:32:08.143714+00:00",
     "open_orders": [
       {
         "order_id": "paper_b5422618e55d",
@@ -14,22 +13,22 @@
         "structure": "put_credit_spread",
         "strategy_id": "hyp_dna_bac_put_credit_spread_631f9804",
         "status": "working",
-        "spot": 64.9749984741211,
-        "chg_pct": 0.25459176322013555,
+        "spot": 64.87999725341797,
+        "chg_pct": 0.10800755664421846,
         "short_strike": 63.0,
         "long_strike": 62.0,
         "exp": "2026-08-21",
-        "short_otm": 1.9749984741210938,
+        "short_otm": 1.8799972534179688,
         "short_itm": false,
-        "short_delta_approx": -0.00017215065367559568,
-        "mtm_usd": 10.683904851711787,
-        "mtm_adverse_usd": 10.683904851711787,
+        "short_delta_approx": -0.14076886006204192,
+        "mtm_usd": 9.68390485171179,
+        "mtm_adverse_usd": 8.683904851711787,
         "profit_target_usd": 12.983063635592362,
         "dual_pt_ready": false,
         "ml_used_frac": 0.0,
         "max_loss_usd": 79.32,
-        "short_mark_src": "last",
-        "long_mark_src": "last",
+        "short_mark_src": "bid_ask",
+        "long_mark_src": "bid_ask",
         "decision": "HOLD",
         "reasons": [
           "short_OTM_or_quiet_path; mtm within budget"
@@ -37,24 +36,13 @@
       }
     ],
     "open_risk": 79.32,
-    "pack_grade": {
-      "status": "NO_SETUP",
-      "reason": "pcs_bull_only+neutral on PLTR/INTC/KO",
-      "seats": [
-        "INTC",
-        "PLTR",
-        "KO"
-      ]
-    },
-    "scout": {
-      "stamp": "20260813T133222",
-      "n_intents": 8,
-      "n_stand_asides": 1,
-      "autonomy": "5x research_only"
-    },
-    "working": 1
+    "working": 1,
+    "pack_grade": "NO_SETUP",
+    "scout_stamp": "20260813T143058",
+    "n_intents": 8,
+    "autonomy": "research_only_x5"
   },
-  "generated_at": "2026-08-13T13:35:54.328396+00:00",
+  "generated_at": "2026-08-13T14:33:25.327959+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -64,7 +52,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "rth_eval_2026-08-13T0931",
-  "stamp": "20260813T0931",
+  "source": "rth_eval_2026-08-13T1030",
+  "stamp": "20260813T1030",
   "trading_authority": false
 }
