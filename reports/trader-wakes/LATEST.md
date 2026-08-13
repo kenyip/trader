@@ -84,7 +84,7 @@ Unlock did its job (found CCL PCS). Leaving the reopen latch stuck on is the was
 
 - Future coach: if last wake unlocked creates and tonight's cycle log is `created: *ccs*` + B4 large_loss@5%, check `family_reopen_sample_exhausted` before raising sat floors again.
 
-## NEXT SEED
+## NEXT
 
 manage_open_paper_campaign · ken_required=false · BAC HOLD residual · worker uses 4h exhaust (no restart required if cycles subprocess) · no densify · ARM Ken only
 
