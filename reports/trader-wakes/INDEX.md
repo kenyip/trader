@@ -1,3 +1,4 @@
+| 2026-08-13T1131 | rth | HOLD BAC PCS mid +4.68/adv +3.68 vs PT 12.98 (dual false, gap~8.30/9.30) OTM0.97 |d|0.24 red-day soften; STAND_ASIDE new (pack NO_SETUP + AAL research_only); book 1/2 risk79 | manage_open_paper_campaign |
 | 2026-08-13T1030 | rth | HOLD BAC PCS mid +9.68/adv +8.68 vs PT 12.98 (dual false, gap~3.30/4.30) OTM1.88 |d|0.14; STAND_ASIDE new (pack NO_SETUP + AAL research_only); book 1/2 risk79 | manage_open_paper_campaign |
 | 2026-08-13T0931 | rth | HOLD BAC PCS last +10.68/+10.68 vs PT 12.98 (dual false, gap~2.30) OTM1.97 vacuous d; STAND_ASIDE new (pack NO_SETUP + AAL research_only); book 1/2 risk79 | manage_open_paper_campaign |
 - `2026-08-13T0931-rth.md` — RTH open: HOLD BAC overnight last-mark soften; pack-grade still NO_SETUP; AAL OPEN_* research_only
