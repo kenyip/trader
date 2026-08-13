@@ -1,3 +1,5 @@
+| 2026-08-13T1500 | continuum-judgment | Ken freeze skip committed in quality_cycle + residual + autonomous (status-only latch was not durable); BAC HOLD residual after-hours | manage_open_paper_campaign |
+- `2026-08-13T1500-continuum-judgment.md` — coach: commit Ken evolve skip; residual/MoA gated; do not prune
 | 2026-08-13T1531 | rth | HOLD BAC PCS mid +5.18/adv +2.68 vs PT 12.98 (dual false, gap~7.80/10.30) OTM1.07 |d|0.23 late-pm greener vs 14:31; STAND_ASIDE new (pack NO_SETUP + AAL research_only); book 1/2 risk79 | manage_open_paper_campaign |
 - `2026-08-13T1531-rth.md` — RTH late: HOLD BAC slightly greener vs 14:31; Ken freeze honored; no prune
 | 2026-08-13T1431 | rth | HOLD BAC PCS mid +4.68/adv +1.68 vs PT 12.98 (dual false, gap~8.30/11.30) OTM1.10 |d|0.23 mid-flat vs 13:31, adv softer; STAND_ASIDE new (pack NO_SETUP + AAL research_only); book 1/2 risk79 | manage_open_paper_campaign |

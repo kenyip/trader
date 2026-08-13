@@ -1,61 +1,40 @@
 {
+  "closed_this_session": [],
   "detail": {
-    "hint": "RTH: mark/manage paper; HOLD BAC while dual PT false; stand-aside if no new capital-fit OPEN_*",
-    "decision": {
-      "BAC": "HOLD",
-      "new": "STAND_ASIDE"
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. EDGE Ken-frozen — committed cycle/residual/autonomous skip; do not prune-to-unfreeze.",
+    "last_rth_mark": {
+      "adv_mtm": 2.68,
+      "decision": "HOLD",
+      "delta_abs": 0.23,
+      "mid_mtm": 5.18,
+      "otm": 1.07,
+      "profit_target_usd": 12.98,
+      "spot": 64.07,
+      "stamp": "2026-08-13T1531"
     },
     "open_orders": [
       {
-        "order_id": "paper_b5422618e55d",
-        "symbol": "BAC",
-        "structure": "put_credit_spread",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_631f9804",
-        "status": "working",
-        "spot": 64.07499694824219,
-        "chg_pct": -1.1340852307347493,
-        "short_strike": 63.0,
-        "long_strike": 62.0,
-        "exp": "2026-08-21",
-        "short_otm": 1.0749969482421875,
-        "short_itm": false,
-        "short_delta_approx": -0.22647487436597624,
-        "mtm_usd": 5.183904851711785,
-        "mtm_adverse_usd": 2.683904851711785,
-        "profit_target_usd": 12.983063635592362,
-        "dual_pt_ready": false,
-        "ml_used_frac": 0.0,
         "max_loss_usd": 79.32,
-        "short_mark_src": "bid_ask",
-        "long_mark_src": "bid_ask",
-        "decision": "HOLD",
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ]
+        "order_id": "paper_b5422618e55d",
+        "status": "working",
+        "strategy_id": "hyp_dna_bac_put_credit_spread_631f9804",
+        "structure": "put_credit_spread",
+        "symbol": "BAC"
       }
-    ],
-    "open_risk": 79.32,
-    "working": 1,
-    "book_headroom": "1/2",
-    "pack_grade": "NO_SETUP",
-    "scout_stamp": "20260813T193207",
-    "n_intents": 8,
-    "autonomy": "research_only_x5",
-    "edge_search": "KEN_FROZEN",
-    "closed_this_session": [],
-    "path_note": "14:31 mid +4.68/adv +1.68 \u2192 15:31 mid +5.18/adv +2.68 (late-pm slightly greener; still ~7.80/10.30 short of PT); HOLD"
+    ]
   },
-  "generated_at": "2026-08-13T19:34:52.806221+00:00",
+  "generated_at": "2026-08-13T22:10:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
-    "fund_3k_at_packet"
+    "fund_3k_at_packet",
+    "edge_search_unfreeze"
   ],
   "ken_required": false,
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "rth_eval_2026-08-13T1531",
-  "stamp": "20260813T1531",
+  "source": "coach_2026-08-13T1500",
+  "stamp": "20260813T1500",
   "trading_authority": false
 }

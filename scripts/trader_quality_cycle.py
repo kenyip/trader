@@ -15,6 +15,7 @@ Sprint knobs (env / configs/quality_worker.env):
   TRADER_QC_STRESS_LIMIT=8
   TRADER_QC_REGISTRY_MAX_BYTES=12000000  # skip evolve --apply when hyp yaml bloated
   TRADER_QC_EVOLVE_LANES=one|both        # one=alternate DR/CSP per cycle (default one)
+  TRADER_QC_SKIP_EVOLVE=1                # Ken/operator freeze (also edge-search-freeze.json)
 
 Usage:
   .venv/bin/python scripts/trader_quality_cycle.py
@@ -57,6 +58,24 @@ def _registry_bloat_limit() -> int:
         return int(os.environ.get("TRADER_QC_REGISTRY_MAX_BYTES", "12000000"))
     except Exception:
         return 12_000_000
+
+
+_KEN_EDGE_FREEZE = Path.home() / ".local/state/jarvis/trader-guidance/edge-search-freeze.json"
+
+
+def _ken_skip_evolve() -> tuple[bool, str]:
+    """Ken/operator freeze: worker may watch, must not evolve the hyp pile."""
+    env = (os.environ.get("TRADER_QC_SKIP_EVOLVE") or "").strip().lower()
+    if env in {"1", "true", "yes", "on"}:
+        return True, "ken_edge_search_frozen_env"
+    try:
+        if _KEN_EDGE_FREEZE.is_file():
+            data = json.loads(_KEN_EDGE_FREEZE.read_text(encoding="utf-8"))
+            if bool(data.get("skip_evolve")):
+                return True, str(data.get("reason") or "ken_edge_search_frozen")
+    except Exception:
+        return False, ""
+    return False, ""
 
 
 def _evolve_skip_payload(*, reason: str, lane: str, registry_bytes: int) -> dict[str, Any]:
@@ -335,6 +354,7 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
     results["registry_max_bytes"] = reg_limit
     # 2026-07-28 coach: ~45MB yaml made both evolve --apply hit 600s TIMEOUT every cycle
     # (~20min wall waste) while stress/shortlist still worked. Skip apply until prune.
+    skip_evolve_ken, ken_evolve_reason = _ken_skip_evolve()
     skip_evolve_bloat = reg_bytes > reg_limit and reg_limit > 0
     # Default one lane/cycle (alternate DR↔CSP). both = legacy full pair.
     evolve_lanes = (os.environ.get("TRADER_QC_EVOLVE_LANES", "one") or "one").strip().lower()
@@ -410,7 +430,18 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
             timeout=int(os.environ.get("TRADER_QC_EVOLVE_TIMEOUT", "600")),
         )
 
-    if skip_evolve_bloat:
+    if skip_evolve_ken:
+        results["phases"]["evolve_csp"] = _evolve_skip_payload(
+            reason=ken_evolve_reason, lane="csp", registry_bytes=reg_bytes
+        )
+        results["phases"]["evolve_defined_risk"] = _evolve_skip_payload(
+            reason=ken_evolve_reason, lane="defined_risk", registry_bytes=reg_bytes
+        )
+        results["evolve_note"] = (
+            f"skipped both evolves: Ken EDGE freeze ({ken_evolve_reason}); "
+            "worker watch/paper only — do not prune-to-unfreeze"
+        )
+    elif skip_evolve_bloat:
         results["phases"]["evolve_csp"] = _evolve_skip_payload(
             reason="registry_bloat_skip_evolve", lane="csp", registry_bytes=reg_bytes
         )

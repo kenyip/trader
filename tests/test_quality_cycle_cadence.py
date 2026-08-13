@@ -87,6 +87,57 @@ def test_book_full_skips_learn_tick_predicate():
     assert manage_only(0, 500.0) is True
 
 
+def test_ken_skip_evolve_from_file(tmp_path, monkeypatch):
+    """Ken first-close latch must skip evolve even when yaml is under the bloat ceiling."""
+    latch = tmp_path / "edge-search-freeze.json"
+    latch.write_text(
+        json.dumps(
+            {
+                "skip_evolve": True,
+                "reason": "ken_first_close_freeze_edge_search",
+                "unfreeze_gate": "explicit Ken only",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(qc, "_KEN_EDGE_FREEZE", latch)
+    monkeypatch.delenv("TRADER_QC_SKIP_EVOLVE", raising=False)
+    skip, reason = qc._ken_skip_evolve()
+    assert skip is True
+    assert reason == "ken_first_close_freeze_edge_search"
+    # Ken skip outranks bloat in run_cycle (if/elif). Payload reason stays Ken.
+    payload = qc._evolve_skip_payload(
+        reason=reason, lane="defined_risk", registry_bytes=6_000_873
+    )
+    assert payload["skipped"] is True
+    assert payload["reason"] == "ken_first_close_freeze_edge_search"
+
+
+def test_ken_skip_evolve_env_without_file(tmp_path, monkeypatch):
+    monkeypatch.setattr(qc, "_KEN_EDGE_FREEZE", tmp_path / "missing.json")
+    monkeypatch.setenv("TRADER_QC_SKIP_EVOLVE", "1")
+    skip, reason = qc._ken_skip_evolve()
+    assert skip is True
+    assert reason == "ken_edge_search_frozen_env"
+
+
+def test_ken_skip_evolve_inactive_or_corrupt(tmp_path, monkeypatch):
+    monkeypatch.delenv("TRADER_QC_SKIP_EVOLVE", raising=False)
+    missing = tmp_path / "nope.json"
+    monkeypatch.setattr(qc, "_KEN_EDGE_FREEZE", missing)
+    assert qc._ken_skip_evolve() == (False, "")
+
+    off = tmp_path / "off.json"
+    off.write_text(json.dumps({"skip_evolve": False, "reason": "stale"}), encoding="utf-8")
+    monkeypatch.setattr(qc, "_KEN_EDGE_FREEZE", off)
+    assert qc._ken_skip_evolve() == (False, "")
+
+    bad = tmp_path / "bad.json"
+    bad.write_text("{not-json", encoding="utf-8")
+    monkeypatch.setattr(qc, "_KEN_EDGE_FREEZE", bad)
+    assert qc._ken_skip_evolve() == (False, "")
+
+
 def test_registry_bloat_skip_evolve_predicate(tmp_path, monkeypatch):
     """Bloated hypotheses.yaml must skip evolve --apply (45MB TIMEOUT thrash)."""
     hyps = tmp_path / "hypotheses.yaml"

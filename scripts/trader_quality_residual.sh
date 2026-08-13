@@ -35,21 +35,53 @@ set +e
 rc_research=$?
 set -e
 
-set +e
-# iron_condor required so unsat open families (SNAP/F/CCL IC) are not filtered
-# out when PCS/CCS are saturated/toxic (2026-07-31T2100 coach).
-"$PY" -m trader_platform.evolve_tick --once \
-  --structures put_credit_spread call_credit_spread iron_condor \
-  --top-symbols 8 --mutants 3 --sleeve-usd 3000 --apply
-rc_evolve_dr=$?
-set -e
+# Ken first-close latch (2026-08-13 coach): residual must not --apply evolve
+# when the operator freeze is on. Worker watch/paper + B3/B4/multi still ok.
+# Do not prune-to-unfreeze. Unfreeze = explicit Ken only.
+ken_evolve_reason=""
+if [[ "${TRADER_QC_SKIP_EVOLVE:-}" =~ ^(1|true|yes|on)$ ]]; then
+  ken_evolve_reason="ken_edge_search_frozen_env"
+else
+  _KEN_EDGE_FREEZE="${TRADER_KEN_EDGE_FREEZE:-$HOME/.local/state/jarvis/trader-guidance/edge-search-freeze.json}"
+  if [[ -f "$_KEN_EDGE_FREEZE" ]]; then
+    ken_evolve_reason="$("$PY" - "$_KEN_EDGE_FREEZE" <<'PY'
+import json, sys
+from pathlib import Path
+p = Path(sys.argv[1])
+try:
+    data = json.loads(p.read_text(encoding="utf-8"))
+except Exception:
+    raise SystemExit(1)
+if isinstance(data, dict) and data.get("skip_evolve"):
+    print(data.get("reason") or "ken_edge_search_frozen")
+    raise SystemExit(0)
+raise SystemExit(1)
+PY
+)" || ken_evolve_reason=""
+  fi
+fi
 
-set +e
-"$PY" -m trader_platform.evolve_tick --once \
-  --structures cash_secured_put wheel_assignment short_put_credit \
-  --top-symbols 6 --mutants 2 --sleeve-usd 3000 --apply
-rc_evolve_csp=$?
-set -e
+if [[ -n "$ken_evolve_reason" ]]; then
+  echo "trader_quality_residual: skip both evolves — Ken EDGE freeze ($ken_evolve_reason); watch/paper only — do not prune-to-unfreeze"
+  rc_evolve_dr=0
+  rc_evolve_csp=0
+else
+  set +e
+  # iron_condor required so unsat open families (SNAP/F/CCL IC) are not filtered
+  # out when PCS/CCS are saturated/toxic (2026-07-31T2100 coach).
+  "$PY" -m trader_platform.evolve_tick --once \
+    --structures put_credit_spread call_credit_spread iron_condor \
+    --top-symbols 8 --mutants 3 --sleeve-usd 3000 --apply
+  rc_evolve_dr=$?
+  set -e
+
+  set +e
+  "$PY" -m trader_platform.evolve_tick --once \
+    --structures cash_secured_put wheel_assignment short_put_credit \
+    --top-symbols 6 --mutants 2 --sleeve-usd 3000 --apply
+  rc_evolve_csp=$?
+  set -e
+fi
 
 # Best-effort B3/B4: mix shortlist leaders + unstressed multi-leg SHIPs
 # (see scripts/trader_select_stress_hyps.py — avoids re-stress thrash on 2 leaders only).

@@ -130,7 +130,40 @@ PY
 
 echo "trader_autonomous_tick: handoff status=$STATUS"
 
+# Ken first-close latch: never launch MoA / residual evolve while freeze is on.
+# Worker may watch/paper. Do not prune-to-unfreeze. Unfreeze = explicit Ken only.
+ken_frozen=0
+ken_reason=""
+if [[ "${TRADER_QC_SKIP_EVOLVE:-}" =~ ^(1|true|yes|on)$ ]]; then
+  ken_frozen=1
+  ken_reason="ken_edge_search_frozen_env"
+else
+  _KEN_EDGE_FREEZE="${TRADER_KEN_EDGE_FREEZE:-$HOME/.local/state/jarvis/trader-guidance/edge-search-freeze.json}"
+  if [[ -f "$_KEN_EDGE_FREEZE" ]]; then
+    ken_reason="$("$PY" - "$_KEN_EDGE_FREEZE" <<'PY'
+import json, sys
+from pathlib import Path
+p = Path(sys.argv[1])
+try:
+    data = json.loads(p.read_text(encoding="utf-8"))
+except Exception:
+    raise SystemExit(1)
+if isinstance(data, dict) and data.get("skip_evolve"):
+    print(data.get("reason") or "ken_edge_search_frozen")
+    raise SystemExit(0)
+raise SystemExit(1)
+PY
+)" && ken_frozen=1 || { ken_frozen=0; ken_reason=""; }
+  fi
+fi
+
 # --- 3a) survivor → BUILD MoA (one lab) ---
+if [[ "$STATUS" == "NEXT_SURVIVOR" && "$ken_frozen" -eq 1 ]]; then
+  write_receipt "skip_ken_edge_freeze" "status=$STATUS" "reason=$ken_reason" \
+    "note=watch_paper_only_do_not_prune_to_unfreeze" >/dev/null
+  echo "trader_autonomous_tick: Ken EDGE freeze ($ken_reason); skip MoA; watch/paper only"
+  STATUS="NO_QUALIFIED_STRATEGY"
+fi
 if [[ "$STATUS" == "NEXT_SURVIVOR" ]]; then
   # Prefer clean main; MoA preflight will enforce. Skip if obviously on foreign dirty branch.
   branch=$(git symbolic-ref --quiet --short HEAD 2>/dev/null || echo DETACHED)
