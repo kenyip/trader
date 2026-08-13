@@ -1,3 +1,5 @@
+| 2026-08-13T1232 | rth | HOLD BAC PCS mid +4.68/adv +1.68 vs PT 12.98 (dual false, gap~8.30/11.30) OTM1.10 |d|0.23 rebound after 12:04; STAND_ASIDE new (pack NO_SETUP + AAL research_only); book 1/2 risk79 | manage_open_paper_campaign |
+- `2026-08-13T1232-rth.md` — RTH mid: HOLD BAC rebound after noon soften; Ken freeze honored; no prune
 | 2026-08-13T0900 | continuum-judgment | Ken first-close EDGE latch → status KEN_FROZEN/EDGE_FROZEN_KEN (not OK_PARTIAL/SEARCHING/prune); HOLD BAC mid +2.18/adv +0.68 vs PT 12.98 | manage_open_paper_campaign |
 - `2026-08-13T0900-continuum-judgment.md` — coach: Ken freeze outranks 6.0MB bloat; do not prune-to-unfreeze
 | 2026-08-13T1131 | rth | HOLD BAC PCS mid +4.68/adv +3.68 vs PT 12.98 (dual false, gap~8.30/9.30) OTM0.97 |d|0.24 red-day soften; STAND_ASIDE new (pack NO_SETUP + AAL research_only); book 1/2 risk79 | manage_open_paper_campaign |

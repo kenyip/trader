@@ -1,11 +1,10 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; HOLD BAC until dual PT or DNA stop. EDGE is Ken-frozen (do not prune-to-unfreeze). Stand-aside if no new capital-fit OPEN_*.",
+    "hint": "RTH: mark/manage paper; HOLD BAC until dual PT or DNA stop; stand-aside if no new capital-fit OPEN_*; EDGE Ken-frozen \u2014 do not prune",
     "closed_this_session": [],
     "decision": {
       "BAC": "HOLD",
-      "new": "STAND_ASIDE",
-      "edge": "KEN_FROZEN"
+      "new": "STAND_ASIDE"
     },
     "open_orders": [
       {
@@ -14,17 +13,17 @@
         "structure": "put_credit_spread",
         "strategy_id": "hyp_dna_bac_put_credit_spread_631f9804",
         "status": "working",
-        "spot": 63.9900016784668,
-        "chg_pct": -1.2652305369794337,
+        "spot": 64.09500122070312,
+        "chg_pct": -1.1032192020130949,
         "short_strike": 63.0,
         "long_strike": 62.0,
         "exp": "2026-08-21",
-        "short_otm": 0.9900016784667969,
+        "short_otm": 1.095001220703125,
         "short_itm": false,
-        "short_delta_approx": -0.24746091995299713,
-        "mtm_usd": 2.1839048517117874,
-        "mtm_adverse_usd": 0.6839048517117863,
-        "profit_target_usd": 12.98,
+        "short_delta_approx": -0.23038441190482717,
+        "mtm_usd": 4.683904851711784,
+        "mtm_adverse_usd": 1.68390485171179,
+        "profit_target_usd": 12.983063635592362,
         "dual_pt_ready": false,
         "ml_used_frac": 0.0,
         "max_loss_usd": 79.32,
@@ -38,22 +37,23 @@
     ],
     "open_risk": 79.32,
     "working": 1,
-    "edge_search": "KEN_FROZEN",
-    "ken_freeze_reason": "ken_first_close_freeze_edge_search",
-    "do_not_prune": true
+    "pack_grade": "NO_SETUP",
+    "scout_stamp": "20260813T163121",
+    "n_intents": 8,
+    "autonomy": "research_only_x5",
+    "edge_search": "KEN_FROZEN"
   },
-  "generated_at": "2026-08-13T16:08:00+00:00",
+  "generated_at": "2026-08-13T16:34:04.665772+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
-    "fund_3k_at_packet",
-    "edge_search_unfreeze"
+    "fund_3k_at_packet"
   ],
   "ken_required": false,
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_2026-08-13T0900",
-  "stamp": "20260813T0900",
+  "source": "rth_eval_2026-08-13T1232",
+  "stamp": "20260813T1232",
   "trading_authority": false
 }
