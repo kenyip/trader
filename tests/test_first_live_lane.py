@@ -99,6 +99,7 @@ class FirstLiveLaneTest(unittest.TestCase):
             capital_by_symbol=capital,
             min_trades=15,
             top_n=5,
+            registry_dna_ids={"dna_nflx", "dna_tsll", "dna_snap", "dna_f_long"},
         )
         # SNAP + TSLL CSP fit_3k collateral + F long debit under $300 bar
         self.assertGreaterEqual(report["n_eligible"], 3)
@@ -144,6 +145,7 @@ class FirstLiveLaneTest(unittest.TestCase):
             sim_rows=sims,
             capital_by_symbol=capital,
             min_trades=15,
+            registry_dna_ids={"dna_tsll_stop"},
         )
         self.assertEqual(report["n_eligible"], 0)
         self.assertIn("max_loss=450>300", report["near_miss_oversized"][0]["reject_reasons"])
@@ -173,6 +175,7 @@ class FirstLiveLaneTest(unittest.TestCase):
             sim_rows=sims,
             capital_by_symbol=capital,
             min_trades=15,
+            registry_dna_ids={"dna_x"},
         )
         self.assertEqual(report["n_eligible"], 0)
         self.assertIsNone(report["leader"])
@@ -193,10 +196,47 @@ class FirstLiveLaneTest(unittest.TestCase):
             ],
             capital_by_symbol={},
             min_trades=15,
+            registry_dna_ids={"dna_wheel"},
         )
         self.assertEqual(report["n_eligible"], 0)
         self.assertIsNone(report["leader"])
         self.assertIn("no_spot_bp", report["near_miss_oversized"][0]["reject_reasons"])
+
+    def test_rejects_ghost_dna_not_in_registry(self):
+        """Sim-only DNA (never promoted to hypotheses.yaml) must not lead the board."""
+        sims = [
+            {
+                "dna_id": "dna_ghostabc123",
+                "structure": "cash_secured_put",
+                "symbol": "SNAP",
+                "verdict": "SHIP",
+                "score": 999.0,
+                "n_trades": 100,
+                "metrics": {},
+                "config": {},
+            }
+        ]
+        capital = {
+            "SNAP": {
+                "spot": 5.0,
+                "short_premium_bp_proxy": 500.0,
+                "capital_fit": "fit_3k",
+                "capital_fit_long": "fit_3k",
+            }
+        }
+        report = rank_first_live_seats(
+            sim_rows=sims,
+            capital_by_symbol=capital,
+            min_trades=15,
+            registry_dna_ids={"dna_real123456"},
+        )
+        self.assertEqual(report["n_eligible"], 0)
+        self.assertIsNone(report["leader"])
+        self.assertEqual(report["n_ghost_dna"], 1)
+        self.assertIn(
+            "ghost_dna_no_registry_hyp",
+            report["near_miss_oversized"][0]["reject_reasons"],
+        )
 
 
 if __name__ == "__main__":

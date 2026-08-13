@@ -22,6 +22,7 @@ _REPO = Path(__file__).resolve().parents[1]
 DEFAULT_EVOLVE_DB = _REPO / ".cache" / "platform" / "evolve_sim.sqlite"
 DEFAULT_RESEARCH_DB = _REPO / ".cache" / "platform" / "research.db"
 DEFAULT_REPORT = _REPO / "reports" / "bootstrap" / "FIRST_LIVE_LANE.json"
+DEFAULT_HYPOTHESES = _REPO / "trader_platform" / "data" / "hypotheses.yaml"
 
 # Structures RH MCP can place today (single-leg class). Multi-leg stays research.
 SINGLE_LEG_STRUCTURES = frozenset(
@@ -71,6 +72,51 @@ STATUS_RANK = {
 
 def _now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def _hyp_id_for(dna_id: str, symbol: str, structure: str) -> str | None:
+    """Registry-style hyp id: `hyp_dna_<symbol>_<structure>_<8 hex>`.
+
+    Sim rows carry dna_id like `dna_0fefd73ec2c4`; the hypotheses registry
+    builds ids from the LAST 8 hex chars of the hash (verified 2026-08-13:
+    `dna_0fefd73ec2c4` -> `hyp_dna_snap_cash_secured_put_d73ec2c4`,
+    `dna_9b2b6e62ebcc` -> `hyp_dna_snap_cash_secured_put_6e62ebcc`).
+    Any other slice (prefix, `[:8]`) produces a ghost id that never matches.
+    """
+    if not dna_id:
+        return None
+    hex_part = dna_id[-8:] if dna_id.startswith("dna_") else dna_id[:8]
+    return f"hyp_dna_{str(symbol).lower()}_{str(structure).lower()}_{hex_part}"
+
+
+def load_registry_dna_ids(
+    hypotheses_yaml: Path | str | None = None,
+) -> set[str]:
+    """dna_ids that actually exist in the hypotheses registry.
+
+    First-live must only name DNA that was promoted into the registry.
+    Sim-only DNA (evolve rows never written to hypotheses.yaml) would be a
+    ghost leader: scoreboard seat with no hypothesis, thesis, or audit trail.
+    """
+    path = Path(hypotheses_yaml) if hypotheses_yaml else DEFAULT_HYPOTHESES
+    if not path.is_file():
+        return set()
+    try:
+        import yaml
+
+        doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        hyps = doc.get("hypotheses") or []
+        ids: set[str] = set()
+        for h in hyps:
+            if not isinstance(h, dict):
+                continue
+            dna = h.get("dna") or {}
+            did = dna.get("dna_id")
+            if did:
+                ids.add(str(did))
+        return ids
+    except Exception:
+        return set()
 
 
 def _finite(x: Any, default: float = 0.0) -> float:
@@ -214,9 +260,7 @@ def load_single_leg_sim_rows(
             "config": config,
             "parent_id": parent_id or "",
             "sim_ts": ts,
-            "hyp_id": f"hyp_dna_{key[2].lower()}_{key[1]}_{str(key[0])[:8]}"
-            if key[0]
-            else None,
+            "hyp_id": _hyp_id_for(key[0], key[2], key[1]),
         }
         prev = best.get(key)
         if prev is None:
@@ -284,10 +328,21 @@ def rank_first_live_seats(
     top_n: int = 12,
     require_fit_3k_short: bool = True,
     test_cash_usd: float = 500.0,
+    registry_dna_ids: set[str] | None = None,
 ) -> dict[str, Any]:
-    """Rank single-leg sim seats that are capital-fit for first live on RH MCP."""
+    """Rank single-leg sim seats that are capital-fit for first live on RH MCP.
+
+    Only DNA present in the hypotheses registry (``registry_dna_ids``) may be
+    ranked; sim-only rows are rejected as ghosts so the board never names a
+    seat without a thesis/audit trail.
+    """
     sims = list(sim_rows) if sim_rows is not None else load_single_leg_sim_rows(min_trades=8)
     caps = dict(capital_by_symbol) if capital_by_symbol is not None else load_symbol_capital()
+    registry = (
+        set(registry_dna_ids)
+        if registry_dna_ids is not None
+        else load_registry_dna_ids()
+    )
 
     ranked: list[dict[str, Any]] = []
     rejected: list[dict[str, Any]] = []
@@ -297,6 +352,7 @@ def rank_first_live_seats(
         symbol = str(row.get("symbol") or "").upper()
         if classify_place_shape(structure) != "single_leg":
             continue
+        dna_id = str(row.get("dna_id") or "")
         cap = caps.get(symbol) or {}
         n_trades = int(row.get("n_trades") or 0)
         verdict = str(row.get("verdict") or "")
@@ -313,6 +369,8 @@ def rank_first_live_seats(
             reasons.append(f"thin_n={n_trades}<{min_trades}")
         if verdict not in ("SHIP", "NEEDS_MORE_DATA"):
             reasons.append(f"verdict={verdict}")
+        if dna_id and registry and dna_id not in registry:
+            reasons.append("ghost_dna_no_registry_hyp")
         if is_short:
             if short_bp <= 0:
                 reasons.append("no_spot_bp")
@@ -342,6 +400,7 @@ def rank_first_live_seats(
             r.startswith("csp_bp=")
             or r.startswith("capital_fit=")
             or r.startswith("max_loss=")
+            or r.startswith("ghost_dna")
             or r in ("max_loss_unknown", "no_spot_bp")
             for r in reasons
         )
@@ -445,6 +504,12 @@ def rank_first_live_seats(
         "n_sim_rows": len(sims),
         "n_eligible": len(ranked),
         "n_rejected": len(rejected),
+        "n_ghost_dna": sum(
+            1
+            for r in rejected
+            if any(str(x).startswith("ghost_dna") for x in r.get("reject_reasons") or [])
+        ),
+        "registry_dna_count": len(registry),
         "leader": leader,
         "shortlist": top,
         "near_miss_oversized": near,
