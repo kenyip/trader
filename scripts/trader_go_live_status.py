@@ -45,6 +45,7 @@ _AUDIT = _CACHE / "autonomy_audit.jsonl"
 _SHADOW_LATEST = _CACHE / "shadow" / "LATEST.json"
 _CYCLE_LATEST = _CACHE / "quality_worker" / "cycle_LATEST.json"
 _HYPS_YAML = _REPO / "trader_platform" / "data" / "hypotheses.yaml"
+_KEN_EDGE_FREEZE = Path.home() / ".local/state/jarvis/trader-guidance/edge-search-freeze.json"
 
 
 def _now() -> str:
@@ -58,14 +59,61 @@ def _load_json(path: Path) -> Any:
         return None
 
 
-def edge_search_health(cycle: Optional[dict] = None, *, registry_bytes: Optional[int] = None) -> dict[str, Any]:
+def _ken_edge_freeze_payload(path: Optional[Path] = None) -> dict[str, Any]:
+    """Operator latch: worker may watch/paper, must not evolve or prune-to-unfreeze."""
+    p = path or _KEN_EDGE_FREEZE
+    try:
+        if not p.is_file():
+            return {"active": False}
+        data = json.loads(p.read_text(encoding="utf-8"))
+        if not isinstance(data, dict) or not bool(data.get("skip_evolve")):
+            return {"active": False}
+        return {
+            "active": True,
+            "reason": str(data.get("reason") or "ken_edge_search_frozen"),
+            "unfreeze_gate": data.get("unfreeze_gate"),
+            "note": data.get("note"),
+            "source": data.get("source"),
+        }
+    except Exception:
+        return {"active": False}
+
+
+def _ken_freeze_from_cycle(cycle: dict[str, Any], note: str, phases: dict[str, Any]) -> tuple[bool, str]:
+    reasons = [note]
+    for lane in ("evolve_csp", "evolve_defined_risk"):
+        ph = phases.get(lane) if isinstance(phases.get(lane), dict) else {}
+        reasons.append(str(ph.get("reason") or ""))
+    blob = " ".join(reasons).lower()
+    if "ken_" in blob and "freeze" in blob:
+        for raw in reasons:
+            token = str(raw).strip()
+            if "ken_" in token.lower() and "freeze" in token.lower():
+                # Prefer the compact reason token over the full evolve_note sentence.
+                if " " not in token and len(token) < 80:
+                    return True, token
+        return True, "ken_edge_search_frozen"
+    if "do not prune-to-unfreeze" in blob:
+        return True, "ken_edge_search_frozen"
+    return False, ""
+
+
+def edge_search_health(
+    cycle: Optional[dict] = None,
+    *,
+    registry_bytes: Optional[int] = None,
+    freeze_path: Optional[Path] = None,
+) -> dict[str, Any]:
     """Classify quality-cycle EDGE muscle health.
 
     Green cycle rc=0 can still freeze search when both evolves skip on registry bloat
-    (2026-07-28/30/31 coach). Surface that so status cannot look SEARCHING while dead.
+    (2026-07-28/30/31 coach) **or** when Ken latches first-close freeze
+    (2026-08-13 coach). Surface that so status cannot look SEARCHING / OK_PARTIAL
+    while minting is intentionally off — and so coaches do not prune a Ken freeze.
     """
     cycle = cycle or {}
-    phases = cycle.get("phases") if isinstance(cycle.get("phases"), dict) else {}
+    raw_phases = cycle.get("phases")
+    phases: dict[str, Any] = raw_phases if isinstance(raw_phases, dict) else {}
     note = str(cycle.get("evolve_note") or "")
     bloat_reasons: list[str] = []
     evolve_skipped = 0
@@ -98,7 +146,17 @@ def edge_search_health(cycle: Optional[dict] = None, *, registry_bytes: Optional
     except Exception:
         reg_max = None
     bloated = bool(bloat_reasons)
-    if bloated:
+    ken_file = _ken_edge_freeze_payload(freeze_path)
+    ken_cycle, ken_cycle_reason = _ken_freeze_from_cycle(cycle, note, phases)
+    ken_frozen = bool(ken_file.get("active") or ken_cycle)
+    ken_reason = str(ken_file.get("reason") or ken_cycle_reason or "")
+    if ken_frozen:
+        state = "KEN_FROZEN"
+        summary = (
+            f"EDGE evolves skipped — Ken freeze ({ken_reason or 'ken_edge_search_frozen'}); "
+            "watch/paper only; do not prune-to-unfreeze"
+        )
+    elif bloated:
         state = "BLOATED_SKIP"
         summary = "EDGE evolves skipped — registry bloat (prune off-hours)"
     elif evolve_ran >= 1:
@@ -114,7 +172,12 @@ def edge_search_health(cycle: Optional[dict] = None, *, registry_bytes: Optional
     return {
         "state": state,
         "summary": summary,
-        "registry_bloated_skip": bloated,
+        "registry_bloated_skip": bloated and not ken_frozen,
+        "registry_over_limit": bool(
+            isinstance(reg_b, int) and isinstance(reg_max, int) and reg_max > 0 and reg_b > reg_max
+        ),
+        "ken_edge_frozen": ken_frozen,
+        "ken_freeze_reason": ken_reason or None,
         "registry_bytes": reg_b,
         "registry_max_bytes": reg_max,
         "evolve_note": note or None,
@@ -818,11 +881,14 @@ def collect() -> Funnel:
     act += min(10.0, real_orders * 2.0)
     act += 5.0 if working >= 1 else 0.0
     act += 5.0 if edge_ok else 0.0
-    # Bloat-skip freezes DNA minting — do not report SEARCHING vanity from cycle count alone.
-    if edge_search.get("registry_bloated_skip"):
+    # Frozen minting — do not report SEARCHING vanity from cycle count alone.
+    ken_frozen = bool(edge_search.get("ken_edge_frozen") or edge_search.get("state") == "KEN_FROZEN")
+    if ken_frozen or edge_search.get("registry_bloated_skip"):
         act = min(act, 35.0)
     activity_pct = round(min(100.0, act), 1)
-    if edge_search.get("registry_bloated_skip"):
+    if ken_frozen:
+        activity_label = "EDGE_FROZEN_KEN"
+    elif edge_search.get("registry_bloated_skip"):
         activity_label = "EDGE_FROZEN_BLOAT"
     elif activity_pct >= 70:
         activity_label = "SEARCHING"
@@ -843,7 +909,11 @@ def collect() -> Funnel:
         "paper_real_orders": real_orders,
         "paper_working": working,
         "edge_search": edge_search,
-        "note": "Search activity (cycles). Not the same as ready-to-trade. EDGE_FROZEN_BLOAT = evolve skipped on hyp yaml size.",
+        "note": (
+            "Search activity (cycles). Not the same as ready-to-trade. "
+            "EDGE_FROZEN_KEN = Ken first-close latch (do not prune). "
+            "EDGE_FROZEN_BLOAT = evolve skipped on hyp yaml size."
+        ),
     }
 
     # --- 3 layers (primary) ---
@@ -1188,7 +1258,11 @@ def format_text(f: Funnel) -> str:
     c = f.continuum
     wr = "ON" if c.get("quality_worker_running") else "off"
     es = c.get("edge_search") if isinstance(c.get("edge_search"), dict) else {}
-    es_state = es.get("state") or ("BLOATED_SKIP" if c.get("registry_bloated_skip") else "?")
+    es_state = es.get("state") or (
+        "KEN_FROZEN"
+        if es.get("ken_edge_frozen")
+        else ("BLOATED_SKIP" if c.get("registry_bloated_skip") else "?")
+    )
     reg_b = c.get("registry_bytes") if c.get("registry_bytes") is not None else es.get("registry_bytes")
     reg_bit = (
         f"  registry≈{int(reg_b / 1e6 * 10) / 10}MB"
@@ -1200,7 +1274,12 @@ def format_text(f: Funnel) -> str:
         f"   worker={wr}  cycles={c.get('quality_cycles_completed')}  "
         f"hb_age_h={c.get('quality_worker_hb_age_h')}  edge_search={es_state}{reg_bit}"
     )
-    if c.get("registry_bloated_skip") or es.get("registry_bloated_skip"):
+    if es.get("ken_edge_frozen") or es_state == "KEN_FROZEN":
+        lines.append(
+            "   ⚠ EDGE frozen: Ken first-close latch — worker watch/paper only; "
+            "do not prune-to-unfreeze (explicit Ken only)"
+        )
+    elif c.get("registry_bloated_skip") or es.get("registry_bloated_skip"):
         lines.append(
             "   ⚠ EDGE frozen: both evolves skipped on hypotheses.yaml bloat — "
             "off-hours `scripts/trader_prune_hyp_registry.py --max-keep 400`"

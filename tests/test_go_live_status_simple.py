@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 from scripts.trader_go_live_status import (
     _load_first_live_lane,
@@ -214,6 +215,7 @@ def test_same_day_single_session():
 def test_edge_search_health_detects_registry_bloat_skip():
     from scripts.trader_go_live_status import edge_search_health
 
+    missing = Path("/tmp/trader-no-ken-freeze-test.json")
     bloated = edge_search_health(
         {
             "stamp": "20260731T040026",
@@ -231,10 +233,12 @@ def test_edge_search_health_detects_registry_bloat_skip():
                     "reason": "registry_bloat_skip_evolve",
                 },
             },
-        }
+        },
+        freeze_path=missing,
     )
     assert bloated["registry_bloated_skip"] is True
     assert bloated["state"] == "BLOATED_SKIP"
+    assert bloated["ken_edge_frozen"] is False
     assert bloated["evolve_ran"] == 0
 
     ok = edge_search_health(
@@ -253,11 +257,80 @@ def test_edge_search_health_detects_registry_bloat_skip():
                     "reason": "evolve_lanes_one_alternate",
                 },
             },
-        }
+        },
+        freeze_path=missing,
     )
     assert ok["registry_bloated_skip"] is False
     assert ok["state"] == "OK"
+    assert ok["ken_edge_frozen"] is False
     assert ok["evolve_ran"] >= 1
+
+
+def test_edge_search_health_ken_freeze_outranks_bloat_and_ok_partial():
+    from scripts.trader_go_live_status import edge_search_health
+
+    missing = Path("/tmp/trader-no-ken-freeze-test.json")
+    frozen = edge_search_health(
+        {
+            "stamp": "20260813T155740",
+            "evolve_note": (
+                "skipped both evolves: Ken EDGE freeze (ken_first_close_freeze_edge_search); "
+                "worker watch/paper only — do not prune-to-unfreeze"
+            ),
+            "registry_bytes": 6_000_873,
+            "registry_max_bytes": 6_000_000,
+            "phases": {
+                "evolve_csp": {
+                    "skipped": True,
+                    "reason": "ken_first_close_freeze_edge_search",
+                    "registry_bytes": 6_000_873,
+                },
+                "evolve_defined_risk": {
+                    "skipped": True,
+                    "reason": "ken_first_close_freeze_edge_search",
+                },
+            },
+        },
+        freeze_path=missing,
+    )
+    assert frozen["state"] == "KEN_FROZEN"
+    assert frozen["ken_edge_frozen"] is True
+    assert frozen["ken_freeze_reason"] == "ken_first_close_freeze_edge_search"
+    assert frozen["registry_bloated_skip"] is False
+    assert frozen["registry_over_limit"] is True
+    assert frozen["evolve_ran"] == 0
+
+
+def test_edge_search_health_reads_operator_freeze_file(tmp_path):
+    from scripts.trader_go_live_status import edge_search_health
+
+    latch = tmp_path / "edge-search-freeze.json"
+    latch.write_text(
+        '{"skip_evolve": true, "reason": "ken_first_close_freeze_edge_search"}',
+        encoding="utf-8",
+    )
+    # Alternate-lane cycle would otherwise look OK_PARTIAL / SEARCHING.
+    out = edge_search_health(
+        {
+            "stamp": "20260813T0900",
+            "registry_bytes": 1_848_575,
+            "registry_max_bytes": 6_000_000,
+            "phases": {
+                "evolve_csp": {
+                    "skipped": True,
+                    "reason": "evolve_lanes_one_alternate",
+                },
+                "evolve_defined_risk": {
+                    "skipped": True,
+                    "reason": "evolve_lanes_one_alternate",
+                },
+            },
+        },
+        freeze_path=latch,
+    )
+    assert out["state"] == "KEN_FROZEN"
+    assert out["ken_edge_frozen"] is True
+    assert out["registry_bloated_skip"] is False
 
 
 def test_format_text_surfaces_edge_search_bloat():
@@ -323,3 +396,71 @@ def test_format_text_surfaces_edge_search_bloat():
     assert "edge_search=BLOATED_SKIP" in text
     assert "EDGE frozen" in text
     assert "trader_prune_hyp_registry" in text
+
+
+def test_format_text_surfaces_ken_freeze_not_prune():
+    from scripts.trader_go_live_status import Funnel, format_text
+
+    f = Funnel(
+        generated_at="2026-08-13T16:00:00+00:00",
+        phase="SHADOW",
+        sleeve_plan_usd=3000,
+        sleeve_cash_usd=500.0,
+        option_level="option_level_2",
+        agentic_enabled=False,
+        overall_pct=85.0,
+        overall_label="NEAR_PACKET",
+        activity_pct=35.0,
+        activity_label="EDGE_FROZEN_KEN",
+        next_action="manage_open_paper_campaign",
+        ken_required=False,
+        layers={
+            "edge": {
+                "status": "PASS",
+                "summary": "pack-grade",
+                "paper_research_leader": "hyp_x",
+                "first_live_candidate": "SNAP cash_secured_put",
+            },
+            "robot": {
+                "status": "PASS",
+                "summary": "paper=ok; shadow=ok",
+                "paper_sessions": 17,
+                "paper_sessions_target": 3,
+                "shadow": "PASS",
+                "live_disarmed": True,
+            },
+            "arm": {"status": "BLOCKED", "summary": "Ken only"},
+        },
+        paper={"real_orders": 1, "working": 1, "open_risk_usd": 79.32, "open": []},
+        continuum={
+            "quality_worker_running": True,
+            "quality_cycles_completed": 22284,
+            "quality_worker_hb_age_h": 0.02,
+            "registry_bloated_skip": False,
+            "registry_bytes": 6_000_873,
+            "edge_search": {
+                "state": "KEN_FROZEN",
+                "ken_edge_frozen": True,
+                "ken_freeze_reason": "ken_first_close_freeze_edge_search",
+                "registry_bloated_skip": False,
+                "registry_bytes": 6_000_873,
+            },
+        },
+        shortlist_top=[],
+        blockers=["Real money blocked until Ken LIVE_PACKET arm"],
+        path_to_live=["1. EDGE"],
+        simple_next="Manage open paper.",
+        glossary={
+            "EDGE": "sims",
+            "ROBOT": "paper+shadow",
+            "ARM": "Ken",
+            "paper": "fake money",
+            "shadow": "log only",
+        },
+        why_overall_stuck="remaining: arm",
+    )
+    text = format_text(f)
+    assert "edge_search=KEN_FROZEN" in text
+    assert "do not prune-to-unfreeze" in text
+    assert "trader_prune_hyp_registry" not in text
+    assert "search EDGE_FROZEN_KEN" in text
