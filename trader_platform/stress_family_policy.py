@@ -172,6 +172,41 @@ def family_recent_capital_path_outcomes(
     return [ok for _, ok in rows[: int(lookback)]]
 
 
+def family_reopen_sample_exhausted(
+    symbol: str | None,
+    structure: str | None,
+    *,
+    rotation: dict[str, Any] | None = None,
+    lookback: int = 6,
+    window_hours: float = 4.0,
+    fail_min: int = 4,
+    max_ok_in_lookback: int = 0,
+) -> bool:
+    """True when a short-window post-reopen sample is already all fails.
+
+    Thin/moderate living reopen (``streak_min_living``) exists so leftover 24h
+    fail streaks after prune/sat floors do not freeze EDGE. It is not a license
+    to burn B3/B4 all night on the same CCS family (2026-08-12T2100 coach:
+    F/CCL/SNAP CCS 10–11 recent fails / 0–1 ok after create-sat unlock). A 4h
+    burst of ≥4 capital_path fails and 0 oks re-arms hot-streak even when
+    ``living_count`` is still below ``streak_min_living``.
+    """
+    if not symbol or not structure or fail_min <= 0:
+        return False
+    outcomes = family_recent_capital_path_outcomes(
+        symbol,
+        structure,
+        rotation=rotation,
+        lookback=lookback,
+        window_hours=window_hours,
+    )
+    if len(outcomes) < int(fail_min):
+        return False
+    oks = sum(1 for ok in outcomes if ok)
+    fails = len(outcomes) - oks
+    return fails >= int(fail_min) and oks <= int(max_ok_in_lookback)
+
+
 def family_hot_fail_streak_toxic(
     symbol: str | None,
     structure: str | None,
@@ -220,6 +255,10 @@ def family_challenge_toxic(
     living_count: int | None = None,
     streak_min_living: int = 12,
     streak_reopen_min_lifetime_ok: int = 3,
+    reopen_lookback: int = 6,
+    reopen_window_hours: float = 4.0,
+    reopen_fail_min: int = 4,
+    reopen_max_ok: int = 0,
 ) -> bool:
     """Hard-block hopeless symbol×structure families (same thresholds as selector).
 
@@ -252,6 +291,13 @@ def family_challenge_toxic(
     CCS/IC (AAPL/AMD/AMZN/XOM zero_trades), DR created 0 multi-leg, and the stress
     selector stayed n=0 (TTL leaders + toxic-only unstressed). Keep thick dens
     (AAL CCS living≫12) hot-toxic; reopen moderate dens so B3/B4 can rotate again.
+
+    Post-reopen exhaust (2026-08-12T2100 coach): the living-floor skip applies
+    only while the *short* 4h sample is not already a fail burst. After unlock,
+    F/CCL/SNAP CCS minted all night (55 stresses / ~6h) with 0–1 capital_path
+    oks while CCL PCS quietly printed 11/12 SHIP@5%. Once ≥4 fails and 0 oks
+    land inside 4h, fall through to hot-streak even at living 6–8 so search
+    budget moves to unsaturated survivors instead of vanity CCS clones.
     """
     if not symbol or not structure:
         return False
@@ -276,7 +322,18 @@ def family_challenge_toxic(
         if living_count is not None and int(living_count) < int(streak_min_living):
             _lf2, lo2 = family_lifetime_fail_ok(symbol, structure, rotation=rot)
             if int(lo2) >= int(streak_reopen_min_lifetime_ok):
-                return False
+                # Leftover 24h streak after prune/sat may still reopen — unless
+                # the post-reopen 4h sample already failed (coach 2026-08-12T2100).
+                if not family_reopen_sample_exhausted(
+                    symbol,
+                    structure,
+                    rotation=rot,
+                    lookback=int(reopen_lookback),
+                    window_hours=float(reopen_window_hours),
+                    fail_min=int(reopen_fail_min),
+                    max_ok_in_lookback=int(reopen_max_ok),
+                ):
+                    return False
         if family_hot_fail_streak_toxic(
             symbol,
             structure,

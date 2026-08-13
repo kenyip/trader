@@ -1107,18 +1107,40 @@ def test_quality_cycle_dr_structures_include_iron_condor():
     assert '"call_credit_spread"' in chunk
 
 
-def test_unsaturated_with_ic_surfaces_current_open_families():
-    """Live-ledger ordering may rotate; IC must remain eligible when requested."""
+def test_unsaturated_includes_open_iron_condor_when_requested():
+    """IC stays eligible when an IC family is actually open (not live-ledger hope)."""
+    from datetime import datetime, timezone
+
     from trader_platform.stress_family_policy import unsaturated_discovery_families
 
+    now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    by = {
+        f"f_ic_{i}": {
+            "symbol": "F",
+            "structure": "iron_condor",
+            "capital_path_ok": True,
+            "stressed_at": now,
+        }
+        for i in range(30)
+    }
+    # Single recent SNAP IC fail — not a 4h burst, not lifetime hopeless.
+    by["snap_ic_0"] = {
+        "symbol": "SNAP",
+        "structure": "iron_condor",
+        "capital_path_ok": False,
+        "stressed_at": now,
+    }
+    live = {("F", "iron_condor"): 10, ("SNAP", "iron_condor"): 0}
     out = unsaturated_discovery_families(
         limit=8,
+        rotation={"by_hyp_id": by},
+        universe=["F", "SNAP", "XOM"],
         structures=("put_credit_spread", "call_credit_spread", "iron_condor"),
-        use_registry_living_counts=True,
+        living_family_counts=live,
+        use_registry_living_counts=False,
+        recent_fail_thrash_min=99,
     )
     pairs = [(r.get("symbol"), r.get("structure")) for r in out]
     structs = {p[1] for p in pairs}
-    # Ghost-prune reopen + preferred cold should surface IC and/or PFE-class families.
-    # Exact open symbol rotates with the live ledger — assert policy, not a dated order.
-    assert "iron_condor" in structs or any(p[0] == "PFE" for p in pairs)
+    assert "iron_condor" in structs, pairs
     assert pairs, "expected at least one open multi-leg family"

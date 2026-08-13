@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import scripts.trader_select_stress_hyps as sel
@@ -1021,6 +1021,7 @@ def test_family_hot_fail_streak_toxic_blocks_despite_historic_oks():
     )
 
     now = datetime.now(timezone.utc).replace(microsecond=0)
+    leftover = (now - timedelta(hours=8)).isoformat()
     by = {}
     # Many older capital_path_ok keep lifetime rate healthy
     for i in range(20):
@@ -1030,13 +1031,14 @@ def test_family_hot_fail_streak_toxic_blocks_despite_historic_oks():
             "capital_path_ok": True,
             "stressed_at": "2026-07-20T12:00:00+00:00",
         }
-    # Newest 7 fails in-window
+    # Leftover 24h fail streak (8h ago) — still hot-streak, but not a 4h
+    # post-reopen burst. Thin/moderate living may reopen this leftover.
     for i in range(7):
         by[f"hyp_dna_aal_call_credit_spread_hot{i}"] = {
             "symbol": "AAL",
             "structure": "call_credit_spread",
             "capital_path_ok": False,
-            "stressed_at": now.isoformat(),
+            "stressed_at": leftover,
         }
     rot = {"by_hyp_id": by}
     assert family_hot_fail_streak_toxic(
@@ -1132,6 +1134,115 @@ def test_family_hot_fail_streak_toxic_blocks_despite_historic_oks():
         lifetime_fail_min=20,
         max_ok_rate=0.05,
         streak_fail_min=0,  # disable streak path
+    )
+
+
+def test_family_reopen_sample_exhausted_rearms_hot_streak():
+    """4h all-fail burst re-arms hot-streak even at living 6–8 (coach 2026-08-12T2100)."""
+    from trader_platform.stress_family_policy import (
+        family_challenge_toxic,
+        family_reopen_sample_exhausted,
+    )
+
+    now = datetime.now(timezone.utc).replace(microsecond=0)
+    by = {}
+    for i in range(20):
+        by[f"hyp_dna_f_call_credit_spread_ok{i}"] = {
+            "symbol": "F",
+            "structure": "call_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": "2026-07-20T12:00:00+00:00",
+        }
+    # Fresh 4h fail burst after create-sat unlock (F CCS vanity SHIP).
+    for i in range(7):
+        by[f"hyp_dna_f_call_credit_spread_burst{i}"] = {
+            "symbol": "F",
+            "structure": "call_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": now.isoformat(),
+        }
+    rot = {"by_hyp_id": by}
+    assert family_reopen_sample_exhausted(
+        "F", "call_credit_spread", rotation=rot, lookback=6, window_hours=4.0, fail_min=4
+    )
+    # Moderate living would have reopened on leftover 24h streak alone; 4h
+    # exhaust must fall through to hot-streak and block.
+    assert family_challenge_toxic(
+        "F",
+        "call_credit_spread",
+        rotation=rot,
+        toxic_fail_min=8,
+        lifetime_fail_min=20,
+        max_ok_rate=0.05,
+        streak_fail_min=6,
+        streak_lookback=8,
+        living_count=7,
+    )
+    assert family_challenge_toxic(
+        "F",
+        "call_credit_spread",
+        rotation=rot,
+        toxic_fail_min=8,
+        lifetime_fail_min=20,
+        max_ok_rate=0.05,
+        streak_fail_min=6,
+        streak_lookback=8,
+        living_count=0,
+    )
+    # Same leftover-only family (no 4h burst) still reopens at living=7.
+    leftover = (now - timedelta(hours=8)).isoformat()
+    by_left = {
+        f"hyp_dna_f_call_credit_spread_ok{i}": {
+            "symbol": "F",
+            "structure": "call_credit_spread",
+            "capital_path_ok": True,
+            "stressed_at": "2026-07-20T12:00:00+00:00",
+        }
+        for i in range(20)
+    }
+    for i in range(7):
+        by_left[f"hyp_dna_f_call_credit_spread_oldhot{i}"] = {
+            "symbol": "F",
+            "structure": "call_credit_spread",
+            "capital_path_ok": False,
+            "stressed_at": leftover,
+        }
+    assert not family_reopen_sample_exhausted(
+        "F",
+        "call_credit_spread",
+        rotation={"by_hyp_id": by_left},
+        lookback=6,
+        window_hours=4.0,
+        fail_min=4,
+    )
+    assert not family_challenge_toxic(
+        "F",
+        "call_credit_spread",
+        rotation={"by_hyp_id": by_left},
+        toxic_fail_min=8,
+        lifetime_fail_min=20,
+        max_ok_rate=0.05,
+        streak_fail_min=6,
+        streak_lookback=8,
+        living_count=7,
+    )
+    # One capital_path_ok in the 4h window keeps reopen (not an all-fail burst).
+    by_ok = dict(by)
+    later = (now + timedelta(minutes=1)).isoformat()
+    by_ok["hyp_dna_f_call_credit_spread_burst_ok"] = {
+        "symbol": "F",
+        "structure": "call_credit_spread",
+        "capital_path_ok": True,
+        "stressed_at": later,
+    }
+    assert not family_reopen_sample_exhausted(
+        "F",
+        "call_credit_spread",
+        rotation={"by_hyp_id": by_ok},
+        lookback=6,
+        window_hours=4.0,
+        fail_min=4,
+        max_ok_in_lookback=0,
     )
 
 

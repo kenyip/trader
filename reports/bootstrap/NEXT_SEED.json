@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper BAC; off-hours worker continues edge-freeze DR→B3/B4. No densify/arm.",
+    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
     "open_orders": [
       {
         "max_loss_usd": 79.32,
@@ -10,19 +10,9 @@
         "structure": "put_credit_spread",
         "symbol": "BAC"
       }
-    ],
-    "coach_20260812T1515": {
-      "outcome": "BLOCKER_REMOVED_AND_RETESTED",
-      "patch": "resolve_create_sat_min_living edge-freeze min_living 6→12 when open_fams<=2",
-      "created": [
-        "hyp_dna_ccl_iron_condor_dec9268b",
-        "hyp_dna_snap_call_credit_spread_eac25555"
-      ],
-      "b4": "both reject fragile@5pct — honest; leaders F IC dens0 hold",
-      "worker": "restarted pid fresh after policy patch"
-    }
+    ]
   },
-  "generated_at": "2026-08-12T22:15:30+00:00",
+  "generated_at": "2026-08-13T04:09:24+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -32,7 +22,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "continuum_judgment_2026-08-12T1515",
-  "stamp": "20260812T1515",
+  "source": "trader_paper_campaign",
+  "stamp": "20260813T040924",
   "trading_authority": false
 }

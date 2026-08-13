@@ -1,3 +1,4 @@
+- 2026-08-12T2100 continuum-judgment — 4h post-reopen exhaust; F/TSLL CCS re-toxic; CCL PCS 11/12 SHIP@5%; BAC manage residual
 - 2026-08-12T1515 continuum-judgment — edge-freeze create-sat unlock; CCL IC+SNAP CCS B4 reject; BAC manage residual
 | 2026-08-12T1531 | rth | HOLD BAC PCS mtm +11.68/adv +10.68 vs PT 12.98 (dual false) OTM1.89 |d|0.13; STAND_ASIDE new (BAC open + AAL filters); book 1/2 risk79 | manage_open_paper_campaign |
 - `2026-08-12T1531-rth.md` — RTH mid/late: HOLD BAC refill grind toward PT; dual gap ~1.3/2.3; no non-BAC capital-fit OPEN_*
