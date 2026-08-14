@@ -1,51 +1,41 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; HOLD BAC while dual PT false; stand-aside if no new capital-fit OPEN_*",
-    "decision": {
-      "BAC": "HOLD",
-      "new": "STAND_ASIDE"
-    },
-    "open_orders": [
+    "closed_this_session": [
       {
-        "order_id": "paper_b5422618e55d",
-        "symbol": "BAC",
-        "structure": "put_credit_spread",
-        "strategy_id": "hyp_dna_bac_put_credit_spread_631f9804",
-        "status": "working",
-        "spot": 64.44999694824219,
-        "chg_pct": 0.5617110796099833,
-        "short_strike": 63.0,
-        "long_strike": 62.0,
-        "exp": "2026-08-21",
-        "short_otm": 1.4499969482421875,
-        "short_itm": false,
-        "short_delta_approx": -0.15397405275481946,
-        "mtm_usd": 10.18390485171179,
-        "mtm_adverse_usd": 8.683904851711787,
-        "profit_target_usd": 12.983063635592362,
-        "dual_pt_ready": false,
-        "ml_used_frac": 0.0,
-        "max_loss_usd": 79.32,
-        "short_mark_src": "bid_ask",
-        "long_mark_src": "bid_ask",
-        "decision": "HOLD",
-        "reasons": [
-          "short_OTM_or_quiet_path; mtm within budget"
-        ]
+        "order_id": "paper_546143354976",
+        "symbol": "INTC",
+        "action": "canceled",
+        "reason": "same_symbol_spray"
+      },
+      {
+        "order_id": "paper_ea3350fe1422",
+        "symbol": "INTC",
+        "action": "canceled",
+        "reason": "same_symbol_spray"
       }
     ],
-    "open_risk": 79.32,
-    "working": 1,
-    "book_headroom": "1/2",
-    "pack_grade": "NO_SETUP",
-    "scout_stamp": "20260814T153147",
-    "n_intents": 6,
-    "autonomy": "research_only_x5",
-    "edge_search": "KEN_FROZEN",
-    "closed_this_session": [],
-    "path_note": "08-14 10:34 BA +9.18/+6.68 OTM1.36 |d|0.17 \u2192 11:31 BA mid +10.18/adv +8.68 OTM1.45 |d|0.15 (greener, closer to PT; still ~2.80/4.30 short); HOLD"
+    "hint": "RTH: mark/manage remaining INTC IC via DNA ladder; stand-aside new; PaperBroker now refuses same-symbol / working>=2. EDGE Ken-frozen — do not prune.",
+    "open_orders": [
+      {
+        "created": "2026-08-14T15:59:06+00:00",
+        "decision": "HOLD",
+        "expiration": "2026-08-28",
+        "long_call": 125.0,
+        "long_put": 85.0,
+        "max_loss_usd": 188.72125668506322,
+        "net_credit": 0.6127874331493679,
+        "note": "pack-grade spine IC; short put ~15 OTM / short call ~20 OTM at spot~103; next RTH marks DNA ladder (pt 0.3 / dl 0.7 / delta 0.4 / dte_stop 4)",
+        "order_id": "paper_b5b969c4a65f",
+        "short_call": 122.5,
+        "short_put": 87.5,
+        "status": "working",
+        "strategy_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
+        "structure": "iron_condor",
+        "symbol": "INTC"
+      }
+    ]
   },
-  "generated_at": "2026-08-14T15:34:12.838656+00:00",
+  "generated_at": "2026-08-14T16:12:30+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -55,7 +45,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "rth_eval_2026-08-14T1131",
-  "stamp": "20260814T1131",
+  "source": "coach_2026-08-14T0900",
+  "stamp": "20260814T0900",
   "trading_authority": false
 }

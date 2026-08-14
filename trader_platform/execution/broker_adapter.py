@@ -155,6 +155,14 @@ class PaperBroker(BrokerAdapter):
             return self.replace_limit(
                 replace_order_id, qty=intent.qty, limit_price=intent.limit_price
             )
+        from trader_platform.execution.paper_book_guards import refuse_paper_place
+
+        refuse = refuse_paper_place(
+            symbol=str(intent.symbol or ""),
+            working=self.list_open_orders(),
+        )
+        if refuse:
+            return OrderResult(ok=False, message=refuse)
         oid = f"paper_{uuid.uuid4().hex[:12]}"
         now = _now()
         order = WorkingOrder(
@@ -245,6 +253,34 @@ class PaperBroker(BrokerAdapter):
         self._event(data, "cancel", {"order_id": order_id})
         self._write(data)
         return OrderResult(ok=True, order=_working_order_from_raw(raw), message="canceled")
+
+    def close(
+        self,
+        order_id: str,
+        *,
+        reason: str,
+        mark: dict[str, Any] | None = None,
+    ) -> OrderResult:
+        """Mark a working paper order closed (PT / stop / DTE / regime)."""
+        data = self._ensure()
+        raw = data["orders"].get(order_id)
+        if not raw:
+            return OrderResult(ok=False, message=f"unknown order {order_id}")
+        if raw.get("status") not in ("working", "filled", "replaced"):
+            return OrderResult(ok=False, message=f"cannot close status={raw.get('status')}")
+        raw["status"] = "closed"
+        raw["updated"] = _now()
+        raw["close_reason"] = str(reason)
+        if mark:
+            raw["mark"] = mark
+        data["orders"][order_id] = raw
+        self._event(
+            data,
+            "close",
+            {"order_id": order_id, "reason": reason, "symbol": raw.get("symbol")},
+        )
+        self._write(data)
+        return OrderResult(ok=True, order=_working_order_from_raw(raw), message=f"closed:{reason}")
 
     def list_open_orders(self) -> list[WorkingOrder]:
         data = self._ensure()

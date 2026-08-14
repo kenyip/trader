@@ -1,3 +1,5 @@
+| 2026-08-14T0900 | continuum-judgment | PaperBroker book guards (1/symbol + max 2); canceled 2 INTC spray extras after false BAC pt40; HOLD remaining INTC IC; Ken freeze honored | manage_open_paper_campaign |
+- `2026-08-14T0900-continuum-judgment.md` — coach: stop pack-grade same-symbol spray; do not prune
 | 2026-08-14T1131 | rth | HOLD BAC PCS mid +10.18/adv +8.68 vs PT 12.98 (dual false, gap~2.80/4.30) OTM1.45 |d|0.15 greener vs 10:34; STAND_ASIDE new (pack NO_SETUP + BAC open + AAL bearish); book 1/2 risk79 | manage_open_paper_campaign |
 - `2026-08-14T1131-rth.md` — RTH mid: HOLD BAC greener under PT; Ken freeze honored; no prune
 | 2026-08-14T1034 | rth | HOLD BAC PCS mid +9.18/adv +6.68 vs PT 12.98 (dual false, gap~3.80/6.30) OTM1.36 |d|0.17 BA fill-in vs 09:31 last; STAND_ASIDE new (pack NO_SETUP + BAC open + AAL bearish); book 1/2 risk79 | manage_open_paper_campaign |
