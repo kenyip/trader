@@ -16,6 +16,7 @@ Sprint knobs (env / configs/quality_worker.env):
   TRADER_QC_REGISTRY_MAX_BYTES=12000000  # skip evolve --apply when hyp yaml bloated
   TRADER_QC_EVOLVE_LANES=one|both        # one=alternate DR/CSP per cycle (default one)
   TRADER_QC_SKIP_EVOLVE=1                # Ken/operator freeze (also edge-search-freeze.json)
+                                         # also skips tight-cycle EDGE re-prove (multi/shortlist_dna)
 
 Usage:
   .venv/bin/python scripts/trader_quality_cycle.py
@@ -88,6 +89,40 @@ def _evolve_skip_payload(*, reason: str, lane: str, registry_bytes: int) -> dict
         "registry_bytes": registry_bytes,
         "registry_max_bytes": _registry_bloat_limit(),
     }
+
+
+# Ken freeze: tight cycle must be watch/paper, not 65s of unchanged-DNA re-prove.
+# Hourly residual may still pulse multi for honesty. Unfreeze = explicit Ken only.
+KEN_FROZEN_SKIP_PROVE_PHASES: tuple[str, ...] = (
+    "discovery_f2_ingest",
+    "multi_symbol",
+    "shortlist_dna_multi",
+    "regime_stress",
+    "cost_stress",
+    "stress_ingest",
+    "shortlist_refresh",
+)
+
+KEN_FROZEN_KEEP_PHASES: tuple[str, ...] = (
+    "research",
+    "paper_loop",
+    "paper_campaign",
+)
+
+
+def _phase_skip_payload(*, reason: str, phase: str) -> dict[str, Any]:
+    return {
+        "rc": 0,
+        "seconds": 0.0,
+        "skipped": True,
+        "reason": reason,
+        "phase": phase,
+    }
+
+
+def _ken_frozen_skip_prove_phases() -> tuple[str, ...]:
+    """EDGE re-prove phases the tight cycle must skip while Ken-frozen."""
+    return KEN_FROZEN_SKIP_PROVE_PHASES
 
 
 def _now() -> str:
@@ -473,11 +508,17 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
             )
 
     # --- phase 3: parallel prove (+ optional paper_loop) ---
-    hyps = _shortlist_hyps()
+    # Ken-frozen: DNA cannot change. Re-proving the same shortlist every ~2 min
+    # (~52s multi + ~13s shortlist_dna) is EDGE theater, not watch/paper.
+    hyps = "" if skip_evolve_ken else _shortlist_hyps()
     # Refresh discovery F2 handoff surface before multi-symbol so new-axis
     # prove_evals enter the pack-grade pool (not only old densify cells).
     ingest_py = _REPO / "scripts" / "trader_ingest_discovery_f2.py"
-    if ingest_py.is_file():
+    if skip_evolve_ken:
+        results["phases"]["discovery_f2_ingest"] = _phase_skip_payload(
+            reason=ken_evolve_reason, phase="discovery_f2_ingest"
+        )
+    elif ingest_py.is_file():
         # Prefer main-repo discovery cache when worktree/.cache is empty.
         disc_roots = [
             _REPO / ".cache" / "platform" / "spine" / "discovery",
@@ -499,68 +540,86 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
         )
     # Always expand multi-symbol book with QUALITY_SHORTLIST leaders (AAL/BAC/…)
     # so pack-grade honesty tracks research DNA, not densify seed book only.
-    parallel_jobs: dict[str, list[str]] = {
-        # Densify seed multi (AMZN/IWM) + discovery F2 handoff candidates.
-        "multi_symbol": [
-            py,
-            str(_REPO / "scripts" / "trader_multi_symbol_reprove.py"),
-            "--from-shortlist",
-        ],
-        # Research leaders (AAL/BAC PCS DNA) peer-symbol honesty — densify multi alone
-        # left quality_pass=0 forever (2026-07-27 continuum coach).
-        "shortlist_dna_multi": [
-            py,
-            str(_REPO / "scripts" / "trader_shortlist_dna_multi_symbol.py"),
-            "--top-n",
-            "3",
-            "--max-peers",
-            "6",
-            "--min-peer-pass",
-            "2",
-        ],
-    }
-    if hyps:
-        parallel_jobs["regime_stress"] = [
-            py,
-            str(_REPO / "scripts" / "pcs_regime_stress.py"),
-            "--hyps",
-            hyps,
-            "--out",
-            str(out / f"regime_{stamp}.json"),
-        ]
-        parallel_jobs["cost_stress"] = [
-            py,
-            str(_REPO / "scripts" / "pcs_cost_stress.py"),
-            "--hyps",
-            hyps,
-            "--out",
-            str(out / f"cost_{stamp}.json"),
-        ]
+    # Ken-frozen: skip that expansion — last living MULTI/SHORTLIST_DNA stay.
+    parallel_jobs: dict[str, list[str]] = {}
+    if skip_evolve_ken:
+        for name in ("multi_symbol", "shortlist_dna_multi"):
+            results["phases"][name] = _phase_skip_payload(
+                reason=ken_evolve_reason, phase=name
+            )
+        results["prove_note"] = (
+            f"skipped EDGE prove (multi/shortlist_dna/ingest/refresh): "
+            f"Ken EDGE freeze ({ken_evolve_reason}); watch/paper only"
+        )
+    else:
+        parallel_jobs = {
+            # Densify seed multi (AMZN/IWM) + discovery F2 handoff candidates.
+            "multi_symbol": [
+                py,
+                str(_REPO / "scripts" / "trader_multi_symbol_reprove.py"),
+                "--from-shortlist",
+            ],
+            # Research leaders (AAL/BAC PCS DNA) peer-symbol honesty — densify multi alone
+            # left quality_pass=0 forever (2026-07-27 continuum coach).
+            "shortlist_dna_multi": [
+                py,
+                str(_REPO / "scripts" / "trader_shortlist_dna_multi_symbol.py"),
+                "--top-n",
+                "3",
+                "--max-peers",
+                "6",
+                "--min-peer-pass",
+                "2",
+            ],
+        }
+        if hyps:
+            parallel_jobs["regime_stress"] = [
+                py,
+                str(_REPO / "scripts" / "pcs_regime_stress.py"),
+                "--hyps",
+                hyps,
+                "--out",
+                str(out / f"regime_{stamp}.json"),
+            ]
+            parallel_jobs["cost_stress"] = [
+                py,
+                str(_REPO / "scripts" / "pcs_cost_stress.py"),
+                "--hyps",
+                hyps,
+                "--out",
+                str(out / f"cost_{stamp}.json"),
+            ]
     # Fold cheap paper_loop into the parallel wave when due (saves ~12s serial)
     if run_paper_loop:
         paper_loop_py = _REPO / "scripts" / "trader_paper_loop.py"
         if paper_loop_py.is_file():
             parallel_jobs["paper_loop"] = [py, str(paper_loop_py)]
 
-    max_workers = int(os.environ.get("TRADER_QC_PARALLEL", "4"))
-    with ThreadPoolExecutor(max_workers=max_workers) as ex:
-        futs = {
-            ex.submit(
-                _run,
-                cmd,
-                out / f"{name}_{stamp}.log",
-                int(os.environ.get("TRADER_QC_PARALLEL_TIMEOUT", "600")),
-            ): name
-            for name, cmd in parallel_jobs.items()
-        }
-        for fut in as_completed(futs):
-            name = futs[fut]
-            results["phases"][name] = fut.result()
+    if parallel_jobs:
+        max_workers = int(os.environ.get("TRADER_QC_PARALLEL", "4"))
+        with ThreadPoolExecutor(max_workers=max_workers) as ex:
+            futs = {
+                ex.submit(
+                    _run,
+                    cmd,
+                    out / f"{name}_{stamp}.log",
+                    int(os.environ.get("TRADER_QC_PARALLEL_TIMEOUT", "600")),
+                ): name
+                for name, cmd in parallel_jobs.items()
+            }
+            for fut in as_completed(futs):
+                name = futs[fut]
+                results["phases"][name] = fut.result()
 
     results["shortlist_hyps"] = hyps
 
     # Ingest B3/B4 into rotation ledger + refresh shortlist (no hyp yaml write)
-    if hyps and "regime_stress" in results["phases"] and "cost_stress" in results["phases"]:
+    if skip_evolve_ken:
+        for name in ("regime_stress", "cost_stress", "stress_ingest", "shortlist_refresh"):
+            results["phases"][name] = _phase_skip_payload(
+                reason=ken_evolve_reason, phase=name
+            )
+    elif hyps and "regime_stress" in results["phases"] and "cost_stress" in results["phases"]:
         reg_out = out / f"regime_{stamp}.json"
         cost_out = out / f"cost_{stamp}.json"
         ingest = _REPO / "scripts" / "trader_ingest_stress_rotation.py"

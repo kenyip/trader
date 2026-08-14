@@ -121,6 +121,27 @@ def test_ken_skip_evolve_env_without_file(tmp_path, monkeypatch):
     assert reason == "ken_edge_search_frozen_env"
 
 
+def test_ken_freeze_skips_edge_prove_not_paper():
+    """Ken latch must drop unchanged-DNA re-prove and keep watch/paper phases."""
+    skip_phases = set(qc._ken_frozen_skip_prove_phases())
+    keep = set(qc.KEN_FROZEN_KEEP_PHASES)
+    assert "multi_symbol" in skip_phases
+    assert "shortlist_dna_multi" in skip_phases
+    assert "discovery_f2_ingest" in skip_phases
+    assert "shortlist_refresh" in skip_phases
+    assert "paper_campaign" not in skip_phases
+    assert "paper_loop" not in skip_phases
+    assert "research" not in skip_phases
+    assert keep.isdisjoint(skip_phases)
+    payload = qc._phase_skip_payload(
+        reason="ken_first_close_freeze_edge_search", phase="multi_symbol"
+    )
+    assert payload["skipped"] is True
+    assert payload["rc"] == 0
+    assert payload["reason"] == "ken_first_close_freeze_edge_search"
+    assert payload["phase"] == "multi_symbol"
+
+
 def test_ken_skip_evolve_inactive_or_corrupt(tmp_path, monkeypatch):
     monkeypatch.delenv("TRADER_QC_SKIP_EVOLVE", raising=False)
     missing = tmp_path / "nope.json"

@@ -1,3 +1,5 @@
+| 2026-08-13T2100 | continuum-judgment | Ken-frozen tight cycle now skips multi/shortlist_dna re-prove (~65s theater); watch/paper only; BAC HOLD residual after-hours | manage_open_paper_campaign |
+- `2026-08-13T2100-continuum-judgment.md` — coach: skip frozen EDGE prove wave; keep paper; do not prune
 | 2026-08-13T1500 | continuum-judgment | Ken freeze skip committed in quality_cycle + residual + autonomous (status-only latch was not durable); BAC HOLD residual after-hours | manage_open_paper_campaign |
 - `2026-08-13T1500-continuum-judgment.md` — coach: commit Ken evolve skip; residual/MoA gated; do not prune
 | 2026-08-13T1531 | rth | HOLD BAC PCS mid +5.18/adv +2.68 vs PT 12.98 (dual false, gap~7.80/10.30) OTM1.07 |d|0.23 late-pm greener vs 14:31; STAND_ASIDE new (pack NO_SETUP + AAL research_only); book 1/2 risk79 | manage_open_paper_campaign |

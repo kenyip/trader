@@ -36,8 +36,9 @@ rc_research=$?
 set -e
 
 # Ken first-close latch (2026-08-13 coach): residual must not --apply evolve
-# when the operator freeze is on. Worker watch/paper + B3/B4/multi still ok.
-# Do not prune-to-unfreeze. Unfreeze = explicit Ken only.
+# when the operator freeze is on. Tight quality_cycle also skips multi /
+# shortlist_dna re-prove (2026-08-13T2100). Hourly residual B3/B4/multi
+# remains the honesty pulse. Do not prune-to-unfreeze. Unfreeze = Ken only.
 ken_evolve_reason=""
 if [[ "${TRADER_QC_SKIP_EVOLVE:-}" =~ ^(1|true|yes|on)$ ]]; then
   ken_evolve_reason="ken_edge_search_frozen_env"

@@ -1,16 +1,16 @@
 {
   "closed_this_session": [],
   "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*. EDGE Ken-frozen — committed cycle/residual/autonomous skip; do not prune-to-unfreeze.",
+    "hint": "After-hours: HOLD open BAC until next RTH dual PT or DNA stop. Tight cycle is Ken-frozen watch/paper (no multi/shortlist_dna theater). Do not prune-to-unfreeze.",
     "last_rth_mark": {
-      "adv_mtm": 2.68,
+      "adv_usd": 2.68,
       "decision": "HOLD",
-      "delta_abs": 0.23,
-      "mid_mtm": 5.18,
-      "otm": 1.07,
+      "mid_usd": 5.18,
+      "otm_cushion": 1.07,
       "profit_target_usd": 12.98,
-      "spot": 64.07,
-      "stamp": "2026-08-13T1531"
+      "short_delta_abs": 0.23,
+      "source": "rth_2026-08-13T1531",
+      "symbol": "BAC"
     },
     "open_orders": [
       {
@@ -23,7 +23,7 @@
       }
     ]
   },
-  "generated_at": "2026-08-13T22:10:00+00:00",
+  "generated_at": "2026-08-14T04:08:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -34,7 +34,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "coach_2026-08-13T1500",
-  "stamp": "20260813T1500",
+  "source": "coach_2026-08-13T2100",
+  "stamp": "20260813T2100",
   "trading_authority": false
 }
