@@ -136,6 +136,48 @@ class WatcherPackGradePreferenceTest(unittest.TestCase):
             self.assertNotEqual(result.candidate_id, ROUTER)
             self.assertTrue(all(ROUTER not in sid for sid in result.seats_considered))
 
+    def test_pack_grade_does_not_grow_leftover_hunt_names(self):
+        """Blocked native INTC must not leave IWM/F leftover overlay (2026-08-14)."""
+        with tempfile.TemporaryDirectory() as tmp:
+            reg_path = Path(tmp) / "reg.json"
+            multi = _write_multi(
+                Path(tmp) / "multi.json",
+                [
+                    {
+                        "candidate_id": BU6,
+                        "f2_symbols": ["INTC", "PLTR"],
+                        "quality_pass": True,
+                    }
+                ],
+            )
+            reg = LivingRegistry()
+            pack_seat = _seat(f"{BU6}_INTC", BU6, "INTC", "paper_eligible")
+            pack_seat.router_policy = "pcs_bull_only"
+            reg.upsert(pack_seat)
+            save_living_registry(reg, reg_path)
+            row = pd.Series(
+                {"close": 176.9, "iv_proxy": 0.4, "iv_rank": 20.0, "regime": "neutral"}
+            )
+            with patch(
+                "trader_platform.research.opportunity_watcher._latest_bar",
+                return_value=(row, pd.Timestamp("2026-08-14")),
+            ), patch(
+                "trader_platform.research.pack_grade.load_quality_pass_cells",
+                return_value=load_quality_pass_cells(multi),
+            ), patch(
+                "trader_platform.research.opportunity_watcher.working_paper_symbols",
+                return_value={"INTC"},
+            ), patch(
+                "trader_platform.research.opportunity_watcher.hunt_symbols",
+                return_value=["KO", "PLTR", "F", "IWM", "BAC", "INTC"],
+            ):
+                result = watch_once(registry_path=reg_path)
+            self.assertIn(result.status, {"NO_SETUP", "PAPER_PACKET_READY"})
+            self.assertEqual(result.candidate_id, BU6)
+            self.assertEqual(result.symbol, "PLTR")
+            self.assertNotEqual(result.symbol, "IWM")
+            self.assertNotIn("IWM", result.reason or "")
+
     def test_sort_key_near_miss_not_tier_zero(self):
         idx = quality_pass_index(
             [{"candidate_id": BU4, "f2_symbols": ["INTC", "KO"]}]

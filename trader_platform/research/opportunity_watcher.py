@@ -21,7 +21,11 @@ from trader_platform.research.living_registry import (
     LivingSeat,
     load_living_registry,
 )
-from trader_platform.research.pack_grade import quality_pass_index, watch_sort_key
+from trader_platform.research.pack_grade import (
+    is_pack_grade,
+    quality_pass_index,
+    watch_sort_key,
+)
 from trader_platform.research.opportunity import (
     Opportunity,
     StandAside,
@@ -297,13 +301,24 @@ def watch_once(
         if not symbols:
             symbols = ["SPY"]
         # Grow names on pack / paper_eligible seats — same structure, more underlyings.
+        # When MULTI quality_pass cells exist, only grow to *that DNA's* pack
+        # symbols. Otherwise a blocked native (already-open INTC) leaves leftover
+        # hunt names (IWM/BAC/F) and last_no_setup tunnels leftover overlay.
         if symbol_override is None and (
             (pack_index and watch_sort_key(seat, pack_index)[0] == 0)
             or str(seat.status or "") == "paper_eligible"
         ):
             for extra in hunt:
-                if extra not in symbols:
-                    symbols.append(extra)
+                if extra in symbols:
+                    continue
+                if pack_index and not is_pack_grade(
+                    candidate_id=seat.candidate_id,
+                    seat_id=seat.seat_id,
+                    symbol=extra,
+                    index=pack_index,
+                ):
+                    continue
+                symbols.append(extra)
         if symbol_override is None:
             symbols = [sym for sym in symbols if sym not in blocked]
             if not symbols:

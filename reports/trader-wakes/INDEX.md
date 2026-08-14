@@ -1,3 +1,4 @@
+| 2026-08-14T1033 | rth | HOLD INTC IC mid +25.53/adv +11.28 vs PT 18.38 (dual false, wings OTM 15.3/19.7); watcher leftover IWM grow repaired (auto=PLTR); F IC put_wing_none (RH +2.20%, daily neutral) | manage_open_paper_campaign |
 | 2026-08-14T0956 | rth | RH works; HOLD INTC IC mid +23.78/adv +9.78 vs PT 18.38 (dual false, wings OTM 15.7/19.3); hunt KO/PLTR NO_SETUP pcs_bull_only:neutral; WAKE quiet rh:works | manage_open_paper_campaign |
 - `2026-08-14T0956-rth.md` — RTH verify: RH MCP live after bounce; HOLD leftover INTC IC; Ken freeze honored
 | 2026-08-14T0943 | rth | HOLD INTC IC mid +24.53/adv +11.28 vs PT 18.38 (dual false, wings OTM 15.9/19.1); F IC put_wing_none (call 14.5/15.5, IVR 34.9); WAKE quiet rh:blocked | manage_open_paper_campaign |
