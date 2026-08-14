@@ -1,45 +1,62 @@
 {
-  "ken_required": false,
-  "live_authority": false,
-  "trading_authority": false,
-  "next_action": "manage_open_paper_campaign",
-  "paper_campaign_execute": true,
-  "source": "rth_eval_20260814T0943",
-  "stamp": "20260814T0943",
-  "generated_at": "2026-08-14T16:45:30+00:00",
-  "ken_only_for": [
-    "gateway_up",
-    "LIVE_PACKET_arm",
-    "fund_3k_at_packet"
-  ],
   "detail": {
-    "hint": "HOLD INTC IC; re-scout F IC put wing (do not overlay MULTI PCS); KO/PLTR only if daily bullish",
+    "hint": "RTH: mark/manage paper from RH option mids; stand-aside if no new capital-fit OPEN_*",
+    "source": "rth_eval_20260814T0956",
+    "rh": "works",
+    "wake": "quiet rh:works",
     "closed_this_session": [],
+    "hunt": {
+      "auto": "NO_SETUP",
+      "n_pack_seats": 4,
+      "blocked": [
+        "INTC"
+      ],
+      "names": {
+        "KO": "NO_SETUP pcs_bull_only:neutral",
+        "PLTR": "NO_SETUP pcs_bull_only:neutral",
+        "F_IC": "STAND_ASIDE filters_blocked IVR32.9",
+        "AAL": "STAND_ASIDE bearish bear_dte=0"
+      }
+    },
     "open_orders": [
       {
         "order_id": "paper_b5b969c4a65f",
         "symbol": "INTC",
         "structure": "iron_condor",
-        "status": "working",
         "strategy_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
-        "spot": 103.36,
-        "chg_pct": -1.15,
+        "status": "working",
+        "spot": 103.155,
+        "chg_pct": -1.343726090283092,
         "put_short": 87.5,
         "call_short": 122.5,
-        "put_otm": 15.86,
-        "call_otm": 19.14,
-        "mtm_usd": 24.53,
-        "mtm_adverse_usd": 11.28,
-        "profit_target_usd": 18.38,
+        "exp": "2026-08-28",
+        "put_otm": 15.655,
+        "call_otm": 19.345,
+        "mtm_usd": 23.77874331493679,
+        "mtm_adverse_usd": 9.77874331493679,
+        "profit_target_usd": 18.383622994481037,
         "dual_pt_ready": false,
         "max_loss_usd": 188.72125668506322,
-        "decision": "HOLD"
+        "short_mark_src": "rh_adjacent_avg",
+        "decision": "HOLD",
+        "reasons": [
+          "profit_target mark-only mtm=23.78>=18.38 but adverse=9.78 < target \u2014 HOLD (half-strike adjacent, no dual fill)",
+          "both_wings_OTM ~15.7p/19.3c"
+        ]
       }
-    ],
-    "hunt_next": {
-      "primary": "hyp_dna_f_iron_condor_39f86341 put_wing",
-      "do_not": "overlay MULTI bu_6 PCS on F; reopen leftover BAC",
-      "f_ic_last": "put_wing_none call=14.5/15.5 ivr=34.9 regime=neutral"
-    }
-  }
+    ]
+  },
+  "generated_at": "2026-08-14T16:58:09+00:00",
+  "ken_only_for": [
+    "gateway_up",
+    "LIVE_PACKET_arm",
+    "fund_3k_at_packet"
+  ],
+  "ken_required": false,
+  "live_authority": false,
+  "next_action": "manage_open_paper_campaign",
+  "paper_campaign_execute": true,
+  "source": "rth_eval_20260814T0956",
+  "stamp": "20260814T0956",
+  "trading_authority": false
 }
