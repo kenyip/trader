@@ -12,6 +12,7 @@ from trader_platform.research.living_registry import (
     load_living_registry,
     save_living_registry,
 )
+from trader_platform.research.pack_grade import is_pack_grade, load_quality_pass_cells, quality_pass_index
 from trader_platform.research.progress_dashboard import collect_progress
 from trader_platform.research.strategy_spec import load_strategy_spec
 
@@ -134,4 +135,82 @@ def promote_top_f2_to_paper(
         "diversify_symbols": diversify_symbols,
         "registry_path": str(registry_path),
         "note": "paper_eligible enables paper ledger mutate via handoff --execute-paper; still no live",
+    }
+
+
+def promote_pack_grade_to_paper(
+    *,
+    registry_path: str | Path | None = None,
+    multi_path: str | Path | None = None,
+    demote_non_pack: bool = True,
+) -> dict[str, Any]:
+    """Promote exact MULTI quality_pass living seats to paper_eligible.
+
+    Does not invent DNA. Only flips status on existing f2_holdout seats whose
+    candidate_id+symbol match a fresh quality_pass cell. Optionally demotes
+    leftover paper_eligible seats so the watcher tries pack-grade first even
+    before selector preference is live.
+    """
+    registry_path = Path(registry_path) if registry_path else DEFAULT_REGISTRY_PATH
+    cells = load_quality_pass_cells(multi_path)
+    index = quality_pass_index(cells)
+    if not index:
+        return {
+            "promoted": [],
+            "already_paper": [],
+            "demoted": [],
+            "n_promoted": 0,
+            "n_quality_pass": 0,
+            "reason": "no MULTI quality_pass cells",
+            "registry_path": str(registry_path),
+            "note": "no DNA invented; missing/empty MULTI is fail-closed",
+        }
+
+    reg = load_living_registry(registry_path)
+    promoted: list[str] = []
+    already: list[str] = []
+    demoted: list[str] = []
+    now = _now()
+    for seat in list(reg.seats):
+        symbols = [str(s).upper() for s in (seat.symbols or []) if str(s).strip()]
+        pack = any(
+            is_pack_grade(
+                candidate_id=seat.candidate_id,
+                seat_id=seat.seat_id,
+                symbol=sym,
+                index=index,
+            )
+            for sym in (symbols or [""])
+        )
+        if pack:
+            if seat.status == "paper_eligible":
+                already.append(seat.seat_id)
+                continue
+            if seat.status != "f2_holdout":
+                continue
+            seat.status = "paper_eligible"
+            seat.funnel_stage = "F3_ROBUST_PAPER_PLAN"
+            seat.notes = (seat.notes or "") + f" | promoted_pack_grade_paper@{now}"
+            seat.updated_at = now
+            reg.upsert(seat)
+            promoted.append(seat.seat_id)
+            continue
+        if demote_non_pack and seat.status == "paper_eligible":
+            seat.status = "f2_holdout"
+            seat.notes = (seat.notes or "") + f" | demoted_legacy_for_pack_grade@{now}"
+            seat.updated_at = now
+            reg.upsert(seat)
+            demoted.append(seat.seat_id)
+
+    save_living_registry(reg, registry_path)
+    return {
+        "promoted": promoted,
+        "already_paper": already,
+        "demoted": demoted,
+        "n_promoted": len(promoted),
+        "n_demoted": len(demoted),
+        "n_quality_pass": len(index),
+        "quality_pass_ids": sorted(index),
+        "registry_path": str(registry_path),
+        "note": "pack-grade paper_eligible only; leftover demoted to f2_holdout; still no live",
     }

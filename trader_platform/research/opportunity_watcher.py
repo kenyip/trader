@@ -6,6 +6,9 @@ Statuses: NO_QUALIFIED_STRATEGY | NO_SETUP | PAPER_PACKET_READY | GATED_LIVE_PAC
 
 from __future__ import annotations
 
+import json
+import os
+import time
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -18,6 +21,7 @@ from trader_platform.research.living_registry import (
     LivingSeat,
     load_living_registry,
 )
+from trader_platform.research.pack_grade import quality_pass_index, watch_sort_key
 from trader_platform.research.opportunity import (
     Opportunity,
     StandAside,
@@ -70,7 +74,48 @@ class WatchResult:
         return asdict(self)
 
 
+_BAR_MEMO: dict[tuple[str, int], tuple[pd.Series, pd.Timestamp]] = {}
+# Pack-grade cells today are INTC/KO/PLTR; F/SNAP/AAL are research hunt, not leftover INTC.
+DEFAULT_HUNT_SYMBOLS = ("KO", "PLTR", "F", "AAL", "SNAP", "CCL", "BAC", "IWM", "INTC")
+
+
+def hunt_symbols() -> list[str]:
+    raw = os.environ.get("TRADER_HUNT_SYMBOLS", "").strip()
+    if raw:
+        return [part.strip().upper() for part in raw.replace(",", " ").split() if part.strip()]
+    return list(DEFAULT_HUNT_SYMBOLS)
+
+
+def working_paper_symbols(ledger_path: str | Path | None = None) -> set[str]:
+    """Symbols that already have a real working paper order (skip same-symbol spray)."""
+    path = Path(ledger_path) if ledger_path else Path(__file__).resolve().parents[2] / ".cache" / "platform" / "paper_ledger.json"
+    if not path.exists():
+        return set()
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return set()
+    orders = data.get("orders") or {}
+    items = orders.values() if isinstance(orders, dict) else orders
+    out: set[str] = set()
+    for o in items:
+        if not isinstance(o, dict):
+            continue
+        if str(o.get("status") or "").lower() not in {"working", "filled", "replaced"}:
+            continue
+        if "smoke" in str(o.get("tag") or "").lower():
+            continue
+        sym = str(o.get("symbol") or "").upper().strip()
+        if sym:
+            out.add(sym)
+    return out
+
+
 def _latest_bar(symbol: str, period: str = "1y") -> tuple[pd.Series, pd.Timestamp]:
+    key = (str(symbol).upper(), int(time.time() // 60))
+    cached = _BAR_MEMO.get(key)
+    if cached is not None:
+        return cached
     if build_market_frame is None:
         raise RuntimeError("data.build unavailable")
     # Prefer requested period; fall back to longer history if cache is thin.
@@ -78,7 +123,9 @@ def _latest_bar(symbol: str, period: str = "1y") -> tuple[pd.Series, pd.Timestam
         frame = build_market_frame(symbol, period=candidate, use_cache=True)
         if frame is not None and len(frame) >= 5:
             ts = pd.Timestamp(str(frame.index[-1]))
-            return frame.iloc[-1], ts
+            row = frame.iloc[-1]
+            _BAR_MEMO[key] = (row, ts)
+            return row, ts
     raise ValueError(f"insufficient bars for {symbol}")
 
 
@@ -226,19 +273,41 @@ def watch_once(
             seats_considered=[s.seat_id for s in reg.seats],
         )
 
-    # Prefer paper_eligible, then f2_holdout; stable order by seat_id.
-    ordered = sorted(
-        watchable,
-        key=lambda s: (0 if s.status == "paper_eligible" else 1, s.seat_id),
+    # Prefer MULTI quality_pass cells. When living pack seats exist, fail closed
+    # on leftover near-miss / router DNA (do not tunnel leftover INTC).
+    pack_index = quality_pass_index()
+    pack_only = (
+        [s for s in watchable if watch_sort_key(s, pack_index)[0] == 0]
+        if pack_index
+        else []
     )
+    others = [s for s in watchable if s not in pack_only]
+    if pack_only:
+        ordered = sorted(pack_only, key=lambda s: watch_sort_key(s, pack_index))
+    else:
+        ordered = sorted(others, key=lambda s: watch_sort_key(s, pack_index))
     considered: list[str] = []
     last_no_setup: WatchResult | None = None
+    hunt = hunt_symbols()
+    blocked = {str(s).upper() for s in working_paper_symbols() if str(s).strip()}
 
     for seat in ordered:
         considered.append(seat.seat_id)
         symbols = [symbol_override.upper()] if symbol_override else list(seat.symbols)
         if not symbols:
             symbols = ["SPY"]
+        # Grow names on pack / paper_eligible seats — same structure, more underlyings.
+        if symbol_override is None and (
+            (pack_index and watch_sort_key(seat, pack_index)[0] == 0)
+            or str(seat.status or "") == "paper_eligible"
+        ):
+            for extra in hunt:
+                if extra not in symbols:
+                    symbols.append(extra)
+        if symbol_override is None:
+            symbols = [sym for sym in symbols if sym not in blocked]
+            if not symbols:
+                continue
         spec = _load_spec_for_seat(seat)
         for symbol in symbols:
             try:

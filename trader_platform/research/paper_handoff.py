@@ -17,6 +17,7 @@ import pandas as pd
 from trader_platform.execution.broker_adapter import PaperBroker, get_broker
 from trader_platform.research.living_registry import LivingRegistry, load_living_registry
 from trader_platform.research.opportunity_watcher import WatchResult, watch_once
+from trader_platform.research.pack_grade import is_pack_grade, load_quality_pass_cells
 from trader_platform.research.pcs_sim import pick_structure_entry
 from trader_platform.research.strategy_spec import StrategySpec, load_strategy_spec
 from trader_platform.risk_governor import OrderIntent, PortfolioSnapshot, RiskGovernor
@@ -229,6 +230,28 @@ def run_paper_handoff(
         _audit("handoff_stand_aside", result.to_dict())
         return result
 
+    pack_cells = load_quality_pass_cells()
+    pack = is_pack_grade(
+        candidate_id=str(watch.candidate_id or ""),
+        seat_id=str(watch.seat_id or ""),
+        symbol=str(watch.symbol or ""),
+        cells=pack_cells,
+    )
+    if pack_cells and not pack:
+        result = PaperHandoffResult(
+            status="CANDIDATE_NOT_PACK_GRADE",
+            watch_status=watch.status,
+            reason=(
+                f"quality_pass cells exist; leftover {watch.candidate_id or watch.seat_id} "
+                f"on {watch.symbol} is not a pack-grade seat — fail closed (no leftover INTC spray)."
+            ),
+            packet=watch.packet,
+            paper_action="candidate_not_pack_grade",
+            generated_at=generated,
+        )
+        _audit("handoff_not_pack_grade", result.to_dict())
+        return result
+
     intent, reason, meta = intent_from_watch(watch, registry=reg, registry_path=registry_path)
     if intent is None:
         result = PaperHandoffResult(
@@ -290,7 +313,11 @@ def run_paper_handoff(
 
     seat = reg.get(watch.seat_id) if watch.seat_id else None
     seat_status = seat.status if seat else ""
-    can_execute = bool(execute_paper and not dry_run and seat_status == "paper_eligible")
+    can_execute = bool(
+        execute_paper
+        and not dry_run
+        and (seat_status in {"paper_eligible", "f2_holdout"} or pack)
+    )
 
     paper_action = "dry_run_only"
     order_id = ""
@@ -336,11 +363,11 @@ def run_paper_handoff(
             )
             _audit("handoff_paper_failed", result.to_dict())
             return result
-    elif execute_paper and seat_status != "paper_eligible":
+    elif execute_paper and seat_status not in {"paper_eligible", "f2_holdout"} and not pack:
         paper_action = "blocked_not_paper_eligible"
         reason = (
             f"execute_paper requested but seat status={seat_status!r}; "
-            "only paper_eligible may mutate paper ledger (F2 stays dry-run)."
+            "only paper_eligible, f2_holdout, or MULTI quality_pass seats may mutate paper ledger."
         )
     else:
         reason = "intent built and risk-allowed; dry-run (no paper ledger mutate)"

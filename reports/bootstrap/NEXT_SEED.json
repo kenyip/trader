@@ -1,41 +1,44 @@
 {
   "detail": {
-    "closed_this_session": [
-      {
-        "order_id": "paper_546143354976",
-        "symbol": "INTC",
-        "action": "canceled",
-        "reason": "same_symbol_spray"
-      },
-      {
-        "order_id": "paper_ea3350fe1422",
-        "symbol": "INTC",
-        "action": "canceled",
-        "reason": "same_symbol_spray"
-      }
-    ],
-    "hint": "RTH: mark/manage remaining INTC IC via DNA ladder; stand-aside new; PaperBroker now refuses same-symbol / working>=2. EDGE Ken-frozen — do not prune.",
+    "hint": "RTH: HOLD leftover INTC IC on dual-PT false; hunt KO/PLTR when daily regime is bullish; do not reopen leftover INTC/BAC.",
+    "source_wake": "rth_eval_2026-08-14T0933",
+    "rh": "blocked",
+    "wake": "quiet rh:blocked",
     "open_orders": [
       {
-        "created": "2026-08-14T15:59:06+00:00",
-        "decision": "HOLD",
-        "expiration": "2026-08-28",
-        "long_call": 125.0,
-        "long_put": 85.0,
-        "max_loss_usd": 188.72125668506322,
-        "net_credit": 0.6127874331493679,
-        "note": "pack-grade spine IC; short put ~15 OTM / short call ~20 OTM at spot~103; next RTH marks DNA ladder (pt 0.3 / dl 0.7 / delta 0.4 / dte_stop 4)",
         "order_id": "paper_b5b969c4a65f",
-        "short_call": 122.5,
-        "short_put": 87.5,
+        "symbol": "INTC",
+        "structure": "iron_condor",
         "status": "working",
         "strategy_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
-        "structure": "iron_condor",
-        "symbol": "INTC"
+        "max_loss_usd": 188.72125668506322,
+        "spot": 103.21,
+        "chg_pct": -1.29,
+        "put_short": 87.5,
+        "call_short": 122.5,
+        "put_otm": 15.71,
+        "call_otm": 19.29,
+        "entry_credit": 0.6127874331493679,
+        "mtm_usd": 23.03,
+        "mtm_adverse_usd": 10.28,
+        "profit_target_usd": 18.38,
+        "dual_pt_ready": false,
+        "decision": "HOLD",
+        "reasons": [
+          "profit_target mark-only mtm=23.03>=18.38 but adverse=10.28 < target",
+          "both_wings_OTM"
+        ]
       }
-    ]
+    ],
+    "hunt": {
+      "auto_status": "NO_SETUP",
+      "n_pack_seats_considered": 4,
+      "blocked_working": ["INTC"],
+      "pack_grade": ["KO", "PLTR"],
+      "research_only": ["F", "AAL", "SNAP", "CCL"]
+    }
   },
-  "generated_at": "2026-08-14T16:12:30+00:00",
+  "generated_at": "2026-08-14T16:35:20+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -45,7 +48,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "coach_2026-08-14T0900",
-  "stamp": "20260814T0900",
+  "source": "rth_eval_20260814T0933",
+  "stamp": "20260814T0933",
   "trading_authority": false
 }
