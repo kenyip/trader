@@ -1,9 +1,20 @@
 {
+  "ken_required": false,
+  "live_authority": false,
+  "trading_authority": false,
+  "next_action": "manage_open_paper_campaign",
+  "paper_campaign_execute": true,
+  "source": "rth_eval_20260814T0943",
+  "stamp": "20260814T0943",
+  "generated_at": "2026-08-14T16:45:24.342151+00:00",
+  "ken_only_for": [
+    "gateway_up",
+    "LIVE_PACKET_arm",
+    "fund_3k_at_packet"
+  ],
   "detail": {
-    "hint": "RTH: HOLD leftover INTC IC on dual-PT false; hunt KO/PLTR when daily regime is bullish; do not reopen leftover INTC/BAC.",
-    "source_wake": "rth_eval_2026-08-14T0933",
-    "rh": "blocked",
-    "wake": "quiet rh:blocked",
+    "hint": "HOLD INTC IC; re-scout F IC put wing (do not overlay MULTI PCS); KO/PLTR only if daily bullish",
+    "closed_this_session": [],
     "open_orders": [
       {
         "order_id": "paper_b5b969c4a65f",
@@ -11,44 +22,24 @@
         "structure": "iron_condor",
         "status": "working",
         "strategy_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
-        "max_loss_usd": 188.72125668506322,
-        "spot": 103.21,
-        "chg_pct": -1.29,
+        "spot": 103.36,
+        "chg_pct": -1.15,
         "put_short": 87.5,
         "call_short": 122.5,
-        "put_otm": 15.71,
-        "call_otm": 19.29,
-        "entry_credit": 0.6127874331493679,
-        "mtm_usd": 23.03,
-        "mtm_adverse_usd": 10.28,
+        "put_otm": 15.86,
+        "call_otm": 19.14,
+        "mtm_usd": 24.53,
+        "mtm_adverse_usd": 11.28,
         "profit_target_usd": 18.38,
         "dual_pt_ready": false,
-        "decision": "HOLD",
-        "reasons": [
-          "profit_target mark-only mtm=23.03>=18.38 but adverse=10.28 < target",
-          "both_wings_OTM"
-        ]
+        "max_loss_usd": 188.72125668506322,
+        "decision": "HOLD"
       }
     ],
-    "hunt": {
-      "auto_status": "NO_SETUP",
-      "n_pack_seats_considered": 4,
-      "blocked_working": ["INTC"],
-      "pack_grade": ["KO", "PLTR"],
-      "research_only": ["F", "AAL", "SNAP", "CCL"]
+    "hunt_next": {
+      "primary": "hyp_dna_f_iron_condor_39f86341 put_wing",
+      "do_not": "overlay MULTI bu_6 PCS on F; reopen leftover BAC",
+      "f_ic_last": "put_wing_none call=14.5/15.5 ivr=34.9 regime=neutral"
     }
-  },
-  "generated_at": "2026-08-14T16:35:20+00:00",
-  "ken_only_for": [
-    "gateway_up",
-    "LIVE_PACKET_arm",
-    "fund_3k_at_packet"
-  ],
-  "ken_required": false,
-  "live_authority": false,
-  "next_action": "manage_open_paper_campaign",
-  "paper_campaign_execute": true,
-  "source": "rth_eval_20260814T0933",
-  "stamp": "20260814T0933",
-  "trading_authority": false
+  }
 }

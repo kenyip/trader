@@ -1,3 +1,5 @@
+| 2026-08-14T0943 | rth | HOLD INTC IC mid +24.53/adv +11.28 vs PT 18.38 (dual false, wings OTM 15.9/19.1); F IC put_wing_none (call 14.5/15.5, IVR 34.9); WAKE quiet rh:blocked | manage_open_paper_campaign |
+- `2026-08-14T0943-rth.md` — RTH compounding: HOLD leftover INTC IC; scouted shortlist F IC (put wing miss); Ken freeze honored
 | 2026-08-14T0933 | rth | HOLD INTC IC mid +23.03/adv +10.28 vs PT 18.38 (dual false, wings OTM 15.7/19.3); hunt KO/PLTR/F all NO_SETUP; WAKE quiet rh:blocked; leftover packet_ready repaired | manage_open_paper_campaign |
 - `2026-08-14T0933-rth.md` — RTH compounding: HOLD leftover INTC IC; pack-grade hunt not leftover spray; Ken freeze honored
 | 2026-08-14T0900 | continuum-judgment | PaperBroker book guards (1/symbol + max 2); canceled 2 INTC spray extras after false BAC pt40; HOLD remaining INTC IC; Ken freeze honored | manage_open_paper_campaign |
