@@ -1,18 +1,38 @@
 {
   "detail": {
-    "hint": "RTH: mark/manage paper; learn_tick; stand-aside if no new capital-fit OPEN_*",
+    "hint": "RTH: HOLD leftover INTC IC on dual RH adjacent-ask PT; hunt F IC put wing then KO/PLTR; watcher must stay off leftover IWM.",
     "open_orders": [
       {
-        "max_loss_usd": 188.72125668506322,
         "order_id": "paper_b5b969c4a65f",
+        "symbol": "INTC",
+        "structure": "iron_condor",
         "status": "working",
         "strategy_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
-        "structure": "iron_condor",
-        "symbol": "INTC"
+        "max_loss_usd": 188.72125668506322,
+        "spot": 102.79,
+        "mtm_usd": 25.528743314936786,
+        "mtm_adverse_usd": 11.27874331493679,
+        "pt_usd": 18.383622994481037,
+        "dual_pt_ready": false,
+        "decision": "HOLD",
+        "put_otm": 15.29,
+        "call_otm": 19.71,
+        "short_put_delta": -0.0880875,
+        "short_call_delta": 0.11347
       }
-    ]
+    ],
+    "closed_this_session": [],
+    "hunt": {
+      "F_IC": "STAND_ASIDE put_wing_none (call 14.5/15.5, IVR 32.9, daily neutral, RH +2.20%)",
+      "KO": "NO_SETUP pcs_bull_only:neutral",
+      "PLTR": "NO_SETUP pcs_bull_only:neutral",
+      "auto_watch": "NO_SETUP PLTR (was leftover IWM before grow repair)",
+      "AAL": "STAND_ASIDE bearish bear_dte=0",
+      "new": "STAND_ASIDE"
+    },
+    "watcher_repair": "pack grow only is_pack_grade extras"
   },
-  "generated_at": "2026-08-14T17:38:59+00:00",
+  "generated_at": "2026-08-14T17:40:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -22,7 +42,7 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "trader_paper_campaign",
-  "stamp": "20260814T173858",
+  "source": "rth_eval_20260814T1033",
+  "stamp": "20260814T1033",
   "trading_authority": false
 }
