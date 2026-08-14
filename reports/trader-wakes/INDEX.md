@@ -1,3 +1,5 @@
+| 2026-08-14T0931 | rth | HOLD BAC PCS last +7.68/+7.68 vs PT 12.98 (dual false, gap~5.30) OTM1.01 vacuous d; STAND_ASIDE new (pack NO_SETUP + BAC open + AAL bearish); book 1/2 risk79 | manage_open_paper_campaign |
+- `2026-08-14T0931-rth.md` — RTH open: HOLD BAC overnight last-mark greener; Ken freeze honored; no prune
 | 2026-08-13T2100 | continuum-judgment | Ken-frozen tight cycle now skips multi/shortlist_dna re-prove (~65s theater); watch/paper only; BAC HOLD residual after-hours | manage_open_paper_campaign |
 - `2026-08-13T2100-continuum-judgment.md` — coach: skip frozen EDGE prove wave; keep paper; do not prune
 | 2026-08-13T1500 | continuum-judgment | Ken freeze skip committed in quality_cycle + residual + autonomous (status-only latch was not durable); BAC HOLD residual after-hours | manage_open_paper_campaign |
