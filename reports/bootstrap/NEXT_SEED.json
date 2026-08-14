@@ -1,47 +1,59 @@
 {
-  "generated_at": "2026-08-14T19:44:21.940428+00:00",
-  "ken_required": false,
-  "ken_only_for": [
-    "gateway_up",
-    "LIVE_PACKET_arm",
-    "fund_3k_at_packet"
-  ],
-  "live_authority": false,
-  "trading_authority": false,
-  "paper_campaign_execute": true,
-  "next_action": "manage_open_paper_campaign",
-  "source": "rth_eval_20260814T1242",
-  "stamp": "20260814T1242",
   "detail": {
-    "hint": "HOLD INTC IC until dual RH adjacent-ask >= PT. F IC: do not wait 14.10 this session \u2014 next prove is new session or fade below ~14.15 restoring BOTH 14p and 14.5c. KO/PLTR only if daily pcs_bull_only flips bullish. Keep auto_watch off leftover IWM.",
-    "closed_this_session": [],
+    "hint": "HOLD leftover INTC IC (close remake mid +26.78 / adv +5.78 vs PT 18.38, dual false). Friday F fade-below-14.15 closed. SNAP/TSLL/CCL not pack-grade. Campaign-thin restore via trader_preserve_rth_next_seed.",
     "open_orders": [
       {
         "order_id": "paper_b5b969c4a65f",
         "symbol": "INTC",
         "structure": "iron_condor",
-        "strategy_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
         "status": "working",
+        "strategy_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
         "max_loss_usd": 188.72125668506322,
         "decision": "HOLD",
-        "spot": 102.87,
-        "mtm_usd": 24.78,
-        "mtm_adverse_usd": 8.28,
-        "pt_usd": 18.38,
+        "spot": 102.54,
+        "mtm_usd": 26.77874331493677,
+        "mtm_adverse_usd": 5.778743314936774,
+        "pt_usd": 18.383623,
         "dual_pt_ready": false,
-        "put_otm": 15.37,
-        "call_otm": 19.63
+        "put_otm": 15.04,
+        "call_otm": 19.96,
+        "short_put_delta": -0.0891415,
+        "short_call_delta": 0.1053865
       }
     ],
     "f_ic": {
-      "miss": "put_wing_none_after_further_rip",
-      "spot": 14.38,
-      "pullback_14_10_printed": false,
-      "next_prove": "new_session_or_fade_below_14.15_both_wings"
+      "spot_close": 14.365,
+      "fade_below_14_15": false,
+      "miss": "put_wing_none",
+      "call_15_16_net": 0.05,
+      "need_net": 0.08,
+      "put_14_quotes_again": true,
+      "next_prove": "Monday new session fade <14.15 restoring both wings"
     },
     "pack": {
       "KO": "pcs_bull_only:neutral",
-      "PLTR": "pcs_bull_only:neutral"
-    }
-  }
+      "PLTR": "pcs_bull_only:neutral",
+      "watch": "NO_SETUP"
+    },
+    "hunt": {
+      "SNAP": "neutral IVR75 first-live CSP ghost pack-owns",
+      "TSLL": "bearish IVR94 not bull-put",
+      "CCL": "neutral IVR25 unsaturated not bullish",
+      "PFE": "neutral IVR25"
+    },
+    "preserve": "quality_cycle next_seed_preserve after campaign"
+  },
+  "generated_at": "2026-08-14T22:18:00+00:00",
+  "ken_only_for": [
+    "gateway_up",
+    "LIVE_PACKET_arm",
+    "fund_3k_at_packet"
+  ],
+  "ken_required": false,
+  "live_authority": false,
+  "next_action": "manage_open_paper_campaign",
+  "paper_campaign_execute": true,
+  "source": "continuum_judgment_20260814T1501",
+  "stamp": "20260814T1501",
+  "trading_authority": false
 }

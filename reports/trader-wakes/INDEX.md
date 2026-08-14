@@ -1,3 +1,5 @@
+| 2026-08-14T1501 | continuum-judgment | HOLD INTC IC close remake mid +26.78/adv +5.78 vs PT 18.38 (dual false); Friday F fade-below-14.15 closed; SNAP/TSLL/CCL not pack; campaign NEXT_SEED preserve hooked | manage_open_paper_campaign |
+- `2026-08-14T1501-continuum-judgment.md` — coach: campaign-thin restore + close remake; Ken freeze honored
 | 2026-08-14T1242 | rth | HOLD INTC IC mid +24.78/adv +8.28 vs PT 18.38 (dual false, wings OTM 15.4/19.6); F IC both wings dead at 14.38 (put 14/13 died after +3.5% rip; 14.10 pullback falsified); KO/PLTR pcs_bull_only:neutral | manage_open_paper_campaign |
 | 2026-08-14T1133 | rth | HOLD INTC IC mid +25.53/adv +12.28 vs PT 18.38 (dual false, wings OTM 15.0/20.0); F IC miss rotated put_ok→call credit_pct 15/16 2.9%<8% (RH +2.63%); KO/PLTR/AMZN pcs_bull_only:neutral | manage_open_paper_campaign |
 | 2026-08-14T1033 | rth | HOLD INTC IC mid +25.53/adv +11.28 vs PT 18.38 (dual false, wings OTM 15.3/19.7); watcher leftover IWM grow repaired (auto=PLTR); F IC put_wing_none (RH +2.20%, daily neutral) | manage_open_paper_campaign |

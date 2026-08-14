@@ -681,6 +681,15 @@ def run_cycle(*, sleeve: int = 3000) -> dict[str, Any]:
             "cycle_n": cycle_n,
             "campaign_every": campaign_every,
         }
+    # Campaign always thins NEXT_SEED to order_id/status. Restore last RTH
+    # marks/hunt so the next coach/RTH tick does not re-derive from a stub.
+    preserve = _REPO / "scripts" / "trader_preserve_rth_next_seed.py"
+    if preserve.is_file():
+        results["phases"]["next_seed_preserve"] = _run(
+            [py, str(preserve)],
+            out / f"next_seed_preserve_{stamp}.log",
+            timeout=20,
+        )
     if not run_paper_loop:
         results["phases"]["paper_loop"] = {
             "rc": 0,
