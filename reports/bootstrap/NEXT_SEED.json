@@ -1,6 +1,20 @@
 {
+  "generated_at": "2026-08-14T19:44:21.940428+00:00",
+  "ken_required": false,
+  "ken_only_for": [
+    "gateway_up",
+    "LIVE_PACKET_arm",
+    "fund_3k_at_packet"
+  ],
+  "live_authority": false,
+  "trading_authority": false,
+  "paper_campaign_execute": true,
+  "next_action": "manage_open_paper_campaign",
+  "source": "rth_eval_20260814T1242",
+  "stamp": "20260814T1242",
   "detail": {
-    "hint": "HOLD INTC IC until dual RH adjacent-ask >= PT. Hunt F IC call-wing credit (put 14/13 already ok) on pullback toward ~14.10. KO/PLTR only if daily pcs_bull_only flips bullish.",
+    "hint": "HOLD INTC IC until dual RH adjacent-ask >= PT. F IC: do not wait 14.10 this session \u2014 next prove is new session or fade below ~14.15 restoring BOTH 14p and 14.5c. KO/PLTR only if daily pcs_bull_only flips bullish. Keep auto_watch off leftover IWM.",
+    "closed_this_session": [],
     "open_orders": [
       {
         "order_id": "paper_b5b969c4a65f",
@@ -8,47 +22,26 @@
         "structure": "iron_condor",
         "strategy_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2",
         "status": "working",
-        "spot": 102.46,
-        "chg_pct": -2.0084162203519607,
-        "put_short": 87.5,
-        "call_short": 122.5,
-        "exp": "2026-08-28",
-        "put_otm": 14.959999999999994,
-        "call_otm": 20.040000000000006,
-        "mtm_usd": 25.528743314936797,
-        "mtm_adverse_usd": 12.27874331493679,
-        "profit_target_usd": 18.383622994481037,
-        "dual_pt_ready": false,
-        "decision": "HOLD",
         "max_loss_usd": 188.72125668506322,
-        "short_put_delta": -0.0904515,
-        "short_call_delta": 0.1046945,
-        "reasons": [
-          "profit_target mark-only mtm=25.53>=18.38 but adverse=12.2787 < target \u2014 HOLD (half-strike adjacent, no dual fill)",
-          "both_wings_OTM ~15.0p/20.0c"
-        ]
+        "decision": "HOLD",
+        "spot": 102.87,
+        "mtm_usd": 24.78,
+        "mtm_adverse_usd": 8.28,
+        "pt_usd": 18.38,
+        "dual_pt_ready": false,
+        "put_otm": 15.37,
+        "call_otm": 19.63
       }
     ],
-    "closed_this_session": [],
-    "new": "STAND_ASIDE",
-    "f_ic_next": "call_credit_pct_15_16",
-    "hunt": [
-      "F",
-      "KO",
-      "PLTR"
-    ]
-  },
-  "generated_at": "2026-08-14T18:43:44.982616+00:00",
-  "ken_only_for": [
-    "gateway_up",
-    "LIVE_PACKET_arm",
-    "fund_3k_at_packet"
-  ],
-  "ken_required": false,
-  "live_authority": false,
-  "next_action": "manage_open_paper_campaign",
-  "paper_campaign_execute": true,
-  "source": "rth_eval_20260814T1133",
-  "stamp": "20260814T1133",
-  "trading_authority": false
+    "f_ic": {
+      "miss": "put_wing_none_after_further_rip",
+      "spot": 14.38,
+      "pullback_14_10_printed": false,
+      "next_prove": "new_session_or_fade_below_14.15_both_wings"
+    },
+    "pack": {
+      "KO": "pcs_bull_only:neutral",
+      "PLTR": "pcs_bull_only:neutral"
+    }
+  }
 }
