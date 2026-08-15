@@ -146,3 +146,49 @@ def test_quality_cycle_hooks_preserve_after_campaign() -> None:
     assert "trader_preserve_rth_next_seed.py" in text
     assert "next_seed_preserve" in text
     assert text.index("next_seed_preserve") > text.index("paper_campaign")
+
+
+def test_preserve_cli_bootstraps_repo_on_sys_path() -> None:
+    """quality_cycle runs this as a file; sys.path[0] is scripts/, not repo."""
+    text = Path("scripts/trader_preserve_rth_next_seed.py").read_text(encoding="utf-8")
+    assert "sys.path.insert" in text
+    assert "parents[1]" in text
+
+
+def test_preserve_cli_runs_as_script_without_pythonpath(tmp_path: Path) -> None:
+    import os
+    import subprocess
+    import sys
+
+    seed_path = tmp_path / "NEXT_SEED.json"
+    sidecar_path = tmp_path / "rich.json"
+    marks_path = tmp_path / "marks.json"
+    seed_path.write_text(json.dumps(_campaign_seed()), encoding="utf-8")
+    sidecar_path.write_text(json.dumps(_rich_seed()), encoding="utf-8")
+    marks_path.write_text("{}", encoding="utf-8")
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(Path("scripts/trader_preserve_rth_next_seed.py").resolve()),
+            "--seed",
+            str(seed_path),
+            "--sidecar",
+            str(sidecar_path),
+            "--marks",
+            str(marks_path),
+            "--json",
+        ],
+        cwd=str(Path.cwd()),
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
+    assert payload.get("action") in {"restored", "sidecar_refresh", "already_rich", "no_rich"}
+    merged = json.loads(seed_path.read_text(encoding="utf-8"))
+    assert not seed_is_thin(merged)
+    assert merged["detail"]["open_orders"][0]["decision"] == "HOLD"

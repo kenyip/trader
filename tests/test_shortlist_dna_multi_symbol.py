@@ -83,3 +83,21 @@ def test_peer_symbols_excludes_origin(tmp_path: Path):
     assert peers[0] == "BAC"
     assert "F" in peers
     assert "KO" in peers
+
+
+def test_peer_symbols_exclusive_skips_shortlist_leftovers(tmp_path: Path):
+    sl = tmp_path / "SHORTLIST.json"
+    sl.write_text(
+        json.dumps({"shortlist": [{"symbol": "F"}, {"symbol": "AAL"}, {"symbol": "BAC"}]}),
+        encoding="utf-8",
+    )
+    peers = peer_symbols(
+        "F",
+        shortlist_path=sl,
+        extra=["SOFI", "PFE", "NIO", "JPM", "QQQ"],
+        max_peers=6,
+        exclusive=True,
+    )
+    assert peers == ["SOFI", "PFE", "NIO", "JPM", "QQQ"]
+    assert "AAL" not in peers
+    assert "BAC" not in peers

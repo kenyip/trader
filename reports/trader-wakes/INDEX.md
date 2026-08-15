@@ -1,3 +1,5 @@
+| 2026-08-14T2001 | offhours | preserve CLI sys.path fix (rc=1→0); F IC DNA peer-pass SOFI n=59 +133 / PFE n=21 +57; AAL PCS does not transfer; INTEREST SOFI/PFE rh_wake=false | manage_open_paper_campaign |
+- `2026-08-14T2001-offhours.md` — off-RTH hunt unused universe names; do not unfreeze EDGE
 | 2026-08-14T1501 | continuum-judgment | HOLD INTC IC close remake mid +26.78/adv +5.78 vs PT 18.38 (dual false); Friday F fade-below-14.15 closed; SNAP/TSLL/CCL not pack; campaign NEXT_SEED preserve hooked | manage_open_paper_campaign |
 - `2026-08-14T1501-continuum-judgment.md` — coach: campaign-thin restore + close remake; Ken freeze honored
 | 2026-08-14T1242 | rth | HOLD INTC IC mid +24.78/adv +8.28 vs PT 18.38 (dual false, wings OTM 15.4/19.6); F IC both wings dead at 14.38 (put 14/13 died after +3.5% rip; 14.10 pullback falsified); KO/PLTR pcs_bull_only:neutral | manage_open_paper_campaign |

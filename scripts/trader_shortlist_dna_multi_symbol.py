@@ -152,18 +152,27 @@ def peer_symbols(
     shortlist_path: Path | None = None,
     extra: list[str] | None = None,
     max_peers: int = 6,
+    exclusive: bool = False,
 ) -> list[str]:
-    sl = _load_json(shortlist_path or _SHORTLIST)
+    """Build peer list. Default: other shortlist names, then extra or _DEFAULT_PEERS.
+
+    exclusive=True: only ``extra`` (unused-universe hunt). Shortlist leftovers
+    otherwise consume every max_peers=6 slot, so SOFI/PFE/NIO never get honesty.
+    """
     peers: list[str] = []
-    for row in sl.get("shortlist") or []:
-        s = str(row.get("symbol") or "").upper()
-        if s and s != origin.upper() and s not in peers:
-            peers.append(s)
-    for s in extra or _DEFAULT_PEERS:
-        su = s.upper()
-        if su != origin.upper() and su not in peers:
+    if not exclusive:
+        sl = _load_json(shortlist_path or _SHORTLIST)
+        for row in sl.get("shortlist") or []:
+            s = str(row.get("symbol") or "").upper()
+            if s and s != origin.upper() and s not in peers:
+                peers.append(s)
+    fill = extra if (exclusive or extra is not None) else _DEFAULT_PEERS
+    for s in fill or []:
+        su = str(s or "").upper()
+        if su and su != origin.upper() and su not in peers:
             peers.append(su)
-    return peers[: max(1, int(max_peers))]
+    cap = max(1, int(max_peers))
+    return peers[:cap]
 
 
 def run_peer_sims(
@@ -253,13 +262,16 @@ def run_shortlist_dna_multi(
     rotation_path: Path | None = None,
     shortlist_path: Path | None = None,
     hyps_path: Path | None = None,
+    extra_peers: list[str] | None = None,
+    exclusive_peers: bool = False,
 ) -> dict[str, Any]:
     leaders = select_leader_hyps(
-        top_n=top_n,
+        top_n=max(int(top_n) * 4, 8),
         rotation_path=rotation_path,
         shortlist_path=shortlist_path,
     )
     results: list[dict[str, Any]] = []
+    n_living = 0
     for lead in leaders:
         hid = str(lead.get("hyp_id") or "")
         origin = str(lead.get("symbol") or "").upper()
@@ -276,9 +288,16 @@ def run_shortlist_dna_multi(
                 }
             )
             continue
+        if n_living >= int(top_n):
+            break
+        n_living += 1
         cfg = dict(dna.get("config") or {})
         peers = peer_symbols(
-            origin, shortlist_path=shortlist_path, max_peers=max_peers
+            origin,
+            shortlist_path=shortlist_path,
+            extra=extra_peers,
+            max_peers=max_peers,
+            exclusive=bool(exclusive_peers),
         )
         per = run_peer_sims(
             structure=structure,
@@ -335,11 +354,14 @@ def run_shortlist_dna_multi(
         "results": results,
         "trading_authority": False,
         "live_authority": False,
+        "exclusive_peers": bool(exclusive_peers),
+        "extra_peers": [str(s).upper() for s in (extra_peers or [])],
         "honesty": (
             "Shortlist capital_path_ok multi-leg DNA re-run on peer symbols via "
             "pcs_sim proxy (L0). quality_pass requires origin + ≥min_peer_pass "
             "peers with n_trades≥min and positive total_pnl_per_contract. "
-            "Not densify-seed multi; not live edge; not MCP first-live."
+            "Not densify-seed multi; not live edge; not MCP first-live. "
+            "exclusive_peers hunts unused universe names without leftover fill."
         ),
     }
     out = Path(report_path) if report_path else _OUT
@@ -358,7 +380,18 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--period", default="2y")
     p.add_argument("--sleeve-usd", type=float, default=3000.0)
     p.add_argument("--report", default=None)
+    p.add_argument(
+        "--extra-peers",
+        default="",
+        help="Comma-separated symbols appended after shortlist fill (or exclusive with --peers-only).",
+    )
+    p.add_argument(
+        "--peers-only",
+        action="store_true",
+        help="Use --extra-peers as the exclusive peer set (skip leftover shortlist fill).",
+    )
     args = p.parse_args(argv)
+    extra = [s.strip().upper() for s in str(args.extra_peers or "").split(",") if s.strip()]
     rep = run_shortlist_dna_multi(
         top_n=int(args.top_n),
         max_peers=int(args.max_peers),
@@ -367,6 +400,8 @@ def main(argv: list[str] | None = None) -> int:
         period=str(args.period),
         sleeve_usd=float(args.sleeve_usd),
         report_path=Path(args.report) if args.report else None,
+        extra_peers=extra or None,
+        exclusive_peers=bool(args.peers_only),
     )
     print(
         json.dumps(

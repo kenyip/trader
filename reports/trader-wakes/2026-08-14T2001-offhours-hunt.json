@@ -1,0 +1,52 @@
+{
+  "generated_at": "2026-08-15T03:12:00+00:00",
+  "mode": "offhours_catalog_dna_hunt",
+  "stamp": "20260814T2001",
+  "live_authority": false,
+  "trading_authority": false,
+  "honesty": "Existing F IC + AAL PCS DNA re-run via pcs_sim proxy (L0) on unused universe names SOFI/PFE/NIO/JPM/QQQ. Not new DNA. Not pack-grade promotion. Not live.",
+  "peers": ["SOFI", "PFE", "NIO", "JPM", "QQQ"],
+  "min_trades": 15,
+  "results": [
+    {
+      "hyp_id": "hyp_dna_f_iron_condor_39f86341",
+      "structure": "iron_condor",
+      "origin": "F",
+      "origin_ok": true,
+      "n_peer_pass": 2,
+      "peer_pass_symbols": ["SOFI", "PFE"],
+      "multi_symbol_ok": true,
+      "per_symbol": [
+        {"symbol": "F", "n": 17, "pnl": 122.70, "dd": 22.25, "ml": 78.96, "pass": "origin"},
+        {"symbol": "SOFI", "n": 59, "pnl": 133.21, "dd": 59.75, "ml": 75.28, "pass": true},
+        {"symbol": "PFE", "n": 21, "pnl": 56.88, "dd": 28.38, "ml": 75.36, "pass": true},
+        {"symbol": "NIO", "n": 8, "pnl": 23.19, "dd": 26.70, "ml": 79.38, "pass": false},
+        {"symbol": "JPM", "n": 0, "pnl": null, "pass": false},
+        {"symbol": "QQQ", "n": 0, "pnl": null, "pass": false}
+      ]
+    },
+    {
+      "hyp_id": "hyp_dna_aal_put_credit_spread_5fa0eac8",
+      "structure": "put_credit_spread",
+      "origin": "AAL",
+      "origin_ok": true,
+      "n_peer_pass": 0,
+      "peer_pass_symbols": [],
+      "multi_symbol_ok": false,
+      "per_symbol": [
+        {"symbol": "AAL", "n": 26, "pnl": 8.07, "dd": 37.99, "ml": 39.86, "pass": "origin"},
+        {"symbol": "SOFI", "n": 19, "pnl": -74.32, "dd": 97.54, "ml": 60.43, "pass": false},
+        {"symbol": "PFE", "n": 14, "pnl": -58.85, "dd": 42.91, "ml": 74.19, "pass": false},
+        {"symbol": "NIO", "n": 13, "pnl": 13.63, "dd": 17.52, "ml": 39.54, "pass": false},
+        {"symbol": "JPM", "n": 0, "pnl": null, "pass": false},
+        {"symbol": "QQQ", "n": 0, "pnl": null, "pass": false}
+      ]
+    }
+  ],
+  "decision": {
+    "monday_hunt": ["SOFI", "PFE"],
+    "do_not_overlay": "AAL PCS on SOFI/PFE",
+    "drop": ["LLY", "GE", "DIS", "JPM", "QQQ"],
+    "leftover_manage": "INTC IC paper_b5b969c4a65f HOLD until dual PT"
+  }
+}
