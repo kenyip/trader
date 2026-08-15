@@ -1,0 +1,77 @@
+{
+  "generated_at": "2026-08-15T04:02:17+00:00",
+  "mode": "offhours_catalog_dna_hunt",
+  "stamp": "20260814T2100",
+  "live_authority": false,
+  "trading_authority": false,
+  "honesty": "Existing F IC + BAC PCS DNA re-run via pcs_sim proxy (L0) on unused universe names SMCI/KO/SOFI/PFE. Not new DNA. Not pack-grade promotion. Not live. --hyp-ids pin skipped leftover leader order.",
+  "hyp_ids": [
+    "hyp_dna_bac_put_credit_spread_631f9804",
+    "hyp_dna_f_iron_condor_5d8c1fff",
+    "hyp_dna_f_iron_condor_39f86341"
+  ],
+  "peers": ["SMCI", "KO", "SOFI", "PFE"],
+  "min_trades": 15,
+  "results": [
+    {
+      "hyp_id": "hyp_dna_bac_put_credit_spread_631f9804",
+      "structure": "put_credit_spread",
+      "origin": "BAC",
+      "origin_ok": true,
+      "n_peer_pass": 1,
+      "peer_pass_symbols": ["KO"],
+      "multi_symbol_ok": false,
+      "per_symbol": [
+        {"symbol": "BAC", "n": 23, "pnl": 134.42, "dd": 41.92, "ml": 80.29, "pass": "origin"},
+        {"symbol": "SMCI", "n": 28, "pnl": -62.21, "dd": 121.72, "ml": 78.64, "pass": false},
+        {"symbol": "KO", "n": 29, "pnl": 106.93, "dd": 61.57, "ml": 80.49, "pass": true},
+        {"symbol": "SOFI", "n": 19, "pnl": -66.49, "dd": 122.27, "ml": 58.52, "pass": false},
+        {"symbol": "PFE", "n": 17, "pnl": -43.33, "dd": 75.71, "ml": 74.87, "pass": false}
+      ]
+    },
+    {
+      "hyp_id": "hyp_dna_f_iron_condor_5d8c1fff",
+      "structure": "iron_condor",
+      "origin": "F",
+      "origin_ok": true,
+      "n_peer_pass": 4,
+      "peer_pass_symbols": ["SMCI", "KO", "SOFI", "PFE"],
+      "multi_symbol_ok": true,
+      "per_symbol": [
+        {"symbol": "F", "n": 17, "pnl": 143.02, "dd": 22.25, "ml": 78.96, "pass": "origin"},
+        {"symbol": "SMCI", "n": 40, "pnl": 227.31, "dd": 65.00, "ml": 68.63, "pass": true},
+        {"symbol": "KO", "n": 50, "pnl": 94.35, "dd": 101.83, "ml": 73.36, "pass": true},
+        {"symbol": "SOFI", "n": 49, "pnl": 158.15, "dd": 63.68, "ml": 75.42, "pass": true},
+        {"symbol": "PFE", "n": 20, "pnl": 56.01, "dd": 36.83, "ml": 75.47, "pass": true}
+      ]
+    },
+    {
+      "hyp_id": "hyp_dna_f_iron_condor_39f86341",
+      "structure": "iron_condor",
+      "origin": "F",
+      "origin_ok": true,
+      "n_peer_pass": 4,
+      "peer_pass_symbols": ["SMCI", "KO", "SOFI", "PFE"],
+      "multi_symbol_ok": true,
+      "per_symbol": [
+        {"symbol": "F", "n": 17, "pnl": 122.70, "dd": 22.25, "ml": 78.96, "pass": "origin"},
+        {"symbol": "SMCI", "n": 63, "pnl": 80.88, "dd": 84.83, "ml": 70.40, "pass": true},
+        {"symbol": "KO", "n": 61, "pnl": 259.73, "dd": 72.41, "ml": 74.01, "pass": true},
+        {"symbol": "SOFI", "n": 59, "pnl": 133.21, "dd": 59.75, "ml": 75.28, "pass": true},
+        {"symbol": "PFE", "n": 21, "pnl": 56.78, "dd": 28.38, "ml": 75.36, "pass": true}
+      ]
+    }
+  ],
+  "decision": {
+    "monday_hunt": ["SMCI", "KO", "SOFI", "PFE"],
+    "prefer": {
+      "SMCI": "F IC 5d8c1fff",
+      "KO": "F IC 39f86341",
+      "PFE": "F IC 39f86341",
+      "SOFI": "F IC either"
+    },
+    "do_not_overlay": "BAC PCS on SOFI/PFE/SMCI; AAL PCS on SOFI/PFE",
+    "bac_pcs_ok": ["KO", "TSLL", "CCL", "XOM"],
+    "leftover_manage": "INTC IC paper_b5b969c4a65f HOLD until dual PT"
+  }
+}

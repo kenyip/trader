@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "Monday RTH: remake leftover INTC IC (close mid +26.78 / adv +5.78 vs PT 18.38, dual false). Hunt SOFI/PFE for F IC 39f86341 only — do not overlay AAL PCS (SOFI -74 / PFE -59). F fade-prove only if new-session <14.15 restores both wings.",
+    "hint": "Monday RTH: remake leftover INTC IC (close mid +26.78 / adv +5.78 vs PT 18.38, dual false). Hunt SMCI/KO/SOFI/PFE for F IC — prefer 5d8c1fff on SMCI (n=40 +227 dd65) and 39f86341 on KO (n=61 +260) / PFE (dd28). Do not overlay BAC PCS on SOFI/PFE/SMCI (SOFI -66 / PFE -43 / SMCI -62); BAC PCS KO +107 is optional vs pack bu_4. F fade-prove only if new-session <14.15 restores both wings.",
     "open_orders": [
       {
         "max_loss_usd": 188.72125668506322,
@@ -33,16 +33,16 @@
       "watch": "NO_SETUP"
     },
     "hunt": {
-      "SOFI": "F IC 39f86341 peer_pass n=59 pnl+133.21 dd59.75 ml75.28 last=18.29",
-      "PFE": "F IC 39f86341 peer_pass n=21 pnl+56.88 dd28.38 ml75.36 last=26.79",
+      "SMCI": "F IC 5d8c1fff peer_pass n=40 pnl+227.31 dd65.00 ml68.63 (prefer vs 39f n=63 +80.88 dd84.83)",
+      "KO": "F IC 39f86341 peer_pass n=61 pnl+259.73 dd72.41 ml74.01; BAC PCS also +106.93 n=29",
+      "SOFI": "F IC 39f n=59 +133.21 / 5d8c n=49 +158.15 last=18.29",
+      "PFE": "F IC 39f n=21 +56.78 dd28.38 (tight) / 5d8c n=20 +56.01 last=26.79",
+      "BAC_PCS_overlay": "REJECT SOFI n=19 pnl-66.49; PFE n=17 pnl-43.33; SMCI n=28 pnl-62.21; KO pass",
       "AAL_PCS_overlay": "REJECT SOFI n=19 pnl-74.32; PFE n=14 pnl-58.85",
-      "NIO": "thin n=8 IC / n=13 PCS — not peer_pass",
-      "JPM": "n=0 at these knobs",
-      "QQQ": "n=0 at these knobs",
-      "dropped": ["LLY", "GE", "DIS"]
+      "dropped": ["LLY", "GE", "DIS", "JPM", "QQQ", "NIO"]
     }
   },
-  "generated_at": "2026-08-15T03:14:00+00:00",
+  "generated_at": "2026-08-15T04:05:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -52,7 +52,8 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "offhours_research_20260814T2001",
-  "stamp": "20260814T2001",
-  "trading_authority": false
+  "source": "offhours_research_20260814T2100",
+  "stamp": "20260814T2100",
+  "trading_authority": false,
+  "preserved_from": "trader_preserve_rth_next_seed"
 }

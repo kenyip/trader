@@ -83,12 +83,58 @@ def _config_fp(cfg: dict[str, Any], structure: str) -> str:
     return "|".join(parts)
 
 
+def _shortlist_rows(shortlist_path: Path | None = None) -> dict[str, dict[str, Any]]:
+    sl = _load_json(shortlist_path or _SHORTLIST)
+    out: dict[str, dict[str, Any]] = {}
+    for row in sl.get("shortlist") or []:
+        hid = str(row.get("hyp_id") or "")
+        if hid and isinstance(row, dict):
+            out[hid] = row
+    return out
+
+
+def select_pinned_hyps(
+    hyp_ids: list[str],
+    *,
+    rotation_path: Path | None = None,
+    shortlist_path: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Pin existing living catalog ids. Does not invent DNA."""
+    rot = _load_json(rotation_path or _ROTATION)
+    by = rot.get("by_hyp_id") or {}
+    sl_rows = _shortlist_rows(shortlist_path)
+    out: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for raw in hyp_ids:
+        hid = str(raw or "").strip()
+        if not hid or hid in seen:
+            continue
+        seen.add(hid)
+        row: dict[str, Any] = {}
+        if isinstance(by.get(hid), dict):
+            row.update(by[hid])
+        if isinstance(sl_rows.get(hid), dict):
+            for k, v in sl_rows[hid].items():
+                if row.get(k) in (None, ""):
+                    row[k] = v
+        row["hyp_id"] = hid
+        out.append(row)
+    return out
+
+
 def select_leader_hyps(
     *,
     top_n: int = 3,
     rotation_path: Path | None = None,
     shortlist_path: Path | None = None,
+    hyp_ids: list[str] | None = None,
 ) -> list[dict[str, Any]]:
+    if hyp_ids:
+        return select_pinned_hyps(
+            hyp_ids,
+            rotation_path=rotation_path,
+            shortlist_path=shortlist_path,
+        )
     rot = _load_json(rotation_path or _ROTATION)
     by = rot.get("by_hyp_id") or {}
     ok = [
@@ -264,14 +310,18 @@ def run_shortlist_dna_multi(
     hyps_path: Path | None = None,
     extra_peers: list[str] | None = None,
     exclusive_peers: bool = False,
+    hyp_ids: list[str] | None = None,
 ) -> dict[str, Any]:
+    pinned = [str(h).strip() for h in (hyp_ids or []) if str(h).strip()]
     leaders = select_leader_hyps(
-        top_n=max(int(top_n) * 4, 8),
+        top_n=max(int(top_n) * 4, 8) if not pinned else max(len(pinned), 1),
         rotation_path=rotation_path,
         shortlist_path=shortlist_path,
+        hyp_ids=pinned or None,
     )
     results: list[dict[str, Any]] = []
     n_living = 0
+    living_cap = len(pinned) if pinned else int(top_n)
     for lead in leaders:
         hid = str(lead.get("hyp_id") or "")
         origin = str(lead.get("symbol") or "").upper()
@@ -288,7 +338,7 @@ def run_shortlist_dna_multi(
                 }
             )
             continue
-        if n_living >= int(top_n):
+        if n_living >= living_cap:
             break
         n_living += 1
         cfg = dict(dna.get("config") or {})
@@ -356,12 +406,15 @@ def run_shortlist_dna_multi(
         "live_authority": False,
         "exclusive_peers": bool(exclusive_peers),
         "extra_peers": [str(s).upper() for s in (extra_peers or [])],
+        "hyp_ids": pinned,
         "honesty": (
             "Shortlist capital_path_ok multi-leg DNA re-run on peer symbols via "
             "pcs_sim proxy (L0). quality_pass requires origin + ≥min_peer_pass "
             "peers with n_trades≥min and positive total_pnl_per_contract. "
             "Not densify-seed multi; not live edge; not MCP first-live. "
-            "exclusive_peers hunts unused universe names without leftover fill."
+            "exclusive_peers hunts unused universe names without leftover fill. "
+            "hyp_ids pins existing living catalog DNA so leftover leader order "
+            "cannot consume the hunt."
         ),
     }
     out = Path(report_path) if report_path else _OUT
@@ -390,8 +443,14 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Use --extra-peers as the exclusive peer set (skip leftover shortlist fill).",
     )
+    p.add_argument(
+        "--hyp-ids",
+        default="",
+        help="Comma-separated existing living hyp ids to pin (skip leftover leader order).",
+    )
     args = p.parse_args(argv)
     extra = [s.strip().upper() for s in str(args.extra_peers or "").split(",") if s.strip()]
+    pinned = [s.strip() for s in str(args.hyp_ids or "").split(",") if s.strip()]
     rep = run_shortlist_dna_multi(
         top_n=int(args.top_n),
         max_peers=int(args.max_peers),
@@ -402,6 +461,7 @@ def main(argv: list[str] | None = None) -> int:
         report_path=Path(args.report) if args.report else None,
         extra_peers=extra or None,
         exclusive_peers=bool(args.peers_only),
+        hyp_ids=pinned or None,
     )
     print(
         json.dumps(

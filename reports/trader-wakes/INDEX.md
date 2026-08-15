@@ -1,3 +1,5 @@
+| 2026-08-14T2100 | offhours | `--hyp-ids` pin; F IC 5d8c/39f peer-pass SMCI/KO/SOFI/PFE; BAC PCS only KO (SOFI/PFE/SMCI reject); INTEREST SMCI rh_wake=false | manage_open_paper_campaign |
+- `2026-08-14T2100-offhours.md` — off-RTH hunt pinned living DNA; do not prune
 | 2026-08-14T2001 | offhours | preserve CLI sys.path fix (rc=1→0); F IC DNA peer-pass SOFI n=59 +133 / PFE n=21 +57; AAL PCS does not transfer; INTEREST SOFI/PFE rh_wake=false | manage_open_paper_campaign |
 - `2026-08-14T2001-offhours.md` — off-RTH hunt unused universe names; do not unfreeze EDGE
 | 2026-08-14T1501 | continuum-judgment | HOLD INTC IC close remake mid +26.78/adv +5.78 vs PT 18.38 (dual false); Friday F fade-below-14.15 closed; SNAP/TSLL/CCL not pack; campaign NEXT_SEED preserve hooked | manage_open_paper_campaign |

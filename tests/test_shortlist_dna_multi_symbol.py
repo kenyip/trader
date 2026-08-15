@@ -4,7 +4,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from scripts.trader_shortlist_dna_multi_symbol import peer_symbols, select_leader_hyps
+from scripts.trader_shortlist_dna_multi_symbol import (
+    peer_symbols,
+    select_leader_hyps,
+    select_pinned_hyps,
+)
 
 
 def test_select_leader_hyps_prefers_capital_path_ok_and_dedupes(tmp_path: Path):
@@ -101,3 +105,60 @@ def test_peer_symbols_exclusive_skips_shortlist_leftovers(tmp_path: Path):
     assert peers == ["SOFI", "PFE", "NIO", "JPM", "QQQ"]
     assert "AAL" not in peers
     assert "BAC" not in peers
+
+
+def test_select_pinned_hyps_keeps_order_and_skips_blank(tmp_path: Path):
+    rot = tmp_path / "STRESS.json"
+    rot.write_text(
+        json.dumps(
+            {
+                "by_hyp_id": {
+                    "hyp_dna_bac_put_credit_spread_631f9804": {
+                        "symbol": "BAC",
+                        "structure": "put_credit_spread",
+                        "capital_path_ok": True,
+                    },
+                    "hyp_dna_f_iron_condor_5d8c1fff": {
+                        "symbol": "F",
+                        "structure": "iron_condor",
+                        "capital_path_ok": True,
+                    },
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    sl = tmp_path / "SHORTLIST.json"
+    sl.write_text(
+        json.dumps(
+            {
+                "shortlist": [
+                    {"hyp_id": "hyp_dna_f_iron_condor_39f86341", "symbol": "F"},
+                    {"hyp_id": "hyp_dna_bac_put_credit_spread_631f9804", "symbol": "BAC"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    pinned = select_pinned_hyps(
+        [
+            "hyp_dna_bac_put_credit_spread_631f9804",
+            "",
+            "hyp_dna_f_iron_condor_5d8c1fff",
+            "hyp_dna_bac_put_credit_spread_631f9804",
+        ],
+        rotation_path=rot,
+        shortlist_path=sl,
+    )
+    assert [r["hyp_id"] for r in pinned] == [
+        "hyp_dna_bac_put_credit_spread_631f9804",
+        "hyp_dna_f_iron_condor_5d8c1fff",
+    ]
+    via_select = select_leader_hyps(
+        top_n=1,
+        rotation_path=rot,
+        shortlist_path=sl,
+        hyp_ids=["hyp_dna_f_iron_condor_5d8c1fff"],
+    )
+    assert [r["hyp_id"] for r in via_select] == ["hyp_dna_f_iron_condor_5d8c1fff"]
+    assert via_select[0]["structure"] == "iron_condor"
