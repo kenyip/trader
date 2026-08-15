@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "Monday RTH: remake leftover INTC IC (close mid +26.78 / adv +5.78 vs PT 18.38, dual false). Hunt SMCI/KO/SOFI/PFE for F IC — prefer 5d8c1fff on SMCI (n=40 +227 dd65) and 39f86341 on KO (n=61 +260) / PFE (dd28). Do not overlay BAC PCS on SOFI/PFE/SMCI (SOFI -66 / PFE -43 / SMCI -62); BAC PCS KO +107 is optional vs pack bu_4. F fade-prove only if new-session <14.15 restores both wings.",
+    "hint": "Monday RTH: remake leftover INTC IC (close mid +26.78 / adv +5.78 vs PT 18.38, dual false). Do NOT pack-grade OPEN SMCI/KO/SOFI/PFE on F IC 39f — dual-cost train n_pass=0 (SMCI -186 / SOFI -195 / KO slip -88 / PFE fixed -19 / F n=3 thin). L0 watch only. Pack KO/PLTR still bu_* until bullish daily. F fade-prove only if new-session <14.15 restores both wings.",
     "open_orders": [
       {
         "max_loss_usd": 188.72125668506322,
@@ -25,7 +25,9 @@
       "spot_close": 14.37,
       "fade_below_14_15": false,
       "miss": "put_wing_none",
-      "next_prove": "Monday new session fade <14.15 restoring both wings"
+      "next_prove": "Monday new session fade <14.15 restoring both wings",
+      "pack_grade_39f": false,
+      "dual_cost_train_pass": 0
     },
     "pack": {
       "KO": "pcs_bull_only:neutral",
@@ -33,16 +35,15 @@
       "watch": "NO_SETUP"
     },
     "hunt": {
-      "SMCI": "F IC 5d8c1fff peer_pass n=40 pnl+227.31 dd65.00 ml68.63 (prefer vs 39f n=63 +80.88 dd84.83)",
-      "KO": "F IC 39f86341 peer_pass n=61 pnl+259.73 dd72.41 ml74.01; BAC PCS also +106.93 n=29",
-      "SOFI": "F IC 39f n=59 +133.21 / 5d8c n=49 +158.15 last=18.29",
-      "PFE": "F IC 39f n=21 +56.78 dd28.38 (tight) / 5d8c n=20 +56.01 last=26.79",
-      "BAC_PCS_overlay": "REJECT SOFI n=19 pnl-66.49; PFE n=17 pnl-43.33; SMCI n=28 pnl-62.21; KO pass",
-      "AAL_PCS_overlay": "REJECT SOFI n=19 pnl-74.32; PFE n=14 pnl-58.85",
-      "dropped": ["LLY", "GE", "DIS", "JPM", "QQQ", "NIO"]
+      "SMCI": "L0 F IC 5d8c +227 / 39f +81 — dual-cost train FAIL 39f slip -185.77. Not a pack seat.",
+      "KO": "L0 F IC 39f +260 — dual-cost train FAIL slip -87.58 (fixed +19). Not a pack seat.",
+      "SOFI": "L0 F IC +133/+158 — dual-cost train FAIL slip -194.64 dd216. Not a pack seat.",
+      "PFE": "L0 F IC +57 dd28 — dual-cost train FAIL fixed -18.52. Not a pack seat.",
+      "BAC_PCS_overlay": "REJECT SOFI/PFE/SMCI; KO L0 pass only",
+      "AAL_PCS_overlay": "REJECT SOFI/PFE"
     }
   },
-  "generated_at": "2026-08-15T04:05:00+00:00",
+  "generated_at": "2026-08-15T05:12:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -52,8 +53,8 @@
   "live_authority": false,
   "next_action": "manage_open_paper_campaign",
   "paper_campaign_execute": true,
-  "source": "offhours_research_20260814T2100",
-  "stamp": "20260814T2100",
+  "source": "offhours_research_20260814T2210",
+  "stamp": "20260814T2210",
   "trading_authority": false,
   "preserved_from": "trader_preserve_rth_next_seed"
 }

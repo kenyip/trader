@@ -1,3 +1,5 @@
+| 2026-08-14T2210 | offhours | F IC 39f dual-cost train fail F/SMCI/KO/SOFI/PFE (n_train_pass=0); L0 peer_pass ≠ pack-grade seats | manage_open_paper_campaign |
+- `2026-08-14T2210-offhours.md` — convert L0 F IC through evaluate_proxy; FAMILY_CLOSED
 | 2026-08-14T2100 | offhours | `--hyp-ids` pin; F IC 5d8c/39f peer-pass SMCI/KO/SOFI/PFE; BAC PCS only KO (SOFI/PFE/SMCI reject); INTEREST SMCI rh_wake=false | manage_open_paper_campaign |
 - `2026-08-14T2100-offhours.md` — off-RTH hunt pinned living DNA; do not prune
 | 2026-08-14T2001 | offhours | preserve CLI sys.path fix (rc=1→0); F IC DNA peer-pass SOFI n=59 +133 / PFE n=21 +57; AAL PCS does not transfer; INTEREST SOFI/PFE rh_wake=false | manage_open_paper_campaign |
