@@ -1,0 +1,513 @@
+{
+  "generated_at": "2026-08-16T16:03:43+00:00",
+  "live_authority": false,
+  "trading_authority": false,
+  "honesty": "Off-RTH consume rehearsal. Last daily bar is Friday close. pcs_bull_only OPEN only on bullish + iv_rank>=15. Leftover INTC working paper is blocked. Do not remake INTC. Do not hunt SNAP/CSP as ARM. Never place_*.",
+  "multi_n_quality_pass": 4,
+  "door_cells": [
+    {
+      "door": "bu_6",
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6",
+      "f2_symbols": [
+        "INTC",
+        "PLTR"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6"
+    },
+    {
+      "door": "bu_4",
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4",
+      "f2_symbols": [
+        "INTC",
+        "KO"
+      ],
+      "family_id": "LONG_BIAS_PCS_REGIME_INCOME_LONGER_DTE__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4"
+    }
+  ],
+  "other_pack_cells": [
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_2",
+      "f2_symbols": [
+        "AMZN",
+        "INTC"
+      ]
+    },
+    {
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_7",
+      "f2_symbols": [
+        "AMZN",
+        "INTC"
+      ]
+    }
+  ],
+  "blocked_working_paper": [
+    "INTC"
+  ],
+  "hunt_symbols": [
+    "KO",
+    "PLTR",
+    "F",
+    "AAL",
+    "SNAP",
+    "CCL",
+    "BAC",
+    "IWM",
+    "INTC"
+  ],
+  "living_door_seats": [
+    {
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6_INTC",
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6",
+      "status": "paper_eligible",
+      "symbols": [
+        "INTC"
+      ],
+      "router_policy": "pcs_bull_only",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0014_20260805T063146Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6__prove.json",
+      "pack_grade_symbols": [
+        "INTC",
+        "INTC",
+        "PLTR"
+      ]
+    },
+    {
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6_PLTR",
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6",
+      "status": "paper_eligible",
+      "symbols": [
+        "PLTR"
+      ],
+      "router_policy": "pcs_bull_only",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0014_20260805T063146Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6__prove.json",
+      "pack_grade_symbols": [
+        "INTC",
+        "PLTR",
+        "PLTR"
+      ]
+    },
+    {
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4_INTC",
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4",
+      "status": "paper_eligible",
+      "symbols": [
+        "INTC"
+      ],
+      "router_policy": "pcs_bull_only",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0056_20260805T064959Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4__prove.json",
+      "pack_grade_symbols": [
+        "INTC",
+        "INTC",
+        "KO"
+      ]
+    },
+    {
+      "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4_KO",
+      "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4",
+      "status": "paper_eligible",
+      "symbols": [
+        "KO"
+      ],
+      "router_policy": "pcs_bull_only",
+      "spec_path": "/Users/jarvis/dev/trader/.cache/platform/spine/discovery/gen_0056_20260805T064959Z/PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4__prove.json",
+      "pack_grade_symbols": [
+        "INTC",
+        "KO",
+        "KO"
+      ]
+    }
+  ],
+  "last_state": {
+    "KO": {
+      "last": {
+        "date": "2026-08-14",
+        "close": 87.71,
+        "regime": "neutral",
+        "iv_rank": 90.08,
+        "open_if_bull_iv15": false
+      },
+      "pcs_bull_only": null,
+      "blocked_working_paper": false,
+      "open_days_last_15": 4
+    },
+    "PLTR": {
+      "last": {
+        "date": "2026-08-14",
+        "close": 174.04,
+        "regime": "neutral",
+        "iv_rank": 98.41,
+        "open_if_bull_iv15": false
+      },
+      "pcs_bull_only": null,
+      "blocked_working_paper": false,
+      "open_days_last_15": 0
+    },
+    "INTC": {
+      "last": {
+        "date": "2026-08-14",
+        "close": 102.5,
+        "regime": "neutral",
+        "iv_rank": 56.35,
+        "open_if_bull_iv15": false
+      },
+      "pcs_bull_only": null,
+      "blocked_working_paper": true,
+      "open_days_last_15": 0
+    }
+  },
+  "last_bars": {
+    "KO": [
+      {
+        "date": "2026-07-27",
+        "close": 84.07,
+        "regime": "bullish",
+        "iv_rank": 95.63,
+        "open_if_bull_iv15": true
+      },
+      {
+        "date": "2026-07-28",
+        "close": 88.27,
+        "regime": "bullish",
+        "iv_rank": 99.6,
+        "open_if_bull_iv15": true
+      },
+      {
+        "date": "2026-07-29",
+        "close": 89.08,
+        "regime": "bullish",
+        "iv_rank": 99.21,
+        "open_if_bull_iv15": true
+      },
+      {
+        "date": "2026-07-30",
+        "close": 88.49,
+        "regime": "neutral",
+        "iv_rank": 98.81,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-07-31",
+        "close": 87.59,
+        "regime": "neutral",
+        "iv_rank": 99.21,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-03",
+        "close": 86.86,
+        "regime": "bullish",
+        "iv_rank": 99.21,
+        "open_if_bull_iv15": true
+      },
+      {
+        "date": "2026-08-04",
+        "close": 86.56,
+        "regime": "neutral",
+        "iv_rank": 99.21,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-05",
+        "close": 86.83,
+        "regime": "neutral",
+        "iv_rank": 98.41,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-06",
+        "close": 86.85,
+        "regime": "neutral",
+        "iv_rank": 98.41,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-07",
+        "close": 87.05,
+        "regime": "neutral",
+        "iv_rank": 97.62,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-10",
+        "close": 86.87,
+        "regime": "neutral",
+        "iv_rank": 95.63,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-11",
+        "close": 86.48,
+        "regime": "neutral",
+        "iv_rank": 95.63,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-12",
+        "close": 86.71,
+        "regime": "neutral",
+        "iv_rank": 94.84,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-13",
+        "close": 87.42,
+        "regime": "neutral",
+        "iv_rank": 94.84,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-14",
+        "close": 87.71,
+        "regime": "neutral",
+        "iv_rank": 90.08,
+        "open_if_bull_iv15": false
+      }
+    ],
+    "PLTR": [
+      {
+        "date": "2026-07-27",
+        "close": 131.53,
+        "regime": "bearish",
+        "iv_rank": 62.3,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-07-28",
+        "close": 123.53,
+        "regime": "bearish",
+        "iv_rank": 78.17,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-07-29",
+        "close": 123.0,
+        "regime": "bearish",
+        "iv_rank": 63.89,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-07-30",
+        "close": 122.26,
+        "regime": "bearish",
+        "iv_rank": 63.49,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-07-31",
+        "close": 123.06,
+        "regime": "bearish",
+        "iv_rank": 62.3,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-03",
+        "close": 125.65,
+        "regime": "bearish",
+        "iv_rank": 63.49,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-04",
+        "close": 162.66,
+        "regime": "neutral",
+        "iv_rank": 100.0,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-05",
+        "close": 158.43,
+        "regime": "neutral",
+        "iv_rank": 100.0,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-06",
+        "close": 155.92,
+        "regime": "neutral",
+        "iv_rank": 99.21,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-07",
+        "close": 172.01,
+        "regime": "neutral",
+        "iv_rank": 100.0,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-10",
+        "close": 175.23,
+        "regime": "neutral",
+        "iv_rank": 99.6,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-11",
+        "close": 174.94,
+        "regime": "neutral",
+        "iv_rank": 99.6,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-12",
+        "close": 171.04,
+        "regime": "neutral",
+        "iv_rank": 100.0,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-13",
+        "close": 179.01,
+        "regime": "neutral",
+        "iv_rank": 97.22,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-14",
+        "close": 174.04,
+        "regime": "neutral",
+        "iv_rank": 98.41,
+        "open_if_bull_iv15": false
+      }
+    ],
+    "INTC": [
+      {
+        "date": "2026-07-27",
+        "close": 91.67,
+        "regime": "bearish",
+        "iv_rank": 66.67,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-07-28",
+        "close": 86.3,
+        "regime": "bearish",
+        "iv_rank": 64.29,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-07-29",
+        "close": 81.88,
+        "regime": "bearish",
+        "iv_rank": 63.49,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-07-30",
+        "close": 91.13,
+        "regime": "bearish",
+        "iv_rank": 71.83,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-07-31",
+        "close": 90.2,
+        "regime": "bearish",
+        "iv_rank": 70.24,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-03",
+        "close": 91.0,
+        "regime": "bearish",
+        "iv_rank": 61.51,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-04",
+        "close": 100.86,
+        "regime": "bearish",
+        "iv_rank": 67.46,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-05",
+        "close": 101.06,
+        "regime": "bearish",
+        "iv_rank": 63.1,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-06",
+        "close": 99.81,
+        "regime": "bearish",
+        "iv_rank": 62.7,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-07",
+        "close": 101.65,
+        "regime": "bearish",
+        "iv_rank": 63.1,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-10",
+        "close": 97.52,
+        "regime": "bearish",
+        "iv_rank": 63.89,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-11",
+        "close": 97.71,
+        "regime": "bearish",
+        "iv_rank": 61.51,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-12",
+        "close": 100.95,
+        "regime": "bearish",
+        "iv_rank": 59.52,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-13",
+        "close": 104.56,
+        "regime": "neutral",
+        "iv_rank": 57.94,
+        "open_if_bull_iv15": false
+      },
+      {
+        "date": "2026-08-14",
+        "close": 102.5,
+        "regime": "neutral",
+        "iv_rank": 56.35,
+        "open_if_bull_iv15": false
+      }
+    ]
+  },
+  "watch": {
+    "status": "NO_SETUP",
+    "reason": "Living seat PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6_PLTR on PLTR: regime=neutral \u2192 stand aside (router_stand_aside:pcs_bull_only:neutral).",
+    "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6_PLTR",
+    "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6",
+    "symbol": "PLTR",
+    "regime": "neutral",
+    "selected_structure": "",
+    "is_pack_grade": true,
+    "seats_considered_head": [
+      "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4_INTC",
+      "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4_KO",
+      "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_2_AMZN",
+      "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_2_INTC",
+      "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_7_AMZN",
+      "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_7_INTC",
+      "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6_INTC",
+      "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6_PLTR"
+    ],
+    "n_considered": 8
+  },
+  "handoff": {
+    "status": "NO_SETUP",
+    "reason": "Living seat PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6_PLTR on PLTR: regime=neutral \u2192 stand aside (router_stand_aside:pcs_bull_only:neutral).",
+    "paper_action": "none",
+    "watch_status": "NO_SETUP"
+  },
+  "monday_rule": {
+    "primary": "OPEN 1-lot $1-wide bu_4 on KO if new daily bar is bullish and iv_rank>=15",
+    "backup": "OPEN 1-lot $1-wide bu_6 on PLTR if new daily bar is bullish and iv_rank>=15",
+    "stand_aside": "neutral/bear is a pass \u2014 do not force leftover F IC or SNAP CSP",
+    "blocked": "INTC leftover working \u2014 do not remake; do not overlay pack PCS on INTC"
+  }
+}

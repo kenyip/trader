@@ -1,3 +1,5 @@
+| 2026-08-16T0905 | offhours | Pack consume rehearsal: MULTI nqp=4 bu_4/bu_6 hold; watch pack-first NO_SETUP (PLTR/KO neutral); IV already 90/98; Monday OPEN = bullish daily | monday_pack_open_on_bullish_bar |
+- `2026-08-16T0905-offhours.md` — Sunday bu_4/bu_6 consume rehearsal; do not remake INTC / hunt SNAP
 | 2026-08-14T2210 | offhours | F IC 39f dual-cost train fail F/SMCI/KO/SOFI/PFE (n_train_pass=0); L0 peer_pass ≠ pack-grade seats | manage_open_paper_campaign |
 - `2026-08-14T2210-offhours.md` — convert L0 F IC through evaluate_proxy; FAMILY_CLOSED
 | 2026-08-14T2100 | offhours | `--hyp-ids` pin; F IC 5d8c/39f peer-pass SMCI/KO/SOFI/PFE; BAC PCS only KO (SOFI/PFE/SMCI reject); INTEREST SMCI rh_wake=false | manage_open_paper_campaign |

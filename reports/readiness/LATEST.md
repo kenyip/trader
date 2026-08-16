@@ -1,22 +1,22 @@
-# Readiness LATEST — 2026-08-14T2210 off-RTH pack-grade convert
+# Readiness LATEST — 2026-08-16T0905 Sunday pack consume rehearsal
 
-PHASE: SHADOW ops / PAPER leftover manage / EDGE frozen-bloat (do not prune)
+PHASE: SHADOW ops / PAPER leftover manage / EDGE searching
 SLEEVE: $3000 plan · test cash≈500 · live_armed=false
 
 | Stamp | Kind | What | Residue | Status |
 |---|---|---|---|---|
-| 2026-08-14T2210 | offhours | F IC 39f dual-cost train fail all 5 names (F thin; SMCI/SOFI red; KO/PFE worst-axis fail). L0 cells ≠ pack-grade seats | evaluate_proxy FAMILY_CLOSED | EDGE_FROZEN_BLOAT ROBOT ok ARM blocked |
-| 2026-08-14T2100 | offhours | `--hyp-ids` pin; F IC L0 peer-pass SMCI/KO/SOFI/PFE; BAC PCS only KO | L0 hunt | EDGE_FROZEN_BLOAT ROBOT ok ARM blocked |
-| EDGE | **FROZEN_BLOAT** · hunt/prove existing DNA ok · do not prune · F IC L0 travels, dual-cost train does not · first-live SNAP CSP $494 |
-| ROBOT | OK · paper **1 open** INTC IC `paper_b5b969c4a65f` risk~$188.72 · sessions 18/3 · shadow PASS |
+| 2026-08-16T0905 | offhours | Pack consume rehearsal: MULTI nqp=4 holds bu_4 INTC+KO / bu_6 INTC+PLTR. Watch pack-first NO_SETUP (PLTR neutral). IV KO 90 / PLTR 98 already ≥15. Monday OPEN = bullish daily only. | rehearsal JSON | EDGE searching ROBOT ok ARM blocked |
+| 2026-08-14T2210 | offhours | F IC 39f dual-cost train fail — L0 ≠ pack seat | evaluate_proxy FAMILY_CLOSED | EDGE_FROZEN_BLOAT ROBOT ok ARM blocked |
+| EDGE | **SEARCHING** · pack-grade quality_pass holds · first-live door = 1-lot $1-wide PCS not SNAP CSP |
+| ROBOT | OK · paper **1 open** INTC IC leftover · sessions 18/3 · shadow PASS (not same-cell) |
 | ARM | BLOCKED · Ken LIVE_PACKET only |
 
-LIVE_PACKET stop: not met. Leftover INTC ≠ paper rule-close. Shadow PASS is not same-strategy pack-grade. SNAP CSP worst≈$494 > $300.
+LIVE_PACKET stop: not met. No pack-grade paper open→manage→rule-close. Leftover INTC ≠ door. Shadow PASS is not bu_4/bu_6. SNAP CSP not the door.
 
-NEXT: manage_open_paper_campaign · ken_required=false · source=offhours_research_20260814T2210
+NEXT: monday_pack_open_on_bullish_bar · ken_required=false · source=offhours_20260816T0905
 
-## C-row offhours 2026-08-14T2210
-- paper: HOLD INTC `paper_b5b969c4a65f` — no off-RTH remake
-- convert: F IC 39f pack-grade FAIL (n_train_pass=0)
-- tape: INTEREST rh_wake=false; L0 watch only, not pack OPEN
+## C-row Sunday 2026-08-16T0905
+- paper: HOLD INTC leftover — do not remake
+- consume: pack-first stand-aside PASS (neutral). IV already clears.
+- tape: INTEREST rh_wake=false
 - live_armed=false; ken_required=false
