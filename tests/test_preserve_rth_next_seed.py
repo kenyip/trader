@@ -8,6 +8,7 @@ from pathlib import Path
 from trader_platform.execution.preserve_rth_next_seed import (
     apply_preserve,
     merge_preserved_seed,
+    seed_has_pack_door,
     seed_is_thin,
 )
 
@@ -192,3 +193,115 @@ def test_preserve_cli_runs_as_script_without_pythonpath(tmp_path: Path) -> None:
     merged = json.loads(seed_path.read_text(encoding="utf-8"))
     assert not seed_is_thin(merged)
     assert merged["detail"]["open_orders"][0]["decision"] == "HOLD"
+
+
+def _fic_hunt_seed() -> dict:
+    return {
+        "source": "trader_paper_campaign",
+        "stamp": "20260816T165109",
+        "ken_required": False,
+        "next_action": "manage_open_paper_campaign",
+        "detail": {
+            "hint": (
+                "Monday RTH: remake leftover INTC IC. Hunt SOFI/PFE for F IC "
+                "39f86341 only — do not overlay AAL PCS."
+            ),
+            "open_orders": [
+                {
+                    "order_id": "paper_b5b969c4a65f",
+                    "symbol": "INTC",
+                    "structure": "iron_condor",
+                    "status": "working",
+                    "decision": "HOLD",
+                    "spot": 102.54,
+                    "mtm_usd": 26.78,
+                    "dual_pt_ready": False,
+                }
+            ],
+            "pack": {"KO": "pcs_bull_only:neutral", "PLTR": "pcs_bull_only:neutral"},
+            "f_ic": {"miss": "put_wing_none"},
+            "hunt": {"SOFI": "F IC leftover"},
+        },
+    }
+
+
+def _pack_door_seed() -> dict:
+    return {
+        "source": "offhours_pack_rehearsal_20260816T0905",
+        "stamp": "20260816T0905",
+        "ken_required": False,
+        "next_action": "monday_pack_open_on_bullish_bar",
+        "detail": {
+            "hint": (
+                "Monday RTH: OPEN 1-lot $1-wide bu_4 on KO if NEW daily bar is "
+                "bullish. Backup bu_6 on PLTR. Do not remake leftover INTC."
+            ),
+            "open_orders": [
+                {
+                    "order_id": "paper_b5b969c4a65f",
+                    "symbol": "INTC",
+                    "decision": "HOLD",
+                    "spot": 102.54,
+                    "mtm_usd": 26.78,
+                    "dual_pt_ready": False,
+                }
+            ],
+            "pack": {
+                "KO": "pcs_bull_only:neutral iv90 — OPEN iff Monday daily bullish",
+                "PLTR": "pcs_bull_only:neutral iv98",
+                "primary_seat": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4_KO",
+                "backup_seat": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6_PLTR",
+            },
+        },
+    }
+
+
+def test_fic_hunt_is_rich_but_not_pack_door() -> None:
+    fic = _fic_hunt_seed()
+    door = _pack_door_seed()
+    assert not seed_is_thin(fic)
+    assert not seed_has_pack_door(fic)
+    assert seed_has_pack_door(door)
+
+
+def test_merge_prefers_pack_door_over_stale_fic_hunt() -> None:
+    merged = merge_preserved_seed(_fic_hunt_seed(), rich=_pack_door_seed())
+    assert seed_has_pack_door(merged)
+    assert merged["next_action"] == "monday_pack_open_on_bullish_bar"
+    assert "OPEN 1-lot" in merged["detail"]["hint"]
+    assert merged["detail"]["pack"]["primary_seat"].endswith("pcs_bu_4_KO")
+
+
+def test_stale_fic_living_does_not_clobber_pack_sidecar(tmp_path: Path) -> None:
+    seed_path = tmp_path / "NEXT_SEED.json"
+    sidecar_path = tmp_path / "rich.json"
+    seed_path.write_text(json.dumps(_fic_hunt_seed()), encoding="utf-8")
+    sidecar_path.write_text(json.dumps(_pack_door_seed()), encoding="utf-8")
+    result = apply_preserve(
+        seed_path=seed_path,
+        marks_path=tmp_path / "missing.json",
+        sidecar_path=sidecar_path,
+    )
+    assert result["action"] == "restored_pack_door"
+    living = json.loads(seed_path.read_text(encoding="utf-8"))
+    sidecar = json.loads(sidecar_path.read_text(encoding="utf-8"))
+    assert seed_has_pack_door(living)
+    assert seed_has_pack_door(sidecar)
+    assert living["next_action"] == "monday_pack_open_on_bullish_bar"
+
+
+def test_campaign_thin_restores_pack_door_sidecar(tmp_path: Path) -> None:
+    seed_path = tmp_path / "NEXT_SEED.json"
+    sidecar_path = tmp_path / "rich.json"
+    seed_path.write_text(json.dumps(_campaign_seed()), encoding="utf-8")
+    sidecar_path.write_text(json.dumps(_pack_door_seed()), encoding="utf-8")
+    result = apply_preserve(
+        seed_path=seed_path,
+        marks_path=tmp_path / "missing.json",
+        sidecar_path=sidecar_path,
+    )
+    assert result["action"] == "restored"
+    living = json.loads(seed_path.read_text(encoding="utf-8"))
+    assert seed_has_pack_door(living)
+    assert living["next_action"] == "monday_pack_open_on_bullish_bar"
+    assert "OPEN 1-lot" in living["detail"]["hint"]

@@ -32,6 +32,22 @@ ORDER_MARK_KEYS = (
     "short_call_delta",
 )
 DETAIL_HUNT_KEYS = ("f_ic", "pack", "closed_this_session", "hunt")
+PACK_DOOR_ACTIONS = {"monday_pack_open_on_bullish_bar"}
+
+
+def seed_has_pack_door(seed: dict[str, Any] | None) -> bool:
+    """True when residue names the first-live bu_4/bu_6 consume seats."""
+    if not isinstance(seed, dict):
+        return False
+    if str(seed.get("next_action") or "") in PACK_DOOR_ACTIONS:
+        return True
+    if str(seed.get("source") or "").startswith("offhours_pack"):
+        return True
+    detail_raw = seed.get("detail")
+    detail = detail_raw if isinstance(detail_raw, dict) else {}
+    pack_raw = detail.get("pack")
+    pack = pack_raw if isinstance(pack_raw, dict) else {}
+    return bool(pack.get("primary_seat") or pack.get("backup_seat"))
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -112,16 +128,35 @@ def merge_preserved_seed(
     if merged_orders:
         detail["open_orders"] = merged_orders
     for key in DETAIL_HUNT_KEYS:
-        if key in rich_detail and rich_detail.get(key) not in (None, {}, []):
-            if key not in detail or detail.get(key) in (None, {}, []):
-                detail[key] = rich_detail[key]
+        rich_val = rich_detail.get(key)
+        if rich_val in (None, {}, []):
+            continue
+        living_val = detail.get(key)
+        if living_val in (None, {}, []):
+            detail[key] = rich_val
+            continue
+        if key == "pack" and seed_has_pack_door({"detail": {"pack": rich_val}}) and not seed_has_pack_door(
+            {"detail": {"pack": living_val}}
+        ):
+            detail[key] = rich_val
     hint = str(camp_detail.get("hint") or "")
     rich_hint = str(rich_detail.get("hint") or "")
-    if rich_hint and (not hint or hint.startswith("RTH: mark/manage paper")):
+    if rich_hint and (
+        not hint
+        or hint.startswith("RTH: mark/manage paper")
+        or (seed_has_pack_door(rich) and not seed_has_pack_door(camp))
+    ):
         detail["hint"] = rich_hint
 
     out = dict(camp)
     out["detail"] = detail
+    if seed_has_pack_door(rich) and not seed_has_pack_door(camp):
+        if rich.get("next_action"):
+            out["next_action"] = rich["next_action"]
+        if str(rich.get("source") or "").startswith("offhours_pack"):
+            out["source"] = rich["source"]
+            if rich.get("stamp"):
+                out["stamp"] = rich["stamp"]
     restored = bool(merged_orders) and not all(order_is_thin(o) for o in merged_orders)
     if restored:
         src = str(rich.get("source") or "")
@@ -148,6 +183,17 @@ def apply_preserve(
     now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
     if seed and not seed_is_thin(seed):
+        if seed_has_pack_door(sidecar) and not seed_has_pack_door(seed):
+            merged = merge_preserved_seed(seed, rich=sidecar, marks=marks)
+            seed_path.parent.mkdir(parents=True, exist_ok=True)
+            seed_path.write_text(json.dumps(merged, indent=2) + "\n", encoding="utf-8")
+            return {
+                "action": "restored_pack_door",
+                "thin": False,
+                "seed_path": str(seed_path),
+                "sidecar_path": str(sidecar_path),
+                "source": merged.get("source"),
+            }
         sidecar_path.parent.mkdir(parents=True, exist_ok=True)
         payload = dict(seed)
         payload["sidecar_saved_at"] = now

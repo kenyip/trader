@@ -1,3 +1,5 @@
+| 2026-08-16T1000 | offhours | Preserve pack-door over stale F IC sidecar; NEXT_SEED monday_pack_open bu_4 KO / bu_6 PLTR | monday_pack_open_on_bullish_bar |
+- `2026-08-16T1000-offhours.md` — campaign can no longer restore leftover F IC hunt over the door
 | 2026-08-16T0905 | offhours | Pack consume rehearsal: MULTI nqp=4 bu_4/bu_6 hold; watch pack-first NO_SETUP (PLTR/KO neutral); IV already 90/98; Monday OPEN = bullish daily | monday_pack_open_on_bullish_bar |
 - `2026-08-16T0905-offhours.md` — Sunday bu_4/bu_6 consume rehearsal; do not remake INTC / hunt SNAP
 | 2026-08-14T2210 | offhours | F IC 39f dual-cost train fail F/SMCI/KO/SOFI/PFE (n_train_pass=0); L0 peer_pass ≠ pack-grade seats | manage_open_paper_campaign |
