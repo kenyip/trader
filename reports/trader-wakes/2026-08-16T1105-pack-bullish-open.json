@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-08-16T18:06:34+00:00",
+  "live_authority": false,
+  "trading_authority": false,
+  "honesty": "Synthetic Monday bullish KO bar for watch only. pick_structure_entry uses cached Friday last bar. dry_run \u2014 no paper place, no ARM.",
+  "watch": {
+    "status": "PAPER_PACKET_READY",
+    "reason": "Watchable living seat and regime/structure filters aligned on latest bar.",
+    "seat_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4_INTC",
+    "candidate_id": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4",
+    "symbol": "KO",
+    "regime": "bullish",
+    "selected_structure": "put_credit_spread",
+    "is_pack_grade": true,
+    "door_match": true
+  },
+  "handoff": {
+    "status": "PAPER_INTENT_READY",
+    "reason": "intent built and risk-allowed; dry-run (no paper ledger mutate)",
+    "paper_action": "dry_run_only"
+  },
+  "intent": {
+    "ok": true,
+    "reason": "ok",
+    "max_loss_usd": 89.7045063920146,
+    "net_credit": 0.10295493607985406,
+    "structure": "put_credit_spread",
+    "meta": {
+      "expiration": "2026-08-28",
+      "net_credit": 0.10295493607985406,
+      "max_loss_usd": 89.7045063920146,
+      "seat_status": "paper_eligible"
+    }
+  },
+  "cached_ko_pick": {
+    "ok": true,
+    "spot": 87.70999908447266,
+    "date": "2026-08-14",
+    "regime": "neutral",
+    "iv_rank": 90.07936507936508,
+    "short_strike": 84.0,
+    "long_strike": 83.0,
+    "width": 1.0,
+    "net_credit": 0.20170514574925136,
+    "max_loss_usd": 79.82948542507486,
+    "dte": 21,
+    "expiration": "2026-09-04"
+  },
+  "monday_rule": "If live watch is PAPER_PACKET_READY on bu_4_KO, Monday agent may just trader-paper-handoff --execute-paper (paper ledger only). Cron must not --execute-paper. Never ARM."
+}

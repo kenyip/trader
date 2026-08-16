@@ -178,6 +178,55 @@ class WatcherPackGradePreferenceTest(unittest.TestCase):
             self.assertNotEqual(result.symbol, "IWM")
             self.assertNotIn("IWM", result.reason or "")
 
+    def test_blocked_intc_bullish_ko_selects_bu4_door(self):
+        """Monday consume: leftover INTC blocked, bullish KO must OPEN bu_4 not leftover."""
+        with tempfile.TemporaryDirectory() as tmp:
+            reg_path = Path(tmp) / "reg.json"
+            multi = _write_multi(
+                Path(tmp) / "multi.json",
+                [
+                    {"candidate_id": BU4, "f2_symbols": ["INTC", "KO"], "quality_pass": True},
+                    {"candidate_id": BU6, "f2_symbols": ["INTC", "PLTR"], "quality_pass": True},
+                ],
+            )
+            reg = LivingRegistry()
+            for cid, sym in ((BU4, "INTC"), (BU4, "KO"), (BU6, "INTC"), (BU6, "PLTR")):
+                seat = _seat(f"{cid}_{sym}", cid, sym, "paper_eligible")
+                seat.router_policy = "pcs_bull_only"
+                reg.upsert(seat)
+            save_living_registry(reg, reg_path)
+
+            def fake_bar(symbol: str, period: str = "3mo"):
+                if str(symbol).upper() == "KO":
+                    row = pd.Series(
+                        {"close": 87.71, "iv_proxy": 0.4, "iv_rank": 90.08, "regime": "bullish"}
+                    )
+                else:
+                    row = pd.Series(
+                        {"close": 174.04, "iv_proxy": 0.4, "iv_rank": 98.41, "regime": "neutral"}
+                    )
+                return row, pd.Timestamp("2026-08-17")
+
+            with patch(
+                "trader_platform.research.opportunity_watcher._latest_bar",
+                side_effect=fake_bar,
+            ), patch(
+                "trader_platform.research.pack_grade.load_quality_pass_cells",
+                return_value=load_quality_pass_cells(multi),
+            ), patch(
+                "trader_platform.research.opportunity_watcher.working_paper_symbols",
+                return_value={"INTC"},
+            ), patch(
+                "trader_platform.research.opportunity_watcher.hunt_symbols",
+                return_value=["KO", "PLTR", "INTC"],
+            ):
+                result = watch_once(registry_path=reg_path)
+            self.assertEqual(result.status, "PAPER_PACKET_READY")
+            self.assertEqual(result.candidate_id, BU4)
+            self.assertEqual(result.symbol, "KO")
+            self.assertEqual(result.selected_structure, "put_credit_spread")
+            self.assertNotIn(ROUTER, "".join(result.seats_considered))
+
     def test_sort_key_near_miss_not_tier_zero(self):
         idx = quality_pass_index(
             [{"candidate_id": BU4, "f2_symbols": ["INTC", "KO"]}]

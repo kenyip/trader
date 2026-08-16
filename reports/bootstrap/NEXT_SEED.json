@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "Monday RTH: OPEN 1-lot $1-wide bu_4 on KO if NEW daily bar is bullish (Fri close 87.71 iv_rank 90.08 already >=15, regime=neutral). Backup: bu_6 on PLTR (174.04 iv 98.41, 0/15 recent bullish). Neutral/bear = stand-aside PASS. HOLD leftover INTC until dual PT — do not remake as pack. Do not pack-OPEN F IC or SNAP CSP.",
+    "hint": "Monday RTH: if new KO daily is bullish, run just trader-paper-handoff --execute-paper (paper ledger only) on bu_4. Synthetic Sunday prove: PAPER_PACKET_READY + PAPER_INTENT_READY. Cached pick KO 84/83 $1-wide credit 0.20 ml 79.83 DTE21. Backup PLTR bu_6 if KO still neutral. HOLD leftover INTC — do not remake. Cron must not --execute-paper. Never ARM / SNAP CSP / F IC pack-OPEN.",
     "open_orders": [
       {
         "max_loss_usd": 188.72125668506322,
@@ -18,20 +18,24 @@
       }
     ],
     "pack": {
-      "KO": "pcs_bull_only:neutral iv90 — OPEN iff Monday daily bullish",
-      "PLTR": "pcs_bull_only:neutral iv98 — backup OPEN iff Monday daily bullish",
+      "KO": "pcs_bull_only OPEN iff Monday daily bullish — Sunday synthetic READY",
+      "PLTR": "backup bu_6 if KO still neutral",
       "INTC": "blocked working leftover — do not remake",
-      "watch": "NO_SETUP",
+      "watch": "PAPER_PACKET_READY on synthetic bullish KO",
       "primary_seat": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4_KO",
-      "backup_seat": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6_PLTR"
-    },
-    "rehearsal": {
-      "stamp": "20260816T1000",
-      "preserve": "pack_door_sidecar",
-      "book": "1/2 open INTC leftover; campaign MAX_CONCURRENT=2 so 1 slot left; pack handoff owns new opens"
+      "backup_seat": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6_PLTR",
+      "cached_pick": {
+        "symbol": "KO",
+        "short": 84.0,
+        "long": 83.0,
+        "width": 1.0,
+        "net_credit": 0.2017,
+        "max_loss_usd": 79.83,
+        "dte": 21
+      }
     }
   },
-  "generated_at": "2026-08-16T17:02:00+00:00",
+  "generated_at": "2026-08-16T18:10:00+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -41,7 +45,7 @@
   "live_authority": false,
   "next_action": "monday_pack_open_on_bullish_bar",
   "paper_campaign_execute": true,
-  "source": "offhours_pack_rehearsal_20260816T1000",
-  "stamp": "20260816T1000",
+  "source": "offhours_pack_rehearsal_20260816T1105",
+  "stamp": "20260816T1105",
   "trading_authority": false
 }

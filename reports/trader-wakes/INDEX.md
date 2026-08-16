@@ -1,3 +1,5 @@
+| 2026-08-16T1105 | offhours | Synthetic bullish KO → bu_4 PAPER_PACKET_READY + dry INTENT; cached 84/83 ml $79.83 | monday_pack_open_on_bullish_bar |
+- `2026-08-16T1105-offhours.md` — OPEN-side consume prove; Monday may paper-handoff --execute-paper
 | 2026-08-16T1000 | offhours | Preserve pack-door over stale F IC sidecar; NEXT_SEED monday_pack_open bu_4 KO / bu_6 PLTR | monday_pack_open_on_bullish_bar |
 - `2026-08-16T1000-offhours.md` — campaign can no longer restore leftover F IC hunt over the door
 | 2026-08-16T0905 | offhours | Pack consume rehearsal: MULTI nqp=4 bu_4/bu_6 hold; watch pack-first NO_SETUP (PLTR/KO neutral); IV already 90/98; Monday OPEN = bullish daily | monday_pack_open_on_bullish_bar |
