@@ -1,3 +1,5 @@
+| 2026-08-16T1210 | offhours | Door-only consume: AMZN bu_2/bu_7 catalog cannot steal Monday OPEN; execute_paper FIRST_LIVE_DOOR_ONLY | monday_pack_open_on_bullish_bar |
+- `2026-08-16T1210-offhours.md` — nqp=4 census; watcher restricted to bu_4/bu_6
 | 2026-08-16T1105 | offhours | Synthetic bullish KO → bu_4 PAPER_PACKET_READY + dry INTENT; cached 84/83 ml $79.83 | monday_pack_open_on_bullish_bar |
 - `2026-08-16T1105-offhours.md` — OPEN-side consume prove; Monday may paper-handoff --execute-paper
 | 2026-08-16T1000 | offhours | Preserve pack-door over stale F IC sidecar; NEXT_SEED monday_pack_open bu_4 KO / bu_6 PLTR | monday_pack_open_on_bullish_bar |

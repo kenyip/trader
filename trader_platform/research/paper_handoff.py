@@ -17,7 +17,7 @@ import pandas as pd
 from trader_platform.execution.broker_adapter import PaperBroker, get_broker
 from trader_platform.research.living_registry import LivingRegistry, load_living_registry
 from trader_platform.research.opportunity_watcher import WatchResult, watch_once
-from trader_platform.research.pack_grade import is_pack_grade, load_quality_pass_cells
+from trader_platform.research.pack_grade import is_first_live_door, is_pack_grade, load_quality_pass_cells
 from trader_platform.research.pcs_sim import pick_structure_entry
 from trader_platform.research.strategy_spec import StrategySpec, load_strategy_spec
 from trader_platform.risk_governor import OrderIntent, PortfolioSnapshot, RiskGovernor
@@ -250,6 +250,26 @@ def run_paper_handoff(
             generated_at=generated,
         )
         _audit("handoff_not_pack_grade", result.to_dict())
+        return result
+
+    door = is_first_live_door(
+        candidate_id=str(watch.candidate_id or ""),
+        seat_id=str(watch.seat_id or ""),
+        symbol=str(watch.symbol or ""),
+    )
+    if execute_paper and not dry_run and pack_cells and not door:
+        result = PaperHandoffResult(
+            status="FIRST_LIVE_DOOR_ONLY",
+            watch_status=watch.status,
+            reason=(
+                f"execute_paper refused: {watch.candidate_id or watch.seat_id} on "
+                f"{watch.symbol} is pack-grade catalog, not first-live bu_4/KO or bu_6/PLTR."
+            ),
+            packet=watch.packet,
+            paper_action="first_live_door_only",
+            generated_at=generated,
+        )
+        _audit("handoff_not_first_live_door", result.to_dict())
         return result
 
     intent, reason, meta = intent_from_watch(watch, registry=reg, registry_path=registry_path)

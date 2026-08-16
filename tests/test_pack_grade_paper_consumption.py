@@ -24,6 +24,7 @@ from trader_platform.research.promote_paper import promote_pack_grade_to_paper
 
 BU4 = "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4"
 BU6 = "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6"
+BU2 = "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt30_dl18_iv35_c8_w1_pcs_bu_2"
 NEAR = "PCS_IV_RICH_NONCOLLAPSE_21D_PT50_V1__dn_d14_pt60_dl14_iv30_c10_w1_pcs_bu_4"
 ROUTER = "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d14_pt30_dl14_iv40_c10_w1_router_2"
 
@@ -227,6 +228,62 @@ class WatcherPackGradePreferenceTest(unittest.TestCase):
             self.assertEqual(result.selected_structure, "put_credit_spread")
             self.assertNotIn(ROUTER, "".join(result.seats_considered))
 
+    def test_bullish_amzn_catalog_does_not_steal_door(self):
+        """MULTI bu_2 AMZN is pack-grade catalog — not Monday consume if door is flat."""
+        with tempfile.TemporaryDirectory() as tmp:
+            reg_path = Path(tmp) / "reg.json"
+            multi = _write_multi(
+                Path(tmp) / "multi.json",
+                [
+                    {"candidate_id": BU2, "f2_symbols": ["AMZN", "INTC"], "quality_pass": True},
+                    {"candidate_id": BU4, "f2_symbols": ["INTC", "KO"], "quality_pass": True},
+                    {"candidate_id": BU6, "f2_symbols": ["INTC", "PLTR"], "quality_pass": True},
+                ],
+            )
+            reg = LivingRegistry()
+            for cid, sym in (
+                (BU2, "AMZN"),
+                (BU2, "INTC"),
+                (BU4, "INTC"),
+                (BU4, "KO"),
+                (BU6, "INTC"),
+                (BU6, "PLTR"),
+            ):
+                seat = _seat(f"{cid}_{sym}", cid, sym, "paper_eligible")
+                seat.router_policy = "pcs_bull_only"
+                reg.upsert(seat)
+            save_living_registry(reg, reg_path)
+
+            def fake_bar(symbol: str, period: str = "3mo"):
+                if str(symbol).upper() == "AMZN":
+                    row = pd.Series(
+                        {"close": 180.0, "iv_proxy": 0.4, "iv_rank": 70.0, "regime": "bullish"}
+                    )
+                else:
+                    row = pd.Series(
+                        {"close": 87.71, "iv_proxy": 0.4, "iv_rank": 90.08, "regime": "bearish"}
+                    )
+                return row, pd.Timestamp("2026-08-17")
+
+            with patch(
+                "trader_platform.research.opportunity_watcher._latest_bar",
+                side_effect=fake_bar,
+            ), patch(
+                "trader_platform.research.pack_grade.load_quality_pass_cells",
+                return_value=load_quality_pass_cells(multi),
+            ), patch(
+                "trader_platform.research.opportunity_watcher.working_paper_symbols",
+                return_value={"INTC"},
+            ), patch(
+                "trader_platform.research.opportunity_watcher.hunt_symbols",
+                return_value=["AMZN", "KO", "PLTR", "INTC"],
+            ):
+                result = watch_once(registry_path=reg_path)
+            self.assertEqual(result.status, "NO_SETUP")
+            self.assertNotEqual(result.symbol, "AMZN")
+            self.assertNotEqual(result.candidate_id, BU2)
+            self.assertTrue(all(BU2 not in sid for sid in result.seats_considered))
+
     def test_sort_key_near_miss_not_tier_zero(self):
         idx = quality_pass_index(
             [{"candidate_id": BU4, "f2_symbols": ["INTC", "KO"]}]
@@ -269,6 +326,28 @@ class HandoffPackGradeGateTest(unittest.TestCase):
         ):
             result = run_paper_handoff(watch=watch)
         self.assertEqual(result.status, "NO_QUALIFIED_STRATEGY")
+
+    def test_execute_paper_refuses_catalog_amzn_pack(self):
+        cells = [
+            {"candidate_id": BU2, "f2_symbols": ["AMZN", "INTC"], "quality_pass": True},
+            {"candidate_id": BU4, "f2_symbols": ["INTC", "KO"], "quality_pass": True},
+        ]
+        watch = WatchResult(
+            status="PAPER_PACKET_READY",
+            generated_at="2026-08-16T00:00:00+00:00",
+            seat_id=f"{BU2}_AMZN",
+            candidate_id=BU2,
+            symbol="AMZN",
+            selected_structure="put_credit_spread",
+            packet={},
+        )
+        with patch(
+            "trader_platform.research.paper_handoff.load_quality_pass_cells",
+            return_value=cells,
+        ):
+            result = run_paper_handoff(watch=watch, execute_paper=True, dry_run=False)
+        self.assertEqual(result.status, "FIRST_LIVE_DOOR_ONLY")
+        self.assertEqual(result.paper_action, "first_live_door_only")
 
 
 class PromotePackGradeTest(unittest.TestCase):

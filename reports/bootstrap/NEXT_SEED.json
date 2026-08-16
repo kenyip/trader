@@ -1,6 +1,6 @@
 {
   "detail": {
-    "hint": "Monday RTH: if new KO daily is bullish, run just trader-paper-handoff --execute-paper (paper ledger only) on bu_4. Synthetic Sunday prove: PAPER_PACKET_READY + PAPER_INTENT_READY. Cached pick KO 84/83 $1-wide credit 0.20 ml 79.83 DTE21. Backup PLTR bu_6 if KO still neutral. HOLD leftover INTC — do not remake. Cron must not --execute-paper. Never ARM / SNAP CSP / F IC pack-OPEN.",
+    "hint": "Monday RTH: if new KO daily is bullish, run just trader-paper-handoff --execute-paper (paper ledger only) on bu_4. Backup PLTR bu_6. Neutral/bear = stand-aside PASS even if AMZN bu_2/bu_7 is bullish (catalog, not door). HOLD leftover INTC — do not remake. Cron must not --execute-paper. Never ARM / SNAP CSP / F IC pack-OPEN.",
     "open_orders": [
       {
         "max_loss_usd": 188.72125668506322,
@@ -14,13 +14,17 @@
         "mtm_usd": 26.77874331493677,
         "mtm_adverse_usd": 5.778743314936774,
         "pt_usd": 18.383623,
-        "dual_pt_ready": false
+        "dual_pt_ready": false,
+        "put_otm": 15.040000000000006,
+        "call_otm": 19.959999999999994,
+        "short_put_delta": -0.0891415,
+        "short_call_delta": 0.1053865
       }
     ],
     "pack": {
-      "KO": "pcs_bull_only OPEN iff Monday daily bullish — Sunday synthetic READY",
+      "KO": "pcs_bull_only OPEN iff Monday daily bullish \u2014 Sunday synthetic READY",
       "PLTR": "backup bu_6 if KO still neutral",
-      "INTC": "blocked working leftover — do not remake",
+      "INTC": "blocked working leftover \u2014 do not remake",
       "watch": "PAPER_PACKET_READY on synthetic bullish KO",
       "primary_seat": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4_KO",
       "backup_seat": "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6_PLTR",
@@ -35,7 +39,7 @@
       }
     }
   },
-  "generated_at": "2026-08-16T18:10:00+00:00",
+  "generated_at": "2026-08-16T19:08:12+00:00",
   "ken_only_for": [
     "gateway_up",
     "LIVE_PACKET_arm",
@@ -45,7 +49,8 @@
   "live_authority": false,
   "next_action": "monday_pack_open_on_bullish_bar",
   "paper_campaign_execute": true,
-  "source": "offhours_pack_rehearsal_20260816T1105",
-  "stamp": "20260816T1105",
-  "trading_authority": false
+  "source": "offhours_pack_rehearsal_20260816T1210",
+  "stamp": "20260816T1210",
+  "trading_authority": false,
+  "preserved_from": "trader_preserve_rth_next_seed"
 }

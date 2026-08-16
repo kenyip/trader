@@ -73,6 +73,51 @@ def seat_stem(seat_id: str, candidate_id: str = "") -> str:
     return sid
 
 
+# Ken 2026-08-15 first-live door. Other MULTI quality_pass cells (AMZN bu_2/bu_7)
+# stay catalog/EDGE — they are not Monday consume / ARM DNA.
+FIRST_LIVE_PRIMARY_STEM = (
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4"
+)
+FIRST_LIVE_BACKUP_STEM = (
+    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6"
+)
+FIRST_LIVE_PRIMARY_SYMBOL = "KO"
+FIRST_LIVE_BACKUP_SYMBOL = "PLTR"
+DOOR_STEMS = (FIRST_LIVE_PRIMARY_STEM, FIRST_LIVE_BACKUP_STEM)
+DOOR_NAMES = {
+    FIRST_LIVE_PRIMARY_STEM: "bu_4",
+    FIRST_LIVE_BACKUP_STEM: "bu_6",
+}
+DOOR_SYMBOLS = {
+    FIRST_LIVE_PRIMARY_STEM: FIRST_LIVE_PRIMARY_SYMBOL,
+    FIRST_LIVE_BACKUP_STEM: FIRST_LIVE_BACKUP_SYMBOL,
+}
+
+
+def first_live_door_rank(*, candidate_id: str = "", seat_id: str = "", symbol: str = "") -> int:
+    """0 = bu_4 KO, 1 = bu_6 PLTR, 2 = other pack/door-stem leftover, 3 = not door."""
+    stem = str(candidate_id or seat_stem(seat_id) or "").strip()
+    sym = str(symbol or "").upper()
+    if not sym and "_" in str(seat_id):
+        tail = str(seat_id).rsplit("_", 1)[-1].upper()
+        if tail.isalpha() and 1 <= len(tail) <= 5:
+            sym = tail
+    if stem == FIRST_LIVE_PRIMARY_STEM and (not sym or sym == FIRST_LIVE_PRIMARY_SYMBOL):
+        return 0
+    if stem == FIRST_LIVE_BACKUP_STEM and (not sym or sym == FIRST_LIVE_BACKUP_SYMBOL):
+        return 1
+    if stem in DOOR_STEMS:
+        return 2
+    return 3
+
+
+def is_first_live_door(*, candidate_id: str = "", seat_id: str = "", symbol: str = "") -> bool:
+    """True only for 1-lot $1-wide pcs_bu_4/KO or pcs_bu_6/PLTR."""
+    return first_live_door_rank(
+        candidate_id=candidate_id, seat_id=seat_id, symbol=symbol
+    ) < 2
+
+
 def is_pack_grade(
     *,
     candidate_id: str = "",
@@ -97,8 +142,8 @@ def is_pack_grade(
     return sym in idx[stem]
 
 
-def watch_sort_key(seat: Any, index: Mapping[str, set[str]] | None = None) -> tuple[int, str]:
-    """0 = pack-grade, 1 = paper_eligible, 2 = other watchable; then seat_id."""
+def watch_sort_key(seat: Any, index: Mapping[str, set[str]] | None = None) -> tuple[int, int, str]:
+    """0 = pack-grade, 1 = paper_eligible, 2 = other; door stems before other pack."""
     idx = index if index is not None else quality_pass_index()
     symbols = list(getattr(seat, "symbols", None) or [])
     cid = str(getattr(seat, "candidate_id", "") or "")
@@ -118,4 +163,5 @@ def watch_sort_key(seat: Any, index: Mapping[str, set[str]] | None = None) -> tu
         tier = 1
     else:
         tier = 2
-    return (tier, sid)
+    door = first_live_door_rank(candidate_id=cid, seat_id=sid)
+    return (tier, door, sid)

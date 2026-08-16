@@ -22,8 +22,10 @@ from trader_platform.research.living_registry import (
     load_living_registry,
 )
 from trader_platform.research.pack_grade import (
+    DOOR_STEMS,
     is_pack_grade,
     quality_pass_index,
+    seat_stem,
     watch_sort_key,
 )
 from trader_platform.research.opportunity import (
@@ -285,6 +287,13 @@ def watch_once(
         if pack_index
         else []
     )
+    door_only = [
+        s
+        for s in pack_only
+        if seat_stem(s.seat_id, s.candidate_id) in DOOR_STEMS
+    ]
+    if door_only:
+        pack_only = door_only
     others = [s for s in watchable if s not in pack_only]
     if pack_only:
         ordered = sorted(pack_only, key=lambda s: watch_sort_key(s, pack_index))

@@ -22,6 +22,8 @@ from trader_platform.research.opportunity_watcher import (
     working_paper_symbols,
 )
 from trader_platform.research.pack_grade import (
+    DOOR_NAMES,
+    DOOR_STEMS,
     is_pack_grade,
     load_quality_pass_cells,
     quality_pass_index,
@@ -34,15 +36,6 @@ try:
     from data import build as build_market_frame
 except Exception:  # pragma: no cover
     build_market_frame = None  # type: ignore[assignment]
-
-DOOR_STEMS = (
-    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d12_pt40_dl14_iv15_c8_w1_pcs_bu_4",
-    "PCS_BULL_NEUTRAL_INCOME_45D_PT50_V1__dn_d5_pt40_dl18_iv15_c6_w1_pcs_bu_6",
-)
-DOOR_NAMES = {
-    DOOR_STEMS[0]: "bu_4",
-    DOOR_STEMS[1]: "bu_6",
-}
 
 
 def _bars(symbol: str, n: int = 15) -> list[dict]:
