@@ -72,7 +72,7 @@ def main() -> int:
     # Risk governor
     gov = RiskGovernor()
     ok = gov.check(
-        OrderIntent(symbol="TSLA", side="sell", qty=1, order_type="limit", limit_price=1.5)
+        OrderIntent(symbol="TSLA", side="sell", qty=1, order_type="limit", limit_price=0.80)
     )
     assert ok.allowed, ok.reasons
 
@@ -244,7 +244,7 @@ def main() -> int:
             OrderIntent(symbol="TSLA", side="sell", qty=1, order_type="limit", limit_price=1.0)
         )
         assert place.ok
-        # live place still blocked
+        # live place still blocked without mcp_call
         rh_live = RobinhoodMcpBroker(
             connected=True, mode="agentic_live", agentic_enabled=True, snapshot_path=snap_path
         )

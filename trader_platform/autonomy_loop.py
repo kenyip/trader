@@ -84,7 +84,7 @@ def scan_proposals_stub(
                     side="sell",
                     qty=1,
                     order_type="limit",
-                    limit_price=1.50,
+                    limit_price=0.80,
                     strategy_id=h.id,
                     multiplier=100.0,
                     tag=f"m0_stub:{event}",
@@ -238,11 +238,18 @@ def run_tick(
             "audit_path": str(_AUDIT),
         }
 
+    mcp_call = None
+    if mode == Mode.AGENTIC_LIVE and agentic_enabled and rh_connected:
+        from trader_platform.execution.rh_mcp_client import call_tool as rh_mcp_call_tool
+
+        mcp_call = rh_mcp_call_tool
+
     broker = get_broker(
         mode.value,
         rh_connected=rh_connected,
         agentic_enabled=agentic_enabled,
         account_number=account_number,
+        mcp_call=mcp_call,
     )
 
     if portfolio is None:

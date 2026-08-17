@@ -1,23 +1,23 @@
-# Conservative defaults for isolated Agentic sleeve ($3000 planning capital).
-# Tuned via recommend_risk_limits(3000). Never paste secrets into chat.
+# Conservative defaults for isolated Agentic sleeve ($1000 live 1-lot ceiling).
+# Ken ARM 2026-08-17; enable only after this wire is tested. Never paste secrets.
 
 agentic:
-  enabled: false  # soft kill; must be true for agentic_live
+  enabled: false  # Ken ARM 2026-08-17; enable only after this wire is tested
 
 # Kill switch file (repo-relative or absolute). Presence => deny all mutating orders.
 kill_switch_file: agentic_kill.switch
 
 order:
   allow_market: false
-  max_notional_per_order: 300.0   # ~10% of $3k sleeve
-  max_contracts_per_order: 1      # 1-lot default on $3k; bump only with evidence
+  max_notional_per_order: 100.0   # $100 live 1-lot ceiling (10% of $1k)
+  max_contracts_per_order: 1      # 1-lot only
   allowed_sides: [buy, sell]
   allowed_order_types: [limit]  # market denied by default
 
 portfolio:
-  max_open_risk: 750.0           # ~25% of $3k (note: cash CSP collateral may exceed this)
-  max_open_orders: 3
-  max_daily_loss: 300.0          # ~10% of $3k
+  max_open_risk: 250.0           # 25% of $1k
+  max_open_orders: 1
+  max_daily_loss: 100.0          # 10% of $1k
 
 # Empty allowlist = all strategies allowed at risk layer (promotion still gates live status).
 # Prefer explicit IDs once a live set is armed.
@@ -36,6 +36,6 @@ instrument_allowlist: []
 # names when max loss is undefined. Prefer attaching max_loss_usd on intents.
 capital_fit:
   enabled: true
-  sleeve_usd: 3000
+  sleeve_usd: 1000
   reject_undefined_risk_on_levered: true
   levered_underlyings: [TSLL]

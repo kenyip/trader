@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import uuid
 from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass, field
@@ -10,11 +11,17 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
+_OPTION_UUID_RE = re.compile(
+    r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+)
+_AGENTIC_LAST4 = "8507"
+
 from trader_platform.risk_governor import OrderIntent, PortfolioSnapshot
 from trader_platform.rh_snapshot import (
     DEFAULT_SNAPSHOT_PATH,
     AccountView,
     RhSnapshot,
+    mask_account,
     try_load_snapshot,
 )
 
@@ -430,7 +437,7 @@ class RhMcpReadAdapter:
 
     1. autonomy_loop --mode shadow | --dry-review → build RhReviewPayload, audit JSON
     2. trader Hermes session → call MCP tool named in payload.tool with payload.args
-    3. place_* only after agentic_live + agentic.enabled + rh_connected (still NotImplemented)
+    3. place_* only after agentic_live + agentic.enabled + rh_connected + mcp_call
 
     Optional `mcp_call` injects a callable(tool_name, args) -> Any for tests.
     """
@@ -522,12 +529,172 @@ class RhMcpReadAdapter:
         return out
 
 
-class RobinhoodMcpBroker(BrokerAdapter):
-    """RH MCP broker: review payloads + fail-closed place until agentic_live armed.
+def _num_str(value: Any) -> str:
+    f = float(value)
+    if f != f or f <= 0 or f == float("inf"):
+        raise ValueError("numeric MCP field must be positive")
+    text = f"{f:.6f}".rstrip("0").rstrip(".")
+    return text or "0"
 
-    Stage2 read-only: local snapshot file (see platform/rh_snapshot.py) and
-    RhMcpReadAdapter review_* payloads. Place path requires mode=agentic_live
-    AND connected AND agentic_enabled — still NotImplemented for real place_*.
+
+def _refuse_live_intent(intent: OrderIntent) -> Optional[str]:
+    otype = (intent.order_type or "").lower()
+    if otype != "limit":
+        return "only limit orders allowed"
+    if intent.limit_price is None:
+        return "limit order requires limit_price"
+    try:
+        if float(intent.limit_price) <= 0:
+            return "limit_price must be positive"
+    except (TypeError, ValueError):
+        return "limit_price must be positive"
+    try:
+        qty = float(intent.qty)
+    except (TypeError, ValueError):
+        return "qty must be 1"
+    if abs(qty - 1.0) > 1e-9:
+        return "qty must be 1"
+    return None
+
+
+def _mcp_order_args(
+    intent: OrderIntent, *, account: str, legs: list[dict[str, Any]]
+) -> dict[str, Any]:
+    args: dict[str, Any] = {
+        "account_number": account,
+        "legs": legs,
+        "quantity": "1",
+        "type": "limit",
+        "price": _num_str(intent.limit_price),
+        "time_in_force": "gfd",
+    }
+    if len(legs) >= 2:
+        if getattr(intent, "net_credit", None) is not None and float(intent.net_credit) > 0:
+            args["direction"] = "credit"
+        else:
+            sells = sum(1 for leg in legs if str(leg.get("side") or "").lower() == "sell")
+            buys = sum(1 for leg in legs if str(leg.get("side") or "").lower() == "buy")
+            args["direction"] = "credit" if sells >= buys else "debit"
+    return args
+
+
+def _mcp_hard_reject(result: Any) -> bool:
+    if result is None:
+        return True
+    if isinstance(result, str):
+        low = result.lower()
+        return any(token in low for token in ("error", "reject", "denied", "fail"))
+    if not isinstance(result, dict):
+        return False
+    if result.get("error") or result.get("isError") or result.get("is_error"):
+        return True
+    if result.get("rejected") is True:
+        return True
+    if result.get("ok") is False:
+        return True
+    state = str(result.get("state") or result.get("status") or "").lower()
+    if state in {"rejected", "failed", "error", "denied"}:
+        return True
+    data = result.get("data")
+    if isinstance(data, dict):
+        if data.get("error") or data.get("rejected") or data.get("ok") is False:
+            return True
+    return False
+
+
+def _safe_mcp_payload(obj: Any) -> Any:
+    if isinstance(obj, dict):
+        out: dict[str, Any] = {}
+        for key, value in obj.items():
+            low = str(key).lower()
+            compact = low.replace("_", "")
+            if "token" in low or "secret" in low or "authorization" in low:
+                out[key] = "[redacted]"
+            elif "accountnumber" in compact or low in {"account_number", "accountnumber"}:
+                out[key] = mask_account(str(value) if value is not None else "")
+            else:
+                out[key] = _safe_mcp_payload(value)
+        return out
+    if isinstance(obj, list):
+        return [_safe_mcp_payload(item) for item in obj]
+    return obj
+
+
+def _extract_order_id(result: Any) -> str:
+    if not isinstance(result, dict):
+        return ""
+    for key in ("id", "order_id", "orderId"):
+        val = result.get(key)
+        if val:
+            return str(val)
+    for nest in ("order", "data", "result"):
+        inner = result.get(nest)
+        if isinstance(inner, dict):
+            found = _extract_order_id(inner)
+            if found:
+                return found
+    orders = result.get("orders")
+    if isinstance(orders, list) and orders:
+        return _extract_order_id(orders[0])
+    return ""
+
+
+def _iter_instruments(raw: Any) -> list[dict[str, Any]]:
+    if isinstance(raw, list):
+        return [item for item in raw if isinstance(item, dict)]
+    if not isinstance(raw, dict):
+        return []
+    for key in ("results", "instruments", "option_instruments", "data"):
+        val = raw.get(key)
+        if isinstance(val, list):
+            return [item for item in val if isinstance(item, dict)]
+        if isinstance(val, dict):
+            nested = _iter_instruments(val)
+            if nested:
+                return nested
+    if raw.get("id") or raw.get("option_id"):
+        return [raw]
+    return []
+
+
+def _extract_option_id(raw: Any, *, strike: Any, right: str) -> str:
+    items = _iter_instruments(raw)
+    want_right = (right or "put").lower()
+    try:
+        want_strike = float(strike)
+    except (TypeError, ValueError):
+        want_strike = None
+    for item in items:
+        option_id = str(item.get("id") or item.get("option_id") or item.get("instrument_id") or "")
+        if not _OPTION_UUID_RE.match(option_id):
+            continue
+        typ = str(item.get("type") or item.get("option_type") or item.get("right") or "").lower()
+        if typ and typ != want_right:
+            continue
+        if want_strike is not None:
+            raw_strike = item.get("strike_price")
+            if raw_strike is None:
+                raw_strike = item.get("strike")
+            if raw_strike is not None:
+                try:
+                    if abs(float(raw_strike) - want_strike) > 1e-6:
+                        continue
+                except (TypeError, ValueError):
+                    pass
+        return option_id
+    for item in items:
+        option_id = str(item.get("id") or item.get("option_id") or item.get("instrument_id") or "")
+        if _OPTION_UUID_RE.match(option_id):
+            return option_id
+    return ""
+
+
+class RobinhoodMcpBroker(BrokerAdapter):
+    """RH MCP broker: review payloads + fail-closed place unless mcp_call is injected.
+
+    Place/cancel require mode=agentic_live AND connected AND agentic_enabled
+    AND an injected ``mcp_call``. Without mcp_call this still raises
+    LiveOrdersBlocked (smoke + unarmed Hermes). replace_limit stays blocked.
     """
 
     name = "robinhood_mcp"
@@ -545,6 +712,8 @@ class RobinhoodMcpBroker(BrokerAdapter):
         self._connected = connected
         self._mode = mode
         self._agentic_enabled = agentic_enabled
+        self.account_number = account_number
+        self._mcp_call = mcp_call
         self.snapshot_path = Path(snapshot_path) if snapshot_path else DEFAULT_SNAPSHOT_PATH
         self.read = RhMcpReadAdapter(
             connected=connected, account_number=account_number, mcp_call=mcp_call
@@ -590,24 +759,235 @@ class RobinhoodMcpBroker(BrokerAdapter):
             intent, option_symbol=option_symbol, legs=legs
         )
 
+    def _resolve_agentic_account(self) -> str:
+        from trader_platform.execution.rh_mcp_client import resolve_agentic_account_number
+
+        if self.account_number:
+            provided = str(self.account_number).strip()
+            digits = re.sub(r"\D", "", provided)
+            last4 = (digits or provided)[-4:]
+            if last4 != _AGENTIC_LAST4:
+                raise NotConnected(
+                    "refusing non-Agentic last4 — only sleeve ••••8507 is allowed"
+                )
+        return resolve_agentic_account_number(mcp_call=self._mcp_call)
+
     def place_limit(
         self, intent: OrderIntent, *, replace_order_id: Optional[str] = None
     ) -> OrderResult:
         self._guard()
-        raise LiveOrdersBlocked(
-            "live place_limit not implemented — Stage2 wires review_* only; "
-            "place_* requires separate arming task after paper/shadow evidence"
+        if self._mcp_call is None:
+            raise LiveOrdersBlocked(
+                "live place_limit blocked — no mcp_call injected "
+                "(Hermes/cron must pass rh_mcp_client.call_tool when armed)"
+            )
+        if replace_order_id:
+            raise LiveOrdersBlocked(
+                "live replace_limit not implemented this slice (cancel+place later)"
+            )
+        blocked = _refuse_live_intent(intent)
+        if blocked:
+            return OrderResult(ok=False, message=blocked)
+        try:
+            account = self._resolve_agentic_account()
+            legs = self._mcp_legs(intent)
+            place_args = _mcp_order_args(intent, account=account, legs=legs)
+            review_args = dict(place_args)
+            if intent.symbol:
+                review_args["chain_symbol"] = intent.symbol.upper()
+                review_args["underlying_type"] = "equity"
+            try:
+                review = self._mcp_call("review_option_order", review_args)
+            except Exception:  # noqa: BLE001 — never leak raw MCP/account text
+                return OrderResult(ok=False, message="review failed")
+            if _mcp_hard_reject(review):
+                return OrderResult(
+                    ok=False,
+                    message="review rejected",
+                    raw=_safe_mcp_payload(review),
+                )
+            placed = self._mcp_call("place_option_order", place_args)
+            if _mcp_hard_reject(placed):
+                return OrderResult(
+                    ok=False,
+                    message="place rejected",
+                    raw=_safe_mcp_payload(placed),
+                )
+            oid = _extract_order_id(placed) or f"rh_{uuid.uuid4().hex[:12]}"
+            now = _now()
+            order = WorkingOrder(
+                order_id=oid,
+                symbol=(intent.symbol or "").upper(),
+                side=(intent.side or "").lower(),
+                qty=1.0,
+                order_type="limit",
+                limit_price=float(intent.limit_price) if intent.limit_price is not None else None,
+                status="working",
+                strategy_id=intent.strategy_id,
+                created=now,
+                updated=now,
+                tag=intent.tag,
+                structure=str(getattr(intent, "structure", "") or ""),
+                legs=list(place_args["legs"]),
+                max_loss_usd=(
+                    float(intent.max_loss_usd)
+                    if getattr(intent, "max_loss_usd", None) is not None
+                    else None
+                ),
+                short_strike=(
+                    float(intent.short_strike)
+                    if getattr(intent, "short_strike", None) is not None
+                    else None
+                ),
+                expiration=(
+                    str(intent.expiration)
+                    if getattr(intent, "expiration", None) is not None
+                    else None
+                ),
+            )
+            return OrderResult(
+                ok=True,
+                order=order,
+                message="placed",
+                raw=_safe_mcp_payload(placed),
+            )
+        except NotConnected:
+            raise
+        except LiveOrdersBlocked:
+            raise
+        except Exception as exc:  # noqa: BLE001
+            return OrderResult(ok=False, message=f"place failed: {type(exc).__name__}")
+
+    def _mcp_legs(self, intent: OrderIntent) -> list[dict[str, Any]]:
+        raw_legs = list(getattr(intent, "legs", None) or [])
+        if raw_legs:
+            out: list[dict[str, Any]] = []
+            for raw in raw_legs:
+                if not isinstance(raw, dict):
+                    raise ValueError("each intent.leg must be a mapping")
+                option_id = str(raw.get("option_id") or raw.get("id") or "").strip()
+                if not _OPTION_UUID_RE.match(option_id):
+                    option_id = self._resolve_option_id(
+                        symbol=intent.symbol,
+                        expiration=str(
+                            raw.get("expiration") or raw.get("expiration_date") or intent.expiration or ""
+                        ),
+                        strike=raw.get("strike") or raw.get("strike_price") or intent.short_strike,
+                        right=str(
+                            raw.get("right")
+                            or raw.get("type")
+                            or raw.get("option_right")
+                            or intent.option_right
+                            or "put"
+                        ),
+                    )
+                side = str(raw.get("side") or raw.get("action") or intent.side or "").lower()
+                effect = str(raw.get("position_effect") or "open").lower()
+                if side not in ("buy", "sell") or effect not in ("open", "close"):
+                    raise ValueError("leg requires side buy|sell and position_effect open|close")
+                leg: dict[str, Any] = {
+                    "option_id": option_id,
+                    "side": side,
+                    "position_effect": effect,
+                }
+                if raw.get("ratio_quantity") is not None:
+                    leg["ratio_quantity"] = int(raw["ratio_quantity"])
+                elif len(raw_legs) == 1:
+                    leg["ratio_quantity"] = 1
+                out.append(leg)
+            return out
+        expiration = str(getattr(intent, "expiration", None) or "").strip()
+        strike = getattr(intent, "short_strike", None)
+        right = str(getattr(intent, "option_right", None) or "put").lower() or "put"
+        if not expiration or strike is None:
+            raise ValueError(
+                "need intent.legs or CSP fields (expiration + short_strike, option_right=put)"
+            )
+        option_id = self._resolve_option_id(
+            symbol=intent.symbol,
+            expiration=expiration,
+            strike=strike,
+            right=right,
         )
+        return [
+            {
+                "option_id": option_id,
+                "side": (intent.side or "sell").lower(),
+                "position_effect": "open",
+                "ratio_quantity": 1,
+            }
+        ]
+
+    def _resolve_option_id(
+        self,
+        *,
+        symbol: str,
+        expiration: str,
+        strike: Any,
+        right: str,
+    ) -> str:
+        if self._mcp_call is None:
+            raise LiveOrdersBlocked("no mcp_call to resolve option_id")
+        if not symbol or not expiration or strike is None:
+            raise ValueError("get_option_instruments needs symbol, expiration, strike")
+        args: dict[str, Any] = {
+            "symbol": str(symbol).upper(),
+            "expiration_dates": str(expiration),
+            "type": str(right or "put").lower(),
+            "strike_price": _num_str(strike),
+        }
+        raw = self._mcp_call("get_option_instruments", args)
+        option_id = _extract_option_id(raw, strike=strike, right=right)
+        if not option_id:
+            raise ValueError("get_option_instruments returned no matching option_id")
+        return option_id
 
     def replace_limit(
         self, order_id: str, *, qty: Optional[float] = None, limit_price: Optional[float] = None
     ) -> OrderResult:
         self._guard()
-        raise LiveOrdersBlocked("live replace_limit not implemented until place_* wiring")
+        raise LiveOrdersBlocked("live replace_limit not implemented this slice (cancel+place later)")
 
     def cancel(self, order_id: str) -> OrderResult:
         self._guard()
-        raise LiveOrdersBlocked("live cancel not implemented until place_* wiring")
+        if self._mcp_call is None or not order_id:
+            raise LiveOrdersBlocked(
+                "live cancel blocked — no mcp_call injected or missing order_id"
+            )
+        try:
+            account = self._resolve_agentic_account()
+            result = self._mcp_call(
+                "cancel_option_order",
+                {"account_number": account, "order_id": str(order_id)},
+            )
+        except NotConnected:
+            raise
+        except Exception:  # noqa: BLE001
+            return OrderResult(ok=False, message="cancel failed")
+        if _mcp_hard_reject(result):
+            return OrderResult(
+                ok=False,
+                message="cancel rejected",
+                raw=_safe_mcp_payload(result),
+            )
+        now = _now()
+        order = WorkingOrder(
+            order_id=str(order_id),
+            symbol="",
+            side="",
+            qty=0.0,
+            order_type="limit",
+            limit_price=None,
+            status="canceled",
+            created=now,
+            updated=now,
+        )
+        return OrderResult(
+            ok=True,
+            order=order,
+            message="canceled",
+            raw=_safe_mcp_payload(result),
+        )
 
     def list_open_orders(self) -> list[WorkingOrder]:
         # Stage2: open-order counts live on snapshot; no live order book yet
@@ -701,6 +1081,7 @@ def get_broker(
     account_number: Optional[str] = None,
     use_rh_bridge: bool = True,
     snapshot_path: Path | str | None = None,
+    mcp_call: Optional[Any] = None,
 ) -> BrokerAdapter:
     if mode == "agentic_live":
         return RobinhoodMcpBroker(
@@ -709,6 +1090,7 @@ def get_broker(
             agentic_enabled=agentic_enabled,
             account_number=account_number,
             snapshot_path=snapshot_path,
+            mcp_call=mcp_call,
         )
     # research / paper / shadow → paper ledger; Stage2 bridge attaches RH snapshot when present
     if use_rh_bridge:
