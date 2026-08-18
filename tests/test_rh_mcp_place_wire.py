@@ -8,11 +8,13 @@ from typing import Any
 import pytest
 
 from trader_platform.execution.broker_adapter import (
+    LIVE_MAX_NOTIONAL_USD,
     LiveOrdersBlocked,
+    NotConnected,
     RobinhoodMcpBroker,
     get_broker,
 )
-from trader_platform.risk_governor import OrderIntent
+from trader_platform.risk_governor import OrderIntent, RiskGovernor, load_limits
 
 # Synthetic book ids — last4 8507 is the only allowed Agentic sleeve.
 # Not a real RH account number.
@@ -176,6 +178,44 @@ def test_enabled_connected_without_mcp_call_stays_blocked() -> None:
         br.place_limit(_uuid_leg_intent())
 
 
+@pytest.mark.parametrize(
+    "kwargs,exc",
+    [
+        ({"mode": "paper", "connected": True, "agentic_enabled": True}, NotConnected),
+        ({"mode": "shadow", "connected": True, "agentic_enabled": True}, NotConnected),
+        ({"mode": "agentic_live", "connected": False, "agentic_enabled": True}, NotConnected),
+        ({"mode": "agentic_live", "connected": True, "agentic_enabled": False}, LiveOrdersBlocked),
+    ],
+)
+def test_place_and_cancel_skip_mcp_unless_live_connected_and_enabled(
+    kwargs: dict[str, Any], exc: type[Exception]
+) -> None:
+    fake = FakeMcp()
+    br = RobinhoodMcpBroker(mcp_call=fake, **kwargs)
+    with pytest.raises(exc):
+        br.place_limit(_uuid_leg_intent())
+    with pytest.raises(exc):
+        br.cancel("ord-test-1")
+    assert fake.names() == []
+
+
+def test_enabled_false_is_live_orders_blocked_even_with_mcp() -> None:
+    fake = FakeMcp()
+    br = RobinhoodMcpBroker(
+        connected=True,
+        mode="agentic_live",
+        agentic_enabled=False,
+        mcp_call=fake,
+    )
+    with pytest.raises(LiveOrdersBlocked, match="agentic.enabled"):
+        br.place_limit(_uuid_leg_intent())
+    with pytest.raises(LiveOrdersBlocked, match="agentic.enabled"):
+        br.cancel("ord-test-1")
+    assert fake.names() == []
+    assert "place_option_order" not in fake.names()
+    assert "cancel_option_order" not in fake.names()
+
+
 def test_fake_mcp_reviews_then_places_one_sell_put() -> None:
     fake = FakeMcp()
     br = _armed(fake)
@@ -241,6 +281,49 @@ def test_qty_two_or_market_does_not_place() -> None:
     except Exception:
         pass
     assert "place_option_order" not in fake_mkt.names()
+
+
+def test_max_loss_over_100_does_not_place() -> None:
+    fake = FakeMcp()
+    br = _armed(fake)
+    res = br.place_limit(_uuid_leg_intent(max_loss_usd=150.0))
+    assert not res.ok
+    assert "100" in (res.message or "")
+    assert "place_option_order" not in fake.names()
+    assert "review_option_order" not in fake.names()
+
+
+def test_max_loss_at_100_still_places() -> None:
+    fake = FakeMcp()
+    br = _armed(fake)
+    res = br.place_limit(_uuid_leg_intent(max_loss_usd=100.0))
+    assert res.ok
+    assert "place_option_order" in fake.names()
+
+
+def test_live_yaml_honors_soft_kill_one_lot_and_100() -> None:
+    import tempfile
+    from pathlib import Path
+
+    limits = load_limits()
+    assert limits["agentic"]["enabled"] is False
+    assert float(limits["order"]["max_notional_per_order"]) == LIVE_MAX_NOTIONAL_USD
+    assert float(limits["order"]["max_contracts_per_order"]) == 1
+
+    with tempfile.TemporaryDirectory() as tmp:
+        gov = RiskGovernor(limits=limits, repo_root=Path(tmp))
+        live_deny = gov.check(_csp_intent(max_loss_usd=80.0), mode="agentic_live")
+        assert not live_deny.allowed
+        assert any("agentic.enabled" in r for r in live_deny.reasons)
+
+        qty_deny = gov.check(_csp_intent(qty=2, max_loss_usd=80.0), mode="paper")
+        assert not qty_deny.allowed
+
+        over_deny = gov.check(_csp_intent(max_loss_usd=150.0), mode="paper")
+        assert not over_deny.allowed
+
+        ok = gov.check(_csp_intent(max_loss_usd=80.0), mode="paper")
+        assert ok.allowed, ok.reasons
 
 
 def test_cancel_with_mcp_call_sends_cancel_option_order() -> None:

@@ -35,7 +35,7 @@ Isolation: **PASS**. Options level: **PASS (L2)**. Funded test tier: **PASS ($50
 | Agentic still **cash** not margin | Expected RH behavior for many new/agentic sleeves; GFV/settlement rules apply; spreads still blocked by MCP single-leg + L2 scope | Accept for v1; optional margin later in app if RH allows |
 | Only **$500** test capital | Not $3k income sleeve; size for plumbing / tiny probes only | Ken transfers $3k at LIVE_PACKET |
 | MCP **options place = single-leg only** | No native multi-leg PCS/IC via MCP | Strategy design |
-| Platform `RobinhoodMcpBroker.place_*` | **Wired 2026-08-17** to `review_option_order` then `place_option_order` (1-lot limit, Agentic last4 8507 only) when `mcp_call` is injected. Still **fail-closed** (`LiveOrdersBlocked`) without it. `replace_limit` stays blocked. `agentic.enabled` remains **false**. No live place in this build. | Trader BUILD |
+| Platform `RobinhoodMcpBroker.place_*` | **Wired 2026-08-17/18** to `review_option_order` then `place_option_order` (1-lot + $100 max-loss, Agentic last4 8507 only) when `mode=agentic_live` AND connected AND `agentic.enabled=true` AND `mcp_call` is injected. `agentic.enabled=false` still raises **`LiveOrdersBlocked`**. `replace_limit` stays blocked. Soft kill remains **off**. No live place in this build. | Trader BUILD |
 | `agentic.enabled: false` | Soft kill (correct) | Ken arm day only |
 | Multi-session paper + shadow + kill drill + TOP_HYP | Not done | Trader continuum |
 

@@ -131,14 +131,14 @@ def main() -> int:
     except NotConnected:
         pass
 
-    # Even with connected+agentic_live, agentic_enabled false → NotConnected
+    # Even with connected+agentic_live, agentic_enabled false → LiveOrdersBlocked
     rh2 = RobinhoodMcpBroker(connected=True, mode="agentic_live", agentic_enabled=False)
     try:
         rh2.place_limit(
             OrderIntent(symbol="TSLA", side="sell", qty=1, order_type="limit", limit_price=1.0)
         )
-        errors.append("RH stub should raise NotConnected when agentic_enabled false")
-    except NotConnected:
+        errors.append("RH stub should raise LiveOrdersBlocked when agentic_enabled false")
+    except LiveOrdersBlocked:
         pass
 
     # review_* payload builders (no MCP invoke)

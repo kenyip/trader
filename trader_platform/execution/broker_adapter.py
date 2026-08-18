@@ -537,6 +537,10 @@ def _num_str(value: Any) -> str:
     return text or "0"
 
 
+# Ken ARM 2026-08-17: live 1-lot defined-risk / max-loss ceiling on $1k.
+LIVE_MAX_NOTIONAL_USD = 100.0
+
+
 def _refuse_live_intent(intent: OrderIntent) -> Optional[str]:
     otype = (intent.order_type or "").lower()
     if otype != "limit":
@@ -554,6 +558,16 @@ def _refuse_live_intent(intent: OrderIntent) -> Optional[str]:
         return "qty must be 1"
     if abs(qty - 1.0) > 1e-9:
         return "qty must be 1"
+    max_loss = getattr(intent, "max_loss_usd", None)
+    if max_loss is not None:
+        try:
+            if float(max_loss) > LIVE_MAX_NOTIONAL_USD:
+                return (
+                    f"max_loss_usd {float(max_loss):.2f} exceeds "
+                    f"${LIVE_MAX_NOTIONAL_USD:.0f} live 1-lot ceiling"
+                )
+        except (TypeError, ValueError):
+            return "max_loss_usd must be numeric"
     return None
 
 
@@ -693,8 +707,9 @@ class RobinhoodMcpBroker(BrokerAdapter):
     """RH MCP broker: review payloads + fail-closed place unless mcp_call is injected.
 
     Place/cancel require mode=agentic_live AND connected AND agentic_enabled
-    AND an injected ``mcp_call``. Without mcp_call this still raises
-    LiveOrdersBlocked (smoke + unarmed Hermes). replace_limit stays blocked.
+    AND an injected ``mcp_call``. agentic.enabled=false raises LiveOrdersBlocked
+    (live default). Without mcp_call this still raises LiveOrdersBlocked.
+    replace_limit stays blocked.
     """
 
     name = "robinhood_mcp"
@@ -735,7 +750,7 @@ class RobinhoodMcpBroker(BrokerAdapter):
                 "(see docs/AGENTIC_AUTONOMY_POLICY.md)"
             )
         if not self._agentic_enabled:
-            raise NotConnected(
+            raise LiveOrdersBlocked(
                 "agentic.enabled is false; refuse live place/replace/cancel "
                 "(see platform/risk_limits.yaml)"
             )
