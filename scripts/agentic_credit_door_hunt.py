@@ -602,6 +602,41 @@ def render_summary(result: dict[str, Any]) -> str:
             f"{row.get('natural_credit')} | ${row.get('lock_usd')} | "
             f"{row.get('short_delta_abs')} | {dna} | {model} | {roc} |"
         )
+    best_model = None
+    for row in result["candidates"]:
+        if not row.get("dna_pass") or not row.get("model_n"):
+            continue
+        roc = row.get("model_sendable_roc")
+        if roc is None:
+            continue
+        if best_model is None or roc > best_model.get("model_sendable_roc", -999):
+            best_model = row
+    lines.extend(
+        [
+            "",
+            "## Best sendable MODEL (not crowned)",
+            "",
+        ]
+    )
+    if best_model:
+        lines.append(
+            f"{best_model['symbol']} {best_model['structure']} "
+            f"{best_model['short_strike']}/{best_model['long_strike']} "
+            f"lock ${best_model['lock_usd']:.0f} · MODEL ${best_model.get('model_avg_pnl_usd'):.2f} "
+            f"n={best_model['model_n']} · ROC {best_model.get('model_sendable_roc'):.2%}."
+        )
+        lines.append(
+            "Does not beat MRK MEASURED sendable ROC, so crown stays null. "
+            "INTC 80/75 is DNA-pass but prior cells treated INTC PCS as toxic — not re-primaried."
+        )
+    else:
+        lines.append("No DNA-pass row produced a MODEL average.")
+    scale_rows = [
+        r
+        for r in result["candidates"]
+        if r.get("lock_usd") and r["lock_usd"] > MAX_LOCK_USD
+        and "discard_prior_hunt" not in (r.get("fails") or [])
+    ]
     lines.extend(
         [
             "",
@@ -615,6 +650,40 @@ def render_summary(result: dict[str, Any]) -> str:
             "",
             "Think in 1-lot defined max loss, then add lots only after Ken wires. "
             "Today's sleeve sizes to $855 post-OKE-flat, ~$785 while OKE is on.",
+            "",
+        ]
+    )
+    if scale_rows:
+        for r in scale_rows:
+            lines.append(
+                f"- {r['symbol']} {r['structure']} {r['short_strike']}/{r['long_strike']}: "
+                f"1-lot lock **${r['lock_usd']:.0f}** (over today's $855). "
+                f"Natural credit {r.get('natural_credit')}."
+            )
+    else:
+        lines.append("No over-cap DNA-looking scale tickets in this snapshot.")
+    coexist = [
+        r
+        for r in result["candidates"]
+        if r.get("dna_pass") and r.get("coexist_vs_live_bp")
+    ]
+    lines.extend(
+        [
+            "",
+            "## Coexist vs wait-for-OKE-flat",
+            "",
+            f"Live BP ${acct['buying_power_usd']:.2f} while OKE is on. "
+            f"{len(coexist)} DNA-pass 1-lots lock under live BP: "
+            + (
+                ", ".join(
+                    f"{r['symbol']} {r['short_strike']}/{r['long_strike']} ${r['lock_usd']:.0f}"
+                    for r in coexist
+                )
+                or "none"
+            )
+            + ". "
+            "Larger DNA-pass locks that fit $855 after OKE is flat but not today's BP stay on the wait list. "
+            "Do not send a second lot that cash-fails.",
             "",
             "## Authority",
             "",

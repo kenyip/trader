@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T17:09:39.380065+00:00",
+  "generated_at": "2026-09-03T17:10:34.703189+00:00",
   "as_of": "2026-09-03",
   "mode": "analysis_only",
   "live_orders": false,
@@ -143,7 +143,34 @@
         "earnings after expiry"
       ],
       "new_strike_or_expiry": false,
-      "ivr_source": "MODEL data.py iv_rank"
+      "ivr_source": "MODEL data.py iv_rank",
+      "model": {
+        "ok": true,
+        "skipped": false,
+        "reason": "ok",
+        "label": "MODEL",
+        "n": 43,
+        "avg_pnl_usd": 8.9,
+        "total_pnl_usd": 382.61,
+        "win_rate_pct": 69.8,
+        "max_dd_usd": 277.16,
+        "profit_factor": 1.5778934204307937,
+        "avg_max_loss_usd": 441.86,
+        "avg_days_held": 10.9,
+        "engine": "pcs_sim.run_pcs_backtest",
+        "period": "5y",
+        "config": {
+          "long_dte": 43,
+          "spread_width": 5.0,
+          "long_target_delta": 0.2244,
+          "min_credit_pct": 0.1,
+          "max_loss_budget_usd": 855.0,
+          "half_spread_per_leg": 0.02
+        }
+      },
+      "model_avg_pnl_usd": 8.9,
+      "model_n": 43,
+      "model_sendable_roc": 0.0201
     },
     {
       "symbol": "KO",
@@ -197,7 +224,34 @@
         "tighter width"
       ],
       "new_strike_or_expiry": false,
-      "ivr_source": "MODEL data.py iv_rank"
+      "ivr_source": "MODEL data.py iv_rank",
+      "model": {
+        "ok": true,
+        "skipped": false,
+        "reason": "ok",
+        "label": "MODEL",
+        "n": 72,
+        "avg_pnl_usd": -0.65,
+        "total_pnl_usd": -46.75,
+        "win_rate_pct": 56.9,
+        "max_dd_usd": 297.39,
+        "profit_factor": 0.9473840356037113,
+        "avg_max_loss_usd": 206.34,
+        "avg_days_held": 11.5,
+        "engine": "pcs_sim.run_pcs_backtest",
+        "period": "5y",
+        "config": {
+          "long_dte": 43,
+          "spread_width": 2.5,
+          "long_target_delta": 0.2244,
+          "min_credit_pct": 0.1,
+          "max_loss_budget_usd": 855.0,
+          "half_spread_per_leg": 0.02
+        }
+      },
+      "model_avg_pnl_usd": -0.65,
+      "model_n": 72,
+      "model_sendable_roc": -0.0031
     },
     {
       "symbol": "T",
@@ -252,7 +306,34 @@
         "small lock"
       ],
       "new_strike_or_expiry": false,
-      "ivr_source": "MODEL data.py iv_rank"
+      "ivr_source": "MODEL data.py iv_rank",
+      "model": {
+        "ok": true,
+        "skipped": false,
+        "reason": "ok",
+        "label": "MODEL",
+        "n": 70,
+        "avg_pnl_usd": -0.29,
+        "total_pnl_usd": -20.01,
+        "win_rate_pct": 62.9,
+        "max_dd_usd": 164.49,
+        "profit_factor": 0.9707916639601305,
+        "avg_max_loss_usd": 173.14,
+        "avg_days_held": 10.4,
+        "engine": "pcs_sim.run_pcs_backtest",
+        "period": "5y",
+        "config": {
+          "long_dte": 43,
+          "spread_width": 2.0,
+          "long_target_delta": 0.2765,
+          "min_credit_pct": 0.1,
+          "max_loss_budget_usd": 855.0,
+          "half_spread_per_leg": 0.02
+        }
+      },
+      "model_avg_pnl_usd": -0.29,
+      "model_n": 70,
+      "model_sendable_roc": -0.0017
     },
     {
       "symbol": "T",
@@ -304,7 +385,34 @@
       },
       "notes": [],
       "new_strike_or_expiry": false,
-      "ivr_source": "MODEL data.py iv_rank"
+      "ivr_source": "MODEL data.py iv_rank",
+      "model": {
+        "ok": true,
+        "skipped": false,
+        "reason": "ok",
+        "label": "MODEL",
+        "n": 46,
+        "avg_pnl_usd": 4.23,
+        "total_pnl_usd": 194.74,
+        "win_rate_pct": 65.2,
+        "max_dd_usd": 133.79,
+        "profit_factor": 1.456406685202302,
+        "avg_max_loss_usd": 261.84,
+        "avg_days_held": 10.8,
+        "engine": "pcs_sim.run_pcs_backtest",
+        "period": "5y",
+        "config": {
+          "long_dte": 43,
+          "spread_width": 3.0,
+          "long_target_delta": 0.2765,
+          "min_credit_pct": 0.1,
+          "max_loss_budget_usd": 855.0,
+          "half_spread_per_leg": 0.02
+        }
+      },
+      "model_avg_pnl_usd": 4.23,
+      "model_n": 46,
+      "model_sendable_roc": 0.0159
     },
     {
       "symbol": "MO",
@@ -356,7 +464,34 @@
       },
       "notes": [],
       "new_strike_or_expiry": false,
-      "ivr_source": "MODEL data.py iv_rank"
+      "ivr_source": "MODEL data.py iv_rank",
+      "model": {
+        "ok": true,
+        "skipped": false,
+        "reason": "ok",
+        "label": "MODEL",
+        "n": 60,
+        "avg_pnl_usd": -4.11,
+        "total_pnl_usd": -246.81,
+        "win_rate_pct": 53.3,
+        "max_dd_usd": 329.05,
+        "profit_factor": 0.694836121468659,
+        "avg_max_loss_usd": 212.48,
+        "avg_days_held": 12.0,
+        "engine": "pcs_sim.run_pcs_backtest",
+        "period": "5y",
+        "config": {
+          "long_dte": 43,
+          "spread_width": 2.5,
+          "long_target_delta": 0.1793,
+          "min_credit_pct": 0.1,
+          "max_loss_budget_usd": 855.0,
+          "half_spread_per_leg": 0.02
+        }
+      },
+      "model_avg_pnl_usd": -4.11,
+      "model_n": 60,
+      "model_sendable_roc": -0.0185
     },
     {
       "symbol": "MO",
@@ -464,7 +599,34 @@
       },
       "notes": [],
       "new_strike_or_expiry": false,
-      "ivr_source": "MODEL data.py iv_rank"
+      "ivr_source": "MODEL data.py iv_rank",
+      "model": {
+        "ok": true,
+        "skipped": false,
+        "reason": "ok",
+        "label": "MODEL",
+        "n": 77,
+        "avg_pnl_usd": -9.01,
+        "total_pnl_usd": -693.72,
+        "win_rate_pct": 58.4,
+        "max_dd_usd": 1297.72,
+        "profit_factor": 0.8031573597583119,
+        "avg_max_loss_usd": 641.35,
+        "avg_days_held": 8.5,
+        "engine": "pcs_sim.run_pcs_backtest",
+        "period": "5y",
+        "config": {
+          "long_dte": 43,
+          "spread_width": 7.5,
+          "long_target_delta": 0.2567,
+          "min_credit_pct": 0.1,
+          "max_loss_budget_usd": 855.0,
+          "half_spread_per_leg": 0.02
+        }
+      },
+      "model_avg_pnl_usd": -9.01,
+      "model_n": 77,
+      "model_sendable_roc": -0.0139
     },
     {
       "symbol": "CVS",
@@ -575,7 +737,34 @@
         "repo history: INTC PCS toxic \u2014 not on discard list; include with warning"
       ],
       "new_strike_or_expiry": false,
-      "ivr_source": "MODEL data.py iv_rank"
+      "ivr_source": "MODEL data.py iv_rank",
+      "model": {
+        "ok": true,
+        "skipped": false,
+        "reason": "ok",
+        "label": "MODEL",
+        "n": 73,
+        "avg_pnl_usd": -5.87,
+        "total_pnl_usd": -428.67,
+        "win_rate_pct": 52.1,
+        "max_dd_usd": 868.46,
+        "profit_factor": 0.8035247602440826,
+        "avg_max_loss_usd": 420.08,
+        "avg_days_held": 9.9,
+        "engine": "pcs_sim.run_pcs_backtest",
+        "period": "5y",
+        "config": {
+          "long_dte": 43,
+          "spread_width": 5.0,
+          "long_target_delta": 0.2205,
+          "min_credit_pct": 0.1,
+          "max_loss_budget_usd": 855.0,
+          "half_spread_per_leg": 0.02
+        }
+      },
+      "model_avg_pnl_usd": -5.87,
+      "model_n": 73,
+      "model_sendable_roc": -0.0148
     },
     {
       "symbol": "MRK",
@@ -629,7 +818,34 @@
         "new strike vs prior discard of old MRK structures"
       ],
       "new_strike_or_expiry": true,
-      "ivr_source": "MODEL data.py iv_rank"
+      "ivr_source": "MODEL data.py iv_rank",
+      "model": {
+        "ok": true,
+        "skipped": false,
+        "reason": "ok",
+        "label": "MODEL",
+        "n": 71,
+        "avg_pnl_usd": -5.89,
+        "total_pnl_usd": -418.45,
+        "win_rate_pct": 64.8,
+        "max_dd_usd": 998.71,
+        "profit_factor": 0.8174545284752461,
+        "avg_max_loss_usd": 429.55,
+        "avg_days_held": 10.7,
+        "engine": "pcs_sim.run_pcs_backtest",
+        "period": "5y",
+        "config": {
+          "long_dte": 43,
+          "spread_width": 5.0,
+          "long_target_delta": 0.2005,
+          "min_credit_pct": 0.1,
+          "max_loss_budget_usd": 855.0,
+          "half_spread_per_leg": 0.02
+        }
+      },
+      "model_avg_pnl_usd": -5.89,
+      "model_n": 71,
+      "model_sendable_roc": -0.0138
     },
     {
       "symbol": "MRK",
@@ -740,7 +956,34 @@
         "option IV ~17% even though HV IVR is elevated"
       ],
       "new_strike_or_expiry": false,
-      "ivr_source": "MODEL data.py iv_rank"
+      "ivr_source": "MODEL data.py iv_rank",
+      "model": {
+        "ok": true,
+        "skipped": false,
+        "reason": "ok",
+        "label": "MODEL",
+        "n": 85,
+        "avg_pnl_usd": -8.05,
+        "total_pnl_usd": -684.28,
+        "win_rate_pct": 57.6,
+        "max_dd_usd": 737.85,
+        "profit_factor": 0.7039131940935034,
+        "avg_max_loss_usd": 439.12,
+        "avg_days_held": 10.4,
+        "engine": "pcs_sim.run_pcs_backtest",
+        "period": "5y",
+        "config": {
+          "long_dte": 43,
+          "spread_width": 5.0,
+          "long_target_delta": 0.28,
+          "min_credit_pct": 0.1,
+          "max_loss_budget_usd": 855.0,
+          "half_spread_per_leg": 0.02
+        }
+      },
+      "model_avg_pnl_usd": -8.05,
+      "model_n": 85,
+      "model_sendable_roc": -0.0186
     },
     {
       "symbol": "WMT",
@@ -794,7 +1037,34 @@
         "WMT ripped 106 to 109; CCS after the rip"
       ],
       "new_strike_or_expiry": false,
-      "ivr_source": "MODEL data.py iv_rank"
+      "ivr_source": "MODEL data.py iv_rank",
+      "model": {
+        "ok": true,
+        "skipped": false,
+        "reason": "ok",
+        "label": "MODEL",
+        "n": 80,
+        "avg_pnl_usd": -19.02,
+        "total_pnl_usd": -1521.57,
+        "win_rate_pct": 55.0,
+        "max_dd_usd": 1861.0,
+        "profit_factor": 0.5196442366165566,
+        "avg_max_loss_usd": 429.59,
+        "avg_days_held": 12.1,
+        "engine": "pcs_sim.run_pcs_backtest",
+        "period": "5y",
+        "config": {
+          "long_dte": 43,
+          "spread_width": 5.0,
+          "long_target_delta": 0.2739,
+          "min_credit_pct": 0.1,
+          "max_loss_budget_usd": 855.0,
+          "half_spread_per_leg": 0.02
+        }
+      },
+      "model_avg_pnl_usd": -19.02,
+      "model_n": 80,
+      "model_sendable_roc": -0.0452
     },
     {
       "symbol": "WMT",
@@ -978,9 +1248,9 @@
       "natural_credit": 0.58,
       "lock_usd": 442.0,
       "coexist_vs_live_bp": true,
-      "model_avg_pnl_usd": null,
-      "model_n": null,
-      "model_sendable_roc": null
+      "model_avg_pnl_usd": 8.9,
+      "model_n": 43,
+      "model_sendable_roc": 0.0201
     },
     {
       "symbol": "KO",
@@ -991,9 +1261,9 @@
       "natural_credit": 0.39,
       "lock_usd": 211.0,
       "coexist_vs_live_bp": true,
-      "model_avg_pnl_usd": null,
-      "model_n": null,
-      "model_sendable_roc": null
+      "model_avg_pnl_usd": -0.65,
+      "model_n": 72,
+      "model_sendable_roc": -0.0031
     },
     {
       "symbol": "T",
@@ -1004,9 +1274,9 @@
       "natural_credit": 0.3,
       "lock_usd": 170.0,
       "coexist_vs_live_bp": true,
-      "model_avg_pnl_usd": null,
-      "model_n": null,
-      "model_sendable_roc": null
+      "model_avg_pnl_usd": -0.29,
+      "model_n": 70,
+      "model_sendable_roc": -0.0017
     },
     {
       "symbol": "T",
@@ -1017,9 +1287,9 @@
       "natural_credit": 0.34,
       "lock_usd": 266.0,
       "coexist_vs_live_bp": true,
-      "model_avg_pnl_usd": null,
-      "model_n": null,
-      "model_sendable_roc": null
+      "model_avg_pnl_usd": 4.23,
+      "model_n": 46,
+      "model_sendable_roc": 0.0159
     },
     {
       "symbol": "MO",
@@ -1030,9 +1300,9 @@
       "natural_credit": 0.28,
       "lock_usd": 222.0,
       "coexist_vs_live_bp": true,
-      "model_avg_pnl_usd": null,
-      "model_n": null,
-      "model_sendable_roc": null
+      "model_avg_pnl_usd": -4.11,
+      "model_n": 60,
+      "model_sendable_roc": -0.0185
     },
     {
       "symbol": "CVS",
@@ -1043,9 +1313,9 @@
       "natural_credit": 1.01,
       "lock_usd": 649.0,
       "coexist_vs_live_bp": true,
-      "model_avg_pnl_usd": null,
-      "model_n": null,
-      "model_sendable_roc": null
+      "model_avg_pnl_usd": -9.01,
+      "model_n": 77,
+      "model_sendable_roc": -0.0139
     },
     {
       "symbol": "INTC",
@@ -1056,9 +1326,9 @@
       "natural_credit": 1.04,
       "lock_usd": 396.0,
       "coexist_vs_live_bp": true,
-      "model_avg_pnl_usd": null,
-      "model_n": null,
-      "model_sendable_roc": null
+      "model_avg_pnl_usd": -5.87,
+      "model_n": 73,
+      "model_sendable_roc": -0.0148
     },
     {
       "symbol": "MRK",
@@ -1069,9 +1339,9 @@
       "natural_credit": 0.74,
       "lock_usd": 426.0,
       "coexist_vs_live_bp": true,
-      "model_avg_pnl_usd": null,
-      "model_n": null,
-      "model_sendable_roc": null
+      "model_avg_pnl_usd": -5.89,
+      "model_n": 71,
+      "model_sendable_roc": -0.0138
     },
     {
       "symbol": "KO",
@@ -1082,9 +1352,9 @@
       "natural_credit": 0.68,
       "lock_usd": 432.0,
       "coexist_vs_live_bp": true,
-      "model_avg_pnl_usd": null,
-      "model_n": null,
-      "model_sendable_roc": null
+      "model_avg_pnl_usd": -8.05,
+      "model_n": 85,
+      "model_sendable_roc": -0.0186
     },
     {
       "symbol": "WMT",
@@ -1095,9 +1365,9 @@
       "natural_credit": 0.79,
       "lock_usd": 421.0,
       "coexist_vs_live_bp": true,
-      "model_avg_pnl_usd": null,
-      "model_n": null,
-      "model_sendable_roc": null
+      "model_avg_pnl_usd": -19.02,
+      "model_n": 80,
+      "model_sendable_roc": -0.0452
     }
   ],
   "crown": null,
