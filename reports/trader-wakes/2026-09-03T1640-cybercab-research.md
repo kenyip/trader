@@ -17,7 +17,7 @@ SLEEVE: TSLA/TSLL covered-call decision support
 - Live quotes timestamped (TSLA/TSLL/SPY 16:33Z; TSLL calls 16:39Z; TSLA 380 straddles 16:41Z).
 - Negative controls: tesla.com still says Cybercab is future; CA DMV has Tesla on drivered testing only; no public NHTSA Cybercab exemption found; BOM UNKNOWN; Waymo $/mi not invented.
 - Boundary: research cut is mid-session *before* the livestream — evening outcomes are falsifiers, not facts.
-- Full unit suite: not required to validate markdown research; run after setup if the environment has a venv. No strategy behavior changed.
+- Full unit suite (`python3 -m unittest discover -s tests -q`): **584 ran, 1 skipped, 3 errors**. All three errors are environment gaps unrelated to this research (`pytest` missing for one loader, `just` missing, `.venv/bin/python` missing). No strategy-test failures. No strategy behavior changed.
 
 ## DURABLE
 
