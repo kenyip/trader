@@ -1,3 +1,5 @@
+| 2026-09-03T1658 | analysis | Agentic credit-door hunt: CROWN null; KO 85/80 PCS best MODEL +$8.90 n=43 ROC 2.01% does not beat MRK MEASURED +$27.08 n=15 | wait_oke_flat_requote |
+- `2026-09-03T1658-credit-door.md` — analysis only; no live orders; lock ≤ $855
 | 2026-08-16T1210 | offhours | Door-only consume: AMZN bu_2/bu_7 catalog cannot steal Monday OPEN; execute_paper FIRST_LIVE_DOOR_ONLY | monday_pack_open_on_bullish_bar |
 - `2026-08-16T1210-offhours.md` — nqp=4 census; watcher restricted to bu_4/bu_6
 | 2026-08-16T1105 | offhours | Synthetic bullish KO → bu_4 PAPER_PACKET_READY + dry INTENT; cached 84/83 ml $79.83 | monday_pack_open_on_bullish_bar |
