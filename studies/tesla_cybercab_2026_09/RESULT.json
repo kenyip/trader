@@ -1,0 +1,239 @@
+{
+  "meta": {
+    "title": "Tesla Cybercab / Robotaxi catalyst research",
+    "as_of_et": "2026-09-03T12:45:00-04:00",
+    "research_window_note": "Evening Austin event had not started. tesla.com/robotaxi still listed Cybercab as future.",
+    "no_trade": true,
+    "labels": ["FACT", "COMPANY_CLAIM", "MODEL", "INFERENCE", "UNVERIFIED", "UNKNOWN"]
+  },
+  "what_launched_today": {
+    "verdict": "No public Cybercab service launch as of mid-session. Invite-only evening event in Austin plus existing Model Y Robotaxi.",
+    "label": "FACT",
+    "product_event_name": "Cybercab Launch Event / Exclusive Access (invite-only)",
+    "location": "Austin, Texas (exact venue UNVERIFIED)",
+    "event_start": {
+      "claimed": "UNVERIFIED ~16:45 CT / 17:45 ET",
+      "tesla_official_clock_time": "UNKNOWN"
+    },
+    "fleet_size_cybercab_commercial": "UNKNOWN",
+    "txdmv_secondary_cite": {
+      "cybercab_authorized": 45,
+      "tx_driverless_total": 420,
+      "as_of": "2026-09-02 night",
+      "label": "UNVERIFIED",
+      "source": "CNBC citing TxDMV"
+    },
+    "paid_public_cybercab_rides": false,
+    "invite_only_or_demo": true,
+    "safety_operator": "UNKNOWN for tonight's guest rides; Model Y unsupervised claimed in TX/FL; Bay Area safety driver",
+    "geofence": "UNKNOWN (existing Austin Model Y geofence not republished today)",
+    "hours_weather_limits": "COMPANY_CLAIM in 2026-07-16 first-responder plan: day/night, light/moderate precip; not extreme weather",
+    "vehicle_model_in_current_service": "Model Y",
+    "vehicle_model_event": "Cybercab (purpose-built, typically no wheel/pedals)",
+    "autonomous_ordinary_meaning": {
+      "model_y_tx_fl": "INFERENCE: Tesla presents as driverless in-car with remote support inside a geofence",
+      "bay_area": "FACT: safety driver / Level-2 chauffeur per Tesla IR + CA permit posture",
+      "cybercab_tonight": "INFERENCE: demo/invite is not public commercial autonomy"
+    },
+    "tesla_com_robotaxi_quote": "Cybercab, our purpose-built fully autonomous vehicle, will offer rides in your area in the future.",
+    "primary_x": [
+      {"t": "2026-08-29T06:23:44Z", "acct": "Tesla", "text": "Less than a week away", "url": "https://x.com/Tesla/status/2093585372920123522"},
+      {"t": "2026-09-02T14:17:21Z", "acct": "robotaxi", "text": "No steering wheel, no pedals", "url": "https://x.com/robotaxi/status/2095154115282387199"},
+      {"t": "2026-09-03T04:13:44Z", "acct": "elonmusk", "text": "A Storm of Cybercabs", "url": "https://x.com/elonmusk/status/2095364595326263447"},
+      {"t": "2026-09-03T13:56:14Z", "acct": "aelluswamy", "text": "Big day today for the future of transportation!", "url": "https://x.com/aelluswamy/status/2095511186372526577"}
+    ]
+  },
+  "shipping": {
+    "demonstrated": ["We Robot 2024-10-10 design", "Q2 2026 production start", "July 2026 employee campus rides", "Q2 public-road engineering tests"],
+    "validated": "UNKNOWN — no published intervention table or independent safety case",
+    "in_production": {
+      "tesla_statement": "Started production at Gigafactory Texas in Q2 2026",
+      "installed_capacity_per_year": ">125000",
+      "label": "COMPANY_CLAIM",
+      "rate_proven": false,
+      "tesla_footnote": "Installed capacity ≠ current production rate"
+    },
+    "unboxed_assembly": {
+      "status": "COMPANY_CLAIM historically; not evidenced at rate in Q2 2026 letter",
+      "proven_at_rate": false
+    },
+    "fleet_ownership_now": {
+      "statement": "All Robotaxi vehicles are owned and operated by Tesla at this time",
+      "source": "Cybercab first-responder plan 2026-07-16",
+      "label": "FACT"
+    }
+  },
+  "gating": {
+    "prior": "validation/regulatory approval is harder than manufacturing",
+    "prior_holds": true,
+    "texas": {
+      "regime": "SB 2807 self-certification authorization",
+      "enforceable_from": "2026-05-28",
+      "independent_safety_test_required": false,
+      "label": "FACT"
+    },
+    "california": {
+      "dmv_drivered_testing": true,
+      "dmv_driverless_testing": false,
+      "dmv_deployment": false,
+      "permit_page_drivered_updated": "2026-08-12",
+      "entity": "TESLA ROBOTAXI LLC",
+      "label": "FACT"
+    },
+    "nhtsa_fmvss": {
+      "part_555_cap_per_year": 2500,
+      "tesla_cybercab_exemption_found": false,
+      "tesla_self_cert_claim": "COMPANY_CLAIM / secondary (Moravy 'No' on 2500 cap)",
+      "open_fsd_investigations": ["PE25012", "EA26002"]
+    },
+    "az_nv": "Preparations Underway as of Tesla Q2 2026 IR",
+    "insurance_remote_ratio": "UNKNOWN"
+  },
+  "unit_economics": {
+    "bom_usd": null,
+    "bom_label": "UNKNOWN",
+    "company_price_target_usd": 30000,
+    "company_price_target_label": "COMPANY_CLAIM",
+    "equation": "C_paid = (D + E + M + K + I + R + O) / m_paid; D = (V - S) / L; m_paid = 365 * u * h * v * p",
+    "waymo_cost_per_mile": null,
+    "waymo_cost_per_mile_label": "UNKNOWN — Alphabet does not disclose",
+    "sensitivities": [
+      {"V": 30000, "lifetime_miles": 300000, "paid_miles_year": 40000, "c_paid_lo": 0.42, "c_paid_hi": 0.74, "label": "MODEL"},
+      {"V": 30000, "lifetime_miles": 300000, "paid_miles_year": 80000, "c_paid_lo": 0.42, "c_paid_hi": 0.74, "label": "MODEL"},
+      {"V": 45000, "lifetime_miles": 250000, "paid_miles_year": 40000, "c_paid_lo": 0.52, "c_paid_hi": 0.84, "label": "MODEL"}
+    ],
+    "fixed_opex_per_paid_mile": [
+      {"fixed_opex_year": 8000, "paid_20k": 0.4, "paid_40k": 0.2, "paid_80k": 0.1},
+      {"fixed_opex_year": 20000, "paid_20k": 1.0, "paid_40k": 0.5, "paid_80k": 0.25}
+    ],
+    "utilization_needed_for_tesla_story": "Waymo-like 15–25 paid trips/vehicle/day plus high paid-mile ratio. Tesla has not shown this. Label: INFERENCE"
+  },
+  "safety": {
+    "supervised_miles": "IR chart, billions, mixed versions — COMPANY_CLAIM",
+    "unsupervised_miles": {"value": 380000, "as_of": "Q2 2026 call", "label": "COMPANY_CLAIM"},
+    "cumulative_paid_miles": {"value": 2500000, "as_of": "Q2 2026 IR chart", "label": "COMPANY_CLAIM"},
+    "intervention_rate": "UNKNOWN",
+    "matched_incidents": "UNKNOWN",
+    "enough_denominator_to_estimate_risk": false,
+    "nhtsa_open": ["PE25012", "EA26002"]
+  },
+  "musk_optimization": {
+    "near_term_fleet_owner": "Tesla balance sheet",
+    "owner_supplied_network": "future optionality, not current mechanism",
+    "adjacencies": ["energy/4680", "Cortex/compute", "Optimus", "Supercharger depots", "FSD subscription"],
+    "admitted_bottleneck": "Cybercab-specific miles before large deployment (Musk Q2 2026 call)",
+    "q2_2026_capex_usd_bn": 5.789,
+    "q2_2026_fcf_usd_bn": -1.092
+  },
+  "waymo": {
+    "cities_official_2026_09_01": 14,
+    "autonomous_miles": {"value": 200000000, "qualifier": "more than", "as_of": "2026-08-26", "label": "FACT"},
+    "paid_rides_per_week": {"value": 500000, "as_of": "Alphabet Q1 2026 call", "label": "FACT", "later_print": "UNKNOWN — Q2 call did not update"},
+    "other_bets_q2_2026": {"revenue_usd_m": 382, "op_loss_usd_m": 1799, "label": "FACT — blended segment"},
+    "unit_cost_per_mile": null
+  },
+  "catalyst": {
+    "verdict": "Mostly demo + sell-the-news is the 1–5 day base case. Real operational inflection not shown as of mid-session.",
+    "label": "INFERENCE",
+    "matrix_1_to_5_days": {
+      "real_launch_favorable": 0.15,
+      "real_launch_incident_or_halt": 0.10,
+      "mostly_demo_narrative_persists": 0.30,
+      "mostly_demo_sell_the_news": 0.45
+    },
+    "matrix_1_to_3_months": {
+      "real_launch_favorable": 0.20,
+      "real_launch_incident_or_halt": 0.15,
+      "mostly_demo_narrative_persists": 0.35,
+      "mostly_demo_sell_the_news": 0.30
+    },
+    "falsifiers": [
+      {"signal": "App-bookable public Cybercab in Austin for 5+ consecutive days", "by": "2026-09-08", "moves_to": "real_launch_favorable"},
+      {"signal": "Tesla states paid public Cybercab + fleet >= 40 in commercial service", "by": "2026-09-10", "moves_to": "real_launch_favorable"},
+      {"signal": "Livestream is campus-only / no public-road guests", "by": "2026-09-03 night", "moves_to": "mostly_demo_sell_the_news"},
+      {"signal": "tesla.com/robotaxi still says Cybercab is future through the week", "by": "2026-09-08", "moves_to": "mostly_demo_*"},
+      {"signal": "Reportable Cybercab crash or TxDMV/NHTSA restriction", "by": "any", "moves_to": "real_launch_incident_or_halt"},
+      {"signal": "CA DMV lists Tesla on driverless testing", "by": "ongoing", "moves_to": "1-3m bull"},
+      {"signal": "Q3 2026 letter paid-mile re-acceleration + Cybercab unit count", "by": "2026-10-21 unconfirmed", "moves_to": "1-3m bull"},
+      {"signal": "Q3 2026 letter sequential paid-mile deceleration again", "by": "2026-10-21 unconfirmed", "moves_to": "1-3m bear"}
+    ],
+    "spot": {
+      "timestamp_utc": "2026-09-03T16:33:23Z",
+      "TSLA": 382.1,
+      "TSLA_prev": 357.01,
+      "TSLA_ret_pct": 7.03,
+      "TSLL": 10.685,
+      "TSLL_prev": 9.37,
+      "TSLL_ret_pct": 14.03,
+      "SPY": 772.345,
+      "SPY_prev": 765.16
+    },
+    "iv_term_tsla_380": {
+      "timestamp_utc": "2026-09-03T16:41:15Z",
+      "spot_approx": 382.0,
+      "rows": [
+        {"expiry": "2026-09-04", "call_mark": 7.05, "put_mark": 5.45, "straddle": 12.5, "straddle_pct": 3.3, "call_iv": 0.734},
+        {"expiry": "2026-09-11", "call_mark": 11.53, "put_mark": 9.7, "straddle": 21.23, "straddle_pct": 5.6, "call_iv": 0.466},
+        {"expiry": "2026-09-18", "call_mark": 15.13, "put_mark": 13.0, "straddle": 28.13, "straddle_pct": 7.4, "call_iv": 0.454},
+        {"expiry": "2026-10-16", "call_mark": 24.55, "put_mark": 21.15, "straddle": 45.7, "straddle_pct": 12.0, "call_iv": 0.440},
+        {"expiry": "2026-11-20", "call_mark": 34.88, "put_mark": 30.1, "straddle": 64.98, "straddle_pct": 17.0, "call_iv": 0.465}
+      ]
+    },
+    "event_study": {
+      "method": "Day0 = first full session after AH/weekend else first session on/after event. Excess = TSLA adj - SPY adj. Yahoo daily.",
+      "n": 16,
+      "mean_xs_1d_pp": 0.02,
+      "median_xs_1d_pp": -0.23,
+      "mean_xs_5d_pp": -1.65,
+      "median_xs_5d_pp": -3.02,
+      "mean_xs_20d_pp": 2.25,
+      "median_xs_20d_pp": -3.22,
+      "pos_xs_1d": "7/16",
+      "pos_xs_5d": "4/16",
+      "events": [
+        {"id": "fsd_v12_wide", "event_date": "2024-04-16", "day0": "2024-04-16", "xs_1d": -2.52, "xs_5d": -11.09, "xs_20d": 3.18},
+        {"id": "we_robot", "event_date": "2024-10-10", "day0": "2024-10-11", "xs_1d": -9.38, "xs_5d": -8.57, "xs_20d": 20.97, "note": "20d overlaps 2024 election"},
+        {"id": "q3_2024_earn", "event_date": "2024-10-23", "day0": "2024-10-24", "xs_1d": 21.7, "xs_5d": 20.2, "xs_20d": 57.92, "note": "20d overlaps 2024 election"},
+        {"id": "q4_2024_earn", "event_date": "2025-01-29", "day0": "2025-01-30", "xs_1d": 2.34, "xs_5d": -3.21, "xs_20d": -24.75},
+        {"id": "q1_2025_earn", "event_date": "2025-04-22", "day0": "2025-04-23", "xs_1d": 3.82, "xs_5d": 17.58, "xs_20d": 32.04},
+        {"id": "austin_launch", "event_date": "2025-06-22", "day0": "2025-06-23", "xs_1d": 7.24, "xs_5d": -3.02, "xs_20d": -3.84},
+        {"id": "q2_2025_earn", "event_date": "2025-07-23", "day0": "2025-07-24", "xs_1d": -8.23, "xs_5d": -4.1, "xs_20d": -3.22},
+        {"id": "nhtsa_pe25012", "event_date": "2025-10-07", "day0": "2025-10-07", "xs_1d": -4.08, "xs_5d": -2.55, "xs_20d": 1.59},
+        {"id": "q3_2025_earn", "event_date": "2025-10-22", "day0": "2025-10-23", "xs_1d": 1.69, "xs_5d": 2.2, "xs_20d": -7.19},
+        {"id": "austin_unsup", "event_date": "2026-01-22", "day0": "2026-01-22", "xs_1d": 3.63, "xs_5d": -1.46, "xs_20d": -4.44},
+        {"id": "q4_2025_earn", "event_date": "2026-01-28", "day0": "2026-01-29", "xs_1d": -3.25, "xs_5d": -4.57, "xs_20d": -4.42},
+        {"id": "nhtsa_ea26002", "event_date": "2026-03-18", "day0": "2026-03-18", "xs_1d": -0.23, "xs_5d": -1.71, "xs_20d": -6.46},
+        {"id": "dallas_houston", "event_date": "2026-04-18", "day0": "2026-04-20", "xs_1d": -1.83, "xs_5d": -6.61, "xs_20d": 1.31},
+        {"id": "q1_2026_earn", "event_date": "2026-04-22", "day0": "2026-04-23", "xs_1d": -3.17, "xs_5d": -3.85, "xs_20d": 3.45},
+        {"id": "miami_rt", "event_date": "2026-07-03", "day0": "2026-07-06", "xs_1d": 5.82, "xs_5d": 2.27, "xs_20d": -21.2},
+        {"id": "q2_2026_earn", "event_date": "2026-07-22", "day0": "2026-07-23", "xs_1d": -13.29, "xs_5d": -17.84, "xs_20d": -9.02}
+      ]
+    }
+  },
+  "covered_call": {
+    "do_not_place": true,
+    "sleeve_shares": 7000,
+    "max_contracts": 70,
+    "sell_today": 20,
+    "do_not_sell_today": [30, 50],
+    "rationale": "Event has not happened; +14% TSLL already realized; overnight straddle still ~3.3% on TSLA. 20/70 leaves upside if Q1 (real launch). 50/70 caps 71% of the 2x sleeve before the livestream.",
+    "preferred_first_tranche": {
+      "symbol": "TSLL",
+      "expiry": "2026-10-16",
+      "strike": 13,
+      "type": "call",
+      "bid_ask_1239et": [0.51, 0.55],
+      "mark": 0.53,
+      "iv": 0.866,
+      "delta": 0.304,
+      "oi": 1534,
+      "vs_earnings": "pre unconfirmed 2026-10-21 AH"
+    },
+    "quotes": [
+      {"contract": "TSLL 2026-11-20 14C", "t_1231et_given": {"bid": 0.8, "ask": 0.89, "iv": 0.926, "delta": 0.345, "oi": 994}, "t_1239et_live": {"bid": 0.78, "ask": 0.86, "mark": 0.82, "iv": 0.918, "delta": 0.339, "oi": 994}},
+      {"contract": "TSLL 2026-10-16 13C", "t_1231et_given": {"bid": 0.51, "ask": 0.55, "iv": 0.856, "delta": 0.306, "oi": 1534}, "t_1239et_live": {"bid": 0.51, "ask": 0.55, "mark": 0.53, "iv": 0.866, "delta": 0.304, "oi": 1534}},
+      {"contract": "TSLL 2026-10-16 14C", "t_1231et_given": {"bid": 0.36, "ask": 0.4, "iv": 0.879, "delta": 0.232, "oi": 1307}, "t_1239et_live": {"bid": 0.34, "ask": 0.4, "mark": 0.37, "iv": 0.880, "delta": 0.228, "oi": 1307}}
+    ],
+    "q3_earnings": {"date": "2026-10-21", "session": "after_close", "status": "UNCONFIRMED"}
+  }
+}
