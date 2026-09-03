@@ -294,6 +294,8 @@ def rank_candidates(liquid: list[CallCandidate], spot: float, k_decay: float) ->
     for c in liquid:
         if c.dte < 14:
             continue
+        if c.strike < spot * 1.08 or c.delta > 0.45 or c.delta < 0.18:
+            continue
         m = c.metrics(spot, SHARES_UNWRITTEN, k_decay)
         # Composite: balance premium/delta (scenario B richness) and upside room (scenario A)
         score = (

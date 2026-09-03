@@ -1,6 +1,6 @@
 # TSLL Covered-Call Selection
 
-**As of:** 2026-09-03 | TSLL **10.75** (MEASURED yfinance + Robinhood cross-check) | TSLA **383.37**
+**As of:** 2026-09-03 | TSLL **10.72** (MEASURED yfinance + Robinhood cross-check) | TSLA **382.93**
 
 Analysis only. Nothing placed. Builds on [PR #1](https://github.com/kenyip/trader/pull/1) (full overwrite ~0.30Δ, no re-entry after assignment).
 
@@ -19,24 +19,24 @@ Analysis only. Nothing placed. Builds on [PR #1](https://github.com/kenyip/trade
 
 | TSLA move | Combined P/L | Notes |
 |---|---:|---|
-| tsla +10pct | $10,305 | Both legs likely ITM near expiry; partial assignment |
-| tsla +20pct | $16,871 | Assignment on both; capped upside above strikes |
-| tsla +40pct | $17,000 | Full assignment; client-desired outcome on Oct leg |
-| tsla -10pct | $-10,026 | Keep premium + IV crush on Nov leg offsets share drop |
-| tsla -20pct | $-20,186 | Premium + crushed short option; share mark still hurts |
+| tsla +10pct | $10,278 | Both legs likely ITM near expiry; partial assignment |
+| tsla +20pct | $16,919 | Assignment on both; capped upside above strikes |
+| tsla +40pct | $17,150 | Full assignment; client-desired outcome on Oct leg |
+| tsla -10pct | $-9,994 | Keep premium + IV crush on Nov leg offsets share drop |
+| tsla -20pct | $-20,124 | Premium + crushed short option; share mark still hurts |
 
 ## Top ranked single-leg candidates (5,000 shares, MEASURED bids)
 
 | Rank | Exp | Strike | Bid | Δ | OI | Premium $ | Assigned $ | Prem/Δ |
 |---:|---|---:|---:|---:|---:|---:|---:|---:|
-| 1 | 2026-09-18 | 10.0 | 1.15 | 0.70 | 12353 | $5,750 | $5,750 | 1.652 |
-| 2 | 2026-09-25 | 10.0 | 1.26 | 0.68 | 1605 | $6,300 | $6,300 | 1.850 |
-| 3 | 2026-09-18 | 10.5 | 0.85 | 0.59 | 607 | $4,250 | $4,250 | 1.436 |
-| 4 | 2026-10-02 | 10.0 | 1.29 | 0.67 | 627 | $6,450 | $6,450 | 1.926 |
-| 5 | 2026-09-18 | 11.0 | 0.65 | 0.49 | 6799 | $3,250 | $4,500 | 1.337 |
-| 6 | 2026-09-25 | 10.5 | 0.93 | 0.59 | 850 | $4,650 | $4,650 | 1.573 |
-| 7 | 2026-10-09 | 10.0 | 1.39 | 0.67 | 90 | $6,950 | $6,950 | 2.088 |
-| 8 | 2026-10-16 | 10.0 | 1.51 | 0.66 | 5195 | $7,550 | $7,550 | 2.280 |
+| 1 | 2026-09-18 | 12.0 | 0.37 | 0.31 | 7594 | $1,850 | $8,250 | 1.207 |
+| 2 | 2026-09-25 | 12.0 | 0.45 | 0.34 | 1357 | $2,250 | $8,650 | 1.323 |
+| 3 | 2026-10-02 | 12.0 | 0.54 | 0.37 | 758 | $2,700 | $9,100 | 1.477 |
+| 4 | 2026-10-09 | 12.0 | 0.63 | 0.39 | 64 | $3,150 | $9,550 | 1.606 |
+| 5 | 2026-10-16 | 12.0 | 0.74 | 0.41 | 2902 | $3,700 | $10,100 | 1.803 |
+| 6 | 2026-09-18 | 12.5 | 0.26 | 0.24 | 400 | $1,300 | $10,200 | 1.086 |
+| 7 | 2026-10-02 | 12.5 | 0.44 | 0.31 | 278 | $2,200 | $11,100 | 1.417 |
+| 8 | 2026-09-25 | 12.5 | 0.31 | 0.27 | 272 | $1,550 | $10,450 | 1.154 |
 
 ## Structure comparison
 
@@ -51,18 +51,18 @@ Analysis only. Nothing placed. Builds on [PR #1](https://github.com/kenyip/trade
 ## Liquidity thresholds
 
 - Min bid: $0.05; max spread: 40% of mid; min OI: 25
-- Rejected: 116 strikes (see RESULT.json)
+- Rejected: 114 strikes (see RESULT.json)
 
 ## IV term structure
 
 - Nov-20 carries ~4.0 vol points over Oct-16 at ~35Δ; ~35 extra days span Q3 earnings (2026-10-21, unverified).
-- TSLL 20d realized vol **96.1%** (MEASURED) vs Nov-20 ~35Δ IV **~89%** — implied still elevated but below recent realized.
+- TSLL 20d realized vol **95.5%** (MEASURED) vs Nov-20 ~35Δ IV **~89%** — implied still elevated but below recent realized.
 
 ## k-decay interaction (MEASURED k + MODEL roll)
 
-- Monthly k decay: **-2.96%** (yfinance daily closes 2026-01-02 → 2026-09-02)
-- Single Nov-20 write: $3,850 premium − $3,983 decay drag = **$-133** net
-- Repeated 43d cycles (MODEL): $1,039 net — only wins if post-crush re-write ≥85% of today's bid
+- Monthly k decay: **-2.97%** (yfinance daily closes 2026-01-02 → 2026-09-02)
+- Single Nov-20 write: $3,850 premium − $3,980 decay drag = **$-130** net
+- Repeated 43d cycles (MODEL): $1,040 net — only wins if post-crush re-write ≥85% of today's bid
 
 ## LEAP diagonal lane (separate — not vs shares)
 
